@@ -1,34 +1,41 @@
 import bcrypt from 'bcryptjs';
 import ms from 'ms';
-import { Op } from 'sequelize';
+import { Op, QueryTypes } from 'sequelize';
 import { Table } from 'sequelize-typescript';
 
 import { JWT } from '../../../../services/types';
+import { addDays } from '../../../../utils';
 import { AuthError } from '../../middleware';
-import { BaseModel } from '../base';
 import {
   Alias,
-  Credential,
-  RefUserRole,
-  Role,
-  Summary,
-  SummaryInteraction,
-  UserMetadata,
-} from '../models';
-import {
   AliasCreationAttributes,
   AliasPayload,
   AliasType,
+  Credential,
   CredentialCreationAttributes,
   CredentialType,
   DestructuredCredentialPayload,
   FindAliasOptions,
   InteractionType,
+  MetadataType,
   Profile,
+  Query,
+  QueryFactory,
+  RefUserRole,
+  Role,
+  Streak,
+  Summary,
+  SummaryInteraction,
   ThirdParty,
   UserAttributes,
   UserCreationAttributes,
-} from '../types';
+  UserEvent,
+  UserEventRaw,
+  UserMetadata,
+  UserStats,
+  rawUserEventMap,
+} from '../../schema';
+import { BaseModel } from '../base';
 
 @Table({
   modelName: 'user',
@@ -46,7 +53,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   /** Resolves a user from an alias request/payload */
   public static async from(payload: AliasPayload, opts?: Partial<FindAliasOptions>) {
-    if (payload.userId || opts.jwt) {
+    if (payload.userId || opts?.jwt) {
       const id = payload.userId ?? new JWT(opts.jwt).userId;
       const user = await User.findOne({ where: { id } });
       if (opts.jwt) {
@@ -65,7 +72,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
         return undefined;
       }
       const user = await User.findOne({ where: { id: alias.userId } });
-      if (opts.jwt) {
+      if (opts?.jwt) {
         user.jwt = new JWT(opts.jwt);
       }
       return user;
@@ -248,10 +255,10 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
 
   // profile
-
-  public async sync() {
-    const aliases = await this.findAliases('email');
+  
+  public async getProfileBase(): Promise<Profile> {
     const profile: Profile = {};
+    const aliases = await this.findAliases('email');
     const metadata = await UserMetadata.findAll({ where: { userId: this.id } });
     const updatedAt = new Date(Math.max(...[...aliases, ...metadata].map((m) => m.updatedAt.valueOf())));
     profile.email = aliases.length > 0 ? aliases.sort((a, b) => a.priority - b.priority)[0].value : '',
@@ -259,15 +266,82 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     profile.pendingEmails = aliases.length > 0 ? aliases.filter((a) => a.verifiedAt === null).map((a) => a.value) : [],
     profile.username = (await this.findAlias('username'))?.value,
     profile.linkedThirdPartyAccounts = (await this.findAliases('thirdParty/apple', 'thirdParty/google')).map((a) => a.type.split('/')[1] as ThirdParty);
-    profile.preferences = Object.fromEntries(metadata.map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value]));
+    profile.preferences = Object.fromEntries(metadata.filter((meta) => meta.type === 'pref').map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value]));
     profile.createdAt = this.createdAt;
     profile.updatedAt = updatedAt;
+    return profile;
+  }
+  
+  public async calculateStreak(before?: Date, events?: UserEvent[]): Promise<Streak> {
+    let start = before;
+    let length = 0;
+    const replacements = {
+      before: start ?? null,
+      userId: this.id,
+    };
+    const response = events ?? (await User.store.query(QueryFactory.getQuery('streak'), {
+      nest: true,
+      replacements,
+      type: QueryTypes.SELECT,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as UserEventRaw[]).map(rawUserEventMap);
+    let lastDate: Date;
+    for (let index = 0; index < response.length; index++) {
+      const row = response[index];
+      const isLast = index + 1 >= response.length;
+      const isNotSequential = lastDate && row.date.toLocaleDateString() !== addDays(lastDate, -1).toLocaleDateString();
+      if (before) {
+        if (isNotSequential) {
+          const next = await this.calculateStreak(lastDate, response.slice(index));
+          return next.length > length ? next : { length, start };
+        }
+      } else {
+        if (isNotSequential) {
+          return { length, start };
+        }
+      }
+      length++;
+      lastDate = row.date;
+      start = row.date;
+      if (isLast) {
+        return { length, start };
+      }
+    }
+    return { length, start };
+  }
+  
+  public async calculateLongestStreak() {
+    return this.calculateStreak(new Date());
+  }
+
+  public async getStats(): Promise<UserStats> {
+    const lastSeen = (await Query.findOne({ 
+      order: [['createdAt', 'desc']], 
+      where: { userId: this.id },
+    }))?.createdAt;
+    const longestStreak = await this.calculateLongestStreak();
+    const streak = await this.calculateStreak();
+    return {
+      lastSeen,
+      longestStreak,
+      streak,
+    };
+  }
+  
+  public async syncProfile() {
+    // fetch profile
+    const profile = await this.getProfileBase();
+    profile.stats = await this.getStats();
     this.set('profile', profile, { raw: true });
   }
 
-  public async setMetadata(key: string, value: Record<string, unknown> | string) {
+  public async setMetadata(
+    key: string, 
+    value: Record<string, unknown> | string, 
+    type: MetadataType = 'pref'
+  ) {
     if (await UserMetadata.findOne({ where: { key, userId: this.id } })) {
-      await UserMetadata.update({ value }, {
+      await UserMetadata.update({ type, value }, {
         where: {
           key, 
           userId: this.id, 
@@ -276,6 +350,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     } else {
       await UserMetadata.create({
         key, 
+        type,
         userId: this.id, 
         value,
       });

@@ -3,9 +3,13 @@ import {
   JwtResponse,
   WrappedJwt,
 } from './jwt';
-import { Profile } from '../../schema';
-import { AliasPayload, ThirdParty  } from '../../schema/user/Alias.types';
-import { DestructuredCredentialPayload } from '../../schema/user/Credential.types';
+import { 
+  AliasPayload,
+  DestructuredCredentialPayload,
+  MetadataType, 
+  Profile,
+  ThirdParty,
+} from '../../schema';
 
 export * from './jwt';
 
@@ -81,6 +85,7 @@ export type VerifyAliasResponse = {
 export type UpdateMetadataRequest = JwtRequest & {
   key: string;
   value: Record<string, unknown>;
+  type?: MetadataType;
 };
 
 export type UpdateMetadataResponse = {

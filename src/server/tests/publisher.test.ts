@@ -19,8 +19,9 @@ describe('publisher', () => {
     await Publisher.prepare();
     const publishers = await Publisher.findAll();
     for (const publisher of publishers) {
-      const icon = await S3Service.download(publisher.icon);
+      const icon = await S3Service.download(publisher.icon ?? '');
       console.log(icon);
+      expect(icon).toBeDefined();
     }
   });
 

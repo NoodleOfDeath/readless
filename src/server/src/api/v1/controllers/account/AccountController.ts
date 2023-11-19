@@ -298,7 +298,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
       if (!user) {
         throw new AuthError('UNKNOWN_ALIAS');
       }
-      await user.sync(); // get profile
+      await user.syncProfile(); // get profile
       return {
         profile: user?.toJSON().profile ?? {},
         token: token.wrapped,
@@ -318,7 +318,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
       if (!user) {
         throw new AuthError('UNKNOWN_ALIAS');
       }
-      await user.sync(); // get profile
+      await user.syncProfile(); // get profile
       if (token) {
         // account is anonymous, return JWT
         return {
@@ -380,7 +380,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
       }
     }
     // user is authenticated, generate JWT else {
-    await user.sync(); // get profile
+    await user.syncProfile(); // get profile
     const userData = user.toJSON();
     const token = await JWT.as(body.requestedRole ?? 'standard', userData.id);
     await user.createCredential('jwt', token);
@@ -397,7 +397,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Request() req: ExpressRequest
   ): Promise<ProfileResponse> {
     const user = await User.from({ jwt: req.body.jwt });
-    await user.sync();
+    await user.syncProfile();
     const userData = user.toJSON();
     return { profile: userData.profile };
   }
@@ -430,7 +430,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Body() body: RegisterAliasRequest
   ): Promise<RegistrationResponse> {
     const user = await User.from(body, req.body);
-    await user.sync();
+    await user.syncProfile();
     if (user.toJSON().profile?.linkedThirdPartyAccounts?.includes(body.otherAlias.thirdParty.name)) {
       throw new AuthError('DUPLICATE_USER');
     }
@@ -578,7 +578,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Body() body: UpdateMetadataRequest
   ): Promise<UpdateMetadataResponse> {
     const user = await User.from(body, req.body);
-    await user.setMetadata(body.key, body.value);
+    await user.setMetadata(body.key, body.value, body.type);
     return { success: true };
   }
   

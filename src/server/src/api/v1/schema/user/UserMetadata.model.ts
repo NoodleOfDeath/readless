@@ -5,7 +5,11 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { UserMetadataAttributes, UserMetadataCreationAttributes } from './UserMetadata.types';
+import { 
+  MetadataType,
+  UserMetadataAttributes, 
+  UserMetadataCreationAttributes,
+} from './UserMetadata.types';
 import { BaseModel } from '../base';
 
 @Table({
@@ -45,4 +49,10 @@ export class UserMetadata<A extends UserMetadataAttributes = UserMetadataAttribu
   })
   declare value: Record<string, unknown> | string;
 
+  @Column({
+    defaultValue: 'pref',
+    type: DataType.STRING,
+  })
+  declare type: MetadataType;
+  
 }
