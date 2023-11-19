@@ -11,7 +11,6 @@ import {
   Publisher,
   PublisherInteraction,
   PublisherTranslation,
-  Query,
   Queue,
   Recap,
   RecapInteraction,
@@ -19,6 +18,7 @@ import {
   RecapSummary,
   RecapTranslation,
   RefUserRole,
+  RequestLog,
   Role,
   SentimentMethod,
   Service,
@@ -68,12 +68,12 @@ export function makeAssociations() {
     onUpdate: 'cascade', 
   });
   
-  Query.belongsTo(User, {
+  RequestLog.belongsTo(User, {
     foreignKey: 'userId',
     onDelete: 'cascade',
     onUpdate: 'cascade', 
   });
-  User.hasMany(Query, {
+  User.hasMany(RequestLog, {
     foreignKey: 'userId',
     onDelete: 'cascade',
     onUpdate: 'cascade', 

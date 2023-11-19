@@ -4,15 +4,15 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { QueryAttributes, QueryCreationAttributes } from './Query.types';
+import { RequestLogAttributes, RequestLogCreationAttributes } from './RequestLog.types';
 import { BaseModel } from '../base';
 
 @Table({
-  modelName: 'query',
+  modelName: 'request',
   paranoid: true,
   timestamps: true,
 })
-export class Query<A extends QueryAttributes = QueryAttributes, B extends QueryCreationAttributes = QueryCreationAttributes> extends BaseModel<A, B> implements QueryAttributes {
+export class RequestLog<A extends RequestLogAttributes = RequestLogAttributes, B extends RequestLogCreationAttributes = RequestLogCreationAttributes> extends BaseModel<A, B> implements RequestLogAttributes {
 
   @Column({
     allowNull: false, 
