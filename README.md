@@ -4,20 +4,22 @@
 
 [![Web Client CI](https://github.com/NoodleOfDeath/readless/actions/workflows/web-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/web-ci.yaml)
 [![Mobile Client CI](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml)
-
 [![API CI](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml)
 [![Scheduler CI](https://github.com/NoodleOfDeath/readless/actions/workflows/scheduler-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/scheduler-ci.yaml)
 [![Worker CI](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml)
 
+[![JIRA](https://img.shields.io/badge/JIRA-Read_Less-darkblue
+)](https://readless.atlassian.net/jira/software/projects/RL/boards/1)
+[![DigitalOcean](https://img.shields.io/badge/DigitalOcean-Read_Less-blue
+)](https://cloud.digitalocean.com/projects/ef71d72f-7fef-4646-b64e-a1b5a5153b29/resources?i=2048ee)
+
+[![https://dev.readless.ai](https://img.shields.io/badge/Dev/Staging-Web-white
+)](https://dev.readless.ai)
+[![https://readless.ai](https://img.shields.io/badge/Production-Web-white)](https://readless.ai)
+[![https://apps.apple.com/us/app/read-less-news/id6447275859](https://img.shields.io/badge/Production-iOS-white)](https://apps.apple.com/us/app/read-less-news/id6447275859)
+[![https://play.google.com/store/apps/details?id=ai.readless.ReadLess](https://img.shields.io/badge/Production-Android-white)](https://apps.apple.com/us/app/read-less-news/id6447275859)
+
 Read Less is the model for a fully automated news aggregation pipeline that is powered by generative AI!
-
-- Dev/Staging (web): [https://dev.readless.ai](https://dev.readless.ai)
-  - user: `dev`, pass: `dev`
-- Production (web): [https://readless.ai](https://readless.ai)
-- Production (ios): [https://apps.apple.com/us/app/read-less-news/id6447275859](https://apps.apple.com/us/app/read-less-news/id6447275859)
-- Production (android): [https://play.google.com/store/apps/details?id=ai.readless.ReadLess](https://play.google.com/store/apps/details?id=ai.readless.ReadLess)
-
-- Child Project [Search Less](https://github.com/noodleofdeath/searchless)
 
 ## Table of Contents <!-- omit in toc -->
 
