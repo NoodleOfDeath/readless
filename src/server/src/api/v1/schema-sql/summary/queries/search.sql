@@ -53,11 +53,11 @@ WHERE
     OR :noPublishers)
   AND ((pub.name NOT IN (:excludedPublishers))
     OR :noExcludedPublishers)
-  AND ((cat.name IN (:categories))
-    OR :noCategories)
   AND ((cat.name NOT IN (:excludedCategories))
     OR :noExcludedCategories)
   AND (:noFilter
+    OR ((cat.name IN (:categories))
+      OR :noCategories)
     OR (s.title ~* :filter)
     OR (s."shortSummary" ~* :filter)
     OR (s.summary ~* :filter)

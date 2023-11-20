@@ -139,7 +139,7 @@ public class Summary {
   
   public func loadImages(resolution: MediaResolution? = nil) {
     if let url = getMediaURL(type: .image, resolution: resolution) {
-      image = Image.load(from: url)
+      image = Image.load(from: url, maxWidth: 80)
     }
     publisherIcon = Image.load(from: publisher.icon, maxWidth: 40)
   }
