@@ -156,6 +156,9 @@ function buildFilter(
       }
     }
   }
+  for (const category of categories) {
+    parts.push(`(?:^|\\y)${category}(?:\\y|$)`);
+  }
   const regex = parts.join('|');
   return {
     categories,

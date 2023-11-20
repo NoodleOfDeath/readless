@@ -62,11 +62,11 @@ func buildEntries(in context: TimelineProviderContext,
   var entries: [SummaryEntry] = []
   for i in stride(from: 0, to: summaries.count, by: pageSize) {
     let first = summaries[i]
-    first.loadImages(resolution: .sm)
+    first.loadImages(resolution: .xs)
     var subset = [first]
     for j in 1 ..< pageSize {
       if let next = i + j < summaries.count ? summaries[i + j] : nil {
-        next.loadImages(resolution: .sm)
+        next.loadImages(resolution: .xs)
         subset.insert(next, at: 0)
       }
     }
