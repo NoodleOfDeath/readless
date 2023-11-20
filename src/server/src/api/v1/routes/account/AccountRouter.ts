@@ -224,6 +224,20 @@ router.get(
 );
 
 router.get(
+  '/metrics',
+  rateLimitMiddleware('15 per 3m'),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.getMetrics(req);
+      return res.status(200).json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.get(
   '/profile',
   validationMiddleware,
   async (req, res) => {

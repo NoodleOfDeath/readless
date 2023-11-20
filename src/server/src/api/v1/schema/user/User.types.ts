@@ -15,6 +15,8 @@ export type Streak = {
   start: Date;
   end: Date;
   length: number;
+  user?: string;
+  userId?: number;
 };
 
 export type UserStats = {

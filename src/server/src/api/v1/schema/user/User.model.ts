@@ -3,6 +3,7 @@ import ms from 'ms';
 import { Op, QueryTypes } from 'sequelize';
 import { Table } from 'sequelize-typescript';
 
+import { OpenAIService } from '../../../../services';
 import { JWT } from '../../../../services/types';
 import { AuthError } from '../../middleware';
 import {
@@ -112,6 +113,21 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       value: `${value}`,
       ...attr,
     });
+  }
+
+  public async generateUsername(): Promise<string> {
+    let validUsername = false;
+    let alias: Alias | null = null;
+    const chatService = new OpenAIService();
+    const reply = await chatService.send('Create a very very unique username between 8 and 16 characters long that contains only letters and numbers. And would never be guessed by anyone else.');
+    alias = await Alias.findOne({ where: { value: reply } });
+    validUsername = alias == null && reply.length > 8 && reply.length < 16 && Boolean(reply.match(/^[a-zA-Z0-9]+$/));
+    if (!validUsername) {
+      return await this.generateUsername();
+    } else {
+      await this.createAlias('username', reply, { verifiedAt: new Date() });
+    }
+    return reply;
   }
 
   // authorization methods
@@ -255,14 +271,24 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   // profile
 
   public static async getStreaks(): Promise<Streak[]> {
-    const replacements = { noUserId: true };
+    const replacements = {
+      limit: 10,
+      noUserId: true, 
+      userId: null, 
+    };
     const response = (await User.store.query(QueryFactory.getQuery('streak'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as UserEventRaw[]).map(rawUserEventMap);
-    return response;
+    return await Promise.all(response.map(async (s) => ({
+      end: s.end,
+      length: s.length,
+      start: s.start,
+      user: (await (await User.findByPk(s.userId))?.findAlias('username'))?.value,
+      userId: s.userId,
+    })));
   }
   
   public async getProfileBase(): Promise<Profile> {
@@ -283,6 +309,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   
   public async calculateStreak(longest = false): Promise<Streak> {
     const replacements = {
+      limit: 10,
       noUserId: false,
       userId: this.id,
     };
@@ -296,18 +323,20 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       end: new Date(new Date().toLocaleDateString()),
       length: 0, 
       start: new Date(new Date().toLocaleDateString()), 
+      user: (await this.findAlias('username'))?.value,
+      userId: this.id,
     };
     if (!longest) {
-      return response.find(
+      streak = response.find(
         (s) => {
-          console.log(s.end, s.end.getDate(), new Date().toLocaleDateString());
           return (s.end.getFullYear(), s.end.getDate()) === (streak.end.getFullYear(), streak.end.getDate());
         }
       ) ?? streak;
-    }
-    for (const row of response) {
-      if (row.length > streak.length) {
-        streak = row;
+    } else {
+      for (const row of response) {
+        if (row.length > streak.length) {
+          streak = row;
+        }
       }
     }
     return streak;

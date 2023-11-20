@@ -24,3 +24,4 @@ ORDER BY
   COUNT(DISTINCT DATE("date")::timestamp) DESC,
   MAX("createdAt") DESC,
   "userId" DESC
+LIMIT :limit

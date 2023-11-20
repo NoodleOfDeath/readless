@@ -48,11 +48,11 @@ export const rateLimitMiddleware = (
       const platform = req.get('x-platform');
       const uuid = req.get('x-uuid');
       const userAgent = req.get('user-agent');
-      const user = await User.from(req.body, { ignoreIfNotResolved: true });
       if (/kube-probe/i.test(userAgent)) {
         res.status(200).send('OK');
         return;
       }
+      const user = await User.from(req.body, { ignoreIfNotResolved: true });
       await RequestLog.create({
         appVersion,
         locale,
