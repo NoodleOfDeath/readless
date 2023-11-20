@@ -16,6 +16,7 @@ export type SubscriptionAttributes = DatedAttributes & {
   unsubscribeToken?: string;
   verifiedAt?: Date;
   expiresAt?: Date;
+  userId?: number;
 };
 
 export type SubscriptionCreationAttributes = Partial<DatedAttributes> & {
@@ -31,6 +32,7 @@ export type SubscriptionCreationAttributes = Partial<DatedAttributes> & {
   unsubscribeToken?: string;
   verifiedAt?: Date;
   expiresAt?: Date;
+  userId?: number;
 };
 
 export const PUBLIC_SUBSCRIPTION_ATTRIBUTES = [

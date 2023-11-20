@@ -108,6 +108,9 @@ export class Subscription<
     type: DataType.DATE,
   })
   declare expiresAt?: Date;
+  
+  @Column({ type: DataType.INTEGER })
+  declare userId?: number;
 
   public static async subscribe({
     channel,
@@ -118,6 +121,7 @@ export class Subscription<
     body,
     fireTime,
     locale,
+    userId,
   }: SubscriptionCreationAttributes): Promise<Subscription> {
     const verificationCode = v4();
     const sub = await Subscription.findOne({
@@ -136,6 +140,7 @@ export class Subscription<
       locale,
       repeats,
       title,
+      userId,
       uuid,
       verificationCode,
     });
@@ -168,7 +173,7 @@ export class Subscription<
     if (channel === 'email') {
       return [];
     }
-    return await Subscription.scope('public').findAll({ where: { channel, uuid } });
+    return await this.scope('public').findAll({ where: { channel, uuid } });
   }
 
   public static async verify({ verificationCode }: Pick<SubscriptionCreationAttributes, 'verificationCode'>): Promise<Subscription> {
