@@ -35,9 +35,10 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
   - [v1.12 - Recaps](#v112---recaps)
   - [v1.13 - Recap Localization](#v113---recap-localization)
   - [v1.14 - Notifications/Newletters](#v114---notificationsnewletters)
-  - [v1.15 - Bringing Back Accounts](#v115---bringing-back-accounts)
-  - [v1.16 - Home Screen Widget](#v116---home-screen-widget)
-  - [v1.17 - Local News and On Demand Jobs](#v117---local-news-and-on-demand-jobs)
+  - [v1.15/v1.16 - Home Screen Widget](#v115v116---home-screen-widget)
+  - [v1.17 - Bringing Back Accounts](#v117---bringing-back-accounts)
+  - [v1.18 - Word Games and Achievements](#v118---word-games-and-achievements)
+  - [v1.19 - Local News and On Demand Jobs](#v119---local-news-and-on-demand-jobs)
   - [v27.0 - Enhanced Discover Page](#v270---enhanced-discover-page)
   - [v27.1 - Cross-Comparative Article Generation](#v271---cross-comparative-article-generation)
   - [v69.69 - Shit is getting realllllll](#v6969---shit-is-getting-realllllll)
@@ -166,32 +167,46 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 
 ### v1.14 - Notifications/Newletters
 
-- [ ] App Store artwork makeover
-- [ ] Add a dislike system for the future "smart" algorithm?
+- [x] App Store artwork makeover
+- [ ] ~Add a dislike system for the future "smart" algorithm?~
 - [x] Backend subscription plumbing to emails/sms/push notifications (50% done)
-- [ ] Add subscription flow to mobile UI
-- [ ] Daily (eventually customizable) newsletters with headlines
-- [ ] Subscription to topics, threads, and/or keywords
-- [ ] Push notifications with Firebase
-- [ ] Replace trigger words with actual negative filters
-
-### v1.15 - Bringing Back Accounts
-
-- [ ] Improve backend plumbing to offload much of the client data onto the backend such as followed preferences?
-- [ ] 2-factor authentication with text and/or authenticator applications
-- [ ] Pros of accounts?
-  - [ ] Account recovery
-  - [ ] Offload preferences on backend
-  - [ ] Backend can employ workers to better provide service
-  - [ ] Do accounts really need emails? Only for recovery?
-  - [ ] Could provide user with a private key instead for recovery?
+- [x] Add subscription flow to mobile UI
+- [ ] ~Daily (eventually customizable) newsletters with headlines~
+- [ ] ~Subscription to topics, threads, and/or keywords~
+- [x] Push notifications with Firebase
+- [ ] ~Replace trigger words with actual negative filters~
   
-### v1.16 - Home Screen Widget
+### v1.15/v1.16 - Home Screen Widget
 
-- [ ] Home screen widget with a lot of customizability
-- [ ] Add variations to summaries
+- [x] Home screen widget for iOS
+- [x] Home screen widget for Android 
+- [ ] ~Add variations to summaries~
 
-### v1.17 - Local News and On Demand Jobs
+### v1.17 - Bringing Back Accounts
+
+- [x] Improve backend plumbing to offload much of the client data onto the backend such as followed preferences?
+- [ ] ~2-factor authentication with text and/or authenticator applications~
+- [ ] Pros of accounts?
+  - [x] Account recovery
+  - [x] Offload preferences on backend
+  - [x] Backend can employ workers to better provide service
+  - [x] Syncing of preferences across devices
+  - [ ] ~Do accounts really need emails? Only for recovery?~
+  - [ ] ~Could provide user with a private key instead for recovery?~
+- [x] Anonynmous accounts
+- [x] Streaks
+- [ ] Sharing of streaks
+- [ ] Notification of lost streaks
+
+### v1.18 - Word Games and Achievements
+
+- [ ] Word games
+- [ ] Achievements
+- [ ] Leaderboards
+- [ ] Sharing of achievements 
+- [ ] Server side syncing of user data?
+
+### v1.19 - Local News and On Demand Jobs
 
 - [ ] Provide local news (needs some kind of optimization for scaling)
 - [ ] Expose pipeline for users to upload text/documents to be processed
