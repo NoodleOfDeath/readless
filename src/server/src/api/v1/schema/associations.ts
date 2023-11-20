@@ -78,6 +78,17 @@ export function makeAssociations() {
     onDelete: 'cascade',
     onUpdate: 'cascade', 
   });
+  
+  Subscription.belongsTo(User, {
+    foreignKey: 'userId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade', 
+  });
+  User.hasMany(Subscription, {
+    foreignKey: 'userId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade', 
+  });
 
   // user/auth associations
   

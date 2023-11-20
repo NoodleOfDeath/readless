@@ -44,8 +44,8 @@ export function AccountScreen({
       <ScrollView>
         <TableView>
           <TableViewSection>
-            <TableViewCell
-              cellContentView={ <Text>{JSON.stringify(userData, null, 2)}</Text> } />
+            {/*<TableViewCell
+              cellContentView={ <Text>{JSON.stringify(userData, null, 2)}</Text> } />*/}
             {userData?.profile?.email && (
               <TableViewCell 
                 cellStyle="RightDetail"

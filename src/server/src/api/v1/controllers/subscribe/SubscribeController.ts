@@ -15,6 +15,7 @@ import {
   PublicSubscriptionAttributes,
   Subscription,
   SubscriptionCreationAttributes,
+  User,
 } from '../../schema';
 
 @Route('/v1/subscribe')
@@ -32,7 +33,8 @@ export class SubscribeController {
     @Request() req: ExpressRequest,
     @Body() body: SubscriptionCreationAttributes
   ): Promise<PublicSubscriptionAttributes> {
-    const subscription = await Subscription.subscribe(body);
+    const user = await User.from(req.body, { ignoreIfNotResolved: true, ...req.body });
+    const subscription = await Subscription.subscribe({ ...body, userId: user?.id });
     return subscription;
   }
 
