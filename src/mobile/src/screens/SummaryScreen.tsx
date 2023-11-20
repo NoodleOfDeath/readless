@@ -50,10 +50,9 @@ export function SummaryScreen({
       if (data && data.rows && data.rows.length) {
         setSummary(data.rows[0]);
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
+    } catch (e) {
       console.error(e);
-      showToast(e?.errorKey ?? e.message);
+      showToast(e);
     } finally {
       setLoading(false);
     }

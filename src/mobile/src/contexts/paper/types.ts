@@ -60,13 +60,7 @@ const makeTheme = (darkMode: boolean) => {
           borderRadius: 500,
           color: '#fff',
         },
-        divider: {
-          backgroundColor: darkMode ? '#888' : '#888',
-          height: StyleSheet.hairlineWidth,
-          marginBottom: 1,
-          marginTop: 1,
-          opacity: 0.5,
-        },
+        divider: { backgroundColor: darkMode ? '#ccc' : '#888' },
         input: { 
           backgroundColor: darkMode ? '#111' : '#ddd',
           borderRadius: 500,

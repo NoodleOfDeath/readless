@@ -9,6 +9,7 @@ import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
 import { SETTINGS_STACK } from './SettingsStack';
 
+import { strings } from '~/locales';
 import { SearchViewController, SettingsToggleWithIndicator } from '~/navigation';
 import {
   CategoryScreen,
@@ -21,6 +22,7 @@ import {
   SummaryScreen,
   TestScreen,
 } from '~/screens';
+import { StreaksScreen } from '~/screens/profile/StreaksScreen';
 
 export const NEWS_STACK: RouteConfig<
   RoutingParams,
@@ -89,6 +91,16 @@ export const NEWS_STACK: RouteConfig<
       headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />,
       headerTitle: '', 
+    },
+  },
+  {
+    component: StreaksScreen, 
+    name: 'streaks',
+    options: { 
+      headerBackTitle: '', 
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: strings.leaderboard,
     },
   },
   // Other

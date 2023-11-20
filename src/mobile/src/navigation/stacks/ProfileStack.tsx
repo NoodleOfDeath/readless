@@ -20,6 +20,7 @@ import {
   RoutingParams,
   SummaryScreen,
 } from '~/screens';
+import { StreaksScreen } from '~/screens/profile/StreaksScreen';
 
 export const PROFILE_STACK: RouteConfig<
   RoutingParams,
@@ -34,7 +35,7 @@ export const PROFILE_STACK: RouteConfig<
     options: {
       headerBackTitle: '',
       headerLeft: () => null,
-      headerRight: () => <SettingsToggleWithIndicator />, 
+      headerRight: () => null, 
       headerTitle: strings.profile,
     },
   },
@@ -85,6 +86,16 @@ export const PROFILE_STACK: RouteConfig<
       headerBackTitle: '', 
       headerLeft: () => null,
       headerRight: () => <SettingsToggleWithIndicator />,
+      headerTitle: '',
+    },
+  },
+  {
+    component: StreaksScreen, 
+    name: 'streaks',
+    options: { 
+      headerBackTitle: '', 
+      headerLeft: () => null,
+      headerRight: () => null,
       headerTitle: '',
     },
   },
