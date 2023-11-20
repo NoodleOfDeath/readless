@@ -5,7 +5,7 @@ SELECT
   trans.locale,
   cat.id,
   cat.name,
-  COALESCE(trans.translations ->> 'displayName'::text, cat."displayName"::text) AS "displayName",
+  COALESCE(trans.translations ->> 'displayName'::text, cat."displayName"::text) "displayName",
   cat.icon,
   trans.translations
 FROM

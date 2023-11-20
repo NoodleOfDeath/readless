@@ -4,7 +4,6 @@ import { Op, QueryTypes } from 'sequelize';
 import { Table } from 'sequelize-typescript';
 
 import { JWT } from '../../../../services/types';
-import { addDays } from '../../../../utils';
 import { AuthError } from '../../middleware';
 import {
   Alias,
@@ -29,7 +28,6 @@ import {
   ThirdParty,
   UserAttributes,
   UserCreationAttributes,
-  UserEvent,
   UserEventRaw,
   UserMetadata,
   UserStats,
@@ -255,6 +253,17 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
 
   // profile
+
+  public static async getStreaks(): Promise<Streak[]> {
+    const replacements = { noUserId: true };
+    const response = (await User.store.query(QueryFactory.getQuery('streak'), {
+      nest: true,
+      replacements,
+      type: QueryTypes.SELECT,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as UserEventRaw[]).map(rawUserEventMap);
+    return response;
+  }
   
   public async getProfileBase(): Promise<Profile> {
     const profile: Profile = {};
@@ -272,46 +281,40 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return profile;
   }
   
-  public async calculateStreak(before?: Date, events?: UserEvent[]): Promise<Streak> {
-    let start = before;
-    let length = 0;
+  public async calculateStreak(longest = false): Promise<Streak> {
     const replacements = {
-      before: start ?? null,
+      noUserId: false,
       userId: this.id,
     };
-    const response = events ?? (await User.store.query(QueryFactory.getQuery('streak'), {
+    const response = (await User.store.query(QueryFactory.getQuery('streak'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as UserEventRaw[]).map(rawUserEventMap);
-    let lastDate: Date;
-    for (let index = 0; index < response.length; index++) {
-      const row = response[index];
-      const isLast = index + 1 >= response.length;
-      const isNotSequential = lastDate && row.date.toLocaleDateString() !== addDays(lastDate, -1).toLocaleDateString();
-      if (before) {
-        if (isNotSequential) {
-          const next = await this.calculateStreak(lastDate, response.slice(index));
-          return next.length > length ? next : { length, start };
+    let streak: Streak = {
+      end: new Date(new Date().toLocaleDateString()),
+      length: 0, 
+      start: new Date(new Date().toLocaleDateString()), 
+    };
+    if (!longest) {
+      return response.find(
+        (s) => {
+          console.log(s.end, s.end.getDate(), new Date().toLocaleDateString());
+          return (s.end.getFullYear(), s.end.getDate()) === (streak.end.getFullYear(), streak.end.getDate());
         }
-      } else {
-        if (isNotSequential) {
-          return { length, start };
-        }
-      }
-      length++;
-      lastDate = row.date;
-      start = row.date;
-      if (isLast) {
-        return { length, start };
+      ) ?? streak;
+    }
+    for (const row of response) {
+      if (row.length > streak.length) {
+        streak = row;
       }
     }
-    return { length, start };
+    return streak;
   }
   
   public async calculateLongestStreak() {
-    return this.calculateStreak(new Date());
+    return this.calculateStreak(true);
   }
 
   public async getStats(): Promise<UserStats> {

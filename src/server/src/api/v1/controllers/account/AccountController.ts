@@ -26,6 +26,7 @@ import {
   LoginResponse,
   LogoutRequest,
   LogoutResponse,
+  MetricsResponse,
   ProfileResponse,
   RegisterAliasRequest,
   RegistrationRequest,
@@ -389,6 +390,16 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
       token: token.wrapped,
       userId: userData.id,
     };
+  }
+
+  @Get('/metrics')
+  @Security('jwt', ['standard:read'])
+  public static async getMetrics(
+    @Request() req: ExpressRequest
+  ): Promise<MetricsResponse> {
+    await User.from({ jwt: req.body.jwt });
+    const streaks = await User.getStreaks();
+    return { streaks };
   }
 
   @Get('/profile')
