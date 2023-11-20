@@ -38,7 +38,7 @@ export function CategoryScreen({
     if (!category) {
       return undefined;
     }
-    return `cat:${category.name}`;
+    return `${category.name}`;
   }, [category]);
 
   const toggleFollowed = React.useCallback(() => {

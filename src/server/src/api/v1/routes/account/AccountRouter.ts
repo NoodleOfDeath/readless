@@ -211,6 +211,33 @@ router.post(
 );
 
 router.get(
+  '/metrics',
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.getMetrics(req);
+      return res.status(200).json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.get(
+  '/metrics',
+  rateLimitMiddleware('15 per 3m'),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.getMetrics(req);
+      return res.status(200).json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
+router.get(
   '/profile',
   validationMiddleware,
   async (req, res) => {
@@ -258,7 +285,7 @@ router.patch(
 
 router.put(
   '/credential', 
-  rateLimitMiddleware('10 per 15m'),
+  rateLimitMiddleware('5 per 3m'),
   authMiddleware('jwt', { required: true, scope: ['account:write'] }),
   validationMiddleware,
   async (req, res) => {
@@ -274,7 +301,7 @@ router.put(
 // legacy v1.17.2
 router.put(
   '/update/credential', 
-  rateLimitMiddleware('10 per 15m'),
+  rateLimitMiddleware('10 per 10m'),
   authMiddleware('jwt', { required: true, scope: ['account:write'] }),
   validationMiddleware,
   async (req, res) => {
@@ -289,7 +316,7 @@ router.put(
 
 router.delete(
   '/',
-  // rateLimitMiddleware('1 per 3m'),
+  rateLimitMiddleware('5 per 3m'),
   body('userId').isNumeric().optional(),
   body('password').isString().optional(),
   validationMiddleware,

@@ -8,10 +8,15 @@ import {
   DestructuredCredentialPayload,
   MetadataType, 
   Profile,
+  Streak,
   ThirdParty,
 } from '../../schema';
 
 export * from './jwt';
+
+export type MetricsResponse = {
+  streaks: Streak[];
+};
 
 export type ProfileRequest = JwtRequest;
 

@@ -26,6 +26,7 @@ import {
   LoginResponse,
   LogoutRequest,
   LogoutResponse,
+  MetricsResponse,
   ProfileResponse,
   RegisterAliasRequest,
   RegistrationRequest,
@@ -42,11 +43,7 @@ import {
   VerifyOtpRequest,
   VerifyOtpResponse,
 } from './types';
-import {
-  GoogleService,
-  MailService,
-  OpenAIService,
-} from '../../../../services';
+import { GoogleService, MailService } from '../../../../services';
 import {
   randomString,
   validateEmail,
@@ -206,19 +203,10 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
       );
     } else
     if (body.anonymous) {
-      let validUsername = false;
-      let alias: Alias | null = null;
-      let reply: string;
-      while (!validUsername) {
-        const chatService = new OpenAIService();
-        reply = await chatService.send('Create a very very unique username between 8 and 16 characters long that contains only letters and numbers. And would never be guessed by anyone else.');
-        alias = await Alias.findOne({ where: { value: reply } });
-        validUsername = alias == null && reply.length > 8 && reply.length < 16 && Boolean(reply.match(/^[a-zA-Z0-9]+$/));
-      }
-      newAliasType = 'username';
-      newAliasValue = reply;
-      verified = true;
+      createAlias = false;
     }
+
+    await newUser.generateUsername();
     
     if (createAlias) {
       try {
@@ -389,6 +377,16 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
       token: token.wrapped,
       userId: userData.id,
     };
+  }
+
+  @Get('/metrics')
+  @Security('jwt', ['standard:read'])
+  public static async getMetrics(
+    @Request() req: ExpressRequest
+  ): Promise<MetricsResponse> {
+    await User.from({ jwt: req.body.jwt });
+    const streaks = await User.getStreaks();
+    return { streaks };
   }
 
   @Get('/profile')

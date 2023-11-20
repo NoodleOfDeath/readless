@@ -82,6 +82,7 @@ export function TablePicker<
             {searchable && (
               <React.Fragment>
                 <TextInput
+                  m={ 12 }
                   placeholder="Search"
                   value={ filter }
                   onChangeText={ setFilter }

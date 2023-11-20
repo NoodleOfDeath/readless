@@ -146,10 +146,9 @@ export function RootNavigator() {
       try {
         const response = await getCategories();
         setCategories(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        console.log(error); 
-        showToast(error?.errorKey ?? error?.message ?? 'Unknown error');
+      } catch (e) {
+        console.log(e); 
+        showToast(e);
         setLastFetchFailed(true);
       } finally {
         setLastFetch(Date.now());
@@ -159,10 +158,9 @@ export function RootNavigator() {
       try {
         const response = await getPublishers();
         setPublishers(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        console.log(error); 
-        showToast(error?.errorKey ?? error?.message ?? 'Unknown error');
+      } catch (e) {
+        console.log(e); 
+        showToast(e);
         setLastFetchFailed(true);
       } finally {
         setLastFetch(Date.now());
@@ -176,12 +174,9 @@ export function RootNavigator() {
 
   React.useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setErrorHandler((error: any) => {
-      if (!error) { 
-        return;
-      }
-      console.log(error);
-      showToast(error.errorKey ?? error.message ?? error.code ?? 'Unknown error');
+    setErrorHandler((e: any) => {
+      console.error(e);
+      showToast(e);
     });
   }, [setErrorHandler, showToast]);
   

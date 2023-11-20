@@ -144,7 +144,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     }
     if (type === 'feedback') {
       await new MailService().sendMailFromTemplate({
-        from: 'user@readless.ai',
+        from: 'hello@readless.ai',
         subject: 'Feedback',
         text: [content, JSON.stringify(metadata)].join('\n\n'),
         to: 'feedback@readless.ai',

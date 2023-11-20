@@ -30,7 +30,8 @@ export type LoginRoutingParams = {
 
 export type SettingsRoutingParams = {
   // settings and pickers
-  settings: undefined;
+  generalSettings: undefined;
+  displayPreferences: undefined;
   notifications: undefined;
   colorSchemePicker: undefined;
   fontPicker: undefined;
@@ -87,6 +88,7 @@ export type GamesRoutingParams = {
 export type ProfileRoutingParams = SettingsRoutingParams & {
   default: undefined;
   account: undefined;
+  streaks: undefined;
 };
 
 export type RoutingParams = NavigationTabParams & LoginRoutingParams & NewsRoutingParams & GamesRoutingParams & ProfileRoutingParams;
@@ -97,9 +99,9 @@ export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RoutingParams> = {
       bookmarks: { path: 'bookmarks' },
       category: { path: 'category' },
       default: { path: '' },
+      generalSettings: { path: 'generalSettings' },
       publisher: { path: 'publisher' },
       search: { path: 'search' },
-      settings: { path: 'settings' },
       summary: { path: 'summary' },
     },
   },

@@ -3,8 +3,8 @@ import ms from 'ms';
 import { Op, QueryTypes } from 'sequelize';
 import { Table } from 'sequelize-typescript';
 
+import { OpenAIService } from '../../../../services';
 import { JWT } from '../../../../services/types';
-import { addDays } from '../../../../utils';
 import { AuthError } from '../../middleware';
 import {
   Alias,
@@ -29,7 +29,6 @@ import {
   ThirdParty,
   UserAttributes,
   UserCreationAttributes,
-  UserEvent,
   UserEventRaw,
   UserMetadata,
   UserStats,
@@ -114,6 +113,21 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       value: `${value}`,
       ...attr,
     });
+  }
+
+  public async generateUsername(): Promise<string> {
+    let validUsername = false;
+    let alias: Alias | null = null;
+    const chatService = new OpenAIService();
+    const reply = await chatService.send('Create a very very unique username between 8 and 16 characters long that contains only letters and numbers. And would never be guessed by anyone else.');
+    alias = await Alias.findOne({ where: { value: reply } });
+    validUsername = alias == null && reply.length > 8 && reply.length < 16 && Boolean(reply.match(/^[a-zA-Z0-9]+$/));
+    if (!validUsername) {
+      return await this.generateUsername();
+    } else {
+      await this.createAlias('username', reply, { verifiedAt: new Date() });
+    }
+    return reply;
   }
 
   // authorization methods
@@ -255,6 +269,27 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
 
   // profile
+
+  public static async getStreaks(): Promise<Streak[]> {
+    const replacements = {
+      limit: 10,
+      noUserId: true, 
+      userId: null, 
+    };
+    const response = (await User.store.query(QueryFactory.getQuery('streak'), {
+      nest: true,
+      replacements,
+      type: QueryTypes.SELECT,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as UserEventRaw[]).map(rawUserEventMap);
+    return await Promise.all(response.map(async (s) => ({
+      end: s.end,
+      length: s.length,
+      start: s.start,
+      user: (await (await User.findByPk(s.userId))?.findAlias('username'))?.value,
+      userId: s.userId,
+    })));
+  }
   
   public async getProfileBase(): Promise<Profile> {
     const profile: Profile = {};
@@ -272,46 +307,43 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return profile;
   }
   
-  public async calculateStreak(before?: Date, events?: UserEvent[]): Promise<Streak> {
-    let start = before;
-    let length = 0;
+  public async calculateStreak(longest = false): Promise<Streak> {
     const replacements = {
-      before: start ?? null,
+      limit: 10,
+      noUserId: false,
       userId: this.id,
     };
-    const response = events ?? (await User.store.query(QueryFactory.getQuery('streak'), {
+    const response = (await User.store.query(QueryFactory.getQuery('streak'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as UserEventRaw[]).map(rawUserEventMap);
-    let lastDate: Date;
-    for (let index = 0; index < response.length; index++) {
-      const row = response[index];
-      const isLast = index + 1 >= response.length;
-      const isNotSequential = lastDate && row.date.toLocaleDateString() !== addDays(lastDate, -1).toLocaleDateString();
-      if (before) {
-        if (isNotSequential) {
-          const next = await this.calculateStreak(lastDate, response.slice(index));
-          return next.length > length ? next : { length, start };
+    let streak: Streak = {
+      end: new Date(new Date().toLocaleDateString()),
+      length: 0, 
+      start: new Date(new Date().toLocaleDateString()), 
+      user: (await this.findAlias('username'))?.value,
+      userId: this.id,
+    };
+    if (!longest) {
+      streak = response.find(
+        (s) => {
+          return (s.end.getFullYear(), s.end.getDate()) === (streak.end.getFullYear(), streak.end.getDate());
         }
-      } else {
-        if (isNotSequential) {
-          return { length, start };
+      ) ?? streak;
+    } else {
+      for (const row of response) {
+        if (row.length > streak.length) {
+          streak = row;
         }
-      }
-      length++;
-      lastDate = row.date;
-      start = row.date;
-      if (isLast) {
-        return { length, start };
       }
     }
-    return { length, start };
+    return streak;
   }
   
   public async calculateLongestStreak() {
-    return this.calculateStreak(new Date());
+    return this.calculateStreak(true);
   }
 
   public async getStats(): Promise<UserStats> {

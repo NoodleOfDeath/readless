@@ -6,7 +6,7 @@ SELECT
   pub.id,
   pub.name,
   pub."displayName",
-  COALESCE(trans.translations ->> 'description'::text, pub.description) AS description,
+  COALESCE(trans.translations ->> 'description'::text, pub.description) description,
   trans.translations
 FROM
   publishers pub

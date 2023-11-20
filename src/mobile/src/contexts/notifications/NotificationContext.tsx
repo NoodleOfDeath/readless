@@ -60,10 +60,9 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
         }
         return (prev = newState);
       });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
+    } catch (e) {
       console.error(e);
-      showToast(e?.errorKey ?? e.message);
+      showToast(e);
     }
   }, [userData?.valid, fcmToken, getSubscriptionStatus, setStoredValue, showToast]);
 
@@ -103,10 +102,9 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
     try {
       setRedirectToSettings(redirectOnFail);
       Notifications.registerRemoteNotifications();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
+    } catch (e) {
       console.error(e);
-      showToast(e?.errorKey ?? e.message);
+      showToast(e);
     }
   }, [showToast]);
 
@@ -131,10 +129,9 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
             event: SubscriptionEvent.Default,
             uuid: newFcmToken,
           });
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-          console.error(error);
-          showToast(['fuck', error?.errorKey ?? error.message].join('\n'));
+        } catch (e) {
+          console.error(e);
+          showToast(e);
           return;
         }
       }),

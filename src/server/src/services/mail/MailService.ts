@@ -44,7 +44,10 @@ export class MailService extends BaseService {
     from = process.env.MAIL_REPLY_TO,
     ...opts
   }: SMTPTransport.Options) {
-    return await this.client.sendMail({ from, ...opts });
+    return await this.client.sendMail({
+      from, 
+      ...opts,
+    });
   }
 
   async sendMailFromTemplate<

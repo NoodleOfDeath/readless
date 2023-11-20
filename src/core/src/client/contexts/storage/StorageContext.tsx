@@ -347,7 +347,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     state.pushNotifications = await getStoredValue('pushNotifications');
     state.fcmToken = await getStoredValue('fcmToken');
     state.userData = await getStoredValue('userData');
-    state.userStats = await getStoredValue('userStats');
     
     // summary state
     state.bookmarkedSummaries = await getStoredValue('bookmarkedSummaries');

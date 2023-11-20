@@ -121,7 +121,7 @@ export type Storage = {
   lastRemoteSync?: Date;
   rotationLock?: OrientationType;  
   searchHistory?: string[];
-  viewedFeatures?: { [key: string]: DatedEvent<boolean> };
+  viewedFeatures?: { [key in ViewableFeature]?: DatedEvent<boolean> };
   hasReviewed?: boolean;
   lastRequestForReview: number;
   
@@ -320,6 +320,14 @@ export type SyncState = {
   hasSyncedBookmarks?: boolean;
 };
 
+export type ViewableFeature = 
+  'bookmarks' |
+  'publishers' | 
+  'categories' |
+  'push-notifications' |
+  'display-preferences' |
+  'app-review';
+
 export type StorageContextType = Storage & SyncState & {
   
   ready?: boolean;
@@ -352,8 +360,8 @@ export type StorageContextType = Storage & SyncState & {
   >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: StoredValueKey) => Promise<void>;
   hasPushEnabled: (key: string) => boolean;
   enablePush: (key: string, settings?: PushNotificationSettings) => Promise<void>;
-  hasViewedFeature: (...features: string[]) => boolean;
-  viewFeature: (feature: string, state?: boolean) => Promise<void>;
+  hasViewedFeature: (...features: ViewableFeature[]) => boolean;
+  viewFeature: (feature: ViewableFeature, state?: boolean) => Promise<void>;
   
   // summary convenience functions
   bookmarkSummary: (summary: PublicSummaryGroup) => Promise<void>;

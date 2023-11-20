@@ -1,7 +1,7 @@
 SELECT
   s.id,
   s.title,
-  JSON_BUILD_OBJECT('displayName', pub."displayName") AS publisher,
+  JSON_BUILD_OBJECT('displayName', pub."displayName") publisher,
   s."originalDate",
   s."createdAt",
   s."updatedAt",

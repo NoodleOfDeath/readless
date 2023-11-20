@@ -8,15 +8,18 @@ import { strings } from '~/locales';
 
 export const SettingsToggleWithIndicator = () => {
   const { navigation } = useNavigation();
-  const { hasViewedFeature } = React.useContext(StorageContext);
+  const { viewFeature, hasViewedFeature } = React.useContext(StorageContext);
   return (
     <SettingsToggle
       accessible
       accessibilityLabel={ strings.settings }
+      leftIcon="eye"
       indicator={ !hasViewedFeature(
-        'first-view-settings',
-        'first-view-notifs'
+        'display-preferences'
       ) }
-      onPress={ () => navigation?.navigate('settings') } />
+      onPress={ () => {
+        viewFeature('display-preferences');
+        navigation?.navigate('displayPreferences'); 
+      } } />
   );
 };

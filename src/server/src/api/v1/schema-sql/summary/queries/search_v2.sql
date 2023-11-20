@@ -1,6 +1,6 @@
 SELECT
-  "totalCount"::int AS "count",
-  JSON_BUILD_OBJECT('sentiment', "averageSentiment") AS metadata,
+  "totalCount"::int "count",
+  JSON_BUILD_OBJECT('sentiment', "averageSentiment") metadata,
   JSON_AGG(c.*) AS rows
 FROM (
   SELECT
@@ -13,19 +13,19 @@ FROM (
     s.summary,
     s.bullets,
     s."imageUrl",
-    JSON_BUILD_OBJECT('id', pub.id, 'name', pub.name, 'displayName', pub."displayName") AS publisher,
-    JSON_BUILD_OBJECT('id', cat.id, 'name', cat.name, 'displayName', cat."displayName", 'icon', cat.icon) AS category,
+    JSON_BUILD_OBJECT('id', pub.id, 'name', pub.name, 'displayName', pub."displayName") publisher,
+    JSON_BUILD_OBJECT('id', cat.id, 'name', cat.name, 'displayName', cat."displayName", 'icon', cat.icon) category,
     ss.sentiment,
-    ss.sentiments::jsonb AS sentiments,
-    sm.media::jsonb AS media,
-    st.translations::jsonb AS translations,
-    COALESCE(JSON_AGG(DISTINCT sr."siblingId") FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::json) AS siblings,
+    ss.sentiments::jsonb sentiments,
+    sm.media::jsonb media,
+    st.translations::jsonb translations,
+    COALESCE(JSON_AGG(DISTINCT sr."siblingId") FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::json) siblings,
     "averageSentiment",
     "totalCount"
   FROM (
     SELECT
       *,
-      AVG(sentiment) OVER () AS "averageSentiment",
+      AVG(sentiment) OVER () "averageSentiment",
       COUNT(id) OVER () AS "totalCount"
     FROM (
       SELECT

@@ -1,5 +1,5 @@
 SELECT
-  "totalCount"::int AS "count",
+  "totalCount"::int "count",
   JSON_AGG(c.*) AS rows
 FROM (
   SELECT
@@ -11,14 +11,14 @@ FROM (
     s.url,
     s."originalDate",
     s."imageUrl",
-    JSON_BUILD_OBJECT('id', pub.id, 'name', pub.name, 'displayName', pub."displayName") AS publisher,
-    JSON_BUILD_OBJECT('id', cat.id, 'name', cat.name, 'displayName', cat."displayName", 'icon', cat.icon) AS category,
+    JSON_BUILD_OBJECT('id', pub.id, 'name', pub.name, 'displayName', pub."displayName") publisher,
+    JSON_BUILD_OBJECT('id', cat.id, 'name', cat.name, 'displayName', cat."displayName", 'icon', cat.icon) category,
     ss.sentiment,
-    ss.sentiments::jsonb AS sentiments,
-    sm.media::jsonb AS media,
-    st.translations::jsonb AS translations,
+    ss.sentiments::jsonb sentiments,
+    sm.media::jsonb media,
+    st.translations::jsonb translations,
     "siblingCount",
-    COALESCE(JSON_AGG(DISTINCT sr."siblingId") FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::json) AS siblings,
+    COALESCE(JSON_AGG(DISTINCT sr."siblingId") FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::json) siblings,
     "totalCount"
   FROM (
     SELECT

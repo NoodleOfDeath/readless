@@ -60,6 +60,7 @@
 		<string>threads</string>
 		<string>twitter</string>
 		<string>whatsapp</string>
+		<string>itms-app</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

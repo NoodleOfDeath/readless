@@ -9,13 +9,14 @@ import { strings } from '~/locales';
 import {
   CategoryPickerScreen,
   ColorSchemePickerScreen,
+  DisplayPreferencesScreen,
   FontPickerScreen,
+  GeneralSettingsScreen,
   LegalScreen,
   NotificationSettingsScreen,
   PublisherPickerScreen,
   ReadingFormatPickerScreen,
   RoutingParams,
-  SettingsScreen,
   ShortPressFormatPickerScreen,
   TriggerWordPickerScreen,
 } from '~/screens';
@@ -28,12 +29,21 @@ export const SETTINGS_STACK: RouteConfig<
   EventMapBase
 >[] = [
   {
-    component: SettingsScreen, 
-    name: 'settings', 
+    component: GeneralSettingsScreen, 
+    name: 'generalSettings', 
     options: {
       headerBackTitle: '',
       headerRight: () => null, 
       headerTitle: strings.settings, 
+    },
+  },
+  {
+    component: DisplayPreferencesScreen, 
+    name: 'displayPreferences', 
+    options: {
+      headerBackTitle: '',
+      headerRight: () => null, 
+      headerTitle: strings.displayPreferences, 
     },
   },
   {

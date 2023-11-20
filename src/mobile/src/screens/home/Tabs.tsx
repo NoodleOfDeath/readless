@@ -1,10 +1,8 @@
 import React from 'react';
 
 import { useFocusEffect } from '@react-navigation/native';
-import pluralize from 'pluralize';
 
 import {
-  Button,
   Divider,
   RecapList,
   SummaryList,
@@ -12,37 +10,8 @@ import {
   View,
 } from '~/components';
 import { StorageContext } from '~/contexts';
-import { useShare, useTheme } from '~/hooks';
 import { strings } from '~/locales';
-import {  ScreenComponent } from '~/screens';
-
-export function StreakCounter() {
-  const theme = useTheme();
-  const { shareStandard, shareSocial } = useShare({});
-  const { currentStreak, longestStreak } = React.useContext(StorageContext);
-  return (
-    <View
-      p={ 6 }
-      m={ 6 }
-      flexRow
-      bg={ theme.colors.headerBackground }
-      beveled>
-      <Button 
-        body2
-        leftIcon={ 'flash' }
-        iconSize={ 24 }
-        flex={ 1 }>
-        { `${currentStreak?.length ?? 1} ${strings.day} ${strings.streak}`}
-      </Button>
-      <Button 
-        iconSize={ 24 }
-        flex={ 1 }>
-        <Text body2 flex={ 2 } lineHeight={ 24 }>{`${strings.longestStreak}:`}</Text>
-        <Text body2 flex={ 1 } lineHeight={ 24 }>{ `${longestStreak?.length ?? 1} ${pluralize(strings.day, longestStreak?.length ?? 1)}`}</Text>
-      </Button>
-    </View>
-  );
-}
+import {  ScreenComponent, StreakCounter } from '~/screens';
 
 export function OldNewsTab({
   route: _route,
@@ -63,7 +32,7 @@ export function OldNewsTab({
 
 export function YourNewsTab({ 
   route: _route,
-  navigation: _navigation,
+  navigation,
 }: ScreenComponent<'yourNews'>) {
   const { api: { getSummaries }, followFilter } = React.useContext(StorageContext);
   const [filter, setFilter] = React.useState(followFilter);
@@ -77,13 +46,19 @@ export function YourNewsTab({
       landscapeEnabled
       fetch={ getSummaries }
       filter={ filter }
-      headerComponent={ <StreakCounter /> } />
+      headerComponent={ (
+        <StreakCounter
+          disclosureIndicator
+          m={ 12 }
+          mt={ 0 }
+          onPress={ () => navigation?.getParent()?.navigate('streaks') } />
+      ) } />
   );
 }
 
 export function TopStoriesTab({ 
   route: _route,
-  navigation: _navigation,
+  navigation,
 }: ScreenComponent<'topStories'>) {
   const { api: { getTopStories }, followFilter } = React.useContext(StorageContext);
   return ( 
@@ -93,7 +68,13 @@ export function TopStoriesTab({
       landscapeEnabled
       fetch={ getTopStories }
       interval='1d'
-      headerComponent={ !followFilter ? <StreakCounter /> : undefined } />
+      headerComponent={ !followFilter ? (
+        <StreakCounter 
+          disclosureIndicator
+          m={ 12 }
+          mt={ 0 }
+          onPress={ () => navigation?.getParent()?.navigate('streaks') } />
+      ) : undefined } />
   );
 }
 

@@ -1,4 +1,5 @@
-export * from './SettingsScreen';
+export * from './GeneralSettingsScreen';
+export * from './DisplayPreferencesScreen';
 
 export * from './CategoryPickerScreen';
 export * from './PublisherPickerScreen';

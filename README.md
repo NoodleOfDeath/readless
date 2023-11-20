@@ -4,20 +4,22 @@
 
 [![Web Client CI](https://github.com/NoodleOfDeath/readless/actions/workflows/web-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/web-ci.yaml)
 [![Mobile Client CI](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/mobile-ci.yaml)
-
 [![API CI](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/api-ci.yaml)
 [![Scheduler CI](https://github.com/NoodleOfDeath/readless/actions/workflows/scheduler-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/scheduler-ci.yaml)
 [![Worker CI](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml/badge.svg)](https://github.com/NoodleOfDeath/readless/actions/workflows/worker-ci.yaml)
 
+[![JIRA](https://img.shields.io/badge/JIRA-Read_Less-darkblue
+)](https://readless.atlassian.net/jira/software/projects/RL/boards/1)
+[![DigitalOcean](https://img.shields.io/badge/DigitalOcean-Read_Less-blue
+)](https://cloud.digitalocean.com/projects/ef71d72f-7fef-4646-b64e-a1b5a5153b29/resources?i=2048ee)
+
+[![https://dev.readless.ai](https://img.shields.io/badge/Dev/Staging-Web-white
+)](https://dev.readless.ai)
+[![https://readless.ai](https://img.shields.io/badge/Production-Web-white)](https://readless.ai)
+[![https://apps.apple.com/us/app/read-less-news/id6447275859](https://img.shields.io/badge/Production-iOS-white)](https://apps.apple.com/us/app/read-less-news/id6447275859)
+[![https://play.google.com/store/apps/details?id=ai.readless.ReadLess](https://img.shields.io/badge/Production-Android-white)](https://apps.apple.com/us/app/read-less-news/id6447275859)
+
 Read Less is the model for a fully automated news aggregation pipeline that is powered by generative AI!
-
-- Dev/Staging (web): [https://dev.readless.ai](https://dev.readless.ai)
-  - user: `dev`, pass: `dev`
-- Production (web): [https://readless.ai](https://readless.ai)
-- Production (ios): [https://apps.apple.com/us/app/read-less-news/id6447275859](https://apps.apple.com/us/app/read-less-news/id6447275859)
-- Production (android): [https://play.google.com/store/apps/details?id=ai.readless.ReadLess](https://play.google.com/store/apps/details?id=ai.readless.ReadLess)
-
-- Child Project [Search Less](https://github.com/noodleofdeath/searchless)
 
 ## Table of Contents <!-- omit in toc -->
 
@@ -35,9 +37,10 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
   - [v1.12 - Recaps](#v112---recaps)
   - [v1.13 - Recap Localization](#v113---recap-localization)
   - [v1.14 - Notifications/Newletters](#v114---notificationsnewletters)
-  - [v1.15 - Bringing Back Accounts](#v115---bringing-back-accounts)
-  - [v1.16 - Home Screen Widget](#v116---home-screen-widget)
-  - [v1.17 - Local News and On Demand Jobs](#v117---local-news-and-on-demand-jobs)
+  - [v1.15/v1.16 - Home Screen Widget](#v115v116---home-screen-widget)
+  - [v1.17 - Bringing Back Accounts](#v117---bringing-back-accounts)
+  - [v1.18 - Word Games and Achievements](#v118---word-games-and-achievements)
+  - [v1.19 - Local News and On Demand Jobs](#v119---local-news-and-on-demand-jobs)
   - [v27.0 - Enhanced Discover Page](#v270---enhanced-discover-page)
   - [v27.1 - Cross-Comparative Article Generation](#v271---cross-comparative-article-generation)
   - [v69.69 - Shit is getting realllllll](#v6969---shit-is-getting-realllllll)
@@ -166,32 +169,46 @@ Read Less is the model for a fully automated news aggregation pipeline that is p
 
 ### v1.14 - Notifications/Newletters
 
-- [ ] App Store artwork makeover
-- [ ] Add a dislike system for the future "smart" algorithm?
+- [x] App Store artwork makeover
+- [ ] ~Add a dislike system for the future "smart" algorithm?~
 - [x] Backend subscription plumbing to emails/sms/push notifications (50% done)
-- [ ] Add subscription flow to mobile UI
-- [ ] Daily (eventually customizable) newsletters with headlines
-- [ ] Subscription to topics, threads, and/or keywords
-- [ ] Push notifications with Firebase
-- [ ] Replace trigger words with actual negative filters
-
-### v1.15 - Bringing Back Accounts
-
-- [ ] Improve backend plumbing to offload much of the client data onto the backend such as followed preferences?
-- [ ] 2-factor authentication with text and/or authenticator applications
-- [ ] Pros of accounts?
-  - [ ] Account recovery
-  - [ ] Offload preferences on backend
-  - [ ] Backend can employ workers to better provide service
-  - [ ] Do accounts really need emails? Only for recovery?
-  - [ ] Could provide user with a private key instead for recovery?
+- [x] Add subscription flow to mobile UI
+- [ ] ~Daily (eventually customizable) newsletters with headlines~
+- [ ] ~Subscription to topics, threads, and/or keywords~
+- [x] Push notifications with Firebase
+- [ ] ~Replace trigger words with actual negative filters~
   
-### v1.16 - Home Screen Widget
+### v1.15/v1.16 - Home Screen Widget
 
-- [ ] Home screen widget with a lot of customizability
-- [ ] Add variations to summaries
+- [x] Home screen widget for iOS
+- [x] Home screen widget for Android 
+- [ ] ~Add variations to summaries~
 
-### v1.17 - Local News and On Demand Jobs
+### v1.17 - Bringing Back Accounts
+
+- [x] Improve backend plumbing to offload much of the client data onto the backend such as followed preferences?
+- [ ] ~2-factor authentication with text and/or authenticator applications~
+- [ ] Pros of accounts?
+  - [x] Account recovery
+  - [x] Offload preferences on backend
+  - [x] Backend can employ workers to better provide service
+  - [x] Syncing of preferences across devices
+  - [ ] ~Do accounts really need emails? Only for recovery?~
+  - [ ] ~Could provide user with a private key instead for recovery?~
+- [x] Anonynmous accounts
+- [x] Streaks
+- [ ] Sharing of streaks
+- [ ] Notification of lost streaks
+
+### v1.18 - Word Games and Achievements
+
+- [ ] Word games
+- [ ] Achievements
+- [ ] Leaderboards
+- [ ] Sharing of achievements 
+- [ ] Server side syncing of user data?
+
+### v1.19 - Local News and On Demand Jobs
 
 - [ ] Provide local news (needs some kind of optimization for scaling)
 - [ ] Expose pipeline for users to upload text/documents to be processed
