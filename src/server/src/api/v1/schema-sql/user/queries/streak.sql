@@ -1,7 +1,7 @@
 SELECT 
   "userId", 
   DATE("createdAt") AS date
-FROM queries q
+FROM requests q
 WHERE
   "userId" = :userId
   AND (:before IS null OR "createdAt" <= :before)
