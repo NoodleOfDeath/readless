@@ -113,7 +113,7 @@ export function LongestStreakLeaderboardScreen({ route }: ScreenComponent<'leade
           itemsCenter
           bg={ theme.colors.headerBackground }>
           <Text>{strings.yourRank}</Text>
-          <Text h3>{`${strings.rank} #${metrics?.userRankings?.streaks ?? '???'}`}</Text>
+          <Text h3>{`${strings.rank} #${(metrics?.userRankings?.streaks ?? Number.MAX_SAFE_INTEGER) > 100 ? '100+' : (metrics?.userRankings?.streaks ?? '???')}`}</Text>
         </View>
         <MetricCounter horizontal longestStreak />
         <View flexRow gap={ 6 } justifyCenter>
@@ -192,7 +192,7 @@ export function InteractionCountLeaderboardScreen({ route }: ScreenComponent<'le
           itemsCenter
           bg={ theme.colors.headerBackground }>
           <Text>{strings.yourRank}</Text>
-          <Text h3>{`${strings.rank} #${metrics.userRankings?.interactionCounts[interactionType] ?? '???'}`}</Text>
+          <Text h3>{`${strings.rank} #${(metrics.userRankings?.interactionCounts[interactionType] ?? Number.MAX_SAFE_INTEGER) > 100 ? '100+' : (metrics.userRankings?.interactionCounts[interactionType] ?? '???')}`}</Text>
         </View>
         <MetricCounter horizontal interactionType={ interactionType } />
         <View flexRow gap={ 6 } justifyCenter>
