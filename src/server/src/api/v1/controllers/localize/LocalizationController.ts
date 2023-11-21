@@ -1,10 +1,6 @@
-import fs from 'fs';
-
 import { Request as ExpressRequest } from 'express';
 import {
   Body,
-  Get,
-  Path,
   Post,
   Request,
   Response,
@@ -15,101 +11,29 @@ import {
 } from 'tsoa';
 
 import { BulkResponse, LocalizeRequest } from '../';
-import { 
-  GoogleService,
-  IapService,
-  PurchaseRequest,
-  S3Service,
-} from '../../../../services';
+import { GoogleService } from '../../../../services';
 import { AuthError, InternalError } from '../../middleware';
 import {
-  FindAndCountOptions,
-  Message,
-  MessageAttributes,
   PublicSummaryAttributes,
   PublicTranslationAttributes,
-  PublicVoucherAttributes,
   Recap,
   RecapAttributes,
   RecapTranslation,
-  Service,
-  ServiceAttributes,
-  ServiceStatus,
-  ServiceStatusAttributes,
   Summary,
-  SummaryMedia,
   SummaryTranslation,
 } from '../../schema';
 
-@Route('/v1/service')
-@Tags('Service')
+@Route('/v1/localize')
+@Tags('Localization')
 @Security('jwt')
 @SuccessResponse(200, 'OK')
 @SuccessResponse(201, 'Created')
 @SuccessResponse(204, 'No Content')
 @Response<AuthError>(401, 'Unauthorized')
 @Response<InternalError>(500, 'Internal Error')
-export class ServiceController {
+export class LocalizationController {
   
-  @Get('/')
-  public static async getServices(): Promise<BulkResponse<ServiceAttributes>> {
-    const options: FindAndCountOptions<Service> = { order: [['name', 'ASC']] };
-    const services = await Service.scope('public').findAndCountAll(options);
-    return services;
-  }
-
-  @Get('/release/:service')
-  public static async getReleaseInfo(
-    @Request() _req: ExpressRequest,
-    @Path() service: string
-  ): Promise<BulkResponse<ServiceStatusAttributes>> {
-    return await ServiceStatus.findAndCountAll({
-      include: {
-        model: Service,
-        required: true,
-        where: { name: service },
-      }, 
-      order: [['createdAt', 'DESC']],
-    });
-  }
-
-  @Get('/messages')
-  public static async getSystemMessages(): Promise<BulkResponse<MessageAttributes>> {
-    const options: FindAndCountOptions<Message> = { order: [['createdAt', 'DESC']] };
-    const messages = await Message.scope('public').findAndCountAll(options);
-    return messages;
-  }
-  
-  @Get('/stream/s/:id')
-  public static async stream(
-    @Request() req: ExpressRequest,
-    @Path() id: number
-  ) {
-    // not paywall locked... yet
-    const media = await SummaryMedia.findOne(({
-      where: {
-        key: 'tts',
-        parentId: id,
-        type: 'audio',
-      },
-    }));
-    if (!media || !media.path) {
-      req.res.status(404).json({ message: 'Not Found' });
-      return;
-    }
-    try {
-      const stream = fs.createReadStream(await S3Service.getObject({ Key: media.path }));
-      req.res.setHeader('content-type', 'audio/mpeg');
-      stream.pipe(req.res);
-      stream.on('end', () => {
-        req.res.status(200).end();
-      });
-    } catch (e) {
-      req.res.status(500).end();
-    }
-  }
-  
-  @Post('/localize')
+  @Post('/')
   public static async localize(
     @Request() req: ExpressRequest,
     @Body() body: LocalizeRequest
@@ -169,14 +93,6 @@ export class ServiceController {
     } else {
       throw new InternalError('Invalid resource type');
     }
-  }
-
-  @Post('iap')
-  public static async processPurchase(
-    @Request() req: ExpressRequest,
-    @Body() body: PurchaseRequest
-  ): Promise<PublicVoucherAttributes> {
-    return await IapService.processPurchase(body);
   }
   
 }

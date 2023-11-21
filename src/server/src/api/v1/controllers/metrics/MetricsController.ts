@@ -9,7 +9,9 @@ import {
   Tags,
 } from 'tsoa';
 
+import { MetricsResponse } from './types';
 import { AuthError, InternalError } from '../../middleware';
+import { User } from '../../schema';
 
 export type StatsRequest = {
   filter?: string;
@@ -20,21 +22,23 @@ export type StatsResponse = {
   count?: number;
 };
 
-@Route('/v1/stats')
-@Tags('Stats')
+@Route('/v1/metrics')
+@Tags('Metrics')
 @Security('jwt')
 @SuccessResponse(200, 'OK')
 @SuccessResponse(201, 'Created')
 @SuccessResponse(204, 'No Content')
 @Response<AuthError>(401, 'Unauthorized')
 @Response<InternalError>(500, 'Internal Error')
-export class StatsController {
-  
+export class MetricsController {
+
   @Get('/')
-  public static async getStats(
-    @Request() _req: ExpressRequest
-  ): Promise<StatsResponse> {
-    return { count: 0 };
+  @Security('jwt', ['standard:read'])
+  public static async getMetrics(
+    @Request() req: ExpressRequest
+  ): Promise<MetricsResponse> {
+    const user = await User.from({ jwt: req.body.jwt });
+    return await User.getMetrics(user);
   }
   
 }

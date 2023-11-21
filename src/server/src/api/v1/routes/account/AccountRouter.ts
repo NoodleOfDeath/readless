@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, oneOf } from 'express-validator';
 
-import { AccountController } from '../../controllers';
+import { AccountController, MetricsController } from '../../controllers';
 import {
   authMiddleware,
   internalErrorHandler,
@@ -210,26 +210,13 @@ router.post(
   }
 );
 
+// legacy v1.17.4
 router.get(
   '/metrics',
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.getMetrics(req);
-      return res.status(200).json(response);
-    } catch (e) {
-      return internalErrorHandler(res, e);
-    }
-  }
-);
-
-router.get(
-  '/metrics',
-  rateLimitMiddleware('15 per 3m'),
-  validationMiddleware,
-  async (req, res) => {
-    try {
-      const response = await AccountController.getMetrics(req);
+      const response = await MetricsController.getMetrics(req);
       return res.status(200).json(response);
     } catch (e) {
       return internalErrorHandler(res, e);

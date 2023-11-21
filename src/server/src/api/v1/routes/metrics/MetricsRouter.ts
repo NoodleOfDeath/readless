@@ -1,16 +1,21 @@
 import { Router } from 'express';
 
-import { StatsController } from '../../controllers';
-import { internalErrorHandler, rateLimitMiddleware } from '../../middleware';
+import { MetricsController } from '../../controllers';
+import {
+  internalErrorHandler,
+  rateLimitMiddleware,
+  validationMiddleware,
+} from '../../middleware';
 
 const router = Router();
 
 router.get(
   '/',
   rateLimitMiddleware('1 per 2s'),
+  validationMiddleware,
   async (req, res) => {
     try {
-      const response = await StatsController.getStats(req);
+      const response = await MetricsController.getMetrics(req);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);

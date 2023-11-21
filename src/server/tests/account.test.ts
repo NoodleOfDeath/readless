@@ -41,4 +41,15 @@ describe('tests the user instance methods', () => {
     }
   });
 
+  test('stats', async () => {
+    await DBService.prepare();
+    const user = await User.from({ email: 'thommy.morgan@gmail.com' });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const stats = await user.getStats();
+    console.log(stats);
+    expect(stats).toBeDefined();
+  });
+
 });

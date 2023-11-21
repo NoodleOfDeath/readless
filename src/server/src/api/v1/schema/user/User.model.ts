@@ -5,6 +5,7 @@ import { Table } from 'sequelize-typescript';
 
 import { OpenAIService } from '../../../../services';
 import { JWT } from '../../../../services/types';
+import { MetricsResponse } from '../../controllers/metrics/types';
 import { AuthError } from '../../middleware';
 import {
   Alias,
@@ -32,7 +33,6 @@ import {
   UserEventRaw,
   UserMetadata,
   UserStats,
-  rawUserEventMap,
 } from '../../schema';
 import { BaseModel } from '../base';
 
@@ -270,25 +270,28 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   // profile
 
-  public static async getStreaks(): Promise<Streak[]> {
+  public static async getMetrics(_user?: User): Promise<MetricsResponse> {
+    return { streaks: await User.getStreaks() };
+  }
+
+  public static async getStreaks(limit: 'ALL' | number = 10): Promise<Streak[]> {
     const replacements = {
-      limit: 10,
-      noUserId: true, 
+      limit: limit === 'ALL' ? null : limit,
       userId: null, 
     };
-    const response = (await User.store.query(QueryFactory.getQuery('streak'), {
+    const response: Streak[] = (await User.store.query(QueryFactory.getQuery('streak'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }) as UserEventRaw[]).map(rawUserEventMap);
-    return await Promise.all(response.map(async (s) => ({
-      end: s.end,
-      length: s.length,
-      start: s.start,
-      user: (await (await User.findByPk(s.userId))?.findAlias('username'))?.value,
-      userId: s.userId,
-    })));
+    }) as UserEventRaw[]).map((e) => ({ 
+      end: new Date(e.max),
+      length: e.length,
+      start: new Date(e.min), 
+      userId: e.userId,
+      ...e,
+    }));
+    return response;
   }
   
   public async getProfileBase(): Promise<Profile> {
@@ -308,17 +311,6 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
   
   public async calculateStreak(longest = false): Promise<Streak> {
-    const replacements = {
-      limit: 10,
-      noUserId: false,
-      userId: this.id,
-    };
-    const response = (await User.store.query(QueryFactory.getQuery('streak'), {
-      nest: true,
-      replacements,
-      type: QueryTypes.SELECT,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }) as UserEventRaw[]).map(rawUserEventMap);
     let streak: Streak = {
       end: new Date(new Date().toLocaleDateString()),
       length: 0, 
@@ -326,17 +318,17 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       user: (await this.findAlias('username'))?.value,
       userId: this.id,
     };
+    const streaks = await User.getStreaks('ALL');
     if (!longest) {
-      streak = response.find(
+      return streaks.find(
         (s) => {
           return (s.end.getFullYear(), s.end.getDate()) === (streak.end.getFullYear(), streak.end.getDate());
         }
       ) ?? streak;
-    } else {
-      for (const row of response) {
-        if (row.length > streak.length) {
-          streak = row;
-        }
+    }
+    for (const row of streaks) {
+      if (row.length > streak.length) {
+        streak = row;
       }
     }
     return streak;
@@ -356,7 +348,9 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return {
       lastSeen,
       longestStreak,
+      memberSince: this.createdAt,
       streak,
+      summariesRead: (await SummaryInteraction.aggregate('targetId', 'DISTINCT', { where: { type: 'read', userId: this.id } })),
     };
   }
   

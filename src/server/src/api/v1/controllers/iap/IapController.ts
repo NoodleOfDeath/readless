@@ -1,3 +1,4 @@
+import { Request as ExpressRequest } from 'express';
 import {
   Body,
   Post,
@@ -23,9 +24,9 @@ import { PublicIapVoucherAttributes } from '../../schema';
 @Response<InternalError>(500, 'Internal Error')
 export class IapController {
   
-  @Post('iap')
+  @Post('/')
   public static async processPurchase(
-    @Request() req,
+    @Request() _req: ExpressRequest,
     @Body() body: PurchaseRequest
   ): Promise<PublicIapVoucherAttributes> {
     return await IapService.processPurchase(body);
