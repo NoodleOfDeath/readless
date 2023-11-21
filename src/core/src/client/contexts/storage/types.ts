@@ -118,7 +118,7 @@ export type StorageEventName = Activity | ResourceActivity | `${ResourceActivity
 export type Storage = {
   
   // system state
-  lastRemoteSync?: Date;
+  lastRemoteSync?: number;
   rotationLock?: OrientationType;  
   searchHistory?: string[];
   viewedFeatures?: { [key in ViewableFeature]?: DatedEvent<boolean> };
@@ -183,6 +183,7 @@ export const STORAGE_TYPES: { [key in keyof Storage]: 'boolean' | 'number' | 'st
   fontFamily: 'string',
   fontSizeOffset: 'number',
   hasReviewed: 'boolean',
+  lastRemoteSync: 'number',
   lastRequestForReview: 'number',
   letterSpacing: 'number',
   lineHeightMultiplier: 'number',
@@ -307,6 +308,10 @@ export type Methods = {
   getSummary: (id: number) => ReturnType<typeof API['getSummaries']>;
 };
 
+export type SyncOptions = {
+  loadBookmarks?: boolean;
+};
+
 export type SyncState = {
   hasLoadedLocalState?: boolean;
   
@@ -389,7 +394,7 @@ export type StorageContextType = Storage & SyncState & {
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
-  syncWithRemotePrefs: (pref?: ProfileResponse) => Promise<void>;
+  syncWithRemote: (pref?: ProfileResponse, opts?: SyncOptions) => Promise<void>;
   api: Methods;
   setErrorHandler: React.Dispatch<React.SetStateAction<(error: Error | AuthError) => void>>;
 };
@@ -427,7 +432,7 @@ export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
   setPublishers: () => Promise.resolve(),
   setStoredValue: () => Promise.resolve(),
   storeTranslations: () => Promise.resolve(undefined),
-  syncWithRemotePrefs: () => Promise.resolve(),
+  syncWithRemote: () => Promise.resolve(),
   unreadBookmarkCount: 0,
   viewFeature: () => Promise.resolve(),
   withHeaders: (fn) => (...args) => fn(...args, {}),

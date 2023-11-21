@@ -37,7 +37,7 @@ export function AccountScreen({
     api: { logout },
     userData, 
     setStoredValue,
-    syncWithRemotePrefs,
+    syncWithRemote,
   } = React.useContext(StorageContext);
   const { showToast } = React.useContext(ToastContext);
   
@@ -53,12 +53,12 @@ export function AccountScreen({
         return;
       }
       setHasSynced(true);
-      await syncWithRemotePrefs();
+      await syncWithRemote();
     } catch (e) {
       console.error(e);
       showToast(e);
     }
-  }, [hasSynced, syncWithRemotePrefs, showToast]);
+  }, [hasSynced, syncWithRemote, showToast]);
 
   const signOut = React.useCallback(async () => {
     await logout({});

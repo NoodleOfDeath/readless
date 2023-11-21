@@ -10,9 +10,11 @@ import {
   STORAGE_TYPES,
   SYNCABLE_SETTINGS,
   Storage,
+  SyncOptions,
   SyncState,
   SyncableIoIn,
   SyncableIoOut,
+  ViewableFeature,
 } from './types';
 
 import {
@@ -97,66 +99,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   }, [storage.excludedPublishers, storage.excludedCategories]);
     
   // system functions
-  
-  const getStoredValue = async <K extends keyof Storage>(key: K): Promise<Storage[K] | undefined> => {
-
-    const value = await getItem(key);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const serialize = (key: K, value: Storage[K], type: 'boolean' | 'number' | 'string' | 'array' | 'object') => {
-      const isCorrectType = type === 'array' ? Array.isArray(value) : typeof value === type;
-      if (!isCorrectType) {
-        setStoredValue(key, undefined);
-        return undefined;
-      }
-      return value;
-    };
-
-    if (value) {
-      try {
-        if (key === 'userData') {
-          return new UserData(JSON.parse(value)) as Storage[K];
-        }
-        return serialize(key, JSON.parse(value), STORAGE_TYPES[key]);
-      } catch (e) {
-        return undefined;
-      }
-    }
-    return undefined;
-  };
-
-  const setStoredValue = async <K extends keyof Storage, V extends Storage[K] | ((value?: Storage[K]) => (Storage[K] | undefined))>(key: K, value?: V, emit = true) => {
-    const newValue = (value instanceof Function ? value(await getStoredValue(key)) : value) as Storage[K];
-    setStorage((prev) => {
-      const state = { ...prev };
-      if (newValue == null) {
-        delete state[key];
-        removeItem(key);
-      } else {
-        state[key] = newValue;
-        setItem(key, JSON.stringify(newValue));
-      }
-      if (emit) {
-        if (SYNCABLE_SETTINGS.includes(key)) {
-          updateRemotePref(key, newValue);
-        }
-        emitStorageEvent('set-preference', key);
-      }
-      return state;
-    });
-  };
-  
-  const storeTranslations = async <
-    Target extends RecapAttributes | PublicSummaryGroup, 
-    StoredValueKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never,
-    State extends NonNullable<StoredValueKey extends 'recapTranslations' ? typeof storage.recapTranslations : StoredValueKey extends 'summaryTranslations' ? typeof storage.summaryTranslations : never>,
-  >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: StoredValueKey) => {
-    await setStoredValue(prefKey, (prev) => {
-      const state = { ...prev } as State;
-      state[item.id] = translations;
-      return state;
-    });
-  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const withHeaders = React.useCallback(<T extends any[], R>(fn: FunctionWithRequestParams<T, R>): ((...args: T) => R) => {
@@ -229,6 +171,81 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     }
   }, [api, storage, handleBadRequest]);
   
+  const getStoredValue = React.useCallback(async <K extends keyof Storage>(key: K): Promise<Storage[K] | undefined> => {
+
+    const value = await getItem(key);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const serialize = (key: K, value: Storage[K], type: 'boolean' | 'number' | 'string' | 'array' | 'object') => {
+      const isCorrectType = type === 'array' ? Array.isArray(value) : typeof value === type;
+      if (!isCorrectType) {
+        setStorage((prev) => {
+          const state = { ...prev };
+          delete state[key];
+          removeItem(key);
+          return state;
+        });
+        return undefined;
+      }
+      return value;
+    };
+
+    if (value) {
+      try {
+        if (key === 'userData') {
+          return new UserData(JSON.parse(value)) as Storage[K];
+        }
+        return serialize(key, JSON.parse(value), STORAGE_TYPES[key]);
+      } catch (e) {
+        return undefined;
+      }
+    }
+    return undefined;
+  }, [getItem, removeItem]);
+
+  const setStoredValue = React.useCallback(async <K extends keyof Storage, V extends Storage[K] | ((value?: Storage[K]) => (Storage[K] | undefined))>(key: K, value?: V, emit = true) => {
+    const newValue = (value instanceof Function ? value(await getStoredValue(key)) : value) as Storage[K];
+    setStorage((prev) => {
+      const state = { ...prev };
+      if (newValue == null) {
+        delete state[key];
+        removeItem(key);
+      } else {
+        state[key] = newValue;
+        setItem(key, JSON.stringify(newValue));
+      }
+      if (emit) {
+        if (SYNCABLE_SETTINGS.includes(key)) {
+          updateRemotePref(key, newValue);
+        }
+        emitStorageEvent('set-preference', key);
+      }
+      state.lastLocalSync = Date.now();
+      return state;
+    });
+  }, [emitStorageEvent, getStoredValue, removeItem, setItem, updateRemotePref]);
+  
+  const forcePushLocalStateToRemote = React.useCallback(async () => {
+    for (const key of SYNCABLE_SETTINGS) {
+      const value = storage[key];
+      if (value) {
+        await updateRemotePref(key, value);
+      }
+    }
+  }, [storage, updateRemotePref]);
+  
+  const storeTranslations = React.useCallback(async <
+    Target extends RecapAttributes | PublicSummaryGroup, 
+    StoredValueKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never,
+    State extends NonNullable<StoredValueKey extends 'recapTranslations' ? Storage['recapTranslations'] : StoredValueKey extends 'summaryTranslations' ? Storage['summaryTranslations'] : never>,
+  >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: StoredValueKey) => {
+    await setStoredValue(prefKey, (prev) => {
+      const state = { ...prev } as State;
+      state[item.id] = translations;
+      return state;
+    });
+  }, [setStoredValue]);
+  
   const loadBookmarks = React.useCallback(async (ids: number[]) => {
     setSyncState((prev) => ({ 
       ...prev, 
@@ -262,7 +279,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api]);
 
-  const syncWithRemotePrefs = React.useCallback(async (prefs?: ProfileResponse) => {
+  const syncWithRemote = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
     if (!syncState.hasLoadedLocalState) {
       return;
     }
@@ -294,15 +311,39 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     if (!data?.profile?.preferences) {
       return handleBadRequest();
     }
-    const { profile: { preferences } } = data;
+    const {
+      profile: {
+        preferences, stats, updatedAt, 
+      }, 
+    } = data;
+    const remoteUpdatedAt = updatedAt && !Number.isNaN(new Date(updatedAt)) ? new Date(updatedAt).valueOf() : 0;
+    if (storage.lastRemoteSync && remoteUpdatedAt < storage.lastRemoteSync) {
+      console.log('remote data is stale');
+      setSyncState((prev) => ({ 
+        ...prev, 
+        hasSyncedWithRemote: true,
+        isSyncingWithRemote: false,
+      }));
+      return;
+    }
+    if (storage.lastLocalSync && remoteUpdatedAt < storage.lastLocalSync) {
+      console.log('local data is stale and needs update');
+      await forcePushLocalStateToRemote();
+      setSyncState((prev) => ({ 
+        ...prev, 
+        hasSyncedWithRemote: true,
+        isSyncingWithRemote: false,
+      }));
+      return;
+    }
     if (!preferences) {
       return handleBadRequest();
     }
-    console.log('syncing prefs');
+    console.log('syncing prefs and stats');
+    const newPreferences: Record<string, unknown> = {};
     for (const key of SYNCABLE_SETTINGS) {
       const remoteValue = preferences[key];
-      console.log('updating', key, remoteValue);
-      if (key === 'bookmarkedSummaries') {
+      if (opts?.loadBookmarks && key === 'bookmarkedSummaries') {
         try {
           loadBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v)));
         } catch (e) {
@@ -314,7 +355,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           if (remoteValue) {
             const trans = SyncableIoIn(key);
             const value = trans(remoteValue);
-            await setStoredValue(key, value, false);
+            newPreferences[key] = value;
           }
         } catch (e) {
           console.error(e);
@@ -322,7 +363,17 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         }
       }
     }
-    await setStoredValue('lastRemoteSync', new Date());
+    // syncing stats
+    await setStoredValue('userData', (prev) => {
+      const state = { ...prev };
+      state.profile = {
+        ...state.profile,
+        preferences: newPreferences,
+        stats,
+      };
+      return new UserData(state);
+    }, false);
+    await setStoredValue('lastRemoteSync', Date.now());
     setSyncState((prev) => ({ 
       ...prev, 
       hasSyncedWithRemote: true,
@@ -336,6 +387,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     const state = { ...DEFAULT_STORAGE_CONTEXT };
     
     // system state
+    state.lastLocalSync = await getStoredValue('lastLocalSync');
     state.lastRemoteSync = await getStoredValue('lastRemoteSync');
     state.rotationLock = await getStoredValue('rotationLock');
     state.searchHistory = await getStoredValue('searchHistory');
@@ -393,10 +445,10 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
 
   React.useEffect(() => {
     if (!syncState.isSyncingWithRemote && !syncState.hasSyncedWithRemote && syncState.hasLoadedLocalState) {
-      syncWithRemotePrefs();
+      syncWithRemote({ loadBookmarks: true });
       setSyncState((prev) => ({ ...prev, isSyncingWithRemote: true }));
     }
-  }, [syncState.hasLoadedLocalState, syncState.isSyncingWithRemote, syncState.hasSyncedWithRemote, syncWithRemotePrefs]);
+  }, [syncState.hasLoadedLocalState, syncState.isSyncingWithRemote, syncState.hasSyncedWithRemote, syncWithRemote]);
   
   const resetStorage = async (hard = false) => {
     await removeAll(hard);
@@ -433,11 +485,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     });
   };
   
-  const hasViewedFeature = React.useCallback((...features: string[]) => {
+  const hasViewedFeature = React.useCallback((...features: ViewableFeature[]) => {
     return features.every((f) => f in ({ ...storage.viewedFeatures }));
   }, [storage.viewedFeatures]);
   
-  const viewFeature = async (feature: string, state = true) => {
+  const viewFeature = async (feature: ViewableFeature, state = true) => {
     await setStoredValue('viewedFeatures', (prev) => {
       const newState = { ...prev };
       if (state) {
@@ -459,7 +511,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         emitStorageEvent('unbookmark-summary', summary, state);
       } else {
         state[summary.id] = new DatedEvent(summary);
-        viewFeature('unread-bookmarks');
+        viewFeature('bookmarks', false);
         emitStorageEvent('bookmark-summary', summary, state);
       }
       return state;
@@ -683,7 +735,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         setPublishers,
         setStoredValue,
         storeTranslations,
-        syncWithRemotePrefs,
+        syncWithRemote,
         unreadBookmarkCount,
         viewFeature,
         withHeaders,

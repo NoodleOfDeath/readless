@@ -55,7 +55,7 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
     },
     userData,
     setStoredValue, 
-    syncWithRemotePrefs,
+    syncWithRemote,
   } = React.useContext(StorageContext);
   const signInWithApple = React.useCallback(async () => {
     try {
@@ -75,13 +75,13 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
       }
       const userData = new UserData(response);
       await setStoredValue('userData', userData);
-      await syncWithRemotePrefs(userData);
+      await syncWithRemote(userData);
     } catch (e) {
       const error = e as Error;
       console.error(error);
       callback?.([strings.failedToSignInWithApple, error.message].join('\n'));
     }
-  }, [login, setStoredValue, syncWithRemotePrefs, callback]);
+  }, [login, setStoredValue, syncWithRemote, callback]);
   
   const signInWithGoogle = React.useCallback(async () => {
     try {
@@ -101,14 +101,14 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
       }
       const userData = new UserData(response);
       await setStoredValue('userData', userData);
-      await syncWithRemotePrefs(userData);
+      await syncWithRemote(userData);
       callback?.(undefined);
     } catch (e) {
       const error = e as Error;
       console.error(error);
       callback?.([strings.failedToSignInWithGoogle, error.message].join('\n'));
     }
-  }, [login, setStoredValue, syncWithRemotePrefs, callback]);
+  }, [login, setStoredValue, syncWithRemote, callback]);
 
   const signInWithoutAccount = React.useCallback(async () => {
     try {
@@ -122,13 +122,13 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
       }
       const userData = new UserData(response);
       await setStoredValue('userData', userData);
-      await syncWithRemotePrefs(userData);
+      await syncWithRemote(userData);
       callback?.(undefined);
     } catch (error) {
       console.error(error);
       callback?.([strings.failedToContinueWithoutAnAccount, error].join(' '));
     }
-  }, [login, setStoredValue, syncWithRemotePrefs, callback]);
+  }, [login, setStoredValue, syncWithRemote, callback]);
   
   const registerEmail = React.useCallback(async (email: string) => {
     await registerAlias({ otherAlias: { email } });
