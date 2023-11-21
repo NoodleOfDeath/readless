@@ -5,7 +5,7 @@ import pluralize from 'pluralize';
 
 import { ScreenComponent } from '../types';
 
-import { MetricsResponse } from '~/api';
+import { InteractionType, MetricsResponse } from '~/api';
 import {
   ActivityIndicator,
   Button,
@@ -31,21 +31,42 @@ import {
 } from '~/hooks';
 import { strings } from '~/locales';
 
-export type StreakCounterProps = ChildlessViewProps & {
+export type MetricCounterProps = ChildlessViewProps & {
   disclosureIndicator?: boolean;
+  streak?: boolean;
   longestStreak?: boolean;
+  interactionType?: InteractionType;
   horizontal?: boolean;
 };
 
-export function StreakCounter({
+export function MetricCounter({
   disclosureIndicator,
   longestStreak: showLongestStreak, 
+  streak: showStreak = showLongestStreak,
+  interactionType,
   horizontal,
   ...props 
-}: StreakCounterProps) {
+}: MetricCounterProps) {
   const theme = useTheme();
   const { shareStandard: _, shareSocial: __ } = useShare({});
-  const { currentStreak, longestStreak } = React.useContext(StorageContext);
+  const { 
+    currentStreak, 
+    longestStreak,
+    userData,
+  } = React.useContext(StorageContext);
+  const count = React.useMemo(() => {
+    if (showStreak) {
+      return `${currentStreak?.length ?? 1} ${strings.day} ${strings.streak}`;
+    } else
+    if (interactionType === InteractionType.Read) {
+      const readCount = userData?.profile?.stats?.interactionCounts?.read?.count ?? 0;
+      return `${readCount} ${pluralize(strings.article, readCount)}`;
+    } else if (interactionType === InteractionType.Share) {
+      const shareCount = userData?.profile?.stats?.interactionCounts?.share?.count ?? 0;
+      return `${shareCount} ${pluralize(strings.share, shareCount)}`;
+    }
+    return '';
+  }, [currentStreak, interactionType, showStreak, userData]);
   return (
     <View
       beveled
@@ -59,7 +80,7 @@ export function StreakCounter({
         gap={ 6 }
         leftIcon={ 'flash' }
         rightIcon={ disclosureIndicator ? 'chevron-right' : undefined }>
-        { `${currentStreak?.length ?? 1} ${strings.day} ${strings.streak}`}
+        { count }
       </Button>
       {showLongestStreak && (
         <React.Fragment>
@@ -77,6 +98,9 @@ export function LongestStreakLeaderboardScreen({ route }: ScreenComponent<'leade
   const theme = useTheme();
   const { openURL } = useInAppBrowser();
   const { userData } = React.useContext(StorageContext);
+  if (!metrics) {
+    return <ActivityIndicator animating />;
+  }
   return (
     <Screen>
       <View p={ 12 } gap={ 12 } flex={ 1 }>
@@ -88,9 +112,9 @@ export function LongestStreakLeaderboardScreen({ route }: ScreenComponent<'leade
           itemsCenter
           bg={ theme.colors.headerBackground }>
           <Text>{strings.yourRank}</Text>
-          {metrics ? <Text h3>{`${strings.rank} #${metrics?.userRankings?.streaks}`}</Text> : <ActivityIndicator animating />}
+          <Text h3>{`${strings.rank} #${metrics?.userRankings?.streaks ?? '???'}`}</Text>
         </View>
-        <StreakCounter horizontal longestStreak />
+        <MetricCounter horizontal longestStreak />
         <View flexRow gap={ 6 } justifyCenter>
           <Text textCenter>
             {strings.thanksForBeingAnActiveReader}
@@ -121,23 +145,98 @@ export function LongestStreakLeaderboardScreen({ route }: ScreenComponent<'leade
           </Popover>
         </View>
         <ScrollView>
-          {!metrics ? (
-            <ActivityIndicator animating />
-          ) : (
-            <TableView mx={ 12 }>
-              <TableViewSection>
-                {metrics?.streaks.map((streak, index) => (
-                  <TableViewCell
-                    key={ index }
-                    bold={ streak.userId === userData?.userId }
-                    cellIcon={ <Text bold={ streak.userId === userData?.userId }>{`#${index + 1}`}</Text> }
-                    cellStyle="RightDetail"
-                    title={ `${streak.user}${streak.userId === userData?.userId ? ` (${strings.you})`: ''}` }
-                    detail={ `${streak.length} ${pluralize(strings.day, streak.length)}` } />
-                ))}
-              </TableViewSection>
-            </TableView>
-          )}
+          <TableView mx={ 12 }>
+            <TableViewSection>
+              {metrics.streaks.map((streak, index) => (
+                <TableViewCell
+                  key={ index }
+                  bold={ streak.userId === userData?.userId }
+                  cellIcon={ <Text bold={ streak.userId === userData?.userId }>{`#${index + 1}`}</Text> }
+                  cellStyle="RightDetail"
+                  title={ `${streak.user}${streak.userId === userData?.userId ? ` (${strings.you})`: ''}` }
+                  detail={ `${streak.length} ${pluralize(strings.day, streak.length)}` } />
+              ))}
+            </TableViewSection>
+          </TableView>
+        </ScrollView>
+      </View>
+    </Screen>
+  );
+}
+
+export function InteractionCountLeaderboardScreen({ route }: ScreenComponent<'leaderboards'>) {
+  const { metrics, interactionType } = route?.params ?? {};
+  const theme = useTheme();
+  const { openURL } = useInAppBrowser();
+  const { userData } = React.useContext(StorageContext);
+  const unit = React.useMemo(() => {
+    if (interactionType === InteractionType.Read) {
+      return strings.article;
+    } else if (interactionType === InteractionType.Share) {
+      return strings.share;
+    }
+    return `${interactionType}`;
+  }, [interactionType]);
+  if (!metrics || !interactionType) {
+    return <ActivityIndicator animating />;
+  }
+  return (
+    <Screen>
+      <View p={ 12 } gap={ 12 } flex={ 1 }>
+        <Text h2 textCenter>{`${strings.most} ${pluralize(interactionType, 2)}`}</Text>
+        <View
+          p={ 12 }
+          beveled
+          flexCol
+          itemsCenter
+          bg={ theme.colors.headerBackground }>
+          <Text>{strings.yourRank}</Text>
+          <Text h3>{`${strings.rank} #${metrics.userRankings?.interactionCounts[interactionType] ?? '???'}`}</Text>
+        </View>
+        <MetricCounter horizontal interactionType={ interactionType } />
+        <View flexRow gap={ 6 } justifyCenter>
+          <Text textCenter>
+            {strings.thanksForBeingAnActiveReader}
+          </Text>
+          <Popover
+            anchor={
+              <Icon size={ 24 } name="information" />
+            }>
+            <View p={ 24 } gap={ 6 }>
+              <Text>{strings.thanksForBeingAnActiveReaderLong}</Text>
+              <View />
+              <View gap={ 6 } itemsCenter>
+                <Text>{strings.contactUs}</Text>
+                <Button
+                  bold 
+                  underline
+                  onPress={ () => openURL('mailto:hello@readless.ai') }>
+                  hello@readless.ai
+                </Button>
+                <Button
+                  bold 
+                  underline
+                  onPress={ () => openURL('https://discord.gg/2gw3dP2a4u') }>
+                  https://discord.gg/2gw3dP2a4u
+                </Button>
+              </View>
+            </View>
+          </Popover>
+        </View>
+        <ScrollView>
+          <TableView mx={ 12 }>
+            <TableViewSection>
+              {metrics.interactionCounts[interactionType]?.map((event, index) => (
+                <TableViewCell
+                  key={ index }
+                  bold={ event.userId === userData?.userId }
+                  cellIcon={ <Text bold={ event.userId === userData?.userId }>{`#${index + 1}`}</Text> }
+                  cellStyle="RightDetail"
+                  title={ `${event.user}${event.userId === userData?.userId ? ` (${strings.you})`: ''}` }
+                  detail={ `${event.count} ${pluralize(unit, event.count)}` } />
+              ))}
+            </TableViewSection>
+          </TableView>
         </ScrollView>
       </View>
     </Screen>
@@ -155,8 +254,11 @@ export function LeaderboardsScreen({ route: _route }: ScreenComponent<'leaderboa
   const [metrics, setMetrics] = React.useState<MetricsResponse>();
 
   const onMount = React.useCallback(async () => {
+    if (metrics) {
+      return; 
+    }
     try {
-      const { data, error } = await getMetrics();
+      const { data, error } = await getMetrics({});
       if (error) {
         throw error;
       }
@@ -165,7 +267,7 @@ export function LeaderboardsScreen({ route: _route }: ScreenComponent<'leaderboa
       console.error(e);
       showToast(e);
     }
-  }, [getMetrics, showToast]);
+  }, [getMetrics, metrics, showToast]);
 
   React.useEffect(() => {
     onMount();
@@ -185,6 +287,14 @@ export function LeaderboardsScreen({ route: _route }: ScreenComponent<'leaderboa
             name={ strings.longestStreak }
             component={ LongestStreakLeaderboardScreen }
             initialParams={ { metrics } } />
+          <Tab.Screen
+            name={ strings.mostReadsInThsPastWeek }
+            component={ InteractionCountLeaderboardScreen }
+            initialParams={ { interactionType: InteractionType.Read, metrics } } />
+          {/* <Tab.Screen
+            name={ strings.mostSharesInThsPastWeek }
+            component={ InteractionCountLeaderboardScreen }
+            initialParams={ { interactionType: InteractionType.Share, metrics } } /> */}
         </Tab.Navigator>
       ) : <ActivityIndicator animating />}
     </Screen>
