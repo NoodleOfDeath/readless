@@ -1,8 +1,13 @@
 import { ThirdParty } from './Alias.types';
 import { DatedAttributes } from '../types';
 
-export type UserEventRaw = { userId: number; length: number; min: string, max: string };
-export type UserEvent<T> = { user?: string, userId?: number; rank?: number, createdAt?: Date } & T;
+export type UserEvent<T> = { 
+  user?: string; 
+  userId?: number;
+  count?: number;
+  rank?: number; 
+  createdAt?: Date;
+} & T;
 
 export type Streak = UserEvent<{
   start: Date;
@@ -10,7 +15,7 @@ export type Streak = UserEvent<{
   length: number;
 }>;
 
-export type ReadCount = UserEvent<{
+export type InteractionCount = UserEvent<{
   count: number;
 }>;
 
@@ -19,7 +24,10 @@ export type UserStats = {
   lastSeen?: Date;
   streak?: Streak;
   longestStreak?: Streak;
-  summariesRead?: number;
+  interactionCounts?: {
+    read: InteractionCount;
+    share: InteractionCount;
+  }
 };
 
 export type Profile = {

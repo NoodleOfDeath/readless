@@ -206,6 +206,7 @@ export const nbStrings: typeof enStrings = {
   pushNotifications: 'Push-varsler',
   pushNotificationsDescription: 'Angi et tidspunkt hver dag for å bli påminnet om å lese nyhetene',
   quizzes: 'Quizzer og belønninger',
+  rank: 'Rang',
   readArticle: 'Les artikkelen',
   readSentiment: 'Trykk på sentimentresultatet for å lese en sentimentanalyse av artikkelen',
   readless: 'Les mindre',
@@ -332,5 +333,6 @@ export const nbStrings: typeof enStrings = {
   yourFollows: 'Dine følgere',
   yourLongestStreak: 'Din lengste strek',
   yourNews: 'Dine nyheter',
+  yourRank: 'Din rangering',
 };
   

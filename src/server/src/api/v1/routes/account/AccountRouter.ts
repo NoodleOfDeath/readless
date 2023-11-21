@@ -216,7 +216,7 @@ router.get(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await MetricsController.getMetrics(req);
+      const response = await MetricsController.getMetricsInternal(req, req.query);
       return res.status(200).json(response);
     } catch (e) {
       return internalErrorHandler(res, e);

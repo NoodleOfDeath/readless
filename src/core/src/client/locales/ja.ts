@@ -206,6 +206,7 @@ export const jaStrings: typeof enStrings = {
   pushNotifications: 'プッシュ通知',
   pushNotificationsDescription: '毎日、ニュースを読むようリマインドされる時間を設定します',
   quizzes: 'クイズと報酬',
+  rank: 'ランク',
   readArticle: '記事を読む',
   readSentiment: '感情スコアをタップすると、記事の感情分析が表示されます',
   readless: 'もっと読む',
@@ -332,5 +333,6 @@ export const jaStrings: typeof enStrings = {
   yourFollows: 'あなたのフォロー',
   yourLongestStreak: 'あなたの最長連続記録',
   yourNews: 'あなたのニュース',
+  yourRank: 'あなたのランク',
 };
   

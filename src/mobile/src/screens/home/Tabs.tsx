@@ -51,7 +51,7 @@ export function YourNewsTab({
           disclosureIndicator
           m={ 12 }
           mt={ 0 }
-          onPress={ () => navigation?.getParent()?.navigate('streaks') } />
+          onPress={ () => navigation?.getParent()?.navigate('leaderboards') } />
       ) } />
   );
 }
@@ -73,7 +73,7 @@ export function TopStoriesTab({
           disclosureIndicator
           m={ 12 }
           mt={ 0 }
-          onPress={ () => navigation?.getParent()?.navigate('streaks') } />
+          onPress={ () => navigation?.getParent()?.navigate('leaderboards') } />
       ) : undefined } />
   );
 }

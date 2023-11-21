@@ -206,6 +206,7 @@ export const elStrings: typeof enStrings = {
   pushNotifications: 'Push Notifications',
   pushNotificationsDescription: 'Ορίστε μια ώρα κάθε μέρα για να σας υπενθυμίζεται να διαβάζετε τις ειδήσεις',
   quizzes: 'Κουίζ και ανταμοιβές',
+  rank: 'Τάξη',
   readArticle: 'Διαβάστε το άρθρο',
   readSentiment: 'Πατήστε στο σκορ συναισθήματος για να διαβάσετε μια ανάλυση συναισθημάτων του άρθρου',
   readless: 'Διαβάστε Λιγότερα',
@@ -332,5 +333,6 @@ export const elStrings: typeof enStrings = {
   yourFollows: 'Οι ακόλουθοί σας',
   yourLongestStreak: 'Το μεγαλύτερο σερί σας',
   yourNews: 'Τα ΝΕΑ σας',
+  yourRank: 'Η κατάταξή σας',
 };
   

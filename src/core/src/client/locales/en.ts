@@ -203,6 +203,7 @@ export const enStrings = {
   pushNotifications: 'Push Notifications',
   pushNotificationsDescription: 'Set a time each day to be reminded to read the news',
   quizzes: 'Quizzes and Rewards',
+  rank: 'Rank',
   readArticle: 'Read Article',
   readSentiment: 'Tap on the sentiment score to view a sentiment analysis of the article',
   readless: 'Read Less',
@@ -329,4 +330,5 @@ export const enStrings = {
   yourFollows: 'Your Follows',
   yourLongestStreak: 'Your Longest Streak',
   yourNews: 'Your News',
+  yourRank: 'Your Rank',
 };

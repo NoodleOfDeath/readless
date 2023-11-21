@@ -206,6 +206,7 @@ export const msStrings: typeof enStrings = {
   pushNotifications: 'Pemberitahuan Tolak',
   pushNotificationsDescription: 'Tetapkan masa setiap hari untuk diingatkan membaca berita',
   quizzes: 'Kuiz dan Ganjaran',
+  rank: 'pangkat',
   readArticle: 'Baca Artikel',
   readSentiment: 'Ketik pada skor sentimen untuk membaca analisis sentimen artikel',
   readless: 'Baca Kurang',
@@ -332,5 +333,6 @@ export const msStrings: typeof enStrings = {
   yourFollows: 'Pengikut Anda',
   yourLongestStreak: 'Rentetan Terpanjang Anda',
   yourNews: 'Berita Anda',
+  yourRank: 'Kedudukan anda',
 };
   

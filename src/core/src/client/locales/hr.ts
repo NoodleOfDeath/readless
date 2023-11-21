@@ -206,6 +206,7 @@ export const hrStrings: typeof enStrings = {
   pushNotifications: 'Push obavijesti',
   pushNotificationsDescription: 'Svaki dan odredite vrijeme za podsjetnik da pročitate vijesti',
   quizzes: 'Kvizovi i nagrade',
+  rank: 'Rang',
   readArticle: 'Pročitaj članak',
   readSentiment: 'Dodirnite ocjenu raspoloženja da biste pročitali analizu raspoloženja članka',
   readless: 'Čitaj manje',
@@ -332,5 +333,6 @@ export const hrStrings: typeof enStrings = {
   yourFollows: 'Vaši pratitelji',
   yourLongestStreak: 'Vaš najduži niz',
   yourNews: 'Vaše Vijesti',
+  yourRank: 'Vaš rang',
 };
   

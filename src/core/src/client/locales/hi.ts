@@ -206,6 +206,7 @@ export const hiStrings: typeof enStrings = {
   pushNotifications: 'सूचनाएं धक्का',
   pushNotificationsDescription: 'समाचार पढ़ने के लिए याद दिलाने हेतु प्रत्येक दिन एक समय निर्धारित करें',
   quizzes: 'क्विज़ और पुरस्कार',
+  rank: 'पद',
   readArticle: 'आलेख पढ़ें',
   readSentiment: 'लेख का भावना विश्लेषण पढ़ने के लिए भावना स्कोर पर टैप करें',
   readless: 'कम पढ़ें',
@@ -332,5 +333,6 @@ export const hiStrings: typeof enStrings = {
   yourFollows: 'आपके फ़ॉलोअर्स',
   yourLongestStreak: 'आपकी सबसे लंबी लकीर',
   yourNews: 'अपका समाचार',
+  yourRank: 'आपका रैंक',
 };
   

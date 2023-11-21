@@ -206,6 +206,7 @@ export const arStrings: typeof enStrings = {
   pushNotifications: 'دفع الإخطارات',
   pushNotificationsDescription: 'حدد وقتًا كل يوم ليتم تذكيرك بقراءة الأخبار',
   quizzes: 'الاختبارات والمكافآت',
+  rank: 'رتبة',
   readArticle: 'اقرأ المقال',
   readSentiment: 'اضغط على درجة المشاعر لقراءة تحليل المشاعر للمقال',
   readless: 'أقرأ أقل',
@@ -332,5 +333,6 @@ export const arStrings: typeof enStrings = {
   yourFollows: 'المتابعات الخاصة بك',
   yourLongestStreak: 'أطول خط الخاص بك',
   yourNews: 'أخبارك',
+  yourRank: 'رتبتك',
 };
   

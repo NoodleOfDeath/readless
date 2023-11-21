@@ -206,6 +206,7 @@ export const svStrings: typeof enStrings = {
   pushNotifications: 'Pushmeddelanden',
   pushNotificationsDescription: 'Ställ in en tid varje dag för att bli påmind om att läsa nyheterna',
   quizzes: 'Frågesporter och belöningar',
+  rank: 'Rang',
   readArticle: 'Läs artikeln',
   readSentiment: 'Tryck på sentimentpoängen för att läsa en sentimentanalys av artikeln',
   readless: 'Läs mindre',
@@ -332,5 +333,6 @@ export const svStrings: typeof enStrings = {
   yourFollows: 'Dina följare',
   yourLongestStreak: 'Din längsta rad',
   yourNews: 'Dina nyheter',
+  yourRank: 'Din rang',
 };
   

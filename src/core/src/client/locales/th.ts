@@ -206,6 +206,7 @@ export const thStrings: typeof enStrings = {
   pushNotifications: 'การแจ้งเตือนแบบพุช',
   pushNotificationsDescription: 'ตั้งเวลาในแต่ละวันเพื่อเตือนให้อ่านข่าว',
   quizzes: 'แบบทดสอบและรางวัล',
+  rank: 'อันดับ',
   readArticle: 'อ่านบทความ',
   readSentiment: 'แตะที่คะแนนความคิดเห็นเพื่ออ่านบทวิเคราะห์ความคิดเห็นของบทความ',
   readless: 'อ่านน้อยลง',
@@ -332,5 +333,6 @@ export const thStrings: typeof enStrings = {
   yourFollows: 'ติดตามของคุณ',
   yourLongestStreak: 'สตรีคที่ยาวที่สุดของคุณ',
   yourNews: 'ข่าวของคุณ',
+  yourRank: 'อันดับของคุณ',
 };
   

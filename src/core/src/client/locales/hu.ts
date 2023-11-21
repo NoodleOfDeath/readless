@@ -206,6 +206,7 @@ export const huStrings: typeof enStrings = {
   pushNotifications: 'Értesítések',
   pushNotificationsDescription: 'Állítson be minden nap egy időpontot, amikor emlékeztetni kell a hírek olvasására',
   quizzes: 'Kvízek és jutalmak',
+  rank: 'Rang',
   readArticle: 'Olvassa el a cikket',
   readSentiment: 'Érintse meg a hangulatpontszámot a cikk hangulatelemzésének elolvasásához',
   readless: 'Olvass kevesebbet',
@@ -332,5 +333,6 @@ export const huStrings: typeof enStrings = {
   yourFollows: 'Az Ön követései',
   yourLongestStreak: 'A leghosszabb sorozatod',
   yourNews: 'A híreid',
+  yourRank: 'A rangod',
 };
   

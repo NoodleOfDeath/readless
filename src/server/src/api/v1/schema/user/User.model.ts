@@ -3,9 +3,10 @@ import ms from 'ms';
 import { Op, QueryTypes } from 'sequelize';
 import { Table } from 'sequelize-typescript';
 
+import { INTERACTION_TYPES } from './../resources/interaction/Interaction.types';
 import { OpenAIService } from '../../../../services';
 import { JWT } from '../../../../services/types';
-import { MetricsResponse } from '../../controllers/metrics/types';
+import { MetricsRequest, MetricsResponse } from '../../controllers/metrics/types';
 import { AuthError } from '../../middleware';
 import {
   Alias,
@@ -17,6 +18,7 @@ import {
   CredentialType,
   DestructuredCredentialPayload,
   FindAliasOptions,
+  InteractionCount,
   InteractionType,
   MetadataType,
   Profile,
@@ -30,7 +32,7 @@ import {
   ThirdParty,
   UserAttributes,
   UserCreationAttributes,
-  UserEventRaw,
+  UserEvent,
   UserMetadata,
   UserStats,
 } from '../../schema';
@@ -270,8 +272,26 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   // profile
 
-  public static async getMetrics(_user?: User): Promise<MetricsResponse> {
-    return { streaks: await User.getStreaks() };
+  public static async getMetrics(user?: User, req?: MetricsRequest): Promise<MetricsResponse> {
+    const streaks = await User.getStreaks();
+    const readCounts = await User.getInteractionCounts('read', req);
+    const shareCounts = await User.getInteractionCounts('share', req);
+    return {
+      interactionCounts: {
+        ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, []])) as { [key in InteractionType]: [] },
+        read: readCounts,
+        share: shareCounts,
+      },
+      streaks,
+      userRankings: { 
+        interactionCounts: {
+          ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, 0])) as { [key in InteractionType]: number },
+          read: readCounts.find((s) => s.userId === user?.id)?.rank,
+          share: shareCounts.find((s) => s.userId === user?.id)?.rank,
+        },
+        streaks: streaks.find((s) => s.userId === user?.id)?.rank,
+      },
+    };
   }
 
   public static async getStreaks(limit: 'ALL' | number = 10): Promise<Streak[]> {
@@ -284,13 +304,32 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       replacements,
       type: QueryTypes.SELECT,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }) as UserEventRaw[]).map((e) => ({ 
+    }) as UserEvent<{min: string, max: string}>[]).map((e) => ({ 
       end: new Date(e.max),
-      length: e.length,
+      length: e.count,
       start: new Date(e.min), 
       userId: e.userId,
       ...e,
     }));
+    return response;
+  }
+
+  public static async getInteractionCounts(type: InteractionType, req?: MetricsRequest, user?: User): Promise<InteractionCount[]> {
+    const replacements = {
+      interval: null,
+      limit: null,
+      type,
+      userId: null,
+    };
+    const response = (await User.store.query(QueryFactory.getQuery('interaction_count'), {
+      nest: true,
+      replacements,
+      type: QueryTypes.SELECT,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as InteractionCount[]);
+    if (user) {
+      return response.map((e) => ({ ...e, rank: response.find((r) => r.userId === user.id)?.rank }));
+    }
     return response;
   }
   
@@ -346,11 +385,14 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     const longestStreak = await this.calculateLongestStreak();
     const streak = await this.calculateStreak();
     return {
+      interactionCounts: {
+        read: (await User.getInteractionCounts('read', undefined, this)).find((s) => s.userId === this.id),
+        share: (await User.getInteractionCounts('share', undefined, this)).find((s) => s.userId === this.id),
+      },
       lastSeen,
       longestStreak,
       memberSince: this.createdAt,
       streak,
-      summariesRead: (await SummaryInteraction.aggregate('targetId', 'DISTINCT', { where: { type: 'read', userId: this.id } })),
     };
   }
   

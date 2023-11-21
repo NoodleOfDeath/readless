@@ -206,6 +206,7 @@ export const itStrings: typeof enStrings = {
   pushNotifications: 'Le notifiche push',
   pushNotificationsDescription: 'Imposta un orario ogni giorno per essere ricordato di leggere le notizie',
   quizzes: 'Quiz e premi',
+  rank: 'Rango',
   readArticle: 'Leggi l\'articolo',
   readSentiment: 'Tocca il punteggio del sentiment per leggere un\'analisi del sentiment dell\'articolo',
   readless: 'Leggi di meno',
@@ -332,5 +333,6 @@ export const itStrings: typeof enStrings = {
   yourFollows: 'I tuoi follower',
   yourLongestStreak: 'La tua serie più lunga',
   yourNews: 'Tue notizie',
+  yourRank: 'Il tuo grado',
 };
   

@@ -206,6 +206,7 @@ export const ukStrings: typeof enStrings = {
   pushNotifications: 'Push-сповіщення',
   pushNotificationsDescription: 'Встановіть час кожного дня, щоб вам нагадували прочитати новини',
   quizzes: 'Вікторини та нагороди',
+  rank: 'ранг',
   readArticle: 'Прочитати статтю',
   readSentiment: 'Торкніться оцінки настроїв, щоб прочитати аналіз настроїв статті',
   readless: 'Читайте менше',
@@ -332,5 +333,6 @@ export const ukStrings: typeof enStrings = {
   yourFollows: 'Ваші підписки',
   yourLongestStreak: 'Ваша найдовша серія',
   yourNews: 'Ваші новини',
+  yourRank: 'Ваш ранг',
 };
   

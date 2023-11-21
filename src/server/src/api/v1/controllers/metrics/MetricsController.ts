@@ -1,6 +1,7 @@
 import { Request as ExpressRequest } from 'express';
 import {
   Get,
+  Query,
   Request,
   Response,
   Route,
@@ -9,7 +10,11 @@ import {
   Tags,
 } from 'tsoa';
 
-import { MetricsResponse } from './types';
+import {
+  MetricType,
+  MetricsRequest,
+  MetricsResponse,
+} from './types';
 import { AuthError, InternalError } from '../../middleware';
 import { User } from '../../schema';
 
@@ -34,11 +39,20 @@ export class MetricsController {
 
   @Get('/')
   @Security('jwt', ['standard:read'])
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   public static async getMetrics(
-    @Request() req: ExpressRequest
+    @Request() req: ExpressRequest,
+    @Query() type?: MetricType[],
+    @Query() after?: Date,
+    @Query() before?: Date
   ): Promise<MetricsResponse> {
     const user = await User.from({ jwt: req.body.jwt });
     return await User.getMetrics(user);
+  }
+
+  public static async getMetricsInternal(req: ExpressRequest, query: MetricsRequest): Promise<MetricsResponse> {
+    const user = await User.from({ jwt: req.body.jwt });
+    return await User.getMetrics(user, query);
   }
   
 }

@@ -74,8 +74,8 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
         throw error;
       }
       const userData = new UserData(response);
-      setStoredValue('userData', userData);
-      syncWithRemotePrefs(userData);
+      await setStoredValue('userData', userData);
+      await syncWithRemotePrefs(userData);
     } catch (e) {
       const error = e as Error;
       console.error(error);
@@ -100,8 +100,8 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
         throw error;
       }
       const userData = new UserData(response);
-      setStoredValue('userData', userData);
-      syncWithRemotePrefs(userData);
+      await setStoredValue('userData', userData);
+      await syncWithRemotePrefs(userData);
       callback?.(undefined);
     } catch (e) {
       const error = e as Error;
@@ -121,8 +121,8 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
         throw error;
       }
       const userData = new UserData(response);
-      setStoredValue('userData', userData);
-      syncWithRemotePrefs(userData);
+      await setStoredValue('userData', userData);
+      await syncWithRemotePrefs(userData);
       callback?.(undefined);
     } catch (error) {
       console.error(error);
@@ -162,7 +162,7 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
     if (error) {
       throw error;
     }
-    setStoredValue('userData', (prev) => {
+    await setStoredValue('userData', (prev) => {
       const state = { ...prev };
       state.profile = {
         ...state.profile,
@@ -179,7 +179,7 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
     
     const unlink = async () => {
       await unregisterAlias({ otherAlias: { thirdParty } });
-      setStoredValue('userData', (prev) => {
+      await setStoredValue('userData', (prev) => {
         const state = { ...prev };
         const accounts = Object.fromEntries((state.profile?.linkedThirdPartyAccounts ?? []).map((k) => [k, null]));
         delete accounts[thirdParty];

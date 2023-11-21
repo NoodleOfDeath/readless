@@ -1,3 +1,3 @@
 export * from './ProfileScreen';
 export * from './AccountScreen';
-export * from './StreaksScreen';
+export * from './LeaderboardsScreen';

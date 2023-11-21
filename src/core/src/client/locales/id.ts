@@ -206,6 +206,7 @@ export const idStrings: typeof enStrings = {
   pushNotifications: 'Pemberitahuan Dorong',
   pushNotificationsDescription: 'Tetapkan waktu setiap hari untuk diingatkan untuk membaca berita',
   quizzes: 'Kuis dan Hadiah',
+  rank: 'Pangkat',
   readArticle: 'Baca Artikel',
   readSentiment: 'Ketuk skor sentimen untuk membaca analisis sentimen artikel',
   readless: 'Baca Lebih Sedikit',
@@ -332,5 +333,6 @@ export const idStrings: typeof enStrings = {
   yourFollows: 'Pengikut Anda',
   yourLongestStreak: 'Pukulan Terpanjang Anda',
   yourNews: 'Kabar mu',
+  yourRank: 'Peringkat Anda',
 };
   

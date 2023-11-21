@@ -206,6 +206,7 @@ export const csStrings: typeof enStrings = {
   pushNotifications: 'Push oznámení',
   pushNotificationsDescription: 'Nastavte si každý den čas, kdy chcete být upozorněni na přečtení zpráv',
   quizzes: 'Kvízy a odměny',
+  rank: 'Hodnost',
   readArticle: 'Přečtěte si článek',
   readSentiment: 'Klepnutím na skóre sentimentu si přečtěte analýzu sentimentu článku',
   readless: 'Číst méně',
@@ -332,5 +333,6 @@ export const csStrings: typeof enStrings = {
   yourFollows: 'Vaši sledující',
   yourLongestStreak: 'Vaše nejdelší série',
   yourNews: 'Vaše novinky',
+  yourRank: 'Vaše hodnost',
 };
   

@@ -26,7 +26,7 @@ import {
   StorageContext,
   ToastContext,
 } from '~/contexts';
-import { useTheme } from '~/hooks';
+import { useAppState, useTheme } from '~/hooks';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
 import { usePlatformTools } from '~/utils';
 
@@ -57,6 +57,7 @@ export function RootNavigator() {
     setCategories, 
     setPublishers,
     setErrorHandler,
+    syncWithRemotePrefs,
   } = storage;
   const { showToast } = React.useContext(ToastContext);
   
@@ -65,6 +66,7 @@ export function RootNavigator() {
   
   const [lastFetch, setLastFetch] = React.useState(0);
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
+  const [lastSync, setLastSync] = React.useState(0);
 
   const [showedReview, setShowedReview] = React.useState(false);
 
@@ -179,6 +181,16 @@ export function RootNavigator() {
       showToast(e);
     });
   }, [setErrorHandler, showToast]);
+  
+  useAppState({
+    onForeground: React.useCallback(async () => {
+      if (lastSync > Date.now() - ms('2m')) {
+        return;
+      }
+      await syncWithRemotePrefs();
+      setLastSync(Date.now());
+    }, [syncWithRemotePrefs, lastSync]),
+  });
   
   if (!ready) {
     const text = isSyncingWithRemote ? 'Syncing with remote...' : 'Loading...';

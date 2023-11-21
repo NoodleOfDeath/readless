@@ -1,6 +1,24 @@
-import { ReadCount, Streak } from '../../schema';
+import {
+  InteractionCount,
+  InteractionType,
+  Streak,
+} from '../../schema';
 
-export type MetricsResponse = {
+export type Metrics = {
   streaks: Streak[];
-  readCounts?: ReadCount[];
+  interactionCounts: Record<InteractionType, InteractionCount[]>;
+};
+
+export type MetricType = keyof Metrics;
+
+export type MetricsRequest = {
+  after?: Date;
+  before?: Date;
+};
+
+export type MetricsResponse = Metrics & {
+  userRankings?: {
+    streaks: number;
+    interactionCounts: Record<InteractionType, number>;
+  };
 };

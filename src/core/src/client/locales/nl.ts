@@ -206,6 +206,7 @@ export const nlStrings: typeof enStrings = {
   pushNotifications: 'Push-meldingen',
   pushNotificationsDescription: 'Stel elke dag een tijdstip in om eraan herinnerd te worden het nieuws te lezen',
   quizzes: 'Quizzen en beloningen',
+  rank: 'Rang',
   readArticle: 'Lees artikel',
   readSentiment: 'Tik op de sentimentscore om een sentimentanalyse van het artikel te lezen',
   readless: 'Lees minder',
@@ -332,5 +333,6 @@ export const nlStrings: typeof enStrings = {
   yourFollows: 'Uw volgers',
   yourLongestStreak: 'Je langste reeks',
   yourNews: 'Jouw nieuws',
+  yourRank: 'Je rang',
 };
   

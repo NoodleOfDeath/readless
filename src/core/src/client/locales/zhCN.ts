@@ -206,6 +206,7 @@ export const zhCNStrings: typeof enStrings = {
   pushNotifications: '推送通知',
   pushNotificationsDescription: '每天设定一个时间提醒阅读新闻',
   quizzes: '测验和奖励',
+  rank: '秩',
   readArticle: '阅读文章',
   readSentiment: '点击情绪分数即可阅读文章的情绪分析',
   readless: '少读',
@@ -332,5 +333,6 @@ export const zhCNStrings: typeof enStrings = {
   yourFollows: '您的关注',
   yourLongestStreak: '你的最长连续记录',
   yourNews: '你的消息',
+  yourRank: '你的等级',
 };
   

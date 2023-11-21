@@ -31,11 +31,13 @@ export function AccountScreen({
 }: ScreenComponent<'account'>) {
 
   const [user, setUser] = React.useState<UserData>();
+  const [hasSynced, setHasSynced] = React.useState(false);
   
   const { 
-    api: { getProfile, logout },
+    api: { logout },
     userData, 
     setStoredValue,
+    syncWithRemotePrefs,
   } = React.useContext(StorageContext);
   const { showToast } = React.useContext(ToastContext);
   
@@ -43,29 +45,24 @@ export function AccountScreen({
     linkThirdPartyAccount,
     unlinkThirdPartyAccount,
     requestDeleteAccount,
-  } = useThirdPartyLogin();
+  } = useThirdPartyLogin(showToast);
 
   const onMount = React.useCallback(async () => {
     try {
-      const { data, error } = await getProfile();
-      if (error) {
-        throw error;
+      if (hasSynced) {
+        return;
       }
-      if (data) {
-        await setStoredValue('userData', (prev) => new UserData({
-          ...prev,
-          profile: data.profile,
-        }));
-      }
+      setHasSynced(true);
+      await syncWithRemotePrefs();
     } catch (e) {
       console.error(e);
       showToast(e);
     }
-  }, [getProfile, setStoredValue, showToast]);
+  }, [hasSynced, syncWithRemotePrefs, showToast]);
 
   const signOut = React.useCallback(async () => {
     await logout({});
-    setStoredValue('userData');
+    await setStoredValue('userData', undefined, false);
   }, [logout, setStoredValue]);
 
   const handleSignOut = React.useCallback(() => {

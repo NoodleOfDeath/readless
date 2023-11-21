@@ -206,6 +206,7 @@ export const trStrings: typeof enStrings = {
   pushNotifications: 'Push bildirimleri',
   pushNotificationsDescription: 'Haberleri okumanın hatırlatılması için her gün bir saat belirleyin',
   quizzes: 'Sınavlar ve Ödüller',
+  rank: 'Rütbe',
   readArticle: 'Makaleyi Oku',
   readSentiment: 'Makalenin duyarlılık analizini okumak için duyarlılık puanına dokunun',
   readless: 'Az oku',
@@ -332,5 +333,6 @@ export const trStrings: typeof enStrings = {
   yourFollows: 'Takipleriniz',
   yourLongestStreak: 'En Uzun Seriniz',
   yourNews: 'Haberleriniz',
+  yourRank: 'Rütbeniz',
 };
   

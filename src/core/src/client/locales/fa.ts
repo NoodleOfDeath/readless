@@ -206,6 +206,7 @@ export const faStrings: typeof enStrings = {
   pushNotifications: 'Push Notifications',
   pushNotificationsDescription: 'هر روز زمانی را برای یادآوری خواندن اخبار تعیین کنید',
   quizzes: 'آزمون ها و جوایز',
+  rank: 'رتبه',
   readArticle: 'مقاله را بخوانید',
   readSentiment: 'برای خواندن تحلیل احساسات مقاله، روی امتیاز احساسات ضربه بزنید',
   readless: 'کمتر بخوان',
@@ -332,5 +333,6 @@ export const faStrings: typeof enStrings = {
   yourFollows: 'دنبال کننده های شما',
   yourLongestStreak: 'طولانی ترین دوره شما',
   yourNews: 'اخبار شما',
+  yourRank: 'امتیاز شما',
 };
   
