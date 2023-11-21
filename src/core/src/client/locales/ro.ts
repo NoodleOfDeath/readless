@@ -169,6 +169,9 @@ export const roStrings: typeof enStrings = {
   menu: 'Meniul',
   minimizeBias: 'minimizați părtinirea',
   more: 'Mai mult',
+  most: 'Cel mai',
+  mostReadsInThsPastWeek: 'Cele mai multe citiri în săptămâna trecută',
+  mostSharesInThsPastWeek: 'Cele mai multe acțiuni în săptămâna trecută',
   negative: 'Negativ',
   neutral: 'Neutru',
   newsAlerts: 'Alerte de știri personalizate',
@@ -206,6 +209,7 @@ export const roStrings: typeof enStrings = {
   pushNotifications: 'Notificări',
   pushNotificationsDescription: 'Setați o oră în fiecare zi pentru a vi se reaminti să citiți știrile',
   quizzes: 'Chestionare și recompense',
+  rank: 'Rang',
   readArticle: 'Citiți articolul',
   readSentiment: 'Atingeți scorul de sentiment pentru a citi o analiză de sentiment a articolului',
   readless: 'Citiți mai puțin',
@@ -332,5 +336,6 @@ export const roStrings: typeof enStrings = {
   yourFollows: 'Urmărește-ți',
   yourLongestStreak: 'Cea mai lungă serie a ta',
   yourNews: 'Stirile tale',
+  yourRank: 'Rangul tău',
 };
   

@@ -169,6 +169,9 @@ export const koStrings: typeof enStrings = {
   menu: '메뉴',
   minimizeBias: '편향 최소화',
   more: '더',
+  most: '최대',
+  mostReadsInThsPastWeek: '지난 주에 가장 많이 읽은 책',
+  mostSharesInThsPastWeek: '지난주 최다 주식',
   negative: '부정적인',
   neutral: '중립적',
   newsAlerts: '맞춤형 뉴스 알림',
@@ -206,6 +209,7 @@ export const koStrings: typeof enStrings = {
   pushNotifications: '푸시 알림',
   pushNotificationsDescription: '매일 뉴스를 읽을 시간을 정하십시오.',
   quizzes: '퀴즈 및 보상',
+  rank: '계급',
   readArticle: '기사 읽기',
   readSentiment: '기사의 감정 분석을 읽으려면 감정 점수를 탭하세요.',
   readless: '적게 읽기',
@@ -332,5 +336,6 @@ export const koStrings: typeof enStrings = {
   yourFollows: '팔로우',
   yourLongestStreak: '당신의 최장 연속 기록',
   yourNews: '당신의 뉴스',
+  yourRank: '당신의 순위',
 };
   

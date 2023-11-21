@@ -40,8 +40,6 @@ export * from './system/RequestLog.types';
 export * from './system/RateLimit.types';
 export * from './system/Cache.types';
 export * from './system/log/SystemLog.types';
-export * from './system/service/Service.types';
-export * from './system/service/ServiceStatus.types';
 export * from './system/message/Message.types';
 
 // Queues
@@ -59,16 +57,21 @@ export * from './user/Role.types';
 // Posts
 export * from './resources/Post.types';
 
+// Localization
 export * from './resources/localization/Locale.types';
 export * from './resources/localization/Translation.types';
 
+// Media
 export * from './resources/media/Media.types';
 
+// Interaction
 export * from './resources/interaction/Interaction.types';
 
+// Sentiment
 export * from './resources/sentiment/SentimentMethod.types';
 export * from './resources/sentiment/Sentiment.types';
 
+// Channel
 export * from './resources/channel/Publisher.types';
 export * from './resources/channel/PublisherInteraction.types';
 export * from './resources/channel/PublisherTranslation.types';
@@ -76,6 +79,7 @@ export * from './resources/channel/Category.types';
 export * from './resources/channel/CategoryInteraction.types';
 export * from './resources/channel/CategoryTranslation.types';
 
+// Summary
 export * from './resources/summary/Summary.types';
 export * from './resources/summary/SummaryCategory.types';
 export * from './resources/summary/SummarySentiment.types';
@@ -84,13 +88,21 @@ export * from './resources/summary/SummaryTranslation.types';
 export * from './resources/summary/SummaryMedia.types';
 export * from './resources/summary/SummaryRelation.types';
 
+// Recap
 export * from './resources/recap/Recap.types';
 export * from './resources/recap/RecapInteraction.types';
 export * from './resources/recap/RecapTranslation.types';
 export * from './resources/recap/RecapMedia.types';
 export * from './resources/recap/RecapSummary.types';
 
+// Subscription
 export * from './resources/subscription/Subscription.types';
 
+// Polls
+export * from './resources/poll/Poll.types';
+export * from './resources/poll/PollInteraction.types';
+export * from './resources/poll/PollOption.types';
+
+// IAP
 export * from './resources/iap/Voucher.types';
 export * from './resources/iap/IapVoucher.types';

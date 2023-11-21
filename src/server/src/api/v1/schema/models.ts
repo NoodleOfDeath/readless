@@ -4,8 +4,6 @@ export * from './system/RateLimit.model';
 export * from './system/Cache.model';
 
 export * from './system/log/SystemLog.model';
-export * from './system/service/Service.model';
-export * from './system/service/ServiceStatus.model';
 export * from './system/message/Message.model';
 
 // queues
@@ -21,10 +19,13 @@ export * from './user/RefUserRole.model';
 export * from './user/Credential.model';
 export * from './user/Role.model';
 
-// resource models
+// Localization
 export * from './resources/localization/Locale.model';
+
+// Sentiment
 export * from './resources/sentiment/SentimentMethod.model';
 
+// Channel
 export * from './resources/channel/Publisher.model';
 export * from './resources/channel/PublisherInteraction.model';
 export * from './resources/channel/PublisherTranslation.model';
@@ -32,6 +33,7 @@ export * from './resources/channel/Category.model';
 export * from './resources/channel/CategoryInteraction.model';
 export * from './resources/channel/CategoryTranslation.model';
 
+// Summary
 export * from './resources/summary/Summary.model';
 export * from './resources/summary/SummaryCategory.model';
 export * from './resources/summary/SummarySentiment.model';
@@ -40,12 +42,20 @@ export * from './resources/summary/SummaryTranslation.model';
 export * from './resources/summary/SummaryMedia.model';
 export * from './resources/summary/SummaryRelation.model';
 
+// Recap
 export * from './resources/recap/Recap.model';
 export * from './resources/recap/RecapInteraction.model';
 export * from './resources/recap/RecapTranslation.model';
 export * from './resources/recap/RecapMedia.model';
 export * from './resources/recap/RecapSummary.model';
 
+// Subscription
 export * from './resources/subscription/Subscription.model';
 
+// Polls
+export * from './resources/poll/Poll.model';
+export * from './resources/poll/PollInteraction.model';
+export * from './resources/poll/PollOption.model';
+
+// IAP
 export * from './resources/iap/IapVoucher.model';

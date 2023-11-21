@@ -5,7 +5,6 @@ import {
 } from 'sequelize-typescript';
 
 import { PollAttributes, PollCreationAttributes } from './Poll.types';
-import { PollOptionAttributes } from './PollOption.types';
 import { BaseModel } from '../../base';
 
 @Table({
@@ -29,7 +28,5 @@ export class Poll<
     type: DataType.STRING,
   })
   declare title: string;
-  
-  declare options?: PollOptionAttributes[];
   
 }

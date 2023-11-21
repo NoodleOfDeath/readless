@@ -169,6 +169,9 @@ export const esStrings: typeof enStrings = {
   menu: 'Menú',
   minimizeBias: 'minimizar el sesgo',
   more: 'Más',
+  most: 'Mayoría',
+  mostReadsInThsPastWeek: 'Más lecturas en la última semana',
+  mostSharesInThsPastWeek: 'La mayoría de las acciones en la última semana',
   negative: 'Negativo',
   neutral: 'Neutral',
   newsAlerts: 'Alertas de noticias personalizadas',
@@ -206,6 +209,7 @@ export const esStrings: typeof enStrings = {
   pushNotifications: 'Notificaciones push',
   pushNotificationsDescription: 'Establezca una hora cada día para recordar leer las noticias.',
   quizzes: 'Cuestionarios y recompensas',
+  rank: 'Rango',
   readArticle: 'Lee el artículo',
   readSentiment: 'Toca la puntuación de opinión para leer un análisis de opinión del artículo.',
   readless: 'Leer menos',
@@ -332,5 +336,6 @@ export const esStrings: typeof enStrings = {
   yourFollows: 'Tus seguidores',
   yourLongestStreak: 'Tu racha más larga',
   yourNews: 'Tus noticias',
+  yourRank: 'Su rango',
 };
   

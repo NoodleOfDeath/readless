@@ -11,7 +11,7 @@ import {
 } from '~/components';
 import { StorageContext } from '~/contexts';
 import { strings } from '~/locales';
-import {  ScreenComponent, StreakCounter } from '~/screens';
+import {  MetricCounter, ScreenComponent } from '~/screens';
 
 export function OldNewsTab({
   route: _route,
@@ -47,11 +47,12 @@ export function YourNewsTab({
       fetch={ getSummaries }
       filter={ filter }
       headerComponent={ (
-        <StreakCounter
+        <MetricCounter
+          streak
           disclosureIndicator
           m={ 12 }
           mt={ 0 }
-          onPress={ () => navigation?.getParent()?.navigate('streaks') } />
+          onPress={ () => navigation?.getParent()?.navigate('leaderboards') } />
       ) } />
   );
 }
@@ -69,11 +70,12 @@ export function TopStoriesTab({
       fetch={ getTopStories }
       interval='1d'
       headerComponent={ !followFilter ? (
-        <StreakCounter 
+        <MetricCounter 
+          streak
           disclosureIndicator
           m={ 12 }
           mt={ 0 }
-          onPress={ () => navigation?.getParent()?.navigate('streaks') } />
+          onPress={ () => navigation?.getParent()?.navigate('leaderboards') } />
       ) : undefined } />
   );
 }

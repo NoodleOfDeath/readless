@@ -169,6 +169,9 @@ export const deStrings: typeof enStrings = {
   menu: 'Speisekarte',
   minimizeBias: 'Voreingenommenheit minimieren',
   more: 'Mehr',
+  most: 'Am meisten',
+  mostReadsInThsPastWeek: 'Die meisten Lesungen in der letzten Woche',
+  mostSharesInThsPastWeek: 'Die meisten Aktien in der letzten Woche',
   negative: 'Negativ',
   neutral: 'Neutral',
   newsAlerts: 'Benutzerdefinierte Nachrichtenbenachrichtigungen',
@@ -206,6 +209,7 @@ export const deStrings: typeof enStrings = {
   pushNotifications: 'Mitteilungen',
   pushNotificationsDescription: 'Legen Sie jeden Tag eine Zeit fest, zu der Sie daran erinnert werden, die Nachrichten zu lesen',
   quizzes: 'Quiz und Belohnungen',
+  rank: 'Rang',
   readArticle: 'Artikel lesen',
   readSentiment: 'Tippen Sie auf den Sentiment-Score, um eine Sentiment-Analyse des Artikels zu lesen',
   readless: 'Lese weniger',
@@ -332,5 +336,6 @@ export const deStrings: typeof enStrings = {
   yourFollows: 'Deine Follower',
   yourLongestStreak: 'Deine längste Serie',
   yourNews: 'Deine Neuigkeiten',
+  yourRank: 'Dein Rang',
 };
   

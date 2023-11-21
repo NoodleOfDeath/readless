@@ -169,6 +169,9 @@ export const thStrings: typeof enStrings = {
   menu: 'เมนู',
   minimizeBias: 'ลดอคติ',
   more: 'มากกว่า',
+  most: 'ที่สุด',
+  mostReadsInThsPastWeek: 'มีการอ่านมากที่สุดในสัปดาห์ที่ผ่านมา',
+  mostSharesInThsPastWeek: 'หุ้นมากที่สุดในสัปดาห์ที่ผ่านมา',
   negative: 'เชิงลบ',
   neutral: 'เป็นกลาง',
   newsAlerts: 'การแจ้งเตือนข่าวที่กำหนดเอง',
@@ -206,6 +209,7 @@ export const thStrings: typeof enStrings = {
   pushNotifications: 'การแจ้งเตือนแบบพุช',
   pushNotificationsDescription: 'ตั้งเวลาในแต่ละวันเพื่อเตือนให้อ่านข่าว',
   quizzes: 'แบบทดสอบและรางวัล',
+  rank: 'อันดับ',
   readArticle: 'อ่านบทความ',
   readSentiment: 'แตะที่คะแนนความคิดเห็นเพื่ออ่านบทวิเคราะห์ความคิดเห็นของบทความ',
   readless: 'อ่านน้อยลง',
@@ -332,5 +336,6 @@ export const thStrings: typeof enStrings = {
   yourFollows: 'ติดตามของคุณ',
   yourLongestStreak: 'สตรีคที่ยาวที่สุดของคุณ',
   yourNews: 'ข่าวของคุณ',
+  yourRank: 'อันดับของคุณ',
 };
   

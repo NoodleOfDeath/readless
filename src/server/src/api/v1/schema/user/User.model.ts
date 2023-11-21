@@ -3,8 +3,10 @@ import ms from 'ms';
 import { Op, QueryTypes } from 'sequelize';
 import { Table } from 'sequelize-typescript';
 
+import { INTERACTION_TYPES } from './../resources/interaction/Interaction.types';
 import { OpenAIService } from '../../../../services';
 import { JWT } from '../../../../services/types';
+import { MetricsRequest, MetricsResponse } from '../../controllers/metrics/types';
 import { AuthError } from '../../middleware';
 import {
   Alias,
@@ -16,6 +18,7 @@ import {
   CredentialType,
   DestructuredCredentialPayload,
   FindAliasOptions,
+  InteractionCount,
   InteractionType,
   MetadataType,
   Profile,
@@ -29,10 +32,9 @@ import {
   ThirdParty,
   UserAttributes,
   UserCreationAttributes,
-  UserEventRaw,
+  UserEvent,
   UserMetadata,
   UserStats,
-  rawUserEventMap,
 } from '../../schema';
 import { BaseModel } from '../base';
 
@@ -270,25 +272,65 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   // profile
 
-  public static async getStreaks(): Promise<Streak[]> {
+  public static async getMetrics(user?: User, req?: MetricsRequest): Promise<MetricsResponse> {
+    const streaks = await User.getStreaks();
+    const readCounts = await User.getInteractionCounts('read', req);
+    const shareCounts = await User.getInteractionCounts('share', req);
+    return {
+      interactionCounts: {
+        ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, []])) as { [key in InteractionType]: [] },
+        read: readCounts,
+        share: shareCounts,
+      },
+      streaks,
+      userRankings: { 
+        interactionCounts: {
+          ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, 0])) as { [key in InteractionType]: number },
+          read: readCounts.find((s) => s.userId === user?.id)?.rank,
+          share: shareCounts.find((s) => s.userId === user?.id)?.rank,
+        },
+        streaks: streaks.find((s) => s.userId === user?.id)?.rank,
+      },
+    };
+  }
+
+  public static async getStreaks(limit: 'ALL' | number = 10): Promise<Streak[]> {
     const replacements = {
-      limit: 10,
-      noUserId: true, 
+      limit: limit === 'ALL' ? null : limit,
       userId: null, 
     };
-    const response = (await User.store.query(QueryFactory.getQuery('streak'), {
+    const response: Streak[] = (await User.store.query(QueryFactory.getQuery('streak'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }) as UserEventRaw[]).map(rawUserEventMap);
-    return await Promise.all(response.map(async (s) => ({
-      end: s.end,
-      length: s.length,
-      start: s.start,
-      user: (await (await User.findByPk(s.userId))?.findAlias('username'))?.value,
-      userId: s.userId,
-    })));
+    }) as UserEvent<{min: string, max: string}>[]).map((e) => ({ 
+      end: new Date(e.max),
+      length: e.count,
+      start: new Date(e.min), 
+      userId: e.userId,
+      ...e,
+    }));
+    return response;
+  }
+
+  public static async getInteractionCounts(type: InteractionType, req?: MetricsRequest, user?: User): Promise<InteractionCount[]> {
+    const replacements = {
+      interval: null,
+      limit: null,
+      type,
+      userId: null,
+    };
+    const response = (await User.store.query(QueryFactory.getQuery('interaction_count'), {
+      nest: true,
+      replacements,
+      type: QueryTypes.SELECT,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as InteractionCount[]);
+    if (user) {
+      return response.map((e) => ({ ...e, rank: response.find((r) => r.userId === user.id)?.rank }));
+    }
+    return response;
   }
   
   public async getProfileBase(): Promise<Profile> {
@@ -308,17 +350,6 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
   
   public async calculateStreak(longest = false): Promise<Streak> {
-    const replacements = {
-      limit: 10,
-      noUserId: false,
-      userId: this.id,
-    };
-    const response = (await User.store.query(QueryFactory.getQuery('streak'), {
-      nest: true,
-      replacements,
-      type: QueryTypes.SELECT,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    }) as UserEventRaw[]).map(rawUserEventMap);
     let streak: Streak = {
       end: new Date(new Date().toLocaleDateString()),
       length: 0, 
@@ -326,17 +357,17 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       user: (await this.findAlias('username'))?.value,
       userId: this.id,
     };
+    const streaks = await User.getStreaks('ALL');
     if (!longest) {
-      streak = response.find(
+      return streaks.find(
         (s) => {
           return (s.end.getFullYear(), s.end.getDate()) === (streak.end.getFullYear(), streak.end.getDate());
         }
       ) ?? streak;
-    } else {
-      for (const row of response) {
-        if (row.length > streak.length) {
-          streak = row;
-        }
+    }
+    for (const row of streaks) {
+      if (row.length > streak.length) {
+        streak = row;
       }
     }
     return streak;
@@ -354,8 +385,13 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     const longestStreak = await this.calculateLongestStreak();
     const streak = await this.calculateStreak();
     return {
+      interactionCounts: {
+        read: (await User.getInteractionCounts('read', undefined, this)).find((s) => s.userId === this.id),
+        share: (await User.getInteractionCounts('share', undefined, this)).find((s) => s.userId === this.id),
+      },
       lastSeen,
       longestStreak,
+      memberSince: this.createdAt,
       streak,
     };
   }

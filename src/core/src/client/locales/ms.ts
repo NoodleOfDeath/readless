@@ -169,6 +169,9 @@ export const msStrings: typeof enStrings = {
   menu: 'Menu',
   minimizeBias: 'meminimumkan berat sebelah',
   more: 'Lagi',
+  most: 'Paling',
+  mostReadsInThsPastWeek: 'Paling Banyak Dibaca Dalam Minggu Lalu',
+  mostSharesInThsPastWeek: 'Perkongsian Terbanyak Dalam Minggu Lalu',
   negative: 'Negatif',
   neutral: 'Berkecuali',
   newsAlerts: 'Makluman Berita Tersuai',
@@ -206,6 +209,7 @@ export const msStrings: typeof enStrings = {
   pushNotifications: 'Pemberitahuan Tolak',
   pushNotificationsDescription: 'Tetapkan masa setiap hari untuk diingatkan membaca berita',
   quizzes: 'Kuiz dan Ganjaran',
+  rank: 'pangkat',
   readArticle: 'Baca Artikel',
   readSentiment: 'Ketik pada skor sentimen untuk membaca analisis sentimen artikel',
   readless: 'Baca Kurang',
@@ -332,5 +336,6 @@ export const msStrings: typeof enStrings = {
   yourFollows: 'Pengikut Anda',
   yourLongestStreak: 'Rentetan Terpanjang Anda',
   yourNews: 'Berita Anda',
+  yourRank: 'Kedudukan anda',
 };
   

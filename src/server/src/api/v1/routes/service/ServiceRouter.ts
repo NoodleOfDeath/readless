@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { body, query } from 'express-validator';
+import { body } from 'express-validator';
 
-import { ServiceController } from '../../controllers';
+import { LocalizationController } from '../../controllers';
 import {
   internalErrorHandler,
   rateLimitMiddleware,
@@ -10,51 +10,17 @@ import {
 
 const router = Router();
 
-router.get(
+router.post(
   '/',
-  async (req, res) => {
-    try {
-      const response = await ServiceController.getServices();
-      return res.json(response);
-    } catch (e) {
-      internalErrorHandler(res, e);
-    }
-  }
-);
-
-router.get(
-  '/release/:service',
-  async (req, res) => {
-    try {
-      const service = req.params.service;
-      const response = await ServiceController.getReleaseInfo(req, service);
-      return res.json(response);
-    } catch (e) {
-      internalErrorHandler(res, e);
-    }
-  }
-);
-
-router.get(
-  '/messages',
-  async (req, res) => {
-    try {
-      const response = await ServiceController.getSystemMessages();
-      return res.json(response);
-    } catch (e) {
-      internalErrorHandler(res, e);
-    }
-  }
-);
-
-router.get(
-  '/stream/s/:id',
-  query('locale').isString().optional(),
+  rateLimitMiddleware('30 per 1m'),
+  body('resourceType').matches(/^(recap|summary)$/i),
+  body('resourceId').isNumeric(),
+  body('locale').isString(),
   validationMiddleware,
   async (req, res) => {
     try {
-      const { id } = req.params;
-      return ServiceController.stream(req, Number(id));
+      const response = await LocalizationController.localize(req, req.body);
+      return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);
     }
@@ -70,19 +36,7 @@ router.post(
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await ServiceController.localize(req, req.body);
-      return res.json(response);
-    } catch (e) {
-      internalErrorHandler(res, e);
-    }
-  }
-);
-
-router.post(
-  '/iap',
-  async (req, res) => {
-    try {
-      const response = await ServiceController.processPurchase(req, req.body);
+      const response = await LocalizationController.localize(req, req.body);
       return res.json(response);
     } catch (e) {
       internalErrorHandler(res, e);

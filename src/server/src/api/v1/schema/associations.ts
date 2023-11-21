@@ -8,6 +8,8 @@ import {
   Job,
   Locale,
   Message,
+  Poll,
+  PollOption,
   Publisher,
   PublisherInteraction,
   PublisherTranslation,
@@ -21,8 +23,6 @@ import {
   RequestLog,
   Role,
   SentimentMethod,
-  Service,
-  ServiceStatus,
   Subscription,
   Summary,
   SummaryCategory,
@@ -56,17 +56,6 @@ import {
 export function makeAssociations() {
 
   // system associations
-  
-  ServiceStatus.belongsTo(Service, {
-    foreignKey: 'serviceId',
-    onDelete: 'cascade',
-    onUpdate: 'cascade', 
-  });
-  Service.hasMany(ServiceStatus, {
-    foreignKey: 'serviceId',
-    onDelete: 'cascade',
-    onUpdate: 'cascade', 
-  });
   
   RequestLog.belongsTo(User, {
     foreignKey: 'userId',
@@ -456,8 +445,22 @@ export function makeAssociations() {
     onDelete: 'cascade',
     onUpdate: 'cascade',
   });
+
+  // poll associations
+
+  PollOption.belongsTo(Poll, {
+    foreignKey: 'pollId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  });
+  Poll.hasMany(PollOption, {
+    foreignKey: 'pollId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  });
   
   // queues
+
   Queue.hasMany(Job, {
     foreignKey: 'queue',
     onDelete: 'cascade',
@@ -482,15 +485,6 @@ export function makeAssociations() {
 }
 
 export function addScopes() {
-  
-  Service.addScope('public', {
-    include: [
-      {
-        as: 'statuses',
-        model: ServiceStatus,
-      },
-    ],
-  });
   
   Message.addScope('public', { attributes: [...PUBLIC_MESSAGE_ATTRIBUTES] });
 

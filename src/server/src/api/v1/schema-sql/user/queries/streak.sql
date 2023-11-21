@@ -1,27 +1,35 @@
 WITH cte AS (
   SELECT
-    *,
-    DATE("createdAt")::timestamp "date",
-    DATE("createdAt")::timestamp - DENSE_RANK() OVER (PARTITION BY "userId" ORDER BY DATE("createdAt")) * interval '1 day' "filter"
-  FROM requests
-  WHERE "userId" IS NOT NULL
+    r."userId",
+    a."value" "user",
+    DATE(r."createdAt")::timestamp "date",
+    DATE(r."createdAt")::timestamp - DENSE_RANK() OVER (PARTITION BY r."userId" ORDER BY DATE(r."createdAt")) * interval '1 day' "filter"
+  FROM requests r
+  LEFT JOIN aliases a ON r."userId" = a."userId"
+    AND (a."type" = 'username')
+WHERE r."userId" IS NOT NULL
 )
 SELECT
+  ROW_NUMBER() OVER (ORDER BY COUNT(DISTINCT DATE("date")::timestamp) DESC,
+    MAX(DATE("date")::timestamp) DESC,
+    "userId" DESC) "rank",
+  "user",
   "userId",
-  COUNT(DISTINCT DATE("date")::timestamp)::integer "length",
-  MAX(DATE("createdAt")::timestamp) "max",
-  MIN(DATE("createdAt")::timestamp) "min"
+  COUNT(DISTINCT DATE("date")::timestamp)::integer "count",
+  MAX(DATE("date")::timestamp) "max",
+  MIN(DATE("date")::timestamp) "min"
 FROM
   cte
-WHERE (:noUserId
+WHERE (:userId IS NULL
   OR "userId" = :userId)
 GROUP BY
+  "user",
   "userId",
   FILTER
 HAVING
   COUNT(DISTINCT DATE("date")::timestamp) - 1 > 0
 ORDER BY
   COUNT(DISTINCT DATE("date")::timestamp) DESC,
-  MAX("createdAt") DESC,
+  MAX(DATE("date")::timestamp) DESC,
   "userId" DESC
 LIMIT :limit

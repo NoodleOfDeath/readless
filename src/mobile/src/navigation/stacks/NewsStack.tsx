@@ -22,7 +22,7 @@ import {
   SummaryScreen,
   TestScreen,
 } from '~/screens';
-import { StreaksScreen } from '~/screens/profile/StreaksScreen';
+import { LeaderboardsScreen } from '~/screens/profile/LeaderboardsScreen';
 
 export const NEWS_STACK: RouteConfig<
   RoutingParams,
@@ -94,8 +94,8 @@ export const NEWS_STACK: RouteConfig<
     },
   },
   {
-    component: StreaksScreen, 
-    name: 'streaks',
+    component: LeaderboardsScreen, 
+    name: 'leaderboards',
     options: { 
       headerBackTitle: '', 
       headerLeft: () => null,

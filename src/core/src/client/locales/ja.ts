@@ -169,6 +169,9 @@ export const jaStrings: typeof enStrings = {
   menu: 'メニュー',
   minimizeBias: 'バイアスを最小限に抑える',
   more: 'もっと',
+  most: 'ほとんど',
+  mostReadsInThsPastWeek: '過去 1 週間で最も読まれた記事',
+  mostSharesInThsPastWeek: '過去 1 週間で最も多くのシェアを獲得',
   negative: 'ネガティブ',
   neutral: '中性',
   newsAlerts: 'カスタムニュースアラート',
@@ -206,6 +209,7 @@ export const jaStrings: typeof enStrings = {
   pushNotifications: 'プッシュ通知',
   pushNotificationsDescription: '毎日、ニュースを読むようリマインドされる時間を設定します',
   quizzes: 'クイズと報酬',
+  rank: 'ランク',
   readArticle: '記事を読む',
   readSentiment: '感情スコアをタップすると、記事の感情分析が表示されます',
   readless: 'もっと読む',
@@ -332,5 +336,6 @@ export const jaStrings: typeof enStrings = {
   yourFollows: 'あなたのフォロー',
   yourLongestStreak: 'あなたの最長連続記録',
   yourNews: 'あなたのニュース',
+  yourRank: 'あなたのランク',
 };
   

@@ -169,6 +169,9 @@ export const heStrings: typeof enStrings = {
   menu: 'תַפרִיט',
   minimizeBias: 'למזער הטיה',
   more: 'יותר',
+  most: 'רוב',
+  mostReadsInThsPastWeek: 'רוב הנקראים בשבוע האחרון',
+  mostSharesInThsPastWeek: 'רוב המניות בשבוע האחרון',
   negative: 'שלילי',
   neutral: 'ניטראלי',
   newsAlerts: 'התראות חדשות מותאמות אישית',
@@ -206,6 +209,7 @@ export const heStrings: typeof enStrings = {
   pushNotifications: 'הודעות דחיפה',
   pushNotificationsDescription: 'קבע שעה בכל יום כדי לקבל תזכורת לקרוא את החדשות',
   quizzes: 'חידונים ותגמולים',
+  rank: 'דַרגָה',
   readArticle: 'קרא מאמר',
   readSentiment: 'הקש על ציון הסנטימנט כדי לקרוא ניתוח סנטימנט של המאמר',
   readless: 'תקרא פחות',
@@ -332,5 +336,6 @@ export const heStrings: typeof enStrings = {
   yourFollows: 'העוקבים שלך',
   yourLongestStreak: 'הרצף הארוך ביותר שלך',
   yourNews: 'החדשות שלך',
+  yourRank: 'הדרגה שלך',
 };
   

@@ -169,6 +169,9 @@ export const svStrings: typeof enStrings = {
   menu: 'Meny',
   minimizeBias: 'minimera partiskhet',
   more: 'Mer',
+  most: 'Mest',
+  mostReadsInThsPastWeek: 'Mest lästa den senaste veckan',
+  mostSharesInThsPastWeek: 'Flest aktier under den senaste veckan',
   negative: 'Negativ',
   neutral: 'Neutral',
   newsAlerts: 'Anpassade nyhetsvarningar',
@@ -206,6 +209,7 @@ export const svStrings: typeof enStrings = {
   pushNotifications: 'Pushmeddelanden',
   pushNotificationsDescription: 'Ställ in en tid varje dag för att bli påmind om att läsa nyheterna',
   quizzes: 'Frågesporter och belöningar',
+  rank: 'Rang',
   readArticle: 'Läs artikeln',
   readSentiment: 'Tryck på sentimentpoängen för att läsa en sentimentanalys av artikeln',
   readless: 'Läs mindre',
@@ -332,5 +336,6 @@ export const svStrings: typeof enStrings = {
   yourFollows: 'Dina följare',
   yourLongestStreak: 'Din längsta rad',
   yourNews: 'Dina nyheter',
+  yourRank: 'Din rang',
 };
   

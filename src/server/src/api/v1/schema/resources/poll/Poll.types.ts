@@ -4,7 +4,6 @@ import { DatedAttributes } from '../../types';
 export type PollAttributes = DatedAttributes & {
   name: string;
   title: string;
-  options?: PollOptionAttributes[];
 };
 
 export type PollCreationAttributes = Partial<DatedAttributes> & {
@@ -16,7 +15,6 @@ export type PollCreationAttributes = Partial<DatedAttributes> & {
 export const PUBLIC_POLL_ATTRIBUTES = [
   'id',
   'title',
-  'options',
 ] as const;
 
 export type PublicPollAttributes = Pick<

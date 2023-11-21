@@ -169,6 +169,9 @@ export const ruStrings: typeof enStrings = {
   menu: 'Меню',
   minimizeBias: 'свести к минимуму предвзятость',
   more: 'Более',
+  most: 'Большинство',
+  mostReadsInThsPastWeek: 'Наибольшее количество прочитанных за последнюю неделю',
+  mostSharesInThsPastWeek: 'Наибольшее количество акций за прошедшую неделю',
   negative: 'Отрицательный',
   neutral: 'Нейтральный',
   newsAlerts: 'Пользовательские оповещения о новостях',
@@ -206,6 +209,7 @@ export const ruStrings: typeof enStrings = {
   pushNotifications: 'Всплывающее уведомление',
   pushNotificationsDescription: 'Установите время каждый день, чтобы получать напоминания о прочтении новостей',
   quizzes: 'Викторины и награды',
+  rank: 'Классифицировать',
   readArticle: 'Читать статью',
   readSentiment: 'Нажмите на оценку тональности, чтобы прочитать анализ тональности статьи.',
   readless: 'Читать меньше',
@@ -332,5 +336,6 @@ export const ruStrings: typeof enStrings = {
   yourFollows: 'Ваши подписчики',
   yourLongestStreak: 'Ваша самая длинная серия',
   yourNews: 'Твои новости',
+  yourRank: 'Ваш ранг',
 };
   

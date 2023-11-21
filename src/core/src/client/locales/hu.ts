@@ -169,6 +169,9 @@ export const huStrings: typeof enStrings = {
   menu: 'Menü',
   minimizeBias: 'minimalizálja az elfogultságot',
   more: 'Több',
+  most: 'A legtöbb',
+  mostReadsInThsPastWeek: 'A legtöbb olvasmány az elmúlt héten',
+  mostSharesInThsPastWeek: 'A legtöbb részvény az elmúlt héten',
   negative: 'Negatív',
   neutral: 'Semleges',
   newsAlerts: 'Egyéni hírek figyelmeztetések',
@@ -206,6 +209,7 @@ export const huStrings: typeof enStrings = {
   pushNotifications: 'Értesítések',
   pushNotificationsDescription: 'Állítson be minden nap egy időpontot, amikor emlékeztetni kell a hírek olvasására',
   quizzes: 'Kvízek és jutalmak',
+  rank: 'Rang',
   readArticle: 'Olvassa el a cikket',
   readSentiment: 'Érintse meg a hangulatpontszámot a cikk hangulatelemzésének elolvasásához',
   readless: 'Olvass kevesebbet',
@@ -332,5 +336,6 @@ export const huStrings: typeof enStrings = {
   yourFollows: 'Az Ön követései',
   yourLongestStreak: 'A leghosszabb sorozatod',
   yourNews: 'A híreid',
+  yourRank: 'A rangod',
 };
   

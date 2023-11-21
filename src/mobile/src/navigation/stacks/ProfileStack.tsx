@@ -20,7 +20,8 @@ import {
   RoutingParams,
   SummaryScreen,
 } from '~/screens';
-import { StreaksScreen } from '~/screens/profile/StreaksScreen';
+import { LeaderboardScreen } from '~/screens/profile/LeaderboardScreen';
+import { LeaderboardsScreen } from '~/screens/profile/LeaderboardsScreen';
 
 export const PROFILE_STACK: RouteConfig<
   RoutingParams,
@@ -90,8 +91,8 @@ export const PROFILE_STACK: RouteConfig<
     },
   },
   {
-    component: StreaksScreen, 
-    name: 'streaks',
+    component: LeaderboardsScreen, 
+    name: 'leaderboards',
     options: { 
       headerBackTitle: '', 
       headerLeft: () => null,

@@ -169,6 +169,9 @@ export const daStrings: typeof enStrings = {
   menu: 'Menu',
   minimizeBias: 'minimere bias',
   more: 'Mere',
+  most: 'Mest',
+  mostReadsInThsPastWeek: 'Mest læste i den seneste uge',
+  mostSharesInThsPastWeek: 'Flest aktier i den seneste uge',
   negative: 'Negativ',
   neutral: 'Neutral',
   newsAlerts: 'Brugerdefinerede nyhedsadvarsler',
@@ -206,6 +209,7 @@ export const daStrings: typeof enStrings = {
   pushNotifications: 'Push-meddelelser',
   pushNotificationsDescription: 'Indstil et tidspunkt hver dag for at blive mindet om at læse nyhederne',
   quizzes: 'Quizzer og belønninger',
+  rank: 'Rang',
   readArticle: 'Læs artikel',
   readSentiment: 'Tryk på stemningsscoren for at læse en stemningsanalyse af artiklen',
   readless: 'Læs mindre',
@@ -332,5 +336,6 @@ export const daStrings: typeof enStrings = {
   yourFollows: 'Dine følgere',
   yourLongestStreak: 'Din længste streak',
   yourNews: 'Dine nyheder',
+  yourRank: 'Din rang',
 };
   

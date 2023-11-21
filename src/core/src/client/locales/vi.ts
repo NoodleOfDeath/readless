@@ -169,6 +169,9 @@ export const viStrings: typeof enStrings = {
   menu: 'Thực đơn',
   minimizeBias: 'giảm thiểu sai lệch',
   more: 'Hơn',
+  most: 'Hầu hết',
+  mostReadsInThsPastWeek: 'Đọc nhiều nhất trong tuần qua',
+  mostSharesInThsPastWeek: 'Nhiều lượt chia sẻ nhất trong tuần qua',
   negative: 'Tiêu cực',
   neutral: 'Trung lập',
   newsAlerts: 'Cảnh báo tin tức tùy chỉnh',
@@ -206,6 +209,7 @@ export const viStrings: typeof enStrings = {
   pushNotifications: 'Thông báo đẩy',
   pushNotificationsDescription: 'Đặt thời gian mỗi ngày để được nhắc đọc tin tức',
   quizzes: 'Câu đố và phần thưởng',
+  rank: 'Thứ hạng',
   readArticle: 'đọc bài viết',
   readSentiment: 'Nhấn vào điểm số tình cảm để đọc phân tích tình cảm của bài viết',
   readless: 'Đọc ít hơn',
@@ -332,5 +336,6 @@ export const viStrings: typeof enStrings = {
   yourFollows: 'Theo dõi của bạn',
   yourLongestStreak: 'Chuỗi dài nhất của bạn',
   yourNews: 'Tin tức của bạn',
+  yourRank: 'Thứ hạng của bạn',
 };
   

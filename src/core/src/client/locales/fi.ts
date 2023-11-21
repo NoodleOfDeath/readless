@@ -169,6 +169,9 @@ export const fiStrings: typeof enStrings = {
   menu: 'Valikko',
   minimizeBias: 'minimoida puolueettomuus',
   more: 'Lisää',
+  most: 'Suurin osa',
+  mostReadsInThsPastWeek: 'Eniten luettuja kuluneen viikon aikana',
+  mostSharesInThsPastWeek: 'Eniten osakkeita kuluneen viikon aikana',
   negative: 'Negatiivinen',
   neutral: 'Neutraali',
   newsAlerts: 'Mukautetut uutisilmoitukset',
@@ -206,6 +209,7 @@ export const fiStrings: typeof enStrings = {
   pushNotifications: 'Push-ilmoitukset',
   pushNotificationsDescription: 'Aseta joka päivä aika, jolloin sinua muistutetaan uutisten lukemisesta',
   quizzes: 'Tietokilpailut ja palkinnot',
+  rank: 'Sijoitus',
   readArticle: 'Lue artikkeli',
   readSentiment: 'Napauta mielipidepistettä lukeaksesi artikkelin mielipideanalyysin',
   readless: 'Lue Vähemmän',
@@ -332,5 +336,6 @@ export const fiStrings: typeof enStrings = {
   yourFollows: 'Sinun seuraamisesi',
   yourLongestStreak: 'Pisin putkisi',
   yourNews: 'Sinun uutiset',
+  yourRank: 'Sijoituksesi',
 };
   

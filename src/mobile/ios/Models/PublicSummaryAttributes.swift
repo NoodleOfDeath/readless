@@ -90,6 +90,16 @@ public enum MediaResolution: String {
   case xxxl
 }
 
+public let MediaResolutionMaxWidths: [MediaResolution: CGFloat] = [
+  .xs: 80,
+  .sm: 240,
+  .md: 480,
+  .lg: 640,
+  .xl: 720,
+  .xxl: 960,
+  .xxxl: 1080,
+]
+
 public class Summary {
   
   public var root: PublicSummaryAttributes
@@ -139,7 +149,11 @@ public class Summary {
   
   public func loadImages(resolution: MediaResolution? = nil) {
     if let url = getMediaURL(type: .image, resolution: resolution) {
-      image = Image.load(from: url, maxWidth: 80)
+      var maxWidth: CGFloat = 80.0
+      if let resolution = resolution {
+        maxWidth = MediaResolutionMaxWidths[resolution] ?? 80.0
+      }
+      image = Image.load(from: url, maxWidth: maxWidth)
     }
     publisherIcon = Image.load(from: publisher.icon, maxWidth: 40)
   }

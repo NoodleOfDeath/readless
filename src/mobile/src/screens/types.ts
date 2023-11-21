@@ -4,6 +4,8 @@ import { LinkingOptions, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import {
+  InteractionType,
+  MetricsResponse,
   PublicCategoryAttributes,
   PublicPublisherAttributes,
   PublicSummaryGroup,
@@ -88,7 +90,7 @@ export type GamesRoutingParams = {
 export type ProfileRoutingParams = SettingsRoutingParams & {
   default: undefined;
   account: undefined;
-  streaks: undefined;
+  leaderboards: { metrics?: MetricsResponse, interactionType?: InteractionType };
 };
 
 export type RoutingParams = NavigationTabParams & LoginRoutingParams & NewsRoutingParams & GamesRoutingParams & ProfileRoutingParams;

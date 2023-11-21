@@ -169,6 +169,9 @@ export const ptBRStrings: typeof enStrings = {
   menu: 'Cardápio',
   minimizeBias: 'minimizar viés',
   more: 'Mais',
+  most: 'Maioria',
+  mostReadsInThsPastWeek: 'Mais leituras na semana passada',
+  mostSharesInThsPastWeek: 'Maioria das ações na semana passada',
   negative: 'Negativo',
   neutral: 'Neutro',
   newsAlerts: 'Alertas de notícias personalizados',
@@ -206,6 +209,7 @@ export const ptBRStrings: typeof enStrings = {
   pushNotifications: 'Notificações via push',
   pushNotificationsDescription: 'Defina um horário todos os dias para ser lembrado de ler as notícias',
   quizzes: 'Testes e recompensas',
+  rank: 'Classificação',
   readArticle: 'Leia o artigo',
   readSentiment: 'Toque na pontuação de sentimento para ler uma análise de sentimento do artigo',
   readless: 'Leia menos',
@@ -332,5 +336,6 @@ export const ptBRStrings: typeof enStrings = {
   yourFollows: 'Seus seguidores',
   yourLongestStreak: 'Sua sequência mais longa',
   yourNews: 'Suas notícias',
+  yourRank: 'Sua classificação',
 };
   

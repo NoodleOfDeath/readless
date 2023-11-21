@@ -169,6 +169,9 @@ export const caStrings: typeof enStrings = {
   menu: 'Menú',
   minimizeBias: 'minimitzar el biaix',
   more: 'Més',
+  most: 'La majoria',
+  mostReadsInThsPastWeek: 'Més lectures durant la setmana passada',
+  mostSharesInThsPastWeek: 'Més accions durant la setmana passada',
   negative: 'Negatiu',
   neutral: 'Neutre',
   newsAlerts: 'Alertes de notícies personalitzades',
@@ -206,6 +209,7 @@ export const caStrings: typeof enStrings = {
   pushNotifications: 'Notificacions push',
   pushNotificationsDescription: 'Establiu una hora cada dia per recordar que llegiu les notícies',
   quizzes: 'Tests i recompenses',
+  rank: 'Classificació',
   readArticle: 'Llegeix l\'article',
   readSentiment: 'Toqueu la puntuació de sentiment per llegir una anàlisi de sentiment de l\'article',
   readless: 'Llegeix menys',
@@ -332,5 +336,6 @@ export const caStrings: typeof enStrings = {
   yourFollows: 'Els teus seguidors',
   yourLongestStreak: 'La teva ratxa més llarga',
   yourNews: 'Les teves notícies',
+  yourRank: 'El teu rang',
 };
   

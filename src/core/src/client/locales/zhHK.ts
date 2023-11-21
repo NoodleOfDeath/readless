@@ -169,6 +169,9 @@ export const zhHKStrings: typeof enStrings = {
   menu: '菜單',
   minimizeBias: '最小化偏見',
   more: '更多的',
+  most: '最多',
+  mostReadsInThsPastWeek: '過去一周閱讀最多的人',
+  mostSharesInThsPastWeek: '過去一周的大部分股票',
   negative: '消極的',
   neutral: '中性的',
   newsAlerts: '自定義新聞提醒',
@@ -206,6 +209,7 @@ export const zhHKStrings: typeof enStrings = {
   pushNotifications: '推送通知',
   pushNotificationsDescription: '每天設定一個時間提醒閱讀新聞',
   quizzes: '測驗和獎勵',
+  rank: '秩',
   readArticle: '閱讀文章',
   readSentiment: '點擊情緒分數即可閱讀文章的情緒分析',
   readless: '少讀',
@@ -332,5 +336,6 @@ export const zhHKStrings: typeof enStrings = {
   yourFollows: '您的關注',
   yourLongestStreak: '你的最長連續紀錄',
   yourNews: '你的消息',
+  yourRank: '你的等級',
 };
   
