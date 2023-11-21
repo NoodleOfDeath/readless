@@ -98,8 +98,9 @@ export class Alias<
         let alias: Alias;
         if (email && emailVerified) {
           alias = await Alias.findOne({ where: { type: 'email', value: email } });
-        } if (!alias) {
-          alias = await Alias.findOne({ where: { type: 'thirdParty/google', value: claims.sub } });
+        } 
+        if (!alias) {
+          alias = await Alias.findOne({ where: { type: 'thirdParty/apple', value: claims.sub } });
         } 
         return alias;
       } else
@@ -111,7 +112,8 @@ export class Alias<
         let alias: Alias;
         if (email && emailVerified) {
           alias = await Alias.findOne({ where: { type: 'email', value: email } });
-        } if (!alias) {
+        }
+        if (!alias) {
           alias = await Alias.findOne({ where: { type: 'thirdParty/google', value: thirdPartyId } });
         } 
         return alias;
