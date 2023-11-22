@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useFocusEffect } from '@react-navigation/native';
 import pluralize from 'pluralize';
 
 import { ScreenComponent } from '../types';
@@ -66,7 +67,7 @@ export function MetricCounter({
       return `${shareCount} ${pluralize(strings.share, shareCount)}`;
     }
     return '';
-  }, [currentStreak, interactionType, showStreak, userData]);
+  }, [currentStreak, interactionType, showStreak, userData?.profile?.stats]);
   return (
     <View
       beveled
@@ -112,7 +113,7 @@ export function LongestStreakLeaderboardScreen({ route }: ScreenComponent<'leade
           itemsCenter
           bg={ theme.colors.headerBackground }>
           <Text>{strings.yourRank}</Text>
-          <Text h3>{`${strings.rank} #${metrics?.userRankings?.streaks ?? '???'}`}</Text>
+          <Text h3>{`${strings.rank} #${(metrics?.userRankings?.streaks ?? Number.MAX_SAFE_INTEGER) > 100 ? '100+' : (metrics?.userRankings?.streaks ?? '???')}`}</Text>
         </View>
         <MetricCounter horizontal longestStreak />
         <View flexRow gap={ 6 } justifyCenter>
@@ -191,7 +192,7 @@ export function InteractionCountLeaderboardScreen({ route }: ScreenComponent<'le
           itemsCenter
           bg={ theme.colors.headerBackground }>
           <Text>{strings.yourRank}</Text>
-          <Text h3>{`${strings.rank} #${metrics.userRankings?.interactionCounts[interactionType] ?? '???'}`}</Text>
+          <Text h3>{`${strings.rank} #${(metrics.userRankings?.interactionCounts[interactionType] ?? Number.MAX_SAFE_INTEGER) > 100 ? '100+' : (metrics.userRankings?.interactionCounts[interactionType] ?? '???')}`}</Text>
         </View>
         <MetricCounter horizontal interactionType={ interactionType } />
         <View flexRow gap={ 6 } justifyCenter>
@@ -248,16 +249,17 @@ const Tab = createMaterialTopTabNavigator();
 export function LeaderboardsScreen({ route: _route }: ScreenComponent<'leaderboards'>) {
 
   const theme = useTheme();
-  const { api: { getMetrics } } = React.useContext(StorageContext);
+  const { api: { getMetrics }, syncWithRemote } = React.useContext(StorageContext);
   const { showToast } = React.useContext(ToastContext);
 
   const [metrics, setMetrics] = React.useState<MetricsResponse>();
 
   const onMount = React.useCallback(async () => {
-    if (metrics) {
-      return; 
-    }
     try {
+      if (metrics) {
+        return; 
+      }
+      syncWithRemote();
       const { data, error } = await getMetrics({});
       if (error) {
         throw error;
@@ -267,11 +269,12 @@ export function LeaderboardsScreen({ route: _route }: ScreenComponent<'leaderboa
       console.error(e);
       showToast(e);
     }
-  }, [getMetrics, metrics, showToast]);
+  }, [syncWithRemote, getMetrics, metrics, showToast]);
 
-  React.useEffect(() => {
+  useFocusEffect(React.useCallback(() => {
     onMount();
-  }, [onMount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []));
 
   return (
     <Screen>

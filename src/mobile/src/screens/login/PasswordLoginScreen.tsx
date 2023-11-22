@@ -20,7 +20,7 @@ export function PasswordLoginScreen({
   const { 
     api: { login }, 
     setStoredValue, 
-    syncWithRemotePrefs,
+    syncWithRemote,
   } = React.useContext(StorageContext);
 
   const [email, setEmail] = React.useState('');
@@ -40,11 +40,11 @@ export function PasswordLoginScreen({
       }
       const userData = new UserData(response);
       setStoredValue('userData', userData);
-      syncWithRemotePrefs(userData);
+      syncWithRemote(userData);
     } catch (error) {
       console.error(error);
     }
-  }, [email, login, password, setStoredValue, syncWithRemotePrefs]);
+  }, [email, login, password, setStoredValue, syncWithRemote]);
 
   React.useEffect(() => setMessage(''), [email, password]);
   

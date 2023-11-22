@@ -286,17 +286,17 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       userRankings: { 
         interactionCounts: {
           ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, 0])) as { [key in InteractionType]: number },
-          read: readCounts.find((s) => s.userId === user?.id)?.rank,
-          share: shareCounts.find((s) => s.userId === user?.id)?.rank,
+          read: readCounts.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
+          share: shareCounts.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
         },
-        streaks: streaks.find((s) => s.userId === user?.id)?.rank,
+        streaks: streaks.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
       },
     };
   }
 
   public static async getStreaks(limit: 'ALL' | number = 10): Promise<Streak[]> {
     const replacements = {
-      limit: limit === 'ALL' ? null : limit,
+      limit: limit === 'ALL' ? 100 : limit,
       userId: null, 
     };
     const response: Streak[] = (await User.store.query(QueryFactory.getQuery('streak'), {
@@ -317,7 +317,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   public static async getInteractionCounts(type: InteractionType, req?: MetricsRequest, user?: User): Promise<InteractionCount[]> {
     const replacements = {
       interval: null,
-      limit: null,
+      limit: 100,
       type,
       userId: null,
     };
@@ -328,7 +328,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as InteractionCount[]);
     if (user) {
-      return response.map((e) => ({ ...e, rank: response.find((r) => r.userId === user.id)?.rank }));
+      return response.map((e) => ({ ...e, rank: response.find((r) => r.userId === user.id)?.rank ?? Number.MAX_SAFE_INTEGER }));
     }
     return response;
   }

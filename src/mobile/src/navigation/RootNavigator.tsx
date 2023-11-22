@@ -57,7 +57,7 @@ export function RootNavigator() {
     setCategories, 
     setPublishers,
     setErrorHandler,
-    syncWithRemotePrefs,
+    syncWithRemote,
   } = storage;
   const { showToast } = React.useContext(ToastContext);
   
@@ -187,9 +187,9 @@ export function RootNavigator() {
       if (lastSync > Date.now() - ms('2m')) {
         return;
       }
-      await syncWithRemotePrefs();
+      await syncWithRemote();
       setLastSync(Date.now());
-    }, [syncWithRemotePrefs, lastSync]),
+    }, [syncWithRemote, lastSync]),
   });
   
   if (!ready) {
