@@ -250,6 +250,7 @@ export const SYNCABLE_SETTINGS: (keyof Storage)[] = [
   'followedCategories',
   'favoritedCategories',
   'excludedCategories',
+  'viewedFeatures',
 ];
 
 export type SyncableSetting = typeof SYNCABLE_SETTINGS[number];
