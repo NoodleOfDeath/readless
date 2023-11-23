@@ -2,13 +2,13 @@ import { Request, RequestHandler } from 'express';
 import ms from 'ms';
 
 import { AuthError, internalErrorHandler } from './internal-errors';
+import { Duration } from '../../../utils';
 import {
   RateLimit,
   RequestLog,
   User,
 } from '../schema';
 
-export type Duration = `${number}${'ms'|'s'|'m'|'h'|'d'|'w'|'M'|'y'}`;
 export type RateLimitString = `${number}${'/'|'every'|'per'}${Duration}`;
 
 export function parseDuration(period: number | string) {
@@ -32,7 +32,7 @@ function parseRateLimitString(rateLimitString: RateLimitString): RateLimitOption
 }
 
 export const rateLimitMiddleware = (
-  opts: RateLimitString | RateLimitOptions = {
+  opts: RateLimitOptions | RateLimitString = {
     duration: ms('10m'), 
     limit: 200, 
     path: (req) => [req.method, req.path].join(':'), 
@@ -52,7 +52,7 @@ export const rateLimitMiddleware = (
         res.status(200).send('OK');
         return;
       }
-      const user = await User.from(req.body, { ignoreIfNotResolved: true });
+      const user = await User.from({ jwt: req.body.jwt }, { ignoreIfNotResolved: true });
       await RequestLog.create({
         appVersion,
         locale,

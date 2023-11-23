@@ -6,7 +6,7 @@ type GenerateTtsOptions = {
   text: string;
   voice?: string;
   quality?: string;
-  output_format?: 'mp3' | 'wav' | 'ogg' | 'flac';
+  output_format?: 'flac' | 'mp3' | 'ogg' | 'wav';
   speed?: number;
   sample_rate?: number;
   seed?: number;

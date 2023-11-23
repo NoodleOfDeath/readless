@@ -1,6 +1,6 @@
 import { DatedAttributes } from '../types';
 
-export type MetadataType = 'pref' | 'info' | 'stat';
+export type MetadataType = 'info' | 'pref' | 'stat';
 
 export type UserMetadataAttributes = DatedAttributes & {
   userId: number;

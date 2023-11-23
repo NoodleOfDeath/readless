@@ -15,7 +15,7 @@ export * from './queue/Worker.model';
 export * from './user/User.model';
 export * from './user/Alias.model';
 export * from './user/UserMetadata.model';
-export * from './user/RefUserRole.model';
+export * from './user/UserRole.model';
 export * from './user/Credential.model';
 export * from './user/Role.model';
 
@@ -52,10 +52,14 @@ export * from './resources/recap/RecapSummary.model';
 // Subscription
 export * from './resources/subscription/Subscription.model';
 
-// Polls
-export * from './resources/poll/Poll.model';
-export * from './resources/poll/PollInteraction.model';
-export * from './resources/poll/PollOption.model';
+// Events
+export * from './resources/event/Event.model';
+export * from './resources/event/EventInteraction.model';
+export * from './resources/event/EventMetadata.model';
+
+// Achievement
+export * from './resources/achievement/Achievement.model';
+export * from './resources/achievement/UserAchievement.model';
 
 // IAP
 export * from './resources/iap/IapVoucher.model';

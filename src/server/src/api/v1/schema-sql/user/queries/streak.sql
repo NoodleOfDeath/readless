@@ -3,7 +3,8 @@ WITH cte AS (
     r."userId",
     a."value" "user",
     DATE(r."createdAt")::timestamp "date",
-    DATE(r."createdAt")::timestamp - DENSE_RANK() OVER (PARTITION BY r."userId" ORDER BY DATE(r."createdAt")) * interval '1 day' "filter"
+    DATE(r."createdAt")::timestamp - DENSE_RANK() OVER (PARTITION BY r."userId" ORDER BY DATE(r."createdAt")::timestamp) * interval '1 day' "filter",
+    r."createdAt"
   FROM requests r
   LEFT JOIN aliases a ON r."userId" = a."userId"
     AND (a."type" = 'username')
@@ -17,7 +18,8 @@ SELECT
   "userId",
   COALESCE(COUNT(DISTINCT DATE("date")::timestamp)::integer, 1) "count",
   MAX(DATE("date")::timestamp) "max",
-  MIN(DATE("date")::timestamp) "min"
+  MIN(DATE("date")::timestamp) "min",
+  MAX("createdAt") "updatedAt"
 FROM
   cte
 WHERE (:userId IS NULL
@@ -32,4 +34,5 @@ ORDER BY
   COUNT(DISTINCT DATE("date")::timestamp) DESC,
   MAX(DATE("date")::timestamp) DESC,
   "userId" DESC
-LIMIT :limit
+LIMIT :limit;
+

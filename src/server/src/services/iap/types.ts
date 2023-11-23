@@ -22,7 +22,7 @@ export type PurchaseRequestApple = {
 export type PurchaseRequest = PurchaseRequestAndroid | PurchaseRequestApple;
 
 export type ApplePurchaseResponse = {
-  environment: 'Sandbox' | 'Production';
+  environment: 'Production' | 'Sandbox';
   is_retryable: boolean;
   latest_receipt: string;
   latest_receipt_info: {

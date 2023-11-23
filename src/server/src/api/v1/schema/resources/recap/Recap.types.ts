@@ -15,7 +15,7 @@ export type RecapAttributes = PostAttributes & Sentimental & Translatable & {
   sentiments?: PublicSentimentAttributes[];
 };
 
-export type RecapCreationAttributes = PostCreationAttributes & Partial<Sentimental> & {
+export type RecapCreationAttributes = Partial<Sentimental> & PostCreationAttributes & {
   key: string;
   length: string;
 };

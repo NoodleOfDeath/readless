@@ -144,7 +144,7 @@ export class Job<D extends Serializable, R, Q extends string = string, A extends
     await this.save();
   }
     
-  async moveToFailed(reason?: string | Error) {
+  async moveToFailed(reason?: Error | string) {
     this.set('lockedBy', null);
     this.set('startedAt', null);
     this.set('failedAt', new Date());

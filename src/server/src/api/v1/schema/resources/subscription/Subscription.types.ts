@@ -1,7 +1,7 @@
 import { DatedAttributes } from '../../types';
 
-export type SubscriptionChannel = 'email' | 'sms' | 'fcm' | 'apns' | 'push';
-export type SubscriptionEvent = 'default' | 'daily-recap' | 'daily-reminder';
+export type SubscriptionChannel = 'apns' | 'email' | 'fcm' | 'push' | 'sms';
+export type SubscriptionEvent = 'daily-recap' | 'daily-reminder' | 'default';
 
 export type SubscriptionAttributes = DatedAttributes & {
   channel: SubscriptionChannel;

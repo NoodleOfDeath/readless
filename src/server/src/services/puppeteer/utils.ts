@@ -1,8 +1,8 @@
 import ms from 'ms';
 import { PublisherCreationAttributes, SpiderSelector } from 'src/api/v1/schema';
 
-type ReplacePattern = string | RegExp | {
-  expr: string | RegExp,
+type ReplacePattern = RegExp | string | {
+  expr: RegExp | string,
   repl: string,
 };
 

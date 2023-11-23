@@ -79,7 +79,7 @@ export class Recap extends Post<RecapAttributes, RecapCreationAttributes> implem
     };
   }
   
-  public static async exists(payload: string | RecapPayload) {
+  public static async exists(payload: RecapPayload | string) {
     if (typeof payload === 'string') {
       return await Recap.findOne({ where: { key: payload } });
     }
