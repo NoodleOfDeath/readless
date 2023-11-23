@@ -38,7 +38,7 @@ export type SummaryAttributes = PostAttributes & Sentimental & Translatable & {
   siblingCount?: number;
 };
 
-export type SummaryCreationAttributes = PostCreationAttributes & Partial<Sentimental> & {
+export type SummaryCreationAttributes = Partial<Sentimental> & PostCreationAttributes & {
   publisherId: number;
   categoryId: number;
   subcategoryId?: number;
@@ -57,9 +57,9 @@ export type SummaryCreationAttributes = PostCreationAttributes & Partial<Sentime
 export const PUBLIC_SUMMARY_ATTRIBUTES = [...PUBLIC_POST_ATTRIBUTES, 'summary', 'shortSummary', 'bullets', 'publisherId', 'categoryId', 'subcategoryId', 'url', 'originalDate'] as const;
 export const PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE = [...PUBLIC_POST_ATTRIBUTES, 'shortSummary', 'publisherId', 'categoryId', 'subcategoryId', 'url', 'originalDate'] as const;
 
-export type PublicSummaryAttributes = Omit<SummaryAttributes, 'rawText' | 'filteredText' | 'originalTitle'>;
+export type PublicSummaryAttributes = Omit<SummaryAttributes, 'filteredText' | 'originalTitle' | 'rawText'>;
 
-export type PublicSummaryGroup = Omit<PublicSummaryAttributes, 'shortSummary' | 'summary' | 'bullets' | 'sentiments'> & {
+export type PublicSummaryGroup = Omit<PublicSummaryAttributes, 'bullets' | 'sentiments' | 'shortSummary' | 'summary'> & {
   shortSummary?: string;
   summary?: string;
   bullets?: string[];

@@ -1,15 +1,17 @@
 import {
+  Achievement,
   Alias,
   Category,
   CategoryInteraction,
   CategoryTranslation,
   Credential,
+  Event,
+  EventInteraction,
+  EventMetadata,
   IapVoucher,
   Job,
   Locale,
   Message,
-  Poll,
-  PollOption,
   Publisher,
   PublisherInteraction,
   PublisherTranslation,
@@ -19,7 +21,6 @@ import {
   RecapMedia,
   RecapSummary,
   RecapTranslation,
-  RefUserRole,
   RequestLog,
   Role,
   SentimentMethod,
@@ -32,7 +33,9 @@ import {
   SummarySentiment,
   SummaryTranslation,
   User,
+  UserAchievement,
   UserMetadata,
+  UserRole,
   Worker,
 } from './models';
 import { 
@@ -55,8 +58,9 @@ import {
 
 export function makeAssociations() {
 
-  // system associations
+  // ----- system associations
   
+  // request log
   RequestLog.belongsTo(User, {
     foreignKey: 'userId',
     onDelete: 'cascade',
@@ -68,6 +72,7 @@ export function makeAssociations() {
     onUpdate: 'cascade', 
   });
   
+  // subscription
   Subscription.belongsTo(User, {
     foreignKey: 'userId',
     onDelete: 'cascade',
@@ -79,8 +84,9 @@ export function makeAssociations() {
     onUpdate: 'cascade', 
   });
 
-  // user/auth associations
+  // ----- user/auth associations
   
+  // alias
   Alias.belongsTo(User, {
     foreignKey: 'userId',
     onDelete: 'cascade',
@@ -92,6 +98,7 @@ export function makeAssociations() {
     onUpdate: 'cascade', 
   });
 
+  // user metadata
   UserMetadata.belongsTo(User, {
     foreignKey: 'userId',
     onDelete: 'cascade',
@@ -103,28 +110,31 @@ export function makeAssociations() {
     onUpdate: 'cascade', 
   });
 
-  RefUserRole.belongsTo(User, {
-    foreignKey: 'userId',
+  // roles
+  UserRole.belongsTo(Role, {
+    foreignKey: 'roleId',
     onDelete: 'cascade',
     onUpdate: 'cascade', 
   });
-  User.hasMany(RefUserRole, {
-    foreignKey: 'userId', 
+  Role.hasMany(UserRole, {
+    foreignKey: 'roleId',
     onDelete: 'cascade',
     onUpdate: 'cascade', 
   });
 
-  RefUserRole.belongsTo(Role, {
-    foreignKey: 'roleId',
+  // user roles
+  UserRole.belongsTo(User, {
+    foreignKey: 'userId',
     onDelete: 'cascade',
     onUpdate: 'cascade', 
   });
-  Role.hasMany(RefUserRole, {
-    foreignKey: 'roleId',
+  User.hasMany(UserRole, {
+    foreignKey: 'userId', 
     onDelete: 'cascade',
     onUpdate: 'cascade', 
   });
   
+  // credentials
   Credential.belongsTo(User, {
     foreignKey: 'userId',
     onDelete: 'cascade',
@@ -136,8 +146,9 @@ export function makeAssociations() {
     onUpdate: 'cascade', 
   });
   
-  // publisher associations
+  // ----- publisher associations
   
+  // publisher interactions
   PublisherInteraction.belongsTo(Publisher, {
     foreignKey: 'targetId',
     onDelete: 'cascade',
@@ -149,6 +160,7 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
 
+  // user-publisher interactions
   PublisherInteraction.belongsTo(User, {
     foreignKey: {
       allowNull: true,
@@ -163,6 +175,7 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
   
+  // publisher translations
   PublisherTranslation.belongsTo(Publisher, { 
     as: 'translations',
     foreignKey: 'parentId',
@@ -183,8 +196,9 @@ export function makeAssociations() {
     sourceKey: 'code',
   });
   
-  // category associations
+  // ----- category associations
   
+  // category interactions
   CategoryInteraction.belongsTo(Category, {
     foreignKey: 'targetId',
     onDelete: 'cascade',
@@ -196,6 +210,7 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
   
+  // user-category interactions
   CategoryInteraction.belongsTo(User, {
     foreignKey: {
       allowNull: true,
@@ -210,6 +225,7 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
   
+  // category translations
   CategoryTranslation.belongsTo(Category, { 
     as: 'translations',
     foreignKey: 'parentId',
@@ -230,8 +246,9 @@ export function makeAssociations() {
     sourceKey: 'code',
   });
   
-  // summary associations
+  // ----- summary associations
   
+  // summary-publisher associations
   Summary.belongsTo(Publisher, { foreignKey: 'publisherId' });
   Publisher.hasMany(Summary, { 
     foreignKey: 'publisherId',
@@ -239,6 +256,7 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
 
+  // summary-category associations
   Summary.belongsToMany(Category, {
     foreignKey: 'parentId',
     onDelete: 'cascade',
@@ -257,6 +275,7 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
   
+  // summary-sentiment associations
   SentimentMethod.hasMany(SummarySentiment, { 
     foreignKey: 'method', 
     onDelete: 'cascade',
@@ -264,6 +283,7 @@ export function makeAssociations() {
     sourceKey: 'name',
   });
   
+  // summary-sentiment associations
   SummarySentiment.belongsTo(Summary, {
     as: 'summary',
     foreignKey: 'parentId',
@@ -277,6 +297,7 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
   
+  // summary translations
   SummaryTranslation.belongsTo(Summary, { 
     as: 'translations',
     foreignKey: 'parentId',
@@ -297,6 +318,7 @@ export function makeAssociations() {
     sourceKey: 'code',
   });
   
+  // summary media
   SummaryMedia.belongsTo(Summary, { 
     as: 'media',
     foreignKey: 'parentId',
@@ -310,19 +332,7 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
   
-  SummaryRelation.belongsTo(Summary, { 
-    as: 'parent',
-    foreignKey: 'parentId',
-    onDelete: 'cascade',
-    onUpdate: 'cascade',
-  });
-  Summary.hasMany(SummaryRelation, {
-    as: 'parent',
-    foreignKey: 'parentId',
-    onDelete: 'cascade',
-    onUpdate: 'cascade',
-  });
-  
+  // summary relations
   SummaryRelation.belongsTo(Summary, { 
     as: 'sibling',
     foreignKey: 'siblingId',
@@ -336,6 +346,7 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
 
+  // summary interactions
   SummaryInteraction.belongsTo(Summary, { foreignKey: 'targetId' });
   Summary.hasMany(SummaryInteraction, { 
     foreignKey: 'targetId',
@@ -343,6 +354,7 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
   
+  // user-summary interactions
   SummaryInteraction.belongsTo(User, {
     foreignKey: {
       allowNull: true,
@@ -357,8 +369,9 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
   
-  // recap associations
+  // -- recap associations
   
+  // recap-summary associations
   RecapSummary.belongsTo(Summary, {
     as: 'child',
     foreignKey: 'summaryId',
@@ -397,6 +410,7 @@ export function makeAssociations() {
     through: RecapSummary,
   });
   
+  // recap translations
   RecapTranslation.belongsTo(Recap, {
     as: 'translations',
     foreignKey: 'parentId',
@@ -417,6 +431,7 @@ export function makeAssociations() {
     sourceKey: 'code',
   });
   
+  // recap media
   RecapMedia.belongsTo(Recap, { 
     as: 'media',
     foreignKey: 'parentId',
@@ -430,6 +445,7 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
   
+  // recap interactions
   RecapInteraction.belongsTo(Recap, { foreignKey: 'targetId' });
   Recap.hasMany(RecapInteraction, { 
     foreignKey: 'targetId',
@@ -437,6 +453,7 @@ export function makeAssociations() {
     onUpdate: 'cascade',
   });
   
+  // user-recap interactions
   RecapInteraction.belongsTo(User, {
     foreignKey: {
       allowNull: true,
@@ -445,21 +462,78 @@ export function makeAssociations() {
     onDelete: 'cascade',
     onUpdate: 'cascade',
   });
-
-  // poll associations
-
-  PollOption.belongsTo(Poll, {
-    foreignKey: 'pollId',
+  User.hasMany(RecapInteraction, {
+    foreignKey: 'userId',
     onDelete: 'cascade',
     onUpdate: 'cascade',
   });
-  Poll.hasMany(PollOption, {
-    foreignKey: 'pollId',
+
+  // ---- event associations
+
+  // event interactions
+  EventInteraction.belongsTo(Event, {
+    foreignKey: 'targetId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  });
+  Event.hasMany(EventInteraction, {
+    foreignKey: 'targetId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  });
+
+  // user-event interactions
+  EventInteraction.belongsTo(User, {
+    foreignKey: {
+      allowNull: true,
+      name: 'userId',
+    },
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  });
+
+  // event metadata
+  EventMetadata.belongsTo(Event, {
+    foreignKey: 'eventId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  });
+  Event.hasMany(EventMetadata, {
+    foreignKey: 'eventId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  });
+
+  // ----- achievement associations
+
+  // achievement associations
+  UserAchievement.belongsTo(Achievement, {
+    foreignKey: 'achievementId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  });
+  Achievement.hasMany(UserAchievement, {
+    foreignKey: 'achievementId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  });
+
+  // user-achievement associations
+  UserAchievement.belongsTo(User, {
+    foreignKey: {
+      allowNull: true,
+      name: 'userId',
+    },
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  });
+  User.hasMany(UserAchievement, {
+    foreignKey: 'userId',
     onDelete: 'cascade',
     onUpdate: 'cascade',
   });
   
-  // queues
+  // ----- queues
 
   Queue.hasMany(Job, {
     foreignKey: 'queue',

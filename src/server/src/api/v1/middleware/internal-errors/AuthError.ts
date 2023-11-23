@@ -48,7 +48,7 @@ export class AuthError extends InternalError implements AuthErrorOptions {
   
   constructor(
     errorKey: keyof typeof ERROR_MESSAGES,
-    statusCodeOrParams: number | typeof ERROR_MESSAGES[keyof typeof ERROR_MESSAGES]['params'] = 401,
+    statusCodeOrParams: typeof ERROR_MESSAGES[keyof typeof ERROR_MESSAGES]['params'] | number = 401,
     params: typeof ERROR_MESSAGES[keyof typeof ERROR_MESSAGES]['params'] = typeof statusCodeOrParams === 'number' ? undefined : statusCodeOrParams
   ) {
     let message: string = ERROR_MESSAGES[errorKey].message;

@@ -34,11 +34,11 @@ import { InteractionType } from '../interaction/Interaction.types';
 
 export type SearchSummariesPayload = {
   filter?: string;
-  matchType?: 'any' | 'all';
+  matchType?: 'all' | 'any';
   page?: number;
   pageSize?: number;
   offset?: number;
-  ids?: number | number[];
+  ids?: number[] | number;
   excludeIds?: boolean;
   interval?: string;
   locale?: string;
@@ -483,7 +483,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     });
   }
   
-  async associateWith(sibling: number | SummaryAttributes, ignore: number[] = []) {
+  async associateWith(sibling: SummaryAttributes | number, ignore: number[] = []) {
     const siblingId = typeof sibling === 'number' ? sibling : sibling.id;
     const newSibling = await Summary.findByPk(siblingId);
     const siblings = await this.getSiblings([...ignore, siblingId]);

@@ -46,6 +46,7 @@ module.exports = {
     '@typescript-eslint/semi': [
       'error', 'always',
     ],
+    '@typescript-eslint/sort-type-constituents': 'error',
     'array-bracket-newline': [
       'error', 'consistent',
     ],

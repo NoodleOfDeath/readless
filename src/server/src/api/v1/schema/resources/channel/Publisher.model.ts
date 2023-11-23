@@ -119,7 +119,7 @@ export class Publisher<
 
   async setRateLimit(
     namespace = 'default', 
-    window: string | number = PUBLISHER_FETCH_INTERVAL,
+    window: number | string = PUBLISHER_FETCH_INTERVAL,
     limit = namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT
   ) {
     const key = ['//publisher', this.id, this.name, namespace].join('§§');
@@ -135,7 +135,7 @@ export class Publisher<
 
   async getRateLimit(
     namespace = 'default',
-    window: string | number = PUBLISHER_FETCH_INTERVAL,
+    window: number | string = PUBLISHER_FETCH_INTERVAL,
     limit = namespace === 'default' ? PUBLISHER_FETCH_LIMIT : PUBLISHER_MAX_ATTEMPT_LIMIT
   ) {
     const key = ['//publisher', this.id, this.name, namespace].join('§§');

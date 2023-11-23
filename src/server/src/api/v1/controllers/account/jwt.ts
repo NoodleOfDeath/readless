@@ -4,7 +4,7 @@ import ms from 'ms';
 import { AuthError } from '../../middleware';
 import { Credential, User } from '../../schema';
 
-export type JwtBaseAccessOperation = '*' | 'has' | 'read' | 'write' | 'delete';
+export type JwtBaseAccessOperation = '*' | 'delete' | 'has' | 'read' | 'write';
 export type JwtAccessOperation = JwtBaseAccessOperation | `deny.${JwtBaseAccessOperation}`;
 
 export const JWT_REFERSH_THRESHOLD_MS = ms(process.env.JWT_REFERSH_THRESHOLD || '100y');
@@ -78,7 +78,7 @@ export class JWT implements JsonWebToken {
     });
   }
   
-  static from(token: string | Partial<JsonWebToken>) {
+  static from(token: Partial<JsonWebToken> | string) {
     return new JWT(token);
   }
 
@@ -99,7 +99,7 @@ export class JWT implements JsonWebToken {
     });
   }
 
-  constructor(opts: string | Partial<JsonWebToken>) {
+  constructor(opts: Partial<JsonWebToken> | string) {
     try {
       if (typeof opts === 'string') {
         const { 
@@ -155,7 +155,7 @@ export class JWT implements JsonWebToken {
     }
   }
 
-  public canAccess(requestedScope: string | string[]) {
+  public canAccess(requestedScope: string[] | string) {
     if (typeof requestedScope === 'string') {
       const [requesetedRole, requestedOperation] = requestedScope.split(':') as [string, JwtBaseAccessOperation];
       for (const { operation, role } of this.scopedAccess) {

@@ -15,7 +15,7 @@ export type DatedAttributes = {
 
 export type FindAndCountOptions<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  T extends Model<any, any> | Hooks<Model<any, any>, any, any>,
+  T extends Hooks<Model<any, any>, any, any> | Model<any, any>,
 > = Omit<SequelizeFindAndCountOptions<Attributes<T>>, 'groups'>;
 
 export type PrepareOptions = {
@@ -26,7 +26,7 @@ export function orderByToItem(orderBy: string): OrderItem {
   return orderBy.split(':') as OrderItem;
 }
 
-export function orderByToItems(orderBy: string | string[]): OrderItem[] {
+export function orderByToItems(orderBy: string[] | string): OrderItem[] {
   if (typeof orderBy === 'string') {
     return [orderByToItem(orderBy)];
   }
@@ -98,10 +98,14 @@ export * from './resources/recap/RecapSummary.types';
 // Subscription
 export * from './resources/subscription/Subscription.types';
 
-// Polls
-export * from './resources/poll/Poll.types';
-export * from './resources/poll/PollInteraction.types';
-export * from './resources/poll/PollOption.types';
+// Event
+export * from './resources/event/Event.types';
+export * from './resources/event/EventInteraction.types';
+export * from './resources/event/EventMetadata.types';
+
+// Achievement
+export * from './resources/achievement/Achievement.types';
+export * from './resources/achievement/UserAchievement.types';
 
 // IAP
 export * from './resources/iap/Voucher.types';

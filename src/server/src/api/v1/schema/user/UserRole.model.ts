@@ -4,15 +4,15 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { RefUserRoleAttributes, RefUserRoleCreationAttributes } from './RefUserRole.types';
+import { UserRoleAttributes, UserRoleCreationAttributes } from './UserRole.types';
 import { BaseModel } from '../base';
 
 @Table({
-  modelName: '_ref_user_role',
+  modelName: 'user_role',
   paranoid: true,
   timestamps: true,
 })
-export class RefUserRole<A extends RefUserRoleAttributes = RefUserRoleAttributes, B extends RefUserRoleCreationAttributes = RefUserRoleCreationAttributes> extends BaseModel<A, B> implements RefUserRoleAttributes {
+export class UserRole<A extends UserRoleAttributes = UserRoleAttributes, B extends UserRoleCreationAttributes = UserRoleCreationAttributes> extends BaseModel<A, B> implements UserRoleAttributes {
     
   @Column({
     allowNull: false,

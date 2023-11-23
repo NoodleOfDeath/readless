@@ -19,7 +19,7 @@ export type ProfileResponse = {
   profile?: Profile;
 };
 
-export type LoginRequest = JwtRequest & AliasPayload & DestructuredCredentialPayload & {
+export type LoginRequest = AliasPayload & DestructuredCredentialPayload & JwtRequest & {
   createIfNotExists?: boolean;
   anonymous?: string;
   requestedRole?: string;
@@ -39,7 +39,7 @@ export type LogoutResponse = Partial<JwtResponse> & {
   count: number;
 };
 
-export type RegistrationRequest = JwtRequest & AliasPayload & DestructuredCredentialPayload & {
+export type RegistrationRequest = AliasPayload & DestructuredCredentialPayload & JwtRequest & {
   anonymous?: string;
 };
 
@@ -101,7 +101,7 @@ export type UpdateCredentialResponse = {
   success: boolean;
 };
 
-export type DeleteUserRequest = JwtRequest & AliasPayload & {
+export type DeleteUserRequest = AliasPayload & JwtRequest & {
   password?: string;
 };
 

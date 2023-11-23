@@ -1,11 +1,11 @@
 import { DatedAttributes } from '../types';
 
-export type RefUserRoleAttributes = DatedAttributes & {
+export type UserRoleAttributes = DatedAttributes & {
   userId: number;
   roleId: number;
 };
 
-export type RefUserRoleCreationAttributes = {
+export type UserRoleCreationAttributes = {
   userId: number;
   roleId: number;
 };

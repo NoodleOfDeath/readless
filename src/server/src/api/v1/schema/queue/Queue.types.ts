@@ -17,7 +17,7 @@ export type QueueCreationAttributes<D extends Serializable, R, Q extends string 
   data?: D;
 };
 
-export type AddJobOptions<D extends Serializable, R, Q extends string = string> = Omit<JobCreationAttributes<D, R, Q>, 'queue' | 'name'> & {
+export type AddJobOptions<D extends Serializable, R, Q extends string = string> = Omit<JobCreationAttributes<D, R, Q>, 'name' | 'queue'> & {
   schedule?: Date;
 };
 

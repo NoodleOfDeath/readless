@@ -57,7 +57,7 @@ export type InteractionRequest = {
   metadata?: Record<string, unknown>;
 };
 
-export type InteractionUserVote = 'up' | 'down';
+export type InteractionUserVote = 'down' | 'up';
 
 // uh this type exists? forcing rebuild
 export type InteractionResponse = {

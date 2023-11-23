@@ -23,7 +23,6 @@ import {
   MetadataType,
   Profile,
   QueryFactory,
-  RefUserRole,
   RequestLog,
   Role,
   Streak,
@@ -34,6 +33,7 @@ import {
   UserCreationAttributes,
   UserEvent,
   UserMetadata,
+  UserRole,
   UserStats,
 } from '../../schema';
 import { BaseModel } from '../base';
@@ -232,7 +232,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   // roles
 
   public async getRoles() {
-    return Object.fromEntries((await Promise.all((await RefUserRole.findAll({ where: { userId: this.id } })).map(async (role) => (await Role.findOne({ where: { id: role.roleId } })) ))).map((role) => [role.name, role]));
+    return Object.fromEntries((await Promise.all((await UserRole.findAll({ where: { userId: this.id } })).map(async (role) => (await Role.findOne({ where: { id: role.roleId } })) ))).map((role) => [role.name, role]));
   }
   
   public async highestRole() {
@@ -257,7 +257,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (!roleModel) {
       throw new AuthError('BAD_REQUEST');
     }
-    await RefUserRole.create({ roleId: roleModel.id, userId: this.id });
+    await UserRole.create({ roleId: roleModel.id, userId: this.id });
     return roleModel;
   }
 
@@ -266,35 +266,13 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (!roleModel) {
       throw new AuthError('BAD_REQUEST');
     }
-    const count = await RefUserRole.destroy({ where: { roleId: roleModel.id, userId: this.id } });
+    const count = await UserRole.destroy({ where: { roleId: roleModel.id, userId: this.id } });
     return count;
   }
 
   // profile
 
-  public static async getMetrics(user?: User, req?: MetricsRequest): Promise<MetricsResponse> {
-    const streaks = await User.getStreaks();
-    const readCounts = await User.getInteractionCounts('read', req);
-    const shareCounts = await User.getInteractionCounts('share', req);
-    return {
-      interactionCounts: {
-        ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, []])) as { [key in InteractionType]: [] },
-        read: readCounts,
-        share: shareCounts,
-      },
-      streaks,
-      userRankings: { 
-        interactionCounts: {
-          ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, 0])) as { [key in InteractionType]: number },
-          read: readCounts.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
-          share: shareCounts.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
-        },
-        streaks: streaks.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
-      },
-    };
-  }
-
-  public static async getStreaks(limit: 'ALL' | number = 10, userId: number = null): Promise<Streak[]> {
+  public static async getStreaks(limit: number | 'ALL' = 10, userId: number = null): Promise<Streak[]> {
     const replacements = {
       limit: limit === 'ALL' ? 100 : limit,
       userId, 
@@ -332,21 +310,27 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     }
     return response;
   }
-  
-  public async getProfileBase(): Promise<Profile> {
-    const profile: Profile = {};
-    const aliases = await this.findAliases('email');
-    const metadata = await UserMetadata.findAll({ where: { userId: this.id } });
-    const updatedAt = new Date(Math.max(...[...aliases, ...metadata].map((m) => m.updatedAt.valueOf())));
-    profile.email = aliases.length > 0 ? aliases.sort((a, b) => a.priority - b.priority)[0].value : '',
-    profile.emails = aliases.length > 0 ? aliases.map((a) => a.value) : [],
-    profile.pendingEmails = aliases.length > 0 ? aliases.filter((a) => a.verifiedAt === null).map((a) => a.value) : [],
-    profile.username = (await this.findAlias('username'))?.value,
-    profile.linkedThirdPartyAccounts = (await this.findAliases('thirdParty/apple', 'thirdParty/google')).map((a) => a.type.split('/')[1] as ThirdParty);
-    profile.preferences = Object.fromEntries(metadata.filter((meta) => meta.type === 'pref').map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value]));
-    profile.createdAt = this.createdAt;
-    profile.updatedAt = updatedAt;
-    return profile;
+
+  public static async getMetrics(user?: User, req?: MetricsRequest): Promise<MetricsResponse> {
+    const streaks = await User.getStreaks();
+    const readCounts = await User.getInteractionCounts('read', req);
+    const shareCounts = await User.getInteractionCounts('share', req);
+    return {
+      interactionCounts: {
+        ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, []])) as { [key in InteractionType]: [] },
+        read: readCounts,
+        share: shareCounts,
+      },
+      streaks,
+      userRankings: { 
+        interactionCounts: {
+          ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, 0])) as { [key in InteractionType]: number },
+          read: readCounts.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
+          share: shareCounts.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
+        },
+        streaks: streaks.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
+      },
+    };
   }
   
   public async calculateStreak(longest = false): Promise<Streak> {
@@ -354,6 +338,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       end: new Date(new Date().toLocaleDateString()),
       length: 1,
       start: new Date(new Date().toLocaleDateString()), 
+      updatedAt: new Date(),
       user: (await this.findAlias('username'))?.value,
       userId: this.id,
     };
@@ -384,6 +369,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     }))?.createdAt;
     const longestStreak = await this.calculateLongestStreak();
     const streak = await this.calculateStreak();
+    const updatedAt = new Date(Math.max(...[longestStreak.updatedAt, streak.updatedAt].map((d) => d.valueOf())));
     return {
       interactionCounts: {
         read: (await User.getInteractionCounts('read', undefined, this)).find((s) => s.userId === this.id),
@@ -393,14 +379,27 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       longestStreak,
       memberSince: this.createdAt,
       streak,
+      updatedAt: !Number.isNaN(updatedAt.valueOf()) ? updatedAt : new Date(),
     };
   }
   
-  public async syncProfile() {
-    // fetch profile
-    const profile = await this.getProfileBase();
-    profile.stats = await this.getStats();
+  public async syncProfile(): Promise<Profile> {
+    const profile: Profile = {};
+    const aliases = await this.findAliases('email');
+    const metadata = await UserMetadata.findAll({ where: { userId: this.id } });
+    const updatedAt = new Date(Math.max(...[...aliases, ...metadata].map((m) => m.updatedAt.valueOf())));
+    profile.email = aliases.length > 0 ? aliases.sort((a, b) => a.priority - b.priority)[0].value : '',
+    profile.emails = aliases.length > 0 ? aliases.map((a) => a.value) : [],
+    profile.pendingEmails = aliases.length > 0 ? aliases.filter((a) => a.verifiedAt === null).map((a) => a.value) : [],
+    profile.username = (await this.findAlias('username'))?.value,
+    profile.linkedThirdPartyAccounts = (await this.findAliases('thirdParty/apple', 'thirdParty/google')).map((a) => a.type.split('/')[1] as ThirdParty);
+    profile.preferences = Object.fromEntries(metadata.filter((meta) => meta.type === 'pref').map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value]));
+    profile.createdAt = this.createdAt;
+    const stats = await this.getStats();
+    profile.updatedAt = new Date(Math.max(updatedAt.valueOf(), stats.updatedAt.valueOf()));
+    profile.stats = stats;
     this.set('profile', profile, { raw: true });
+    return profile;
   }
 
   public async setMetadata(

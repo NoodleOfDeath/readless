@@ -5,7 +5,7 @@ import { QueueSpecifier } from './Queue.types';
 import { Serializable } from '../../../../types';
 import { DatedAttributes } from '../types';
 
-export type WorkerState = 'idle' | 'processing' | 'stopped' | 'retired';
+export type WorkerState = 'idle' | 'processing' | 'retired' | 'stopped';
 
 export type WorkerOptions = {
   autostart?: boolean;
