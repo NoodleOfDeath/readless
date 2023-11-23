@@ -352,7 +352,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   public async calculateStreak(longest = false): Promise<Streak> {
     let streak: Streak = {
       end: new Date(new Date().toLocaleDateString()),
-      length: 0, 
+      length: 1,
       start: new Date(new Date().toLocaleDateString()), 
       user: (await this.findAlias('username'))?.value,
       userId: this.id,

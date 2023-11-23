@@ -15,7 +15,7 @@ SELECT
     "userId" DESC) "rank",
   "user",
   "userId",
-  COUNT(DISTINCT DATE("date")::timestamp)::integer "count",
+  COALESCE(COUNT(DISTINCT DATE("date")::timestamp)::integer, 1) "count",
   MAX(DATE("date")::timestamp) "max",
   MIN(DATE("date")::timestamp) "min"
 FROM
