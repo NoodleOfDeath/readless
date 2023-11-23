@@ -22,10 +22,10 @@ import { LayoutContext } from '~/contexts';
   
 export type TablePickerProps<
   T extends string,
-  Multi extends true | false = false,
+  Multi extends false | true = false,
   Value extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
   OptionValue extends Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined) = Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)
-> = TableViewProps & Omit<PickerProps<T, Multi, Value, OptionValue>, 'render'> & {
+> = Omit<PickerProps<T, Multi, Value, OptionValue>, 'render'> & TableViewProps & {
   children?: React.ReactNode;
   sectionProps?: Partial<TableViewSectionProps> | ((state: Omit<SelectOptionState<T, Pick<TableIndex, 'section'>>, 'option' | 'selected'>) => Partial<TableViewSectionProps>);
   cellProps?: Partial<TableViewCellProps> | ((state: SelectOptionState<T, TableIndex>) => Partial<TableViewCellProps>);
@@ -34,7 +34,7 @@ export type TablePickerProps<
 
 export function TablePicker<
   T extends string,
-  Multi extends true | false = false,
+  Multi extends false | true = false,
   Value extends Multi extends true ? T[] : (T | undefined) = Multi extends true ? T[] : (T | undefined),
   OptionValue extends Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined) = Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)
 >({

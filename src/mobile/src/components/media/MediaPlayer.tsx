@@ -19,7 +19,7 @@ import {
 import { MediaContext, StorageContext } from '~/contexts';
 import { RoutingParams } from '~/screens';
 
-type MediaPlayerProps = ViewProps & Omit<BannerProps, 'actions' | 'children'> ;
+type MediaPlayerProps = Omit<BannerProps, 'actions' | 'children'> & ViewProps ;
 
 export function MediaPlayer(props: MediaPlayerProps) {
 

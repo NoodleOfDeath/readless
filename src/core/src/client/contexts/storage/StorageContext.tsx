@@ -176,7 +176,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     const value = await getItem(key);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const serialize = (key: K, value: Storage[K], type: 'boolean' | 'number' | 'string' | 'array' | 'object') => {
+    const serialize = (key: K, value: Storage[K], type: 'array' | 'boolean' | 'number' | 'object' | 'string') => {
       const isCorrectType = type === 'array' ? Array.isArray(value) : typeof value === type;
       if (!isCorrectType) {
         setStorage((prev) => {
@@ -235,7 +235,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   }, [storage, updateRemotePref]);
   
   const storeTranslations = React.useCallback(async <
-    Target extends RecapAttributes | PublicSummaryGroup, 
+    Target extends PublicSummaryGroup | RecapAttributes, 
     StoredValueKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never,
     State extends NonNullable<StoredValueKey extends 'recapTranslations' ? Storage['recapTranslations'] : StoredValueKey extends 'summaryTranslations' ? Storage['summaryTranslations'] : never>,
   >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: StoredValueKey) => {
@@ -340,7 +340,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       return handleBadRequest();
     }
     console.log('syncing prefs and stats');
-    const newPreferences: Record<string, unknown> = {};
     for (const key of SYNCABLE_SETTINGS) {
       const remoteValue = preferences[key];
       if (opts?.loadBookmarks && key === 'bookmarkedSummaries') {
@@ -355,7 +354,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           if (remoteValue) {
             const trans = SyncableIoIn(key);
             const value = trans(remoteValue);
-            setStoredValue(key, value, false);
+            await setStoredValue(key, value, false);
           }
         } catch (e) {
           console.error(e);

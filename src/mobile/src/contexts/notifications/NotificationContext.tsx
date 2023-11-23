@@ -81,8 +81,8 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
       Platform.select({
         android: (await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS, {
           buttonPositive: 'OK',
-          message: strings.settings, 
-          title: strings.settings,
+          message: strings.keepYourStreakGoing, 
+          title: strings.dailyReminder,
         })) === PermissionsAndroid.RESULTS.GRANTED, 
         ios: true, 
       });

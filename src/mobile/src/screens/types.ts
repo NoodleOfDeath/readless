@@ -13,7 +13,7 @@ import {
   RecapAttributes,
 } from '~/api';
 
-export type NavigationID = `${string}StackNav` | `${string}TabNav` | `${string}DrawerNav`;
+export type NavigationID = `${string}DrawerNav` | `${string}StackNav` | `${string}TabNav`;
 
 export type NavigationTabParams = {
   news: undefined;
@@ -93,7 +93,7 @@ export type ProfileRoutingParams = SettingsRoutingParams & {
   leaderboards: { metrics?: MetricsResponse, interactionType?: InteractionType };
 };
 
-export type RoutingParams = NavigationTabParams & LoginRoutingParams & NewsRoutingParams & GamesRoutingParams & ProfileRoutingParams;
+export type RoutingParams = GamesRoutingParams & LoginRoutingParams & NavigationTabParams & NewsRoutingParams & ProfileRoutingParams;
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RoutingParams> = {
   config: {

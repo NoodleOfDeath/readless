@@ -240,8 +240,8 @@ function Title({
 }
 
 export async function generateScreenshot<
-  C extends HTMLCanvasElement | undefined | null, 
-  R extends (C extends undefined | null ? Buffer : HTMLCanvasElement) | null 
+  C extends HTMLCanvasElement | null | undefined, 
+  R extends (C extends null | undefined ? Buffer : HTMLCanvasElement) | null 
 >({ 
   screen, 
   bg = 'transparent',

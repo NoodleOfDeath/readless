@@ -13,7 +13,7 @@ export function Text({
   fontSizeFixed,
   sentenceCase,
   ...props
-}: ViewProps & TextProps) {
+}: TextProps & ViewProps) {
   const textStyle = useTextStyles({
     ...props, 
     fontSizeFixed: fontSizeFixed || props.adjustsFontSizeToFit, 

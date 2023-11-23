@@ -5,7 +5,7 @@ import { Surface as RNPSurface, SurfaceProps as RNPSurfaceProps  } from 'react-n
 import { ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type SurfaceProps = ViewProps & RNPSurfaceProps & React.PropsWithChildren;
+export type SurfaceProps = React.PropsWithChildren & RNPSurfaceProps & ViewProps;
 
 export function Surface({
   children,

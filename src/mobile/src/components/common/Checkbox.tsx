@@ -7,10 +7,10 @@ import {
 } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type CheckboxProps = {
+export type CheckboxProps = ViewProps & {
   checked?: boolean;
   onPress?: () => void;
-} & ViewProps;
+};
 
 export function Checkbox({
   checked,

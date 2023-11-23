@@ -47,7 +47,7 @@ export class DatedEvent<T> {
 
 }
 
-export type ColorScheme = 'light' | 'dark' | 'system';
+export type ColorScheme = 'dark' | 'light' | 'system';
 
 export enum OrientationType {
   'PORTRAIT' = 'PORTRAIT',
@@ -83,29 +83,7 @@ export const ACTIVITY_KEYS = [
 export type Activity = typeof ACTIVITY_KEYS[number];
 
 export type ResourceActivity = 
- | 'read'
- | 'unread'
- | 'hide'
- | 'unhide'
- | 'bookmark' 
- | 'unbookmark' 
- | 'follow'
- | 'unfollow'
- | 'favorite'
- | 'unfavorite'
- | 'exclude'
- | 'unexclude'
- | 'copy-to-clipboard'
- | 'intent-to-share'
- | 'save-as-image'
- | 'share-standard'
- | 'share-social'
- | 'set-preference'
- | 'report'
- | 'expand'
- | 'preview'
- | 'view-sentiment'
- | 'open-article';
+ 'bookmark' | 'copy-to-clipboard' | 'exclude' | 'expand' | 'favorite' | 'follow' | 'hide' | 'intent-to-share' | 'open-article' | 'preview' | 'read' | 'report' | 'save-as-image' | 'set-preference' | 'share-social' | 'share-standard' | 'unbookmark' | 'unexclude' | 'unfavorite' | 'unfollow' | 'unhide' | 'unread' | 'view-sentiment';
 
 export type Resource =
  | 'category'
@@ -113,11 +91,12 @@ export type Resource =
  | 'recap'
  | 'summary';
  
-export type StorageEventName = Activity | ResourceActivity | `${ResourceActivity}-${Resource}` | `${ResourceActivity}-${Resource}-${number}` | `poll-${string}`;
+export type StorageEventName = Activity | ResourceActivity | `${ResourceActivity}-${Resource}-${number}` | `${ResourceActivity}-${Resource}` | `poll-${string}`;
 
 export type Storage = {
   
   // system state
+  lastLocalSync?: number;
   lastRemoteSync?: number;
   rotationLock?: OrientationType;  
   searchHistory?: string[];
@@ -169,7 +148,7 @@ export type Storage = {
   triggerWords?: { [key: string]: string };
 };
 
-export const STORAGE_TYPES: { [key in keyof Storage]: 'boolean' | 'number' | 'string' | 'object' | 'array' } = {
+export const STORAGE_TYPES: { [key in keyof Storage]: 'array' | 'boolean' | 'number' | 'object' | 'string' } = {
   bookmarkedSummaries: 'object',
   colorScheme: 'string',
   compactSummaries: 'boolean',
@@ -220,7 +199,7 @@ export type StorageMutation<E extends StorageEventName> =
   any;
   
 export type StorageState<E extends StorageEventName> =
-  E extends `${'unbookmark' | 'bookmark'}-summary` ? Storage['bookmarkedSummaries'] :
+  E extends `${'bookmark' | 'unbookmark'}-summary` ? Storage['bookmarkedSummaries'] :
   E extends `${'read' | 'unread'}-summary` ? Storage['readSummaries'] :
   E extends `${'read' | 'unread'}-recap` ? Storage['readRecaps'] :
   E extends `${string}-summary` ? Storage['removedSummaries'] :
@@ -327,12 +306,7 @@ export type SyncState = {
 };
 
 export type ViewableFeature = 
-  'bookmarks' |
-  'publishers' | 
-  'categories' |
-  'push-notifications' |
-  'display-preferences' |
-  'app-review';
+  'app-review' | 'bookmarks' | 'categories' | 'display-preferences' | 'publishers' | 'push-notifications';
 
 export type StorageContextType = Storage & SyncState & {
   
@@ -361,7 +335,7 @@ export type StorageContextType = Storage & SyncState & {
   getStoredValue: <K extends keyof Storage>(key: K) => Promise<Storage[K] | undefined>;
   resetStorage: (hard?: boolean) => Promise<void>;
   storeTranslations: <
-    Target extends RecapAttributes | PublicSummaryGroup, 
+    Target extends PublicSummaryGroup | RecapAttributes, 
     StoredValueKey extends Target extends RecapAttributes ? 'recapTranslations' : Target extends PublicSummaryGroup ? 'summaryTranslations' : never
   >(item: Target, translations: { [key in keyof Target]?: string }, prefKey: StoredValueKey) => Promise<void>;
   hasPushEnabled: (key: string) => boolean;
@@ -397,7 +371,7 @@ export type StorageContextType = Storage & SyncState & {
   withHeaders: <T extends any[], R>(fn: FunctionWithRequestParams<T, R>) => ((...args: T) => R);
   syncWithRemote: (pref?: ProfileResponse, opts?: SyncOptions) => Promise<void>;
   api: Methods;
-  setErrorHandler: React.Dispatch<React.SetStateAction<(error: Error | AuthError) => void>>;
+  setErrorHandler: React.Dispatch<React.SetStateAction<(error: AuthError | Error) => void>>;
 };
 
 export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {

@@ -115,7 +115,7 @@ export const WalkthroughSlider = React.forwardRef(function WalkthroughSlider<Ite
   showSkipButton,
   bottomButton,
   ...props
-}: WalkthroughSliderProps<ItemT> & State, ref: React.ForwardedRef<WalkthroughSliderRef>) {
+}: State & WalkthroughSliderProps<ItemT>, ref: React.ForwardedRef<WalkthroughSliderRef>) {
 
   const [activeIndex, setActiveIndex] = React.useState(activeIndex0);
   const [width, setWidth] = React.useState(width0);
@@ -340,7 +340,7 @@ export const WalkthroughSlider = React.forwardRef(function WalkthroughSlider<Ite
     </View>
   );
 
-}) as <ItemT>(props: Partial<WalkthroughSliderProps<ItemT> & State> & React.RefAttributes<WalkthroughSliderRef>) => React.ReactElement;
+}) as <ItemT>(props: Partial<State & WalkthroughSliderProps<ItemT>> & React.RefAttributes<WalkthroughSliderRef>) => React.ReactElement;
 
 const styles = StyleSheet.create({
   bottomButton: {

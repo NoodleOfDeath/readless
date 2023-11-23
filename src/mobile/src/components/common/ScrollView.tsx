@@ -8,7 +8,7 @@ import {
 import { ViewProps } from '~/components';
 import { useStyles } from '~/hooks';
 
-export type ScrollViewProps = ViewProps & RNScrollViewProps & {
+export type ScrollViewProps = RNScrollViewProps & ViewProps & {
   refreshing?: boolean;
   onRefresh?: () => void;
   ref?: React.RefObject<RNScrollView>;

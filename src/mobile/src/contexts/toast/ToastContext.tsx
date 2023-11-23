@@ -24,7 +24,7 @@ export function ToastContextProvider({ children }: React.PropsWithChildren) {
   const toasts = React.useMemo(() => Object.values(toastMap).filter(Boolean).sort((a, b) => (a.createdAt.valueOf() - b.createdAt.valueOf()) + ((a.duration ?? 0) - (b.duration ?? 0))), [toastMap]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const showToast = React.useCallback((props?: any | ToastProps) => {
+  const showToast = React.useCallback((props?: ToastProps | any) => {
     if (!props) {
       return;
     }

@@ -12,7 +12,7 @@ import {
 import { ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type DataTableProps = ViewProps & RNDataTableProps;
+export type DataTableProps = RNDataTableProps & ViewProps;
 
 export function DataTable(props: DataTableProps) {
   const theme = useTheme();
@@ -25,7 +25,7 @@ export function DataTable(props: DataTableProps) {
 
 }
 
-export type DataTableHeaderProps = ViewProps & RNDataTableHeaderProps;
+export type DataTableHeaderProps = RNDataTableHeaderProps & ViewProps;
 
 export function DataTableHeader(props: DataTableHeaderProps) {
   const theme = useTheme();
@@ -37,7 +37,7 @@ export function DataTableHeader(props: DataTableHeaderProps) {
   );
 }
 
-export type DataTableTitleProps = ViewProps & RNDataTableTitleProps;
+export type DataTableTitleProps = RNDataTableTitleProps & ViewProps;
 
 export function DataTableTitle(props: DataTableTitleProps) {
   const theme = useTheme();
@@ -49,7 +49,7 @@ export function DataTableTitle(props: DataTableTitleProps) {
   );
 }
 
-export type DataTableRowProps = ViewProps & RNDataTableRowProps;
+export type DataTableRowProps = RNDataTableRowProps & ViewProps;
 
 export function DataTableRow(props: DataTableRowProps) {
   const theme = useTheme();
@@ -61,7 +61,7 @@ export function DataTableRow(props: DataTableRowProps) {
   );
 }
 
-export type DataTableCellProps = ViewProps & RNDataTableCellProps;
+export type DataTableCellProps = RNDataTableCellProps & ViewProps;
 
 export function DataTableCell(props: DataTableCellProps) {
   const theme = useTheme();

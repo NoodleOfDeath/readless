@@ -11,7 +11,7 @@ import { StorageContextType } from '~/contexts';
 import { getLocale, strings } from '~/locales';
 import { usePlatformTools } from '~/utils';
 
-export type TranslateToggleProps<Type extends 'summary' | 'recap', Target extends Type extends 'summary' ? PublicSummaryGroup : RecapAttributes> = ChildlessViewProps & {
+export type TranslateToggleProps<Type extends 'recap' | 'summary', Target extends Type extends 'summary' ? PublicSummaryGroup : RecapAttributes> = ChildlessViewProps & {
   type: Type;
   target: Target;
   translations?: { [key in keyof Target]?: string };
@@ -20,12 +20,12 @@ export type TranslateToggleProps<Type extends 'summary' | 'recap', Target extend
   onLocalize: (translations?: { [key in keyof Target]?: string }) => void;
 };
 
-export type TranslateToggleRef<Target extends RecapAttributes | PublicSummaryGroup> = {
+export type TranslateToggleRef<Target extends PublicSummaryGroup | RecapAttributes> = {
   setTranslations: React.Dispatch<React.SetStateAction<{ [key in keyof Target]?: string | undefined; } | undefined>>;
   translate: () => Promise<void>;
 };
 
-export const TranslateToggle = React.forwardRef(function TranslateToggle<Type extends 'summary' | 'recap', Target extends Type extends 'summary' ? PublicSummaryGroup : RecapAttributes>({
+export const TranslateToggle = React.forwardRef(function TranslateToggle<Type extends 'recap' | 'summary', Target extends Type extends 'summary' ? PublicSummaryGroup : RecapAttributes>({
   type,
   target,
   translations: translations0,

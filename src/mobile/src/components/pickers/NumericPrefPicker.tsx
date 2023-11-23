@@ -29,7 +29,7 @@ export function NumericPrefPicker<K extends keyof NumericStorage>({
   
   const [value, setValue] = React.useState<Storage[K] | undefined>(context[prefKey]);
 
-  const onValueChange = React.useCallback((values?: number | number[]) => {
+  const onValueChange = React.useCallback((values?: number[] | number) => {
     let newValue = typeof values === 'number' ? values : values && values[0];
     if (newValue !== undefined) {
       if (newValue < min) {

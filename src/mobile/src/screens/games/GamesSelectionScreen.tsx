@@ -15,7 +15,7 @@ export type GameProps = {
   displayName?: string;
 };
 
-export function GameTile({ ...props }: GameProps & ChildlessViewProps) {
+export function GameTile({ ...props }: ChildlessViewProps & GameProps) {
   return (
     <View p={ 32 } gap={ 12 } bg={ 'red' } { ...props }>
       <Text textCenter>{props.displayName ?? props.name}</Text>

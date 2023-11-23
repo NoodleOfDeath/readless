@@ -43,20 +43,20 @@ export function TableViewCellImage({
   );
 }
 
-export type TableViewCellProps = TextProps & ChildlessViewProps & {
-  accessory?: false | 'DisclosureIndicator' | 'Detail' | 'DetailDisclosure' | 'Checkmark';
-  accessoryColor?: ViewStyle['borderColor'] | TextStyle['color'];
+export type TableViewCellProps = ChildlessViewProps & TextProps & {
+  accessory?: 'Checkmark' | 'Detail' | 'DetailDisclosure' | 'DisclosureIndicator' | false;
+  accessoryColor?: TextStyle['color'] | ViewStyle['borderColor'];
   accessoryColorDisclosureIndicator?: ViewStyle['borderColor'];
   allowFontScaling?: boolean;
   backgroundColor?: ViewStyle['backgroundColor'];
-  cellStyle?: 'Basic' | 'RightDetail' | 'LeftDetail' | 'Subtitle';
+  cellStyle?: 'Basic' | 'LeftDetail' | 'RightDetail' | 'Subtitle';
   cellAccessoryView?: React.ReactNode;
   cellContentView?: React.ReactNode;
   cellImageView?: React.ReactNode;
   cellIcon?: React.ReactNode;
   children?: React.ReactNode;
   contentContainerStyle?: StyleProp<ViewStyle>;
-  detail?: string | number;
+  detail?: number | string;
   detailTextStyle?: StyleProp<TextStyle>;
   detailTextProps?: TextProps;
   disableImageResize?: boolean;
@@ -65,9 +65,9 @@ export type TableViewCellProps = TextProps & ChildlessViewProps & {
   highlightUnderlayColor?: ViewStyle['backgroundColor'];
   image?: React.ReactElement;
   isDisabled?: boolean;
-  onPress?: () => void | false;
-  onLongPress?: () => void | false;
-  onPressDetailAccessory?: () => void | false;
+  onPress?: () => false | void;
+  onLongPress?: () => false | void;
+  onPressDetailAccessory?: () => false | void;
   onUnHighlightRow?(): void;
   onHighlightRow?(): void;
   leftDetailColor?: TextStyle['color'];

@@ -13,7 +13,7 @@ import {
   useTheme,
 } from '~/hooks';
 
-export type DrawerItemProps = Omit<ChildlessViewProps & TextProps & Parameters<typeof Drawer.Item>[0], 'label' | 'left' | 'right'> & {
+export type DrawerItemProps = Omit<ChildlessViewProps & Parameters<typeof Drawer.Item>[0] & TextProps, 'label' | 'left' | 'right'> & {
   label?: React.ReactNode | (() => React.ReactNode);
   left?: React.ReactNode | (() => React.ReactNode);
   right?: React.ReactNode | ((props: IconProps) => React.ReactNode);

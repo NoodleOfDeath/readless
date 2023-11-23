@@ -24,7 +24,7 @@ export type ValidationResult = {
 };
 
 export type LetterGroupRequirement = {
-  expr?: string | RegExp | (string | RegExp)[];
+  expr?: (RegExp | string)[] | RegExp | string;
   error?: string;
 };
 

@@ -14,7 +14,7 @@ import { useTheme } from '~/hooks';
 
 export type CardStackEntryProps = ChildlessViewProps & {
   id: string;
-  image?: string | React.ReactNode;
+  image?: React.ReactNode | string;
   title?: string;
   subtitle?: string;
   onPress?: () => void;

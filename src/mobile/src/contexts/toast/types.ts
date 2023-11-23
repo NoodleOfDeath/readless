@@ -2,7 +2,7 @@ import { ToastProps } from '~/components';
 
 export type ToastContextType = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  showToast: (props: any | ToastProps) => void;
+  showToast: (props: ToastProps | any) => void;
   hideToast: (id: string) => void;
 };
 

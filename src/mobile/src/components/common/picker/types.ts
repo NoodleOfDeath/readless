@@ -6,15 +6,15 @@ export class SelectOption<T extends string = string> {
   label: React.ReactNode;
   icon?: React.ReactNode;
   
-  static from<T extends string = string>(value: T | SelectOption<T>) {
+  static from<T extends string = string>(value: SelectOption<T> | T) {
     return new SelectOption(value);
   }
   
-  static options<T extends string = string>(options: T[] | SelectOption<T>[]) {
+  static options<T extends string = string>(options: SelectOption<T>[] | T[]) {
     return options.map((o) => SelectOption.from(o));
   }
   
-  constructor(value: T | SelectOption<T>) {
+  constructor(value: SelectOption<T> | T) {
     if (typeof value === 'string') {
       this.value = value;
       this.label = value;

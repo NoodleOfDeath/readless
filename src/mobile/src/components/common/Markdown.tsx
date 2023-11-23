@@ -9,7 +9,7 @@ import {
 export const MarkdownSearchPattern = { default: /\*\*(.*?)\*\*/g };
 
 export type MarkdownProps = Omit<ButtonProps & HighlighterProps, 'searchWords'> & {
-  searchPattern?: string | RegExp;
+  searchPattern?: RegExp | string;
 };
 
 export function Markdown({
