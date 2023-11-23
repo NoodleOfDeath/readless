@@ -12,7 +12,7 @@ export const SettingsToggleWithIndicator = () => {
   return (
     <SettingsToggle
       accessible
-      accessibilityLabel={ strings.settings }
+      accessibilityLabel={ strings.translate }
       leftIcon="eye"
       indicator={ !hasViewedFeature(
         'display-preferences'

@@ -11,12 +11,12 @@ export type PickerRender<T extends string> = (handler: {
 
 export type PickerProps<
   T extends string,
-  Multi extends true | false = false,
+  Multi extends false | true = false,
   Value extends (Multi extends true ? T[] : (T | undefined)) = Multi extends true ? T[] : (T | undefined),
   OptionValue extends (Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)) = Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)
 > = {
   filter?: string;
-  options: T[] | SelectOption<T>[] | (() => Promise<T[] | SelectOption<T>[]>);
+  options: SelectOption<T>[] | T[] | (() => Promise<SelectOption<T>[] | T[]>);
   render: PickerRender<T>;
   multi?: Multi;
   initialValue?: Value;
@@ -25,7 +25,7 @@ export type PickerProps<
 
 export function Picker<
   T extends string,
-  Multi extends true | false = false,
+  Multi extends false | true = false,
   Value extends (Multi extends true ? T[] : (T | undefined)) = Multi extends true ? T[] : (T | undefined),
   OptionValue extends (Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)) = Multi extends true ? SelectOption<T>[] : (SelectOption<T> | undefined)
 >({

@@ -10,7 +10,7 @@ import {
 } from '~/components';
 import { useTheme } from '~/hooks';
 
-export type SegmentedButtonProps<T extends string | number | boolean = string> = {
+export type SegmentedButtonProps<T extends boolean | number | string = string> = {
   icon?: React.ReactNode;
   label?: React.ReactNode;
   style?: ChildlessViewProps['style'];
@@ -18,7 +18,7 @@ export type SegmentedButtonProps<T extends string | number | boolean = string> =
   pressOnly?: boolean;
 };
 
-export type SegmentedButtonsProps<T extends string | number | boolean = string> = ChildlessViewProps & {
+export type SegmentedButtonsProps<T extends boolean | number | string = string> = ChildlessViewProps & {
   options: SegmentedButtonProps<T>[];
   initialValue?: T;
   onValueChange?: (value: T) => void;
@@ -26,12 +26,12 @@ export type SegmentedButtonsProps<T extends string | number | boolean = string> 
   buttonMenuItems?: (option: SegmentedButtonProps<T>, selected: boolean) => ContextMenuAction[];
 };
 
-export type SegmentedButtonsRef<T extends string | number | boolean = string> = {
+export type SegmentedButtonsRef<T extends boolean | number | string = string> = {
   setValue: React.Dispatch<React.SetStateAction<T | undefined>>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const SegmentedButtons = React.forwardRef(function SegmentedButtons<T extends string | number | boolean = string>({
+export const SegmentedButtons = React.forwardRef(function SegmentedButtons<T extends boolean | number | string = string>({
   initialValue,
   options,
   onValueChange,
@@ -74,6 +74,6 @@ export const SegmentedButtons = React.forwardRef(function SegmentedButtons<T ext
       ))}
     </View>
   );
-}) as <T extends string | number | boolean = string>(
+}) as <T extends boolean | number | string = string>(
   props: SegmentedButtonsProps<T> & { ref?: React.ForwardedRef<SegmentedButtonsRef<T>> }
 ) => React.ReactElement;

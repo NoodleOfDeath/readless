@@ -16,7 +16,7 @@ import { useTheme } from '~/hooks';
 
 export type NativeTextInput = RNTextInput;
 
-export type TextInputProps = RNTextInputProps & TextProps & ChildlessViewProps & {
+export type TextInputProps = ChildlessViewProps & RNTextInputProps & TextProps & {
   flat?: boolean;
 };
 
@@ -33,4 +33,4 @@ export const TextInput = React.forwardRef(function TextInput(props: TextInputPro
         contentStyle={ [theme.components.input, props.color ? { color: props.color } : {} ] } />
     </View>
   );
-}) as React.ForwardRefExoticComponent<TextInputProps & React.RefAttributes<NativeTextInput>>;
+}) as React.ForwardRefExoticComponent<React.RefAttributes<NativeTextInput> & TextInputProps>;

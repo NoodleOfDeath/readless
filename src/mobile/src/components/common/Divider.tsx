@@ -6,7 +6,7 @@ import { Divider as RNDivider, DividerProps as RNDividerProps } from 'react-nati
 import { ChildlessViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type DividerProps = RNDividerProps & ChildlessViewProps & {
+export type DividerProps = ChildlessViewProps & RNDividerProps & {
   vertical?: boolean;
 };
 

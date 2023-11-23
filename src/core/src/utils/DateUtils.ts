@@ -5,6 +5,8 @@ import {
 } from 'date-fns';
 import ms from 'ms';
 
+export type Duration = `${number}${'d' | 'h' | 'M' | 'm' | 'ms' | 's' | 'w' | 'y'}`;
+
 export const addDays = (date: Date, days: number) => {
   const newDate = new Date(date.valueOf());
   newDate.setDate(newDate.getDate() + days);
@@ -82,7 +84,7 @@ export function parseDate(context?: string) {
   return parsedDate;
 }
 
-export function filterDates(dates: (Date | string | undefined | null)[], filterOutFutureDatesBy = '1d') {
+export function filterDates(dates: (Date | string | null | undefined)[], filterOutFutureDatesBy = '1d') {
   return dates.filter(Boolean).map((d) => typeof d === 'string' ? parseDate(d) : d).filter((date) => {
     return date != null && !Number.isNaN(date.valueOf()) && (date.valueOf() < Date.now() + ms(filterOutFutureDatesBy));
   });
@@ -94,11 +96,11 @@ export const DateSorter = (a?: Date | string, b?: Date | string) => {
   return lhs && rhs ? lhs.valueOf() - rhs.valueOf() : 0;
 };
 
-export function sortDates(...dates: (Date | string | undefined | null)[]) {
+export function sortDates(...dates: (Date | string | null | undefined)[]) {
   return filterDates(dates).sort(DateSorter);
 }
 
-export function minDate(...dates: (Date | string | undefined | null)[]) {
+export function minDate(...dates: (Date | string | null | undefined)[]) {
   const sortedDates = sortDates(...dates);
   if (sortedDates.length === 0) {
     return undefined;
@@ -106,7 +108,7 @@ export function minDate(...dates: (Date | string | undefined | null)[]) {
   return sortedDates[0];
 }
 
-export function maxDate(...dates: (Date | string | undefined | null)[]) {
+export function maxDate(...dates: (Date | string | null | undefined)[]) {
   const sortedDates = sortDates(...dates);
   if (sortedDates.length === 0) {
     return undefined;
@@ -116,12 +118,12 @@ export function maxDate(...dates: (Date | string | undefined | null)[]) {
 
 export type FormatTimestampOptions = {
   format?: string, 
-  relativeTo?: string | Date, 
+  relativeTo?: Date | string, 
   locale?: Locale
 };
 
 export function formatTimestamp(
-  timestamp?: string | Date,
+  timestamp?: Date | string,
   {
     format, relativeTo, locale,
   }: FormatTimestampOptions = {}

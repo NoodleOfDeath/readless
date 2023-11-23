@@ -14,7 +14,7 @@ export type TableIndex = {
 
 export type TableViewProps = ChildlessViewProps & {
   children?: React.ReactNode;
-  appearance?: 'auto' | 'dark' | 'light' | string;
+  appearance?: string | 'auto' | 'dark' | 'light';
   customAppearances?: {
     [key: string]: THEME_APPEARANCE;
   };

@@ -14,6 +14,7 @@ export type Streak = UserEvent<{
   start: Date;
   end: Date;
   length: number;
+  expiresSoon?: boolean;
 }>;
 
 export type InteractionCount = UserEvent<{

@@ -10,7 +10,7 @@ import { strings } from '~/locales';
 
 type TextInputHandles = Pick<
   TextInput,
-  'setNativeProps' | 'isFocused' | 'clear' | 'blur' | 'focus'
+  'blur' | 'clear' | 'focus' | 'isFocused' | 'setNativeProps'
 >;
 
 type SearchViewControllerProps = ChildlessViewProps & {

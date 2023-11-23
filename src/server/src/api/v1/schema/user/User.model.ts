@@ -6,6 +6,7 @@ import { Table } from 'sequelize-typescript';
 import { INTERACTION_TYPES } from './../resources/interaction/Interaction.types';
 import { OpenAIService } from '../../../../services';
 import { JWT } from '../../../../services/types';
+import { Duration } from '../../../../utils';
 import { MetricsRequest, MetricsResponse } from '../../controllers/metrics/types';
 import { AuthError } from '../../middleware';
 import {
@@ -37,6 +38,13 @@ import {
   UserStats,
 } from '../../schema';
 import { BaseModel } from '../base';
+
+type StreakOptions = {
+  limit?: number | 'ALL';
+  longest?: boolean;
+  userId?: number;
+  expiresIn?: Duration;
+};
 
 @Table({
   modelName: 'user',
@@ -272,7 +280,11 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   // profile
 
-  public static async getStreaks(limit: number | 'ALL' = 10, userId: number = null): Promise<Streak[]> {
+  public static async getStreaks({ 
+    expiresIn = '6h',
+    limit = 10, 
+    userId = null,
+  }: StreakOptions = {}): Promise<Streak[]> {
     const replacements = {
       limit: limit === 'ALL' ? 100 : limit,
       userId, 
@@ -284,8 +296,9 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as UserEvent<{min: string, max: string}>[]).map((e) => ({ 
       end: new Date(e.max),
-      length: e.count,
-      start: new Date(e.min), 
+      expiresSoon: (new Date(new Date().toLocaleDateString()).valueOf() + ms('1d') - new Date(e.updatedAt).valueOf()) < ms(expiresIn),
+      length: e.count, 
+      start: new Date(e.min),
       userId: e.userId,
       ...e,
     }));
@@ -333,16 +346,24 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     };
   }
   
-  public async calculateStreak(longest = false): Promise<Streak> {
+  public async calculateStreak({ 
+    longest,
+    ...options
+  }: StreakOptions = {}): Promise<Streak> {
     let streak: Streak = {
       end: new Date(new Date().toLocaleDateString()),
+      expiresSoon: false,
       length: 1,
       start: new Date(new Date().toLocaleDateString()), 
       updatedAt: new Date(),
       user: (await this.findAlias('username'))?.value,
       userId: this.id,
     };
-    const streaks = await User.getStreaks('ALL', this.id);
+    const streaks = await User.getStreaks({
+      limit: 'ALL', 
+      userId: this.id,
+      ...options,
+    });
     if (!longest) {
       return streaks.find(
         (s) => {
@@ -359,7 +380,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
   
   public async calculateLongestStreak() {
-    return this.calculateStreak(true);
+    return this.calculateStreak({ longest: true });
   }
 
   public async getStats(): Promise<UserStats> {
@@ -369,7 +390,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     }))?.createdAt;
     const longestStreak = await this.calculateLongestStreak();
     const streak = await this.calculateStreak();
-    const updatedAt = new Date(Math.max(...[longestStreak.updatedAt, streak.updatedAt].map((d) => d.valueOf())));
+    const updatedAt = new Date(Math.max(...[longestStreak?.updatedAt, streak?.updatedAt].filter(Boolean).map((d) => d.valueOf())));
     return {
       interactionCounts: {
         read: (await User.getInteractionCounts('read', undefined, this)).find((s) => s.userId === this.id),

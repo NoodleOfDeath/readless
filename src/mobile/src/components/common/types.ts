@@ -40,7 +40,7 @@ export const FONT_SIZES = {
   subtitle2: 19,
 } as const;
 
-export type TextProps = { [key in keyof typeof FONT_SIZES]?: boolean } & RNTextProps & TextStyle & {
+export type TextProps = RNTextProps & TextStyle & {
   
   // font and size
   system?: boolean;
@@ -79,9 +79,9 @@ export type TextProps = { [key in keyof typeof FONT_SIZES]?: boolean } & RNTextP
   sentenceCase?: boolean;
   capitalize?: boolean;
   uppercase?: boolean;
-};
+} & { [key in keyof typeof FONT_SIZES]?: boolean };
 
-export type ViewProps = TouchableOpacityProps & PressableProps & RNViewProps & ViewStyle & {
+export type ViewProps = PressableProps & RNViewProps & TouchableOpacityProps & ViewStyle & {
   
   // preset variants
   outlined?: boolean;
@@ -96,7 +96,7 @@ export type ViewProps = TouchableOpacityProps & PressableProps & RNViewProps & V
   inactive?: boolean;
   
   // preset animations
-  pulse?: boolean | PulseProps;
+  pulse?: PulseProps | boolean;
   
   // position
   absolute?: boolean;

@@ -6,7 +6,7 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { ChildlessViewProps, View } from '~/components';
 import { useTheme } from '~/hooks';
 
-export type IconProps = RNIconProps & ChildlessViewProps;
+export type IconProps = ChildlessViewProps & RNIconProps;
 
 export function Icon({
   size = 20, color, ...props 

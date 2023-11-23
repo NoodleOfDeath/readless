@@ -5,12 +5,12 @@ import { Dialog as RNDialog } from 'react-native-paper';
 import { ViewProps } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type DialogProps = ViewProps & React.PropsWithChildren<{
+export type DialogProps = React.PropsWithChildren<{
   visible?: boolean;
   onClose?: () => void;
   title?: string;
   actions?: React.ReactNode | React.ReactNode[];
-}>;
+}> & ViewProps;
 
 export function Dialog({
   children,

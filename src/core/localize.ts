@@ -42,7 +42,7 @@ type LocalizeIOSOptions = LocalizeOptions;
 
 type XCLocalization = {
   stringUnit: {
-    state: 'translated' | 'needs-translation' | 'needs-review-translation';
+    state: 'needs-review-translation' | 'needs-translation' | 'translated';
     value: string;
     comment?: string;
   }

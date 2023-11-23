@@ -205,4 +205,4 @@ export const Walkthrough = React.forwardRef(function Walkthrough<Step extends Wa
     </ActionSheet>
   );
   
-}) as <Step extends WalkthroughStep = WalkthroughStep>(props: SheetProps<WalkthroughProps<Step>> & React.RefAttributes<WalkthroughSliderRef>) => React.ReactElement;
+}) as <Step extends WalkthroughStep = WalkthroughStep>(props: React.RefAttributes<WalkthroughSliderRef> & SheetProps<WalkthroughProps<Step>>) => React.ReactElement;

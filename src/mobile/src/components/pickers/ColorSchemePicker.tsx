@@ -11,7 +11,7 @@ import { StorageContext } from '~/contexts';
 import { strings } from '~/locales';
 
 type ColorSchemePickerProps = Omit<SegmentedButtonsProps, 'options'> & {
-  variant?: 'table' | 'buttons';
+  variant?: 'buttons' | 'table';
   buttons?: boolean;
 };
 

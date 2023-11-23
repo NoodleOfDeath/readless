@@ -13,8 +13,8 @@ import {
 } from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
-export type ActionSheetProps = ViewProps & RNActionSheetProps & {
-  closeButton?: boolean | React.ReactNode;
+export type ActionSheetProps = RNActionSheetProps & ViewProps & {
+  closeButton?: React.ReactNode | boolean;
 };
 
 export function ActionSheet({ 

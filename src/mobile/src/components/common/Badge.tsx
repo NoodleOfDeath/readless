@@ -9,7 +9,7 @@ import {
   useTheme,
 } from '~/hooks';
 
-export type BadgeProps = ViewProps & TextProps & Parameters<typeof RNBadge>[0] & {
+export type BadgeProps = Parameters<typeof RNBadge>[0] & TextProps & ViewProps & {
   topLeft?: boolean;
   topRight?: boolean;
   bottomLeft?: boolean;
@@ -36,7 +36,6 @@ export function Badge({
   color = 'contrastText',
   fontSize = xs ? 8 : small ? 12 : big ? 24 : undefined,
   zIndex = 100,
-  bg = 'primary',
   ...props
 }: BadgeProps) {
   const theme = useTheme();

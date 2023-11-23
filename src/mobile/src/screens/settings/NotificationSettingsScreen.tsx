@@ -58,7 +58,7 @@ export function NotificationSettingsScreen() {
         });
         setSettings({ ...settings, [SubscriptionEvent.DailyReminder]: reminders });
         await subscribe({
-          body: strings.dailyReminderDescription,
+          body: strings.thisIsYourDailyReminder,
           event: SubscriptionEvent.DailyReminder,
           fireTime: fireTime.toISOString(),
           repeats: '1d',
@@ -137,7 +137,7 @@ export function NotificationSettingsScreen() {
                   if (value === true) {
                     await subscribe({
                       event: SubscriptionEvent.DailyRecap,
-                      title: strings.settings,
+                      title: strings.dailyRecaps,
                     });
                   } else {
                     await unsubscribe({ event: SubscriptionEvent.DailyRecap });

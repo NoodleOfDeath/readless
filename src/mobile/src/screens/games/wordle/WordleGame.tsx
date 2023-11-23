@@ -11,7 +11,7 @@ import {
 } from '~/components';
 import { LayoutContext } from '~/contexts';
 
-type LetterClue = 'exact' | 'close' | 'wrong' | 'unknown';
+type LetterClue = 'close' | 'exact' | 'unknown' | 'wrong';
 
 const LETTER_COLORS = {
   close: {

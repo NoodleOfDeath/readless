@@ -23,7 +23,7 @@ export function CompactModePicker({
   const compactSummariesSwitch = React.useMemo(() => {
     return labeled ? (
       <Button system contained gap={ 12 }>
-        {strings.settings}
+        {strings.compactSummaries}
         <View row />
         <PrefSwitch prefKey={ 'compactSummaries' } />
       </Button>
@@ -35,7 +35,7 @@ export function CompactModePicker({
   const shortSummarySwitch = React.useMemo(() => {
     return labeled ? (
       <Button system contained gap={ 12 }>
-        {compactSummaries ? strings.settings : strings.settings}
+        {compactSummaries ? strings.shortSummariesUnderTitles : strings.compactSummaries}
         <View row />
         <PrefSwitch prefKey={ 'showShortSummary' } />
       </Button>

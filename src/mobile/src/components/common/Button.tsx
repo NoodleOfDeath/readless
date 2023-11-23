@@ -16,7 +16,7 @@ import {
 } from '~/hooks';
 
 export type ButtonProps = TextProps & ViewProps & {
-  badge?: number | boolean;
+  badge?: boolean | number;
   indicator?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -24,7 +24,7 @@ export type ButtonProps = TextProps & ViewProps & {
   vertical?: boolean;
   iconSize?: number;
   selected?: boolean;
-  variant?: 'default' | 'contained';
+  variant?: 'contained' | 'default';
   contained?: boolean;
   primary?: boolean;
 };

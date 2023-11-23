@@ -6,7 +6,7 @@ import FastImage, { FastImageProps } from 'react-native-fast-image';
 import { ViewProps } from '~/components';
 import { useStyles } from '~/hooks';
 
-export type ImageProps = RNImageProps & FastImageProps & Omit<ViewProps, 'children'> & {
+export type ImageProps = FastImageProps & Omit<ViewProps, 'children'> & RNImageProps & {
   native?: boolean;
   contain?: boolean;
   stretch?: boolean;
