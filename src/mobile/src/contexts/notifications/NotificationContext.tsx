@@ -129,6 +129,13 @@ export function NotificationContextProvider({ children }: React.PropsWithChildre
             event: SubscriptionEvent.Default,
             uuid: newFcmToken,
           });
+          await subscribe({
+            body: strings.keepYourStreakGoing,
+            channel,
+            event: SubscriptionEvent.StreakReminder,
+            title: strings.streakReminders,
+            uuid: newFcmToken,
+          });
         } catch (e) {
           console.error(e);
           showToast(e);

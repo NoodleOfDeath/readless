@@ -33,21 +33,21 @@ export function NotificationSettingsScreen() {
   const [loaded, setLoaded] = React.useState(false);
   const [enabled, setEnabled] = React.useState(pushNotificationsEnabled);
   const [settings, setSettings] = React.useState(pushNotifications ?? {});
-  const [fireTime, setFireTime] = React.useState<Date>();
+  const [dailyFireTime, setDailyFireTime] = React.useState<Date>();
 
   const updatePushNotifications = React.useCallback(async (enable = false) => {
-    if (!loaded || !fireTime) {
+    if (!loaded || !dailyFireTime) {
       return;
     }
     try {
       await unsubscribe({ event: SubscriptionEvent.DailyReminder });
       if (enable) {
-        if (settings[SubscriptionEvent.DailyReminder]?.fireTime === fireTime.toISOString()) {
+        if (settings[SubscriptionEvent.DailyReminder]?.fireTime === dailyFireTime.toISOString()) {
           return; 
         }
         const reminders = {
           ...settings[SubscriptionEvent.DailyReminder],
-          fireTime: fireTime.toISOString(),
+          fireTime: dailyFireTime.toISOString(),
         };
         setSettings((prev) => {
           const newState = {
@@ -60,7 +60,7 @@ export function NotificationSettingsScreen() {
         await subscribe({
           body: strings.thisIsYourDailyReminder,
           event: SubscriptionEvent.DailyReminder,
-          fireTime: fireTime.toISOString(),
+          fireTime: dailyFireTime.toISOString(),
           repeats: '1d',
           title: strings.dailyReminder,
         });
@@ -74,7 +74,7 @@ export function NotificationSettingsScreen() {
     } catch (e) {
       console.error(e);
     }
-  }, [loaded, fireTime, unsubscribe, settings, subscribe]);
+  }, [loaded, dailyFireTime, unsubscribe, settings, subscribe]);
 
   useFocusEffect(React.useCallback(() => {
     if (loaded) {
@@ -84,11 +84,11 @@ export function NotificationSettingsScreen() {
       setEnabled(pushNotificationsEnabled);
       setSettings(pushNotifications ?? {});
       setLoaded(true);
-      const fireTime = new Date(pushNotifications?.[SubscriptionEvent.DailyReminder]?.fireTime ?? new Date().getTime());
-      if (Number.isNaN(fireTime.getTime())) {
-        setFireTime(new Date(new Date().getTime()));
+      const dailyFireTime = new Date(pushNotifications?.[SubscriptionEvent.DailyReminder]?.fireTime ?? new Date().getTime());
+      if (Number.isNaN(dailyFireTime.getTime())) {
+        setDailyFireTime(new Date(new Date().getTime()));
       } else {
-        setFireTime(fireTime);
+        setDailyFireTime(dailyFireTime);
       }
     }).catch(console.error);
   }, [loaded, syncWithServer, pushNotificationsEnabled, pushNotifications]));
@@ -111,6 +111,37 @@ export function NotificationSettingsScreen() {
                     registerRemoteNotifications(true);
                   } else {
                     await unsubscribe({ event: SubscriptionEvent.Default });
+                  }
+                } } />
+            ) } />
+          <Divider />
+          <TableViewCell
+            bold
+            disabled={ !enabled }
+            title={ strings.streakReminders }
+            cellIcon="flash"
+            cellAccessoryView={ (
+              <Switch 
+                disabled={ !enabled }
+                value={ Boolean(settings[SubscriptionEvent.StreakReminder]) }
+                onValueChange={ async (value) => {
+                  setSettings((prev) => {
+                    const newState = { ...prev };
+                    if (value === true) {
+                      newState[SubscriptionEvent.StreakReminder] = {};
+                    } else {
+                      delete newState[SubscriptionEvent.StreakReminder];
+                    }
+                    return (prev = newState);
+                  });
+                  if (value === true) {
+                    await subscribe({
+                      body: strings.keepYourStreakGoing,
+                      event: SubscriptionEvent.StreakReminder,
+                      title: strings.streakReminders,
+                    });
+                  } else {
+                    await unsubscribe({ event: SubscriptionEvent.StreakReminder });
                   }
                 } } />
             ) } />
@@ -155,7 +186,7 @@ export function NotificationSettingsScreen() {
                 disabled={ !enabled }
                 value={ Boolean(settings[SubscriptionEvent.DailyReminder]) }
                 onValueChange={ async (value) => {
-                  setFireTime(value ? new Date() : undefined);
+                  setDailyFireTime(value ? new Date() : undefined);
                   registerRemoteNotifications(true);
                   await updatePushNotifications(value);
                 } } />
@@ -166,10 +197,10 @@ export function NotificationSettingsScreen() {
             disabled={ !settings[SubscriptionEvent.DailyReminder] }
             title={ strings.dailyReminderTime }
             cellIcon="clock"
-            cellAccessoryView={ Boolean(settings[SubscriptionEvent.DailyReminder]) && fireTime && (
+            cellAccessoryView={ Boolean(settings[SubscriptionEvent.DailyReminder]) && dailyFireTime && (
               <DateTimePicker 
                 disabled={ !settings[SubscriptionEvent.DailyReminder] }
-                value={ fireTime }
+                value={ dailyFireTime }
                 onChange={ async (event, date) => {
                   if (event.type !== 'set') {
                     return;
@@ -183,7 +214,7 @@ export function NotificationSettingsScreen() {
                     }
                     newDate.setHours(date.getHours());
                     newDate.setMinutes(date.getMinutes());
-                    setFireTime(newDate);
+                    setDailyFireTime(newDate);
                   }
                   registerRemoteNotifications();
                   await updatePushNotifications(true);
