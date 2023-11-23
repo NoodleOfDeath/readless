@@ -55,9 +55,9 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   /** Resolves a user from an alias request/payload */
   public static async from(payload: AliasPayload, opts?: Partial<FindAliasOptions>) {
     if (payload.userId || opts?.jwt) {
-      const id = payload.userId ?? new JWT(opts.jwt).userId;
+      const id = payload.userId ?? new JWT(opts?.jwt).userId;
       const user = await User.findOne({ where: { id } });
-      if (opts.jwt) {
+      if (opts?.jwt) {
         user.jwt = new JWT(opts.jwt);
       }
       if (!user && !opts?.ignoreIfNotResolved) {
@@ -294,10 +294,10 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     };
   }
 
-  public static async getStreaks(limit: 'ALL' | number = 10): Promise<Streak[]> {
+  public static async getStreaks(limit: 'ALL' | number = 10, userId: number = null): Promise<Streak[]> {
     const replacements = {
       limit: limit === 'ALL' ? 100 : limit,
-      userId: null, 
+      userId, 
     };
     const response: Streak[] = (await User.store.query(QueryFactory.getQuery('streak'), {
       nest: true,
@@ -357,7 +357,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       user: (await this.findAlias('username'))?.value,
       userId: this.id,
     };
-    const streaks = await User.getStreaks('ALL');
+    const streaks = await User.getStreaks('ALL', this.id);
     if (!longest) {
       return streaks.find(
         (s) => {

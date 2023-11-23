@@ -355,7 +355,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           if (remoteValue) {
             const trans = SyncableIoIn(key);
             const value = trans(remoteValue);
-            newPreferences[key] = value;
+            setStoredValue(key, value, false);
           }
         } catch (e) {
           console.error(e);
@@ -368,7 +368,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const state = { ...prev };
       state.profile = {
         ...state.profile,
-        preferences: newPreferences,
         stats,
       };
       return new UserData(state);
