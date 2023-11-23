@@ -106,7 +106,3 @@ export * from './resources/event/EventMetadata.types';
 // Achievement
 export * from './resources/achievement/Achievement.types';
 export * from './resources/achievement/UserAchievement.types';
-
-// IAP
-export * from './resources/iap/Voucher.types';
-export * from './resources/iap/IapVoucher.types';

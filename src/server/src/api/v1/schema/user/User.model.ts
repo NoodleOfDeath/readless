@@ -6,7 +6,6 @@ import { Table } from 'sequelize-typescript';
 import { INTERACTION_TYPES } from './../resources/interaction/Interaction.types';
 import { OpenAIService } from '../../../../services';
 import { JWT } from '../../../../services/types';
-import { Duration } from '../../../../utils';
 import { MetricsRequest, MetricsResponse } from '../../controllers/metrics/types';
 import { AuthError } from '../../middleware';
 import {
@@ -14,6 +13,7 @@ import {
   AliasCreationAttributes,
   AliasPayload,
   AliasType,
+  CalculateStreakOptions,
   Credential,
   CredentialCreationAttributes,
   CredentialType,
@@ -38,13 +38,6 @@ import {
   UserStats,
 } from '../../schema';
 import { BaseModel } from '../base';
-
-type StreakOptions = {
-  limit?: number | 'ALL';
-  longest?: boolean;
-  userId?: number;
-  expiresIn?: Duration;
-};
 
 @Table({
   modelName: 'user',
@@ -284,7 +277,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     expiresIn = '6h',
     limit = 10, 
     userId = null,
-  }: StreakOptions = {}): Promise<Streak[]> {
+  }: CalculateStreakOptions = {}): Promise<Streak[]> {
     const replacements = {
       limit: limit === 'ALL' ? 100 : limit,
       userId, 
@@ -349,7 +342,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   public async calculateStreak({ 
     longest,
     ...options
-  }: StreakOptions = {}): Promise<Streak> {
+  }: CalculateStreakOptions = {}): Promise<Streak> {
     let streak: Streak = {
       end: new Date(new Date().toLocaleDateString()),
       expiresSoon: false,

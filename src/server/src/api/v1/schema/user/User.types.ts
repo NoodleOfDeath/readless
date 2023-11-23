@@ -1,4 +1,5 @@
 import { ThirdParty } from './Alias.types';
+import { DurationString } from '../../../../utils';
 import { DatedAttributes } from '../types';
 
 export type UserEvent<T> = T & { 
@@ -43,6 +44,13 @@ export type Profile = {
   stats?: UserStats;
   createdAt?: Date;
   updatedAt?: Date;
+};
+
+export type CalculateStreakOptions = {
+  limit?: number | 'ALL';
+  longest?: boolean;
+  userId?: number;
+  expiresIn?: DurationString;
 };
 
 export type UserAttributes = DatedAttributes & {

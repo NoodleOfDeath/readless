@@ -1,7 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-import { Vendor } from '../../api/v1/schema';
-
 type PurchaseReceipt = {
   packageName: string,
   productId: string,
@@ -116,7 +114,7 @@ export type ApplePurchaseResponse = {
 const JWT_TOKEN_LIFESPAN = '1d';
 
 export class PurchaseResponse<
-  V extends Vendor, 
+  V extends string, 
   R = V extends 'apple' ? ApplePurchaseResponse : V extends 'google' ? object : never
 > {
   

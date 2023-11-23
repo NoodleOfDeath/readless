@@ -1,4 +1,4 @@
-import { Duration } from '../../../../../utils';
+import { DurationString } from '../../../../../utils';
 import { DatedAttributes } from '../../types';
 
 export type EventType = 
@@ -10,7 +10,7 @@ export type EventAttributes = DatedAttributes & {
   title?: string;
   description?: string;
   startDate?: Date;
-  duration?: Duration;
+  duration?: DurationString;
 };
 
 export type EventCreationAttributes = Partial<DatedAttributes> & {
@@ -19,7 +19,7 @@ export type EventCreationAttributes = Partial<DatedAttributes> & {
   title?: string;
   description?: string;
   startDate?: Date;
-  duration?: Duration;
+  duration?: DurationString;
 };
 
 export const PUBLIC_EVENT_ATTRIBUTES = [
