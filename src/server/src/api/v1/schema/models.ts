@@ -60,6 +60,3 @@ export * from './resources/event/EventMetadata.model';
 // Achievement
 export * from './resources/achievement/Achievement.model';
 export * from './resources/achievement/UserAchievement.model';
-
-// IAP
-export * from './resources/iap/IapVoucher.model';

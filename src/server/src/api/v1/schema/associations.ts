@@ -8,7 +8,6 @@ import {
   Event,
   EventInteraction,
   EventMetadata,
-  IapVoucher,
   Job,
   Locale,
   Message,
@@ -41,7 +40,6 @@ import {
 import { 
   PUBLIC_CATEGORY_ATTRIBUTES,
   PUBLIC_CATEGORY_TRANSLATION_ATTRIBUTES,
-  PUBLIC_IAP_VOUCHER_ATTRIBUTES,
   PUBLIC_MESSAGE_ATTRIBUTES,
   PUBLIC_PUBLISHER_ATTRIBUTES,
   PUBLIC_PUBLISHER_TRANSLATION_ATTRIBUTES,
@@ -608,7 +606,5 @@ export function addScopes() {
   RecapMedia.addScope('public', { attributes: [...PUBLIC_RECAP_MEDIA_ATTRIBUTES] });
   
   Subscription.addScope('public', { attributes: [...PUBLIC_SUBSCRIPTION_ATTRIBUTES] });
-
-  IapVoucher.addScope('public', { attributes: [...PUBLIC_IAP_VOUCHER_ATTRIBUTES] });
 
 }

@@ -5,7 +5,7 @@ import {
 } from 'date-fns';
 import ms from 'ms';
 
-export type Duration = `${number}${'d' | 'h' | 'M' | 'm' | 'ms' | 's' | 'w' | 'y'}`;
+export type DurationString = `${number}${'d' | 'h' | 'M' | 'm' | 'ms' | 's' | 'w' | 'y'}`;
 
 export const addDays = (date: Date, days: number) => {
   const newDate = new Date(date.valueOf());

@@ -10,7 +10,7 @@ import {
   EventCreationAttributes,
   EventType,
 } from './Event.types';
-import { Duration } from '../../../../../utils';
+import { DurationString } from '../../../../../utils';
 import { BaseModel } from '../../base';
 
 @Table({
@@ -49,6 +49,6 @@ export class Event<
   declare startDate?: Date;
   
   @Column({ type: DataType.STRING })
-  declare duration?: Duration;
+  declare duration?: DurationString;
 
 }
