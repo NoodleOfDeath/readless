@@ -97,7 +97,7 @@ export class Alias<
         const { email, email_verified: emailVerified } = claims;
         let alias: Alias;
         if (email && emailVerified) {
-          alias = await Alias.findOne({ where: { type: 'email', value: email } });
+          alias = await Alias.findOne({ where: { type: 'email', value: { [Op.iLike]: email } } });
         } 
         if (!alias) {
           alias = await Alias.findOne({ where: { type: 'thirdParty/apple', value: claims.sub } });
@@ -111,7 +111,7 @@ export class Alias<
         } = ticket.getPayload();
         let alias: Alias;
         if (email && emailVerified) {
-          alias = await Alias.findOne({ where: { type: 'email', value: email } });
+          alias = await Alias.findOne({ where: { type: 'email', value: { [Op.iLike]: email } } });
         }
         if (!alias) {
           alias = await Alias.findOne({ where: { type: 'thirdParty/google', value: thirdPartyId } });
@@ -148,14 +148,14 @@ export class Alias<
         alias = await Alias.findOne({
           where: {
             type,
-            value: payload[type],
+            value: { [Op.iLike]: payload[type] },
           },
         });
       } else {
         alias = await Alias.findOne({ 
           where: {
             type,
-            value: payload[type],
+            value: { [Op.iLike]: payload[type] },
             verifiedAt: { [Op.ne]: null },
           },
         });
