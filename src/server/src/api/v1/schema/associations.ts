@@ -5,12 +5,12 @@ import {
   CategoryInteraction,
   CategoryTranslation,
   Credential,
+  DevUpdate,
   Event,
   EventInteraction,
   EventMetadata,
   Job,
   Locale,
-  Message,
   Publisher,
   PublisherInteraction,
   PublisherTranslation,
@@ -40,7 +40,7 @@ import {
 import { 
   PUBLIC_CATEGORY_ATTRIBUTES,
   PUBLIC_CATEGORY_TRANSLATION_ATTRIBUTES,
-  PUBLIC_MESSAGE_ATTRIBUTES,
+  PUBLIC_DEV_UPDATE_ATTRIBUTES,
   PUBLIC_PUBLISHER_ATTRIBUTES,
   PUBLIC_PUBLISHER_TRANSLATION_ATTRIBUTES,
   PUBLIC_RECAP_ATTRIBUTES,
@@ -558,7 +558,7 @@ export function makeAssociations() {
 
 export function addScopes() {
   
-  Message.addScope('public', { attributes: [...PUBLIC_MESSAGE_ATTRIBUTES] });
+  DevUpdate.addScope('public', { attributes: [...PUBLIC_DEV_UPDATE_ATTRIBUTES] });
 
   Publisher.addScope('defaultScope', { where: { disabled: null } });
   Publisher.addScope('public', { 

@@ -29,7 +29,7 @@ import {
 } from '../../schema';
 
 @Route('/v1/publisher')
-@Tags('Publisher')
+@Tags('Publishers')
 @Security('jwt')
 @SuccessResponse(200, 'OK')
 @SuccessResponse(201, 'Created')
@@ -57,7 +57,7 @@ export class PublisherController extends BaseController {
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
   ): Promise<PublicPublisherAttributes> {
-    const user = await User.from(body, { ignoreIfNotResolved: true, ...req.body });
+    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
     const {
       content, metadata, remoteAddr, 
     } = body;

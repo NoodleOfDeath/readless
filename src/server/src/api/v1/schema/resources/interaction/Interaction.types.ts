@@ -20,6 +20,7 @@ export const INTERACTION_TYPES = {
   untranslate: 'untranslate',
   upvote: 'upvote',
   view: 'view',
+  vote: 'vote',
 } as const;
 
 export type InteractionType = typeof INTERACTION_TYPES[keyof typeof INTERACTION_TYPES];

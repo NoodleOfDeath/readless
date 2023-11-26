@@ -10,7 +10,7 @@ export type EventAttributes = DatedAttributes & {
   title?: string;
   description?: string;
   startDate?: Date;
-  duration?: DurationString;
+  duration?: string; // DurationString
 };
 
 export type EventCreationAttributes = Partial<DatedAttributes> & {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request as ExpressRequest } from 'express';
 import {
   Body,
@@ -39,7 +40,7 @@ import {
 } from '../../schema';
 
 @Route('/v1/summary')
-@Tags('Summary')
+@Tags('Summaries')
 @Security('jwt')
 @SuccessResponse(200, 'OK')
 @SuccessResponse(201, 'Created')
@@ -132,7 +133,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
   ): Promise<PublicSummaryAttributes> {
-    const user = await User.from(body, { ignoreIfNotResolved: true, ...req.body });
+    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
     const {
       content, metadata, remoteAddr, 
     } = body;
@@ -161,7 +162,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Path() targetId: number,
     @Body() body: JwtRequest
   ): Promise<DestroyResponse> {
-    const user = await User.from(body, req.body);
+    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
     await user.destroySummary(targetId);
     return { success: true };
   }
@@ -173,7 +174,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Path() targetId: number,
     @Body() body: JwtRequest
   ): Promise<DestroyResponse> {
-    const user = await User.from(body, req.body);
+    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
     await user.restoreSummary(targetId);
     return { success: true };
   }

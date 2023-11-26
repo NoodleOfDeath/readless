@@ -4,7 +4,7 @@ export * from './system/RateLimit.model';
 export * from './system/Cache.model';
 
 export * from './system/log/SystemLog.model';
-export * from './system/message/Message.model';
+export * from './system/update/DevUpdate.model';
 
 // queues
 export * from './queue/Queue.model';

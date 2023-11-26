@@ -19,7 +19,7 @@ import {
 } from '../../schema';
 
 @Route('/v1/subscribe')
-@Tags('Subscribe')
+@Tags('Subscriptions')
 @Security('jwt')
 @SuccessResponse(200, 'OK')
 @SuccessResponse(201, 'Created')
@@ -33,7 +33,7 @@ export class SubscribeController {
     @Request() req: ExpressRequest,
     @Body() body: SubscriptionCreationAttributes
   ): Promise<PublicSubscriptionAttributes> {
-    const user = await User.from(req.body, { ignoreIfNotResolved: true, ...req.body });
+    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
     const subscription = await Subscription.subscribe({ ...body, userId: user?.id });
     return subscription;
   }

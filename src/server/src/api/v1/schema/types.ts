@@ -40,7 +40,7 @@ export * from './system/RequestLog.types';
 export * from './system/RateLimit.types';
 export * from './system/Cache.types';
 export * from './system/log/SystemLog.types';
-export * from './system/message/Message.types';
+export * from './system/update/DevUpdate.types';
 
 // Queues
 export * from './queue/Queue.types';
