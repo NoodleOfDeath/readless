@@ -9,6 +9,7 @@ import { JWT } from '../../../../services/types';
 import { MetricsRequest, MetricsResponse } from '../../controllers/metrics/types';
 import { AuthError } from '../../middleware';
 import {
+  Achievement,
   Alias,
   AliasCreationAttributes,
   AliasPayload,
@@ -30,6 +31,8 @@ import {
   Summary,
   SummaryInteraction,
   ThirdParty,
+  UserAchievement,
+  UserAchievementCreationAttributes,
   UserAttributes,
   UserCreationAttributes,
   UserEvent,
@@ -440,6 +443,27 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
         value,
       });
     }
+  }
+
+  // achievements
+  public async getAchievements() {
+    return await UserAchievement.findAll({ where: { userId: this.id } });
+  }
+
+  public async hasAchievement(achievement: Achievement) {
+    return await UserAchievement.findOne({ where: { achievementId: achievement.id, userId: this.id } });
+  }
+
+  public async grantAchievement(achievement: Achievement, { progress = 100, achievedAt = progress === 100 ? new Date() : null }: Partial<UserAchievementCreationAttributes> = {}) {
+    if (await this.hasAchievement(achievement)) {
+      return achievement;
+    }
+    return await UserAchievement.create({
+      achievedAt,
+      achievementId: achievement.id,
+      progress, 
+      userId: this.id,
+    });
   }
 
   // summary methods

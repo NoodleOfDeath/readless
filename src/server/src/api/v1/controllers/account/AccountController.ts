@@ -492,7 +492,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
   ): Promise<VerifyAliasResponse> {
     const alias = await Alias.findOne({ where: { verificationCode: body.verificationCode } });
     if (!alias) {
-      throw new AuthError('UNKNOWN_ALIAS', { alias: 'user identifier' });
+      throw new AuthError('INVALID_CREDENTIALS');
     } else if (alias.verificationExpiresAt < new Date()) {
       await alias.destroy();
       throw new AuthError('EXPIRED_VERIFICATION_CODE');
@@ -512,10 +512,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Request() req: ExpressRequest,
     @Body() body: RequestOtpRequest
   ): Promise<RequestOtpResponse> {
-    const user = await User.from(body, { ignoreIfNotResolved: true });
-    if (!user) {
-      return { success: false };
-    }
+    const user = await User.from(body);
     const email = await user.findAlias('email');
     if (!email) {
       return { success: false };

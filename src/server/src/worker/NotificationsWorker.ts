@@ -2,7 +2,9 @@ import ms from 'ms';
 import { Op } from 'sequelize';
 
 import {
+  Achievement,
   Queue,
+  RequestLog,
   Subscription,
   User,
   Worker,
@@ -17,10 +19,14 @@ import {
 async function main() {
   await DBService.prepare();
   await Queue.prepare();
+  await Achievement.prepare();
   ScribeService.prepare();
-  doWork();
-  sendDailyPushNotifications();
-  sendStreakPushNotifications();
+  if ('1' === `${process.env.TWO}`) {
+    doWork();
+    sendDailyPushNotifications();
+    sendStreakPushNotifications();
+  }
+  detectAndAssignAchievements();
 }
 
 export async function doWork() {
@@ -59,7 +65,8 @@ async function sendDailyPushNotifications() {
       },
     });
     if (!subscriptions.length) {
-      throw new Error('no subscriptions');
+      console.log('no subscriptions to notify');
+      return;
     }
     console.log(`notifying ${subscriptions.length} subscribers`);
     const messages: FirebaseMessage[] = [];
@@ -78,7 +85,7 @@ async function sendDailyPushNotifications() {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(() => sendDailyPushNotifications(), 3_000);
+    setTimeout(() => sendDailyPushNotifications(), 5_000);
   }
 }
 
@@ -95,7 +102,8 @@ async function sendStreakPushNotifications() {
       },
     });
     if (!subscriptions.length) {
-      throw new Error('no subscriptions');
+      console.log('no subscriptions to notify');
+      return;
     }
     const ids: Subscription[] = [];
     for (const sub of subscriptions) {
@@ -122,7 +130,27 @@ async function sendStreakPushNotifications() {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(() => sendStreakPushNotifications(), 3_000);
+    setTimeout(() => sendStreakPushNotifications(), 5_000);
+  }
+}
+
+async function detectAndAssignAchievements() {
+  try {
+    for (const criteria of Achievement.ACHIEVEMENT_CRITERIA) {
+      const achievement = await Achievement.findOne({ where: { name: criteria.name } });
+      if (criteria.criteria?.table === 'RequestLog') {
+        console.log('checking achievement:', criteria.name);
+        const logs = await RequestLog.findAll(criteria.criteria);
+        for (const log of logs) {
+          const user = await User.from({ userId: log.userId });
+          await user.grantAchievement(achievement);
+        }
+      }
+    }
+  } catch (e) {
+    console.error(e);
+  } finally {
+    setTimeout(() => detectAndAssignAchievements(), 30_000);
   }
 }
 
