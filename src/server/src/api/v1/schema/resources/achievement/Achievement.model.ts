@@ -1,10 +1,15 @@
 import {
   Column,
   DataType,
+  Index,
   Table,
 } from 'sequelize-typescript';
 
-import { AchievementAttributes, AchievementCreationAttributes } from './Achievement.types';
+import {
+  AchievementAttributes,
+  AchievementCreationAttributes,
+  AchievementCriteria,
+} from './Achievement.types';
 import { BaseModel } from '../../base';
 
 @Table({
@@ -17,11 +22,15 @@ export class Achievement<
   B extends AchievementCreationAttributes = AchievementCreationAttributes
 > extends BaseModel<A, B> implements AchievementAttributes {
 
+  @Index({ unique: true })
   @Column({
     allowNull: false,
     type: DataType.STRING,
   })
   declare name: string;
+
+  @Column({ type: DataType.JSON })
+  declare criteria?: AchievementCriteria;
 
   @Column({ type: DataType.TEXT })
   declare description?: string;
