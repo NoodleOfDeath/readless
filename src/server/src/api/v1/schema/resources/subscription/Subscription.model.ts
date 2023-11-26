@@ -35,7 +35,6 @@ export class Subscription<
   @Index({  
     name: 'subscription_channel_uuid_event',
     unique: true,
-    where: { deletedAt: null },
   })
   @Column({
     allowNull: false,
@@ -46,7 +45,6 @@ export class Subscription<
   @Index({  
     name: 'subscription_channel_uuid_event',
     unique: true,
-    where: { deletedAt: null },
   })
   @Column({
     allowNull: false,
@@ -57,7 +55,6 @@ export class Subscription<
   @Index({  
     name: 'subscription_channel_uuid_event',
     unique: true,
-    where: { deletedAt: null },
   })
   @Column({
     allowNull: false,
@@ -87,7 +84,6 @@ export class Subscription<
   @Index({  
     name: 'subscription_verification_code',
     unique: true,
-    where: { deletedAt: null },
   })
   @Column({ type: DataType.STRING })
   declare verificationCode?: string;
@@ -95,7 +91,6 @@ export class Subscription<
   @Index({  
     name: 'subscription_unsubscribe_token',
     unique: true,
-    where: { deletedAt: null },
   })
   @Column({ type: DataType.STRING })
   declare unsubscribeToken?: string;
