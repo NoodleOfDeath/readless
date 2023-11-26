@@ -1,8 +1,16 @@
+import {
+  Attributes,
+  FindOptions,
+  Model,
+} from 'sequelize';
+
+import { RequestLog } from '../../models';
 import { DatedAttributes } from '../../types';
 
-export type AchievementCriteria = {
-  table?: string;
-  column?: string;
+export type AchievementCriteriaMetric = 'count' | 'time';
+
+export type AchievementCriteria<T extends Model = RequestLog> = Partial<FindOptions<Attributes<T>>> & {
+  table: string;
 };
 
 export type AchievementAttributes = DatedAttributes & {
