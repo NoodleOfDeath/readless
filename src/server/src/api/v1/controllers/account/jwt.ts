@@ -127,7 +127,7 @@ export class JWT implements JsonWebToken {
           userId,
           scope = [],
           priority = 0,
-          expiresIn = '1d',
+          expiresIn = process.env.JWT_TOKEN_LIFESPAN || '30d',
           refreshable,
           defaultsTo = 'standard',
         } = opts;

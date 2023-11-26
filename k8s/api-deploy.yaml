@@ -56,6 +56,8 @@ spec:
               value: '$GOOGLE_MEASUREMENT_ID'
             - name: JWT_SECRET
               value: '$JWT_SECRET'
+            - name: JWT_TOKEN_LIFESPAN
+              value: '$JWT_TOKEN_LIFESPAN'
             - name: MAIL_HOST
               value: '$MAIL_HOST'
             - name: MAIL_PASS

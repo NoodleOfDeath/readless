@@ -5,7 +5,6 @@ import {
   Get,
   Path,
   Post,
-  Query,
   Request,
   Response,
   Route,
@@ -13,63 +12,55 @@ import {
   SuccessResponse,
   Tags,
 } from 'tsoa';
-  
-import {
-  BaseController,
-  BulkResponse,
-  InteractionRequest,
-} from '../';
-import { SupportedLocale } from '../../../../core/locales';
+
+import { BulkResponse, InteractionRequest } from '../';
 import { AuthError, InternalError } from '../../middleware';
 import {
-  Category,
-  CategoryInteraction,
+  Event,
+  EventInteraction,
   InteractionType,
-  PublicCategoryAttributes,
+  PublicEventAttributes,
   User,
 } from '../../schema';
 
-@Route('/v1/category')
-@Tags('Categories')
+@Route('/v1/event')
+@Tags('Events')
 @Security('jwt')
 @SuccessResponse(200, 'OK')
 @SuccessResponse(201, 'Created')
 @SuccessResponse(204, 'No Content')
 @Response<AuthError>(401, 'Unauthorized')
 @Response<InternalError>(500, 'Internal Error')
-export class CategoryController extends BaseController {
+export class EventController {
   
   @Get('/')
-  public static async getCategories(
-    @Request() req: ExpressRequest,
-    @Query() locale?: SupportedLocale,
-    @Query() userId?: number,
-    @Query() filter?: string
-  ): Promise<BulkResponse<PublicCategoryAttributes>> {
-    const params = this.serializeParams(req);
-    const categories = await Category.getCategories(locale ?? params.locale);
-    return categories;
+  public static async getEvents(
+    @Request() req: ExpressRequest
+  ): Promise<BulkResponse<PublicEventAttributes>> {
+    return {
+      count: 0,
+      rows: [],
+    };
   }
-  
+
   @Post('/interact/:targetId/:type')
-  public static async interactWithCategory(
+  public static async interactWithEvent(
     @Request() req: ExpressRequest,
     @Path() targetId: number,
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
-  ): Promise<PublicCategoryAttributes> {
+  ): Promise<PublicEventAttributes> {
     const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
     const {
       content, metadata, remoteAddr, 
     } = body;
-    const interaction = await CategoryInteraction.create({
+    const interaction = await EventInteraction.create({
       content, metadata, remoteAddr, targetId, type, userId: user?.id,
     });
     if (!interaction) {
       throw new InternalError('Failed to create interaction');
     }
-    const resource = await Category.scope('public').findByPk(targetId);
-    return resource;
+    return Event.scope('public').findByPk(targetId);
   }
   
 }

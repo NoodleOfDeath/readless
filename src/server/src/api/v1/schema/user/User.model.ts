@@ -55,11 +55,11 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   /** Resolves a user from an alias request/payload */
   public static async from(payload: AliasPayload, opts?: Partial<FindAliasOptions>) {
-    if (payload.userId || opts?.jwt) {
-      const id = payload.userId ?? new JWT(opts?.jwt).userId;
+    if (payload.userId) {
+      const id = payload.userId ?? new JWT(payload.jwt).userId;
       const user = await User.findOne({ where: { id } });
-      if (opts?.jwt) {
-        user.jwt = new JWT(opts.jwt);
+      if (payload.jwt) {
+        user.jwt = new JWT(payload.jwt);
       }
       if (!user && !opts?.ignoreIfNotResolved) {
         throw new AuthError('INVALID_CREDENTIALS');
@@ -74,11 +74,15 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
         return undefined;
       }
       const user = await User.findOne({ where: { id: alias.userId } });
-      if (opts?.jwt) {
-        user.jwt = new JWT(opts.jwt);
+      if (payload.jwt) {
+        user.jwt = new JWT(payload.jwt);
       }
       return user;
     }
+  }
+
+  public static async fromJwt(jwt: AliasPayload | string, opts?: Partial<FindAliasOptions>) {
+    return await this.from({ jwt: typeof jwt === 'string' ? jwt : jwt.jwt }, opts);
   }
   
   public async findAlias(type: AliasType) {

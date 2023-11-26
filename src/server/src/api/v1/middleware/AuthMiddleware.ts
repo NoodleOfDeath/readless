@@ -10,6 +10,10 @@ type AuthMiddlewareOptions = {
 
 export const authMiddleware = (securityName: string, { required = false, scope = [] }: AuthMiddlewareOptions = {}): RequestHandler => async (req, res, next) => {
   try {
+    delete req.body.jwt;
+    delete req.query.jwt;
+    delete req.body.refreshedJwt;
+    delete req.query.refreshedJwt; 
     if (securityName === 'jwt') {
       const auth = req.get('authorization');
       if (auth) {

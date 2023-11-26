@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request as ExpressRequest } from 'express';
 import {
   Get,
@@ -39,14 +40,13 @@ export class MetricsController {
 
   @Get('/')
   @Security('jwt', ['standard:read'])
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   public static async getMetrics(
     @Request() req: ExpressRequest,
     @Query() type?: MetricType[],
     @Query() after?: Date,
     @Query() before?: Date
   ): Promise<MetricsResponse> {
-    const user = await User.from({ jwt: req.body.jwt });
+    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
     return await User.getMetrics(user);
   }
 
