@@ -494,6 +494,9 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         continue;
       }
       const siblingSummary = await Summary.scope('public').findByPk(relation);
+      if (!siblingSummary) {
+        continue;
+      }
       await siblingSummary.associateWith(siblingId, [...ignore, ...relations, this.id]);
       await siblingSummary.associateWith(this.id, [...ignore, ...relations, siblingId]);
     }

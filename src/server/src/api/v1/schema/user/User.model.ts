@@ -282,7 +282,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   public static async getStreaks({ 
     expiresIn = '1h',
-    limit = 10, 
+    limit,
     userId = null,
   }: CalculateStreakOptions = {}): Promise<Streak[]> {
     const replacements = {
@@ -312,7 +312,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       type,
       userId: null,
     };
-    const response = (await User.store.query(QueryFactory.getQuery('interaction_count'), {
+    const response = (await User.store.query(QueryFactory.getQuery('summary_interaction_count'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,
