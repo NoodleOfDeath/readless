@@ -282,7 +282,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   public static async getStreaks({ 
     expiresIn = '1h',
-    limit = null,
+    limit = 100,
     userId = null,
   }: CalculateStreakOptions = {}): Promise<Streak[]> {
     const replacements = {
