@@ -6,11 +6,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import {
-  AchievementAttributes,
-  AchievementCreationAttributes,
-  AchievementCriteria,
-} from './Achievement.types';
+import { AchievementAttributes, AchievementCreationAttributes } from './Achievement.types';
 import { BaseModel } from '../../base';
 
 @Table({
@@ -30,9 +26,6 @@ export class Achievement<
   })
   declare name: string;
 
-  @Column({ type: DataType.JSON })
-  declare criteria?: AchievementCriteria;
-
   @Column({ type: DataType.TEXT })
   declare description?: string;
 
@@ -42,7 +35,7 @@ export class Achievement<
   @Column({ type: DataType.INTEGER })
   declare points?: number;
 
-  static ACHIEVEMENTS: AchievementCreationAttributes[] = [
+  static ACHIEVEMENT_CRITERIA: AchievementCreationAttributes[] = [
     {
       criteria: {
         attributes: [
@@ -63,7 +56,7 @@ export class Achievement<
   ];
 
   static async prepare() {
-    for (const achievement of this.ACHIEVEMENTS) {
+    for (const achievement of this.ACHIEVEMENT_CRITERIA) {
       const exists = await this.findOne({ where: { name: achievement.name } });
       if (exists) {
         this.update(achievement, { where: { name: achievement.name } });
@@ -71,22 +64,6 @@ export class Achievement<
         this.create(achievement);
       }
     }
-  }
-
-  get parsedCriteria(): AchievementCriteria {
-    if (!this.criteria) {
-      return undefined;
-    }
-    return Object.keys(this.criteria).reduce((prev, curr) => { 
-      let next = this[curr as keyof AchievementCriteria];
-      if (Array.isArray(next)) {
-        next = next.map((n) => typeof n === 'object' && n.fn && n.args ? fn(n.fn, n.args) : n);
-      }
-      return {
-        ...prev, 
-        [curr]: next,
-      };
-    }, {}) as AchievementCriteria;
   }
 
 }

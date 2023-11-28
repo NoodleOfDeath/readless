@@ -11,5 +11,5 @@ export type UserAchievementCreationAttributes = Partial<DatedAttributes> & {
   userId: number;
   achievementId: number;
   progress?: number;
-  achievedAt?: boolean;
+  achievedAt?: Date;
 };
