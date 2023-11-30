@@ -104,27 +104,24 @@ export function AccountScreen({
     <Screen>
       <ScrollView>
         <TableView>
-          <TableViewSection>
-            {__DEV__ && (
-              <TableViewCell
-                cellContentView={ <Text>{JSON.stringify(user, null, 2)}</Text> } />
-            )}
+          <TableViewSection
+            grouped 
+            header={ strings.personalInformation }>
             {user?.profile?.email && (
-              <TableViewCell 
-                cellStyle="RightDetail"
-                title={ user?.profile?.email } />
+              <TableViewCell
+                cellIcon={ <Icon name="email" /> }
+                title={ strings.email }
+                detail={ user?.profile?.email } />
             )}
             {user?.profile?.username && (
-              <React.Fragment>
-                <Divider />
-                <TableViewCell 
-                  cellStyle="RightDetail"
-                  title={ strings.username }
-                  detail={ user?.profile?.username } />
-              </React.Fragment>
+              <TableViewCell
+                cellIcon={ <Icon name="pen" /> }
+                title={ strings.username }
+                detail={ user?.profile?.username } />
             )}
           </TableViewSection>
           <TableViewSection
+            grouped
             header={ strings.linkedThirdPartyAccounts }>
             {Object.values(ThirdParty).map((p, i) => (
               <React.Fragment
@@ -132,7 +129,6 @@ export function AccountScreen({
                 <TableViewCell 
                   capitalize
                   cellIcon={ <Icon name={ p } /> }
-                  cellStyle="RightDetail"
                   title={ p }
                   detail={ user?.profile?.linkedThirdPartyAccounts?.includes(p) ? strings.disconnect : strings.connect }
                   onPress={ () => {
@@ -146,18 +142,23 @@ export function AccountScreen({
               </React.Fragment>
             ))}
           </TableViewSection>
-          <TableViewSection>
+          <TableViewSection grouped>
             <TableViewCell
               cellIcon={ <Button leftIcon="logout" /> }
               title={ strings.signOut }
               onPress={ handleSignOut } />
+            <TableViewCell
+              devOnly
+              cellContentView={ <Text>{JSON.stringify(user, null, 2)}</Text> } />
           </TableViewSection>
           {!user?.unlinked && (
-            <TableViewSection>
+            <TableViewSection
+              grouped
+              header={ strings.dangerZone }>
               <TableViewCell
-                cellIcon={ <Button leftIcon="delete" /> }
+                cellIcon={ <Button leftIcon="delete" destructive /> }
                 title={ strings.deleteAccount }
-                titleTextColor="red"
+                color="red"
                 onPress={ () => {
                   handleRequestDeleteAccount();
                 } } />

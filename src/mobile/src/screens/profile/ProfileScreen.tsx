@@ -8,7 +8,6 @@ import { ScreenComponent } from '../types';
 import {
   Button,
   ContextMenu,
-  Divider,
   Screen,
   ScrollView,
   TableView,
@@ -45,72 +44,34 @@ export function ProfileScreen({
     <Screen>
       <ScrollView>
         <TableView>
-          <TableViewSection header={ strings.account }>
+          <TableViewSection
+            grouped
+            header={ strings.account }>
             <TableViewCell 
               cellIcon={ <Button leftIcon="account" /> }
               cellStyle="RightDetail"
               accessory="DisclosureIndicator"
               title={ strings.account }
               onPress={ () => navigation?.push('account') } />
-          </TableViewSection>
-          <TableViewSection header={ strings.contentPreferences }>
             <TableViewCell 
-              cellIcon={ <Button leftIcon="bookmark" /> }
+              cellIcon={ (
+                <Button
+                  leftIcon="bookmark"
+                  indicator={ unreadBookmarkCount > 0 && !hasViewedFeature('bookmarks') } />
+              ) }
               disabled={ isSyncingBookmarks }
               cellStyle="RightDetail"
               title={ `${strings.bookmarks} (${isSyncingBookmarks ? 'syncing...' : bookmarkCount})` }
               accessory="DisclosureIndicator"
               detail={ `${unreadBookmarkCount} ${strings.unread}` } 
-              onPress={ isSyncingBookmarks ? undefined : () => navigation?.push('bookmarks') } />
-            <Divider />
-            <TableViewCell 
-              cellIcon={ <Button leftIcon="pen" indicator={ !hasViewedFeature('publishers') } /> }
-              cellStyle="RightDetail"
-              title={ strings.publishers }
-              accessory="DisclosureIndicator"
-              detail={ `${Object.keys(followedPublishers ?? {}).length ?? 0} ${strings.following}` }
-              onPress={ () =>{
-                viewFeature('publishers');
-                navigation?.push('publisherPicker'); 
-              } } />
-            <Divider />
-            <TableViewCell 
-              cellIcon={ <Button leftIcon="bucket" indicator={ !hasViewedFeature('categories') } /> }
-              cellStyle="RightDetail"
-              title={ strings.categories }
-              accessory="DisclosureIndicator"
-              detail={ `${Object.keys(followedCategories ?? {}).length ?? 0} ${strings.following}` }
-              onPress={ () => {
-                viewFeature('categories');
-                navigation?.push('categoryPicker'); 
-              } } />
-            <Divider />
-            <TableViewCell
-              cellIcon={ (
-                <Button
-                  leftIcon="cog" />
-              ) }
-              cellStyle="RightDetail"
-              accessory="DisclosureIndicator"
-              title={ strings.manage }
-              onPress={ () => {
-                navigation?.push('generalSettings');
+              onPress={ isSyncingBookmarks ? undefined : () => {
+                viewFeature('bookmarks');
+                navigation?.push('bookmarks');
               } } />
           </TableViewSection>
-          <TableViewSection header={ strings.settings }>
-            <TableViewCell
-              title={ strings.pushNotifications }
-              cellIcon={ (
-                <Button
-                  leftIcon="bell" 
-                  indicator={ !hasViewedFeature('push-notifications') } />
-              ) }
-              accessory="DisclosureIndicator"
-              onPress={ () => {
-                viewFeature('push-notifications');
-                navigation?.push('notifications');
-              } } />
-            <Divider />
+          <TableViewSection
+            grouped
+            header={ strings.contentPreferences }>
             <TableViewCell
               cellIcon={ (
                 <Button
@@ -124,8 +85,56 @@ export function ProfileScreen({
                 viewFeature('display-preferences');
                 navigation?.push('displayPreferences');
               } } />
+            <TableViewCell 
+              cellIcon={ <Button leftIcon="pen" indicator={ !hasViewedFeature('publishers') } /> }
+              cellStyle="RightDetail"
+              title={ strings.publishers }
+              accessory="DisclosureIndicator"
+              detail={ `${Object.keys(followedPublishers ?? {}).length ?? 0} ${strings.following}` }
+              onPress={ () =>{
+                viewFeature('publishers');
+                navigation?.push('publisherPicker'); 
+              } } />
+            <TableViewCell 
+              cellIcon={ <Button leftIcon="bucket" indicator={ !hasViewedFeature('categories') } /> }
+              title={ strings.categories }
+              accessory="DisclosureIndicator"
+              detail={ `${Object.keys(followedCategories ?? {}).length ?? 0} ${strings.following}` }
+              onPress={ () => {
+                viewFeature('categories');
+                navigation?.push('categoryPicker'); 
+              } } />
+            <TableViewCell
+              devOnly
+              cellIcon={ (
+                <Button
+                  leftIcon="cog" />
+              ) }
+              accessory="DisclosureIndicator"
+              title={ strings.manage }
+              onPress={ () => {
+                navigation?.push('generalSettings');
+              } } />
+          </TableViewSection>
+          <TableViewSection
+            grouped
+            header={ strings.notifications }>
+            <TableViewCell
+              title={ strings.notifications }
+              cellIcon={ (
+                <Button
+                  leftIcon="bell" 
+                  indicator={ !hasViewedFeature('notifications') } />
+              ) }
+              accessory="DisclosureIndicator"
+              onPress={ () => {
+                viewFeature('notifications');
+                navigation?.push('notifications');
+              } } />
           </TableViewSection> 
-          <TableViewSection header={ strings.community }>
+          <TableViewSection
+            grouped
+            header={ strings.community }>
             <TableViewCell
               cellContentView={ (
                 <View
@@ -173,7 +182,6 @@ export function ProfileScreen({
                   </Button>
                 </View>
               ) } />
-            <Divider />
             <ContextMenu
               dropdownMenuMode
               actions={ [
@@ -190,13 +198,11 @@ export function ProfileScreen({
               ] }>
               <TableViewCell
                 title={ strings.contactUs }
-                cellIcon="email"
+                cellIcon={ <Button leftIcon={ 'email' } /> }
                 accessory="DisclosureIndicator" />
             </ContextMenu>
-            <Divider />
             <TableViewCell
               cellIcon={ <Button leftIcon="star" indicator={ !hasViewedFeature('app-review') } /> }
-              cellStyle="RightDetail"
               accessory="DisclosureIndicator"
               title={ strings.leaveUsAReview }
               detail={ strings.howAreWeDoing }
@@ -205,21 +211,21 @@ export function ProfileScreen({
                 openURL(Platform.select({ android: PLAY_STORE_LINK, ios: APP_STORE_LINK }) ?? ''); 
               } } />
           </TableViewSection>
-          <TableViewSection header={ strings.about }>
+          <TableViewSection
+            grouped
+            header={ strings.about }>
             <TableViewCell 
               cellStyle='RightDetail'
               title={ strings.termsAndConditions }
               onPress={ () => {
                 openURL('https://readless.ai/terms');
               } } />
-            <Divider />
             <TableViewCell 
               cellStyle='RightDetail'
               title={ strings.privacyPolicy }
               onPress={ () => {
                 openURL('https://readless.ai/privacy');
               } } />
-            <Divider />
             <TableViewCell 
               cellStyle='RightDetail'
               title={ strings.version }

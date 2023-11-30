@@ -306,7 +306,7 @@ export type SyncState = {
 };
 
 export type ViewableFeature = 
-  'app-review' | 'bookmarks' | 'categories' | 'display-preferences' | 'publishers' | 'push-notifications';
+  'app-review' | 'bookmarks' | 'categories' | 'display-preferences' | 'notifications' | 'publishers';
 
 export type StorageContextType = Storage & SyncState & {
   

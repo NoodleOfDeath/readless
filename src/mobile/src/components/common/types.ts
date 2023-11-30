@@ -263,6 +263,7 @@ export type ViewProps = PressableProps & RNViewProps & TouchableOpacityProps & V
   
   // other
   style?: StyleProp<ViewStyle>;
+  devOnly?: boolean;
 
 };
 

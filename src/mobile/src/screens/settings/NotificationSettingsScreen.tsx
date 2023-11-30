@@ -5,7 +5,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { SubscriptionEvent } from '~/api';
 import {
   DateTimePicker,
-  Divider,
   PrefSwitch,
   Screen,
   Switch,
@@ -97,7 +96,9 @@ export function NotificationSettingsScreen() {
     <Screen>
       <TableView 
         flexGrow={ 1 }>
-        <TableViewSection header={ strings.pushNotifications }>
+        <TableViewSection
+          grouped
+          header={ strings.pushNotifications }>
           <TableViewCell
             bold
             title={ strings.pushNotifications }
@@ -114,7 +115,6 @@ export function NotificationSettingsScreen() {
                   }
                 } } />
             ) } />
-          <Divider />
           <TableViewCell
             bold
             disabled={ !enabled }
@@ -145,7 +145,6 @@ export function NotificationSettingsScreen() {
                   }
                 } } />
             ) } />
-          <Divider />
           <TableViewCell
             bold
             disabled={ !enabled }
@@ -175,7 +174,6 @@ export function NotificationSettingsScreen() {
                   }
                 } } />
             ) } />
-          <Divider />
           <TableViewCell
             bold
             disabled={ !enabled }
@@ -191,7 +189,6 @@ export function NotificationSettingsScreen() {
                   await updatePushNotifications(value);
                 } } />
             ) } />
-          <Divider />
           <TableViewCell
             bold
             disabled={ !settings[SubscriptionEvent.DailyReminder] }

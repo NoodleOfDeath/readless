@@ -16,7 +16,6 @@ export * from './Divider';
 export * from './DrawerItem';
 export * from './DrawerSection';
 export * from './FlatList';
-export * from './Header';
 export * from './Highlighter';
 export * from './Icon';
 export * from './Image';

@@ -64,7 +64,9 @@ export function SearchViewController({
       { ...props }>
       <Searchbar
         ref={ searchRef }
+        autoFocus
         accessible
+        accessibilityLabel={ strings.search }
         onLayout={ (e) => setSearchbarLayout(e.nativeEvent.layout) }
         onIconPress={ () => searchRef.current?.focus() }
         placeholder={ placeholder }

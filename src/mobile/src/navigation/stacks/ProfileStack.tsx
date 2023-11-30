@@ -7,21 +7,16 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
+import { BASE_STACK } from './BaseStack';
 import { SETTINGS_STACK } from './SettingsStack';
 
 import { strings } from '~/locales';
-import { SettingsToggleWithIndicator } from '~/navigation';
 import {
   AccountScreen,
   BookmarksScreen,
-  CategoryScreen,
   ProfileScreen,
-  PublisherScreen,
   RoutingParams,
-  SummaryScreen,
 } from '~/screens';
-import { LeaderboardScreen } from '~/screens/profile/LeaderboardScreen';
-import { LeaderboardsScreen } from '~/screens/profile/LeaderboardsScreen';
 
 export const PROFILE_STACK: RouteConfig<
   RoutingParams,
@@ -56,49 +51,10 @@ export const PROFILE_STACK: RouteConfig<
     options: {
       headerBackTitle: '',
       headerLeft: () => null,
-      headerRight: () => <SettingsToggleWithIndicator />,
+      headerRight: () => null,
       headerTitle: strings.bookmarks, 
     }, 
   }, 
-  {
-    component: SummaryScreen, 
-    name: 'summary',  
-    options: { 
-      headerBackTitle: '',
-      headerLeft: () => null,
-      headerRight: () => <SettingsToggleWithIndicator />,
-      headerTitle: '', 
-    },
-  },
-  {
-    component: PublisherScreen, 
-    name: 'publisher',
-    options: {
-      headerBackTitle: '', 
-      headerLeft: () => null,
-      headerRight: () => <SettingsToggleWithIndicator />,
-      headerTitle: '', 
-    },
-  },
-  {
-    component: CategoryScreen, 
-    name: 'category',
-    options: { 
-      headerBackTitle: '', 
-      headerLeft: () => null,
-      headerRight: () => <SettingsToggleWithIndicator />,
-      headerTitle: '',
-    },
-  },
-  {
-    component: LeaderboardsScreen, 
-    name: 'leaderboards',
-    options: { 
-      headerBackTitle: '', 
-      headerLeft: () => null,
-      headerRight: () => null,
-      headerTitle: '',
-    },
-  },
+  ...BASE_STACK,
   ...SETTINGS_STACK,
 ];

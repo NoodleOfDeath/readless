@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import {
   GAMES_STACK,
-  NEWS_STACK,
+  HOME_STACK,
   PROFILE_STACK,
 } from './stacks';
 
@@ -18,7 +18,7 @@ const Tab = createBottomTabNavigator<RoutingParams>();
 function NewsStack() {
   return (
     <RoutedScreen safeArea={ false } navigationID='newsStackNav'>
-      <StackNavigator id="newsStackNav" screens={ NEWS_STACK } />
+      <StackNavigator id="newsStackNav" screens={ HOME_STACK } />
     </RoutedScreen>
   );
 }
@@ -72,7 +72,7 @@ export function TabbedNavigator() {
             <Button 
               indicator={ 
                 (unreadBookmarkCount > 0 && !hasViewedFeature('bookmarks')) || 
-                !hasViewedFeature('push-notifications') ||
+                !hasViewedFeature('notifications') ||
                 !hasViewedFeature('display-preferences') ||
                 !hasViewedFeature('categories') ||
                 !hasViewedFeature('publishers') ||

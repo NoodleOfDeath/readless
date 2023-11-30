@@ -34,7 +34,7 @@ export type SettingsRoutingParams = {
   // settings and pickers
   generalSettings: undefined;
   displayPreferences: undefined;
-  notifications: undefined;
+  notificationSettings: undefined;
   colorSchemePicker: undefined;
   fontPicker: undefined;
   publisherPicker: undefined;
@@ -66,9 +66,13 @@ export type NewsRoutingParams = SettingsRoutingParams & {
     recap: RecapAttributes;
   };
   search: {
+    prefilter?: string;
+  };
+  notifications?: undefined;
+  summaryList: {
     prefilter?: string,
     specificIds?: number[];
-  },
+  };
   summary: {
     initialFormat?: ReadingFormat;
     keywords?: string[];

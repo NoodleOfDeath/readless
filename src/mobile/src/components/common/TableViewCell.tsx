@@ -50,6 +50,9 @@ export type TableViewCellProps = ChildlessViewProps & TextProps & {
   allowFontScaling?: boolean;
   backgroundColor?: ViewStyle['backgroundColor'];
   cellStyle?: 'Basic' | 'LeftDetail' | 'RightDetail' | 'Subtitle';
+  leftDetail?: boolean;
+  rightDetail?: boolean;
+  subtitle?: boolean;
   cellAccessoryView?: React.ReactNode;
   cellContentView?: React.ReactNode;
   cellImageView?: React.ReactNode;
@@ -83,16 +86,31 @@ export type TableViewCellProps = ChildlessViewProps & TextProps & {
   withSafeAreaView?: boolean;
 };
 
-export function TableViewCell(props: TableViewCellProps) {
+export function TableViewCell({
+  detail,
+  leftDetail,
+  rightDetail = !leftDetail && Boolean(detail),
+  subtitle,
+  cellStyle = leftDetail ? 'LeftDetail' : rightDetail ? 'RightDetail' : subtitle ? 'Subtitle' : 'Basic',
+  ...rest
+}: TableViewCellProps) {
+  const props = {
+    cellStyle,
+    detail, 
+    ...rest, 
+  };
   const theme= useTheme();
-  const style = useStyles(props);
+  const style = useStyles({ ...props, bg: props.devOnly ? 'red' : props.bg });
   const textStyles = useTextStyles({ ...props, system: true });
   const stylesWithoutFontScaling = { padding: 3, ...textStyles };
+  if (props.devOnly && !__DEV__) {
+    return null;
+  }
   return (
     <Cell
+      { ...theme.components.tableViewCell }
       { ...props }
       allowFontScaling
-      { ...theme.components.tableViewCell }
       contentContainerStyle={ [stylesWithoutFontScaling] }
       titleTextStyle={ [stylesWithoutFontScaling, props.titleTextStyle, { flex: 1 }] }
       detailTextStyle={ [stylesWithoutFontScaling, props.detailTextStyle, { color: theme.colors.textSecondary }] }

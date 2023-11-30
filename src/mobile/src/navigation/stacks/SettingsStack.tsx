@@ -66,7 +66,7 @@ export const SETTINGS_STACK: RouteConfig<
   },
   {
     component: NotificationSettingsScreen,
-    name: 'notifications',
+    name: 'notificationSettings',
     options: {
       headerBackTitle: '',
       headerRight: () => null, 

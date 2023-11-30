@@ -247,6 +247,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   }, [setStoredValue]);
   
   const loadBookmarks = React.useCallback(async (ids: number[]) => {
+    console.log('Loading bookmarks');
     setSyncState((prev) => ({ 
       ...prev, 
       isSyncingBookmarks: true,
@@ -443,7 +444,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
 
   React.useEffect(() => {
     if (!syncState.isSyncingWithRemote && !syncState.hasSyncedWithRemote && syncState.hasLoadedLocalState) {
-      syncWithRemote({ loadBookmarks: true });
+      syncWithRemote(undefined, { loadBookmarks: true });
       setSyncState((prev) => ({ ...prev, isSyncingWithRemote: true }));
     }
   }, [syncState.hasLoadedLocalState, syncState.isSyncingWithRemote, syncState.hasSyncedWithRemote, syncWithRemote]);
