@@ -36,11 +36,11 @@ export function orderByToItems(orderBy: string[] | string): OrderItem[] {
 // Model Types
 
 // System
-export * from './system/RequestLog.types';
 export * from './system/RateLimit.types';
 export * from './system/Cache.types';
+export * from './system/log/RequestLog.types';
 export * from './system/log/SystemLog.types';
-export * from './system/update/DevUpdate.types';
+export * from './system/notification/SystemNotification.types';
 
 // Queues
 export * from './queue/Queue.types';

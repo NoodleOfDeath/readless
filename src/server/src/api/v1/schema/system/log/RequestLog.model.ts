@@ -5,7 +5,7 @@ import {
 } from 'sequelize-typescript';
 
 import { RequestLogAttributes, RequestLogCreationAttributes } from './RequestLog.types';
-import { BaseModel } from '../base';
+import { BaseModel } from '../../base';
 
 @Table({
   modelName: 'request',
