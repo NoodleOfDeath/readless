@@ -314,8 +314,10 @@ export function useStyles({
   }, [outlined, theme.components.outlined]);
   
   const viewStyle = React.useMemo(() => {
+     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attrs: any[] = [];
+    
     // position
     attrs.push(position ? { position } : undefined);
     attrs.push(top ? { top } : undefined);
@@ -401,3 +403,4 @@ export function useStyles({
   return allStyles;
 
 }
+

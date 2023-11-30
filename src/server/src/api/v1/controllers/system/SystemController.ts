@@ -16,8 +16,8 @@ import { StaticGeneratorService } from '../../../../services';
 import { AuthError, InternalError } from '../../middleware';
 import {
   Cache,
-  DevUpdate,
-  PublicDevUpdateAttributes,
+  PublicSystemNotificationAttributes,
+  SystemNotification,
 } from '../../schema';
 import { BulkResponse } from '../types';
 
@@ -31,11 +31,11 @@ import { BulkResponse } from '../types';
 @Response<InternalError>(500, 'Internal Error')
 export class SystemController {
 
-  @Get('/developer-updates')
-  public static async getDeveloperUpdates(
+  @Get('/notifications')
+  public static async getSystemNotifications(
     @Request() req: ExpressRequest
-  ): Promise<BulkResponse<PublicDevUpdateAttributes>> {
-    return await DevUpdate.findAndCountAll();
+  ): Promise<BulkResponse<PublicSystemNotificationAttributes>> {
+    return await SystemNotification.findAndCountAll();
   }
   
   @Get('/sitemap')

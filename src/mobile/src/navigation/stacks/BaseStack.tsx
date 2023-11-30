@@ -7,49 +7,57 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
-import { SETTINGS_STACK } from './SettingsStack';
+import { RightToggles } from '../header';
 
 import { strings } from '~/locales';
-import { SearchViewController, SettingsToggleWithIndicator } from '~/navigation';
 import {
   CategoryScreen,
-  HomeScreen,
+  LeaderboardsScreen,
+  NotificationsScreen,
   PublisherScreen,
   RecapScreen,
   RoutingParams,
   SearchScreen,
   StatsScreen,
+  SummaryListScreen,
   SummaryScreen,
   TestScreen,
 } from '~/screens';
-import { LeaderboardsScreen } from '~/screens/profile/LeaderboardsScreen';
 
-export const NEWS_STACK: RouteConfig<
+export const BASE_STACK: RouteConfig<
   RoutingParams,
   keyof RoutingParams,
   NavigationState,
   NativeStackNavigationOptions,
   EventMapBase
 >[] = [
-  // Home Tab
-  {
-    component: HomeScreen, 
-    name: 'home',
-    options: { 
-      headerBackTitle: '',
-      headerLeft: () => <SearchViewController />,
-      headerRight: () => <SettingsToggleWithIndicator />,
-      headerTitle: '',
-    },
-  },
-  // Screens
   {
     component: SearchScreen, 
     name: 'search',
     options: { 
       headerBackTitle: '',
       headerLeft: () => null,
-      headerRight: () => <SettingsToggleWithIndicator />,
+      headerRight: () => null,
+      headerTitle: strings.search,
+    },
+  },
+  {
+    component: NotificationsScreen, 
+    name: 'notifications',
+    options: { 
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: strings.notifications, 
+    },
+  },
+  {
+    component: SummaryListScreen, 
+    name: 'summaryList',
+    options: { 
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => <RightToggles />,
       headerTitle: '', 
     },
   },
@@ -59,7 +67,7 @@ export const NEWS_STACK: RouteConfig<
     options: { 
       headerBackTitle: '',
       headerLeft: () => null,
-      headerRight: () => <SettingsToggleWithIndicator />,
+      headerRight: () => null,
       headerTitle: '', 
     },
   },
@@ -69,7 +77,7 @@ export const NEWS_STACK: RouteConfig<
     options: {
       headerBackTitle: '',
       headerLeft: () => null,
-      headerRight: () => <SettingsToggleWithIndicator />,
+      headerRight: () => null,
       headerTitle: '', 
     },
   },
@@ -79,7 +87,7 @@ export const NEWS_STACK: RouteConfig<
     options: { 
       headerBackTitle: '', 
       headerLeft: () => null,
-      headerRight: () => <SettingsToggleWithIndicator />,
+      headerRight: () => null,
       headerTitle: '', 
     },
   },
@@ -89,7 +97,7 @@ export const NEWS_STACK: RouteConfig<
     options: {
       headerBackTitle: '', 
       headerLeft: () => null,
-      headerRight: () => <SettingsToggleWithIndicator />,
+      headerRight: () => null,
       headerTitle: '', 
     },
   },
@@ -103,7 +111,6 @@ export const NEWS_STACK: RouteConfig<
       headerTitle: strings.leaderboard,
     },
   },
-  // Other
   {
     component: StatsScreen,
     name: 'stats',
@@ -124,5 +131,4 @@ export const NEWS_STACK: RouteConfig<
       headerTitle: 'test', 
     },
   },
-  ...SETTINGS_STACK,
 ];

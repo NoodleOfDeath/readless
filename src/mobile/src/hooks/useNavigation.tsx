@@ -36,14 +36,18 @@ export function useNavigation() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (stackNav?.push ?? navigation.push ?? navigation.navigate)(route, params as RoutingParams[R]);
   }, [emitStorageEvent, navigation]);
+  
+  const beginSearch = React.useCallback((params: RoutingParams['search'], stackNav?: Navigation) => {
+    navigate('search', params, stackNav);
+  }, [navigate]);
 
-  const search = React.useCallback((params: RoutingParams['search'], stackNav?: Navigation) => {
+  const search = React.useCallback((params: RoutingParams['summaryList'], stackNav?: Navigation) => {
     const prefilter = params.prefilter;
     if (!prefilter) {
       return;
     }
-    setStoredValue('searchHistory', (prev) => Array.from(new Set([prefilter, ...(prev ?? [])])).slice(0, 10));
-    navigate('search', params, stackNav);
+    setStoredValue('searchHistory', (prev) => Array.from(new Set([prefilter, ...(prev ?? [])])).slice(0, 100));
+    navigate('summaryList', params, stackNav);
   }, [navigate, setStoredValue]);
   
   const openSummary = React.useCallback((props: RoutingParams['summary'], stackNav?: Navigation) => {
@@ -123,6 +127,7 @@ export function useNavigation() {
   }, [navigate, openURL, openSummary, search, openPublisher, openCategory]);
   
   return {
+    beginSearch,
     navigate,
     navigation,
     openCategory,

@@ -5,7 +5,7 @@ import { TextStyle, ViewStyle } from 'react-native';
 import { Section } from 'react-native-tableview-simple';
 
 import { View, ViewProps } from '~/components';
-import { useStyles } from '~/hooks';
+import { useTheme } from '~/hooks';
 
 export type TableViewSectionProps = ViewProps & {
     grouped?: boolean;
@@ -22,7 +22,7 @@ export type TableViewSectionProps = ViewProps & {
   headerTextStyle?: TextStyle;
   hideSeparator?: boolean;
   hideSurroundingSeparators?: boolean;
-  beveledCorners?: boolean;
+  roundedCorners?: boolean;
   sectionPaddingBottom?: ViewStyle['paddingBottom'];
   sectionPaddingTop?: ViewStyle['paddingTop'];
   sectionTintColor?: ViewStyle['backgroundColor'];
@@ -37,15 +37,16 @@ export function TableViewSection({
   grouped,
   ...props 
 }: TableViewSectionProps) {
-  const style = useStyles(props);
+  const theme = useTheme();
   return (
-    <View mx={ grouped ? 12 : 0 }>
+    <View 
+      mx={ grouped ? 12 : 0 }>
       <Section
-        { ...props }
-        hideSeparator={ grouped }>
-        <View style={ style }>
-          {children}
-        </View>
+        hideSurroundingSeparators
+        roundedCorners={ grouped }
+        separatorTintColor={ theme.components.divider.backgroundColor }
+        { ...props }>
+        {children}
       </Section>
     </View>
   );

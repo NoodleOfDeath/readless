@@ -5,7 +5,6 @@ import {
   CategoryInteraction,
   CategoryTranslation,
   Credential,
-  DevUpdate,
   Event,
   EventInteraction,
   EventMetadata,
@@ -31,6 +30,7 @@ import {
   SummaryRelation,
   SummarySentiment,
   SummaryTranslation,
+  SystemNotification,
   User,
   UserAchievement,
   UserMetadata,
@@ -40,18 +40,18 @@ import {
 import { 
   PUBLIC_CATEGORY_ATTRIBUTES,
   PUBLIC_CATEGORY_TRANSLATION_ATTRIBUTES,
-  PUBLIC_DEV_UPDATE_ATTRIBUTES,
   PUBLIC_PUBLISHER_ATTRIBUTES,
   PUBLIC_PUBLISHER_TRANSLATION_ATTRIBUTES,
   PUBLIC_RECAP_ATTRIBUTES,
-  PUBLIC_RECAP_MEDIA_ATTRIBUTES, 
-  PUBLIC_RECAP_TRANSLATION_ATTRIBUTES,
-  PUBLIC_SENTIMENT_ATTRIBUTES, 
+  PUBLIC_RECAP_MEDIA_ATTRIBUTES,
+  PUBLIC_RECAP_TRANSLATION_ATTRIBUTES, 
+  PUBLIC_SENTIMENT_ATTRIBUTES,
   PUBLIC_SUBSCRIPTION_ATTRIBUTES, 
-  PUBLIC_SUMMARY_ATTRIBUTES,
+  PUBLIC_SUMMARY_ATTRIBUTES, 
   PUBLIC_SUMMARY_ATTRIBUTES_CONSERVATIVE,
-  PUBLIC_SUMMARY_MEDIA_ATTRIBUTES, 
-  PUBLIC_SUMMARY_TRANSLATION_ATTRIBUTES,
+  PUBLIC_SUMMARY_MEDIA_ATTRIBUTES,
+  PUBLIC_SUMMARY_TRANSLATION_ATTRIBUTES, 
+  PUBLIC_SYSTEM_NOTIFICATION_ATTRIBUTES,
 } from './types';
 
 export function makeAssociations() {
@@ -558,7 +558,7 @@ export function makeAssociations() {
 
 export function addScopes() {
   
-  DevUpdate.addScope('public', { attributes: [...PUBLIC_DEV_UPDATE_ATTRIBUTES] });
+  SystemNotification.addScope('public', { attributes: [...PUBLIC_SYSTEM_NOTIFICATION_ATTRIBUTES] });
 
   Publisher.addScope('defaultScope', { where: { disabled: null } });
   Publisher.addScope('public', { 

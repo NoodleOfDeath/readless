@@ -6,9 +6,9 @@ import ms from 'ms';
 import { SheetProvider } from 'react-native-actions-sheet';
 import InAppReview from 'react-native-in-app-review';
 
+import { LeftDrawerNavigator } from './LeftDrawerNavigator';
 import { RoutedScreen } from './RoutedScreen';
 import { StackNavigator } from './StackNavigator';
-import { TabbedNavigator } from './TabbedNavigator';
 import { LOGIN_STACK } from './stacks';
 
 import {
@@ -27,6 +27,7 @@ import {
   ToastContext,
 } from '~/contexts';
 import { useAppState, useTheme } from '~/hooks';
+import { strings } from '~/locales';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
 import { usePlatformTools } from '~/utils';
 
@@ -42,20 +43,14 @@ export function RootNavigator() {
   } = React.useContext(LayoutContext);
   const storage = React.useContext(StorageContext);
   const {
-    api: {
-      getCategories, getPublishers, updateMetadata,
-    },
+    api: { updateMetadata },
     ready, 
-    isSyncingWithRemote,
-    categories,
-    publishers,
+    isFetching,
     lastRequestForReview = 0,
     readSummaries,
     pushNotificationsEnabled,
     userData,
     setStoredValue,
-    setCategories, 
-    setPublishers,
     setErrorHandler,
     syncWithRemote,
   } = storage;
@@ -64,8 +59,6 @@ export function RootNavigator() {
   const { isRegisteredForRemoteNotifications, registerRemoteNotifications } = React.useContext(NotificationContext);
   const { currentTrack } = React.useContext(MediaContext);
   
-  const [lastFetch, setLastFetch] = React.useState(0);
-  const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
   const [lastSync, setLastSync] = React.useState(0);
 
   const [showedReview, setShowedReview] = React.useState(false);
@@ -133,46 +126,6 @@ export function RootNavigator() {
 
     }
   }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitStorageEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, userData, showToast]);
-  
-  const refreshSources = React.useCallback(async () => {
-    if (!ready) {
-      return;
-    }
-    if (!userData?.valid) {
-      return;
-    }
-    if (lastFetchFailed || (Date.now() - lastFetch < ms('10s'))) {
-      return;
-    }
-    if (!categories) {
-      try {
-        const response = await getCategories();
-        setCategories(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
-      } catch (e) {
-        console.log(e); 
-        showToast(e);
-        setLastFetchFailed(true);
-      } finally {
-        setLastFetch(Date.now());
-      }
-    }
-    if (!publishers) {
-      try {
-        const response = await getPublishers();
-        setPublishers(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
-      } catch (e) {
-        console.log(e); 
-        showToast(e);
-        setLastFetchFailed(true);
-      } finally {
-        setLastFetch(Date.now());
-      }
-    }
-  }, [categories, getCategories, getPublishers, lastFetch, lastFetchFailed, publishers, ready, setCategories, setPublishers, showToast, userData?.valid]);
-
-  React.useEffect(() => {
-    refreshSources(); 
-  }, [refreshSources]);
 
   React.useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -193,7 +146,6 @@ export function RootNavigator() {
   });
   
   if (!ready) {
-    const text = isSyncingWithRemote ? 'Syncing with remote...' : 'Loading...';
     return (
       <Screen>
         <View
@@ -203,7 +155,7 @@ export function RootNavigator() {
           justifyCenter>
           <ActivityIndicator />
           <Text textCenter>
-            {text}
+            {isFetching ? strings.syncing : strings.loading}
           </Text>
         </View>
       </Screen>
@@ -217,7 +169,7 @@ export function RootNavigator() {
       <SheetProvider>
         {(userData?.valid || userData?.unlinked) ? (
           <React.Fragment>
-            <TabbedNavigator />
+            <LeftDrawerNavigator />
             <MediaPlayer visible={ Boolean(currentTrack) } />
           </React.Fragment>
         ) : (

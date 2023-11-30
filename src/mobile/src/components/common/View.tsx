@@ -19,6 +19,7 @@ export function View({
   haptic,
   inactive,
   elevated,
+  devOnly,
   ...props
 }: ViewProps) {
   
@@ -62,6 +63,10 @@ export function View({
     }
     props.onPress(event);
   }, [haptic, props]);
+  
+  if (devOnly && !__DEV__) {
+    return null;
+  }
   
   return (touchable) ? (
     <TouchableOpacity

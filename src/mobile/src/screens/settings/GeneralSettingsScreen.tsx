@@ -52,7 +52,9 @@ export function GeneralSettingsScreen() {
       <ScrollView>
         <TableView 
           flexGrow={ 1 }>
-          <TableViewSection header={ strings.general }>
+          <TableViewSection
+            grouped
+            header={ strings.general }>
             <TableViewCell
               title={ `${strings.resetReadSummaries} (${Object.keys({ ...readSummaries }).length})` }
               onPress={ () => {

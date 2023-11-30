@@ -245,8 +245,21 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       return state;
     });
   }, [setStoredValue]);
-  
+
+  const loadChannels = React.useCallback(async () => {
+    console.log('Loading channels');
+    if (!categories) {
+      const response = await api.getCategories();
+      setCategories(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
+    }
+    if (!publishers) {
+      const response = await api.getPublishers();
+      setPublishers(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
+    }
+  }, [categories, publishers, api]);
+
   const loadBookmarks = React.useCallback(async (ids: number[]) => {
+    console.log('Loading bookmarks');
     setSyncState((prev) => ({ 
       ...prev, 
       isSyncingBookmarks: true,
@@ -286,25 +299,74 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     let data: ProfileResponse | undefined = prefs;
     if (!prefs) {
       if (!storage.userData?.valid || storage.userData.unlinked) {
-        return handleBadRequest();
+        return;
       }
-      setSyncState((prev) => ({ 
-        ...prev, 
-        isFetchingProfile: true,
-      }));
+      // fetch channels
       try {
+        setSyncState((prev) => ({ 
+          ...prev, 
+          channels: {
+            ...prev.channels,
+            isFetching: true,
+            lastFetchFailed: undefined,
+          },
+        }));
+        await loadChannels();
+        setSyncState((prev) => ({ 
+          ...prev, 
+          channels: {
+            ...prev.channels,
+            isFetching: false,
+            lastFetch: new Date(),
+            lastFetchFailed: undefined,
+          },
+        }));
+      } catch (e) {
+        setSyncState((prev) => ({ 
+          ...prev, 
+          channels: {
+            ...prev.channels,
+            isFetching: false,
+            lastFetch: undefined,
+            lastFetchFailed: new Date(),
+          },
+        }));
+        return handleBadRequest(e);
+      }
+      // fetch profile
+      try {
+        setSyncState((prev) => ({ 
+          ...prev, 
+          profile: {
+            ...prev.profile,
+            isFetching: true,
+            lastFetchFailed: undefined,
+          },
+        }));
         const response = await api.getProfile();
         data = response.data;
         setSyncState((prev) => ({ 
           ...prev, 
-          hasFetchedProfile: true,
-          isFetchingProfile: false,
+          profile: {
+            isFetching: false,
+            lastFetch: new Date(),
+            lastFetchFailed: undefined,
+          },
         }));
         if (response.error) {
-          return handleBadRequest(response.error);
+          throw response.error;
         }
       } catch (e) {
         console.error(e);
+        setSyncState((prev) => ({ 
+          ...prev, 
+          profile: {
+            ...prev.profile,
+            isFetching: false,
+            lastFetch: undefined,
+            lastFetchFailed: new Date(),
+          },
+        }));
         return handleBadRequest(e);
       }
     }
@@ -443,7 +505,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
 
   React.useEffect(() => {
     if (!syncState.isSyncingWithRemote && !syncState.hasSyncedWithRemote && syncState.hasLoadedLocalState) {
-      syncWithRemote({ loadBookmarks: true });
+      syncWithRemote(undefined, { loadBookmarks: true });
       setSyncState((prev) => ({ ...prev, isSyncingWithRemote: true }));
     }
   }, [syncState.hasLoadedLocalState, syncState.isSyncingWithRemote, syncState.hasSyncedWithRemote, syncWithRemote]);
@@ -562,19 +624,22 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
 
   // publisher functions
   
-  const followPublisher = async (publisher: PublicPublisherAttributes) => {
+  const followPublisher = async (publisher: PublicPublisherAttributes, force?: boolean) => {
     await setStoredValue('followedPublishers', (prev) => {
       const state = { ...prev };
-      if (publisher.name in state) {
+      if (force === false || publisher.name in state) {
         delete state[publisher.name];
+        // also remove from favorited
         setStoredValue('favoritedPublishers', (prev) => {
           const state = { ...prev };
           delete state[publisher.name];
           return state;
         });
         emitStorageEvent('unfollow-publisher', publisher, state);
-      } else {
+      } else
+      if (force === true || !(publisher.name in state)) {
         state[publisher.name] = true;
+        // also remove from excluded
         setStoredValue('excludedPublishers', (prev) => {
           const state = { ...prev };
           delete state[publisher.name];
@@ -583,23 +648,26 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         emitStorageEvent('follow-publisher', publisher, state);
       }
       return state;
-    });
+    }, force === undefined);
   };
   
   const isFollowingPublisher = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...storage.followedPublishers }), [storage.followedPublishers]);
   
-  const favoritePublisher = async (publisher: PublicPublisherAttributes) => {
+  const favoritePublisher = async (publisher: PublicPublisherAttributes, force?: boolean) => {
     await setStoredValue('favoritedPublishers', (prev) => {
       const state = { ...prev };
-      if (publisher.name in state) {
+      if (force === false || publisher.name in state) {
         delete state[publisher.name];
         emitStorageEvent('unfavorite-publisher', publisher, state);
-      } else {
+      } else
+      if (force === true || !(publisher.name in state)) {
         state[publisher.name] = true;
+        // ensure publisher is also followed
+        followPublisher(publisher, true);
         emitStorageEvent('favorite-publisher', publisher, state);
       }
       return state;
-    });
+    }, force === undefined);
   };
   
   const publisherIsFavorited = React.useCallback((publisher: PublicPublisherAttributes) => publisher.name in ({ ...storage.favoritedPublishers }), [storage.favoritedPublishers]);
@@ -612,11 +680,8 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         emitStorageEvent('unexclude-publisher', publisher, state);
       } else {
         state[publisher.name] = true;
-        setStoredValue('followedPublishers', (prev) => {
-          const state = { ...prev };
-          delete state[publisher.name];
-          return state;
-        });
+        // ensure publisher is also unfollowed/unfavorited
+        followPublisher(publisher, false);
         emitStorageEvent('exclude-publisher', publisher, state);
       }
       return state;
@@ -627,19 +692,22 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
 
   // category functions
   
-  const followCategory = async (category: PublicCategoryAttributes) => {
+  const followCategory = async (category: PublicCategoryAttributes, force?: boolean) => {
     await setStoredValue('followedCategories', (prev) => {
       const state = { ...prev };
-      if (category.name in state) {
+      if (force === false || category.name in state) {
         delete state[category.name];
-        setStoredValue('followedCategories', (prev) => {
+        // also remove from favorited categories
+        setStoredValue('favoritedCategories', (prev) => {
           const state = { ...prev };
           delete state[category.name];
           return state;
         });
         emitStorageEvent('unfollow-category', category, state);
-      } else {
+      } else
+      if (force === true || !(category.name in state)) {
         state[category.name] = true;
+        // also remove from excluded categories
         setStoredValue('excludedCategories', (prev) => {
           const state = { ...prev };
           delete state[category.name];
@@ -648,19 +716,22 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         emitStorageEvent('follow-category', category, state);
       }
       return state;
-    });
+    }, force === undefined);
   };
   
   const isFollowingCategory = React.useCallback((category: PublicCategoryAttributes) => category.name in ({ ...storage.followedCategories }), [storage.followedCategories]);
   
-  const favoriteCategory = async (category: PublicCategoryAttributes) => {
+  const favoriteCategory = async (category: PublicCategoryAttributes, force?: boolean) => {
     await setStoredValue('favoritedCategories', (prev) => {
       const state = { ...prev };
-      if (category.name in state) {
+      if (force === false || category.name in state) {
         delete state[category.name];
         emitStorageEvent('unfavorite-category', category, state);
-      } else {
+      } else
+      if (force === true || !(category.name in state)) {
         state[category.name] = true;
+        // ensure category is also followed
+        followCategory(category, true);
         emitStorageEvent('favorite-category', category, state);
       }
       return state;
@@ -677,11 +748,8 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         emitStorageEvent('unexclude-category', category, state);
       } else {
         state[category.name] = true;
-        setStoredValue('followedCategories', (prev) => {
-          const state = { ...prev };
-          delete state[category.name];
-          return state;
-        });
+        // ensure category is also unfollowed/unfavorited
+        followCategory(category, false);
         emitStorageEvent('exclude-category', category, state);
       }
       return state;

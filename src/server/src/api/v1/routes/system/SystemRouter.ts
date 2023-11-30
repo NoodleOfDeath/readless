@@ -11,11 +11,11 @@ import {
 const router = Router();
 
 router.get(
-  '/developer-updates',
+  '/notifications',
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await SystemController.getDeveloperUpdates(req);
+      const response = await SystemController.getSystemNotifications(req);
       return res.status(200).json(response);
     } catch (e) {
       internalErrorHandler(res, e);

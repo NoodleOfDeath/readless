@@ -27,6 +27,7 @@ export type ButtonProps = TextProps & ViewProps & {
   variant?: 'contained' | 'default';
   contained?: boolean;
   primary?: boolean;
+  destructive?: boolean;
 };
 
 export function Button({
@@ -41,6 +42,7 @@ export function Button({
   contained,
   variant = contained ? 'contained' : 'default',
   primary,
+  destructive,
   itemsCenter = !vertical,
   flexRow = !vertical,
   untouchable,
@@ -60,13 +62,13 @@ export function Button({
       ...theme.components.chip,
       ...(variant === 'contained' ? theme.components.chipContained : {}),
       backgroundColor: variant === 'contained' && primary ? theme.colors.primary : variant === 'contained' ? theme.components.chipContained.backgroundColor : undefined,
-      color: variant === 'contained' && primary ? theme.colors.contrastText : variant === 'contained' ? theme.components.chipContained.color : undefined,
+      color: destructive ? 'red' : variant === 'contained' && primary ? theme.colors.contrastText : variant === 'contained' ? theme.components.chipContained.color : undefined,
       ...(props.selected ? theme.components.chipSelected : {}),
       ...(props.disabled ? theme.components.chipDisabled : {}),
       ...props,
       ...style,
     };
-  }, [theme.components.chip, theme.components.chipContained, primary, theme.colors.primary, theme.colors.contrastText, theme.components.chipSelected, theme.components.chipDisabled, variant, props, style]);
+  }, [theme.components.chip, theme.components.chipContained, theme.components.chipSelected, theme.components.chipDisabled, theme.colors.primary, theme.colors.contrastText, variant, primary, destructive, props, style]);
 
   const leftIconComponent = React.useMemo(() => {
     if (typeof leftIcon === 'string') {

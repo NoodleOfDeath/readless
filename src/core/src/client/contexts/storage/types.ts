@@ -230,6 +230,7 @@ export const SYNCABLE_SETTINGS: (keyof Storage)[] = [
   'favoritedCategories',
   'excludedCategories',
   'viewedFeatures',
+  'searchHistory',
 ];
 
 export type SyncableSetting = typeof SYNCABLE_SETTINGS[number];
@@ -292,21 +293,21 @@ export type SyncOptions = {
   loadBookmarks?: boolean;
 };
 
-export type SyncState = {
+export type FetchState = {
+  isFetching?: boolean;
+  lastFetch?: Date;
+  lastFetchFailed?: Date;
+};
+
+export type SyncState = FetchState & {
   hasLoadedLocalState?: boolean;
-  
-  isSyncingWithRemote?: boolean;
-  hasSyncedWithRemote?: boolean;
-  
-  isFetchingProfile?: boolean;
-  hasFetchedProfile?: boolean;
-  
-  isSyncingBookmarks?: boolean;
-  hasSyncedBookmarks?: boolean;
+  channels?: FetchState;  
+  profile?: FetchState;
+  bookmarks?: FetchState;
 };
 
 export type ViewableFeature = 
-  'app-review' | 'bookmarks' | 'categories' | 'display-preferences' | 'publishers' | 'push-notifications';
+  'app-review' | 'bookmarks' | 'categories' | 'display-preferences' | 'notifications' | 'publishers';
 
 export type StorageContextType = Storage & SyncState & {
   
