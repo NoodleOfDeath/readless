@@ -26,6 +26,7 @@ import {
   PublicSummaryGroup,
   RecapAttributes,
   RequestParams,
+  SystemNotificationAttributes,
 } from '~/api';
 import { getLocale } from '~/locales';
 import { useLocalStorage, usePlatformTools } from '~/utils';
@@ -52,12 +53,19 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [errorHandler, setErrorHandler] = React.useState<((e?: any) => void)>();
   
-  const ready = React.useMemo(() => syncState.hasLoadedLocalState && syncState.hasSyncedWithRemote, [syncState.hasLoadedLocalState, syncState.hasSyncedWithRemote]);
+  const ready = React.useMemo(() => Boolean(syncState.hasLoadedLocalState && syncState.lastFetch), [syncState.hasLoadedLocalState, syncState.lastFetch]);
   
   const [loadedInitialUrl, setLoadedInitialUrl] = React.useState<boolean>();
 
   const currentStreak = React.useMemo(() => storage.userData?.profile?.stats?.streak, [storage.userData?.profile?.stats?.streak]);
   const longestStreak = React.useMemo(() => storage.userData?.profile?.stats?.longestStreak, [storage.userData?.profile?.stats?.longestStreak]);
+
+  const [notifications, setNotifications] = React.useState<SystemNotificationAttributes[]>();
+
+  const notificationCount = React.useMemo(() => notifications?.length ?? 0, [notifications]);
+  const unreadNotificationCount = React.useMemo(() => {
+    return notifications?.filter((n) => !(n.id in ({ ...storage.readNotifications }))).length ?? 0;
+  }, [notifications, storage.readNotifications]);
 
   const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
   const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes>>();
@@ -258,6 +266,15 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     }
   }, [categories, publishers, api]);
 
+  const loadNotifications = React.useCallback(async () => {
+    console.log('Loading notifications');
+    const { data, error } = await api.getSystemNotifications();
+    if (error) {
+      throw error;
+    }
+    setNotifications(data.rows);
+  }, [api]);
+
   const loadBookmarks = React.useCallback(async (ids: number[]) => {
     console.log('Loading bookmarks');
     setSyncState((prev) => ({ 
@@ -326,6 +343,38 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
           ...prev, 
           channels: {
             ...prev.channels,
+            isFetching: false,
+            lastFetch: undefined,
+            lastFetchFailed: new Date(),
+          },
+        }));
+        return handleBadRequest(e);
+      }
+      // fetch notifications
+      try {
+        setSyncState((prev) => ({ 
+          ...prev, 
+          notifications: {
+            ...prev.notifications,
+            isFetching: true,
+            lastFetchFailed: undefined,
+          },
+        }));
+        await loadNotifications();
+        setSyncState((prev) => ({ 
+          ...prev, 
+          notifications: {
+            ...prev.notifications,
+            isFetching: false,
+            lastFetch: new Date(),
+            lastFetchFailed: undefined,
+          },
+        }));
+      } catch (e) {
+        setSyncState((prev) => ({ 
+          ...prev, 
+          notifications: {
+            ...prev.notifications,
             isFetching: false,
             lastFetch: undefined,
             lastFetchFailed: new Date(),
@@ -436,8 +485,8 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     await setStoredValue('lastRemoteSync', Date.now());
     setSyncState((prev) => ({ 
       ...prev, 
-      hasSyncedWithRemote: true,
-      isSyncingWithRemote: false,
+      isFetching: false,
+      lastFetch: new Date(),
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncState.hasLoadedLocalState, storage.userData?.valid, handleBadRequest, api, loadBookmarks]);
@@ -459,6 +508,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     state.pushNotifications = await getStoredValue('pushNotifications');
     state.fcmToken = await getStoredValue('fcmToken');
     state.userData = await getStoredValue('userData');
+    state.readNotifications = await getStoredValue('readNotifications');
     
     // summary state
     state.bookmarkedSummaries = await getStoredValue('bookmarkedSummaries');
@@ -504,11 +554,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   };
 
   React.useEffect(() => {
-    if (!syncState.isSyncingWithRemote && !syncState.hasSyncedWithRemote && syncState.hasLoadedLocalState) {
+    if (!syncState.isFetching && !syncState.lastFetch && syncState.hasLoadedLocalState) {
       syncWithRemote(undefined, { loadBookmarks: true });
-      setSyncState((prev) => ({ ...prev, isSyncingWithRemote: true }));
+      setSyncState((prev) => ({ ...prev, isFetching: true }));
     }
-  }, [syncState.hasLoadedLocalState, syncState.isSyncingWithRemote, syncState.hasSyncedWithRemote, syncWithRemote]);
+  }, [syncState.hasLoadedLocalState, syncState.isFetching, syncState.lastFetch, syncWithRemote]);
   
   const resetStorage = async (hard = false) => {
     await removeAll(hard);
@@ -556,6 +606,20 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         newState[feature] = new DatedEvent(true);
       } else {
         delete newState[feature];
+      }
+      return (prev = newState);
+    });
+  };
+
+  const hasReadNotification = React.useCallback((...notifications: (SystemNotificationAttributes | number)[]) => {
+    return notifications.every((n) => (typeof n === 'number' ? n : n.id) in ({ ...storage.readNotifications }));
+  }, [storage.readNotifications]);
+
+  const readNotification = async (...notifications: (SystemNotificationAttributes | number)[]) => {
+    await setStoredValue('readNotifications', (prev) => {
+      const newState = { ...prev };
+      for (const notification of notifications) {
+        newState[typeof notification === 'number' ? notification : notification.id] = new DatedEvent(true);
       }
       return (prev = newState);
     });
@@ -627,7 +691,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   const followPublisher = async (publisher: PublicPublisherAttributes, force?: boolean) => {
     await setStoredValue('followedPublishers', (prev) => {
       const state = { ...prev };
-      if (force === false || publisher.name in state) {
+      if (force === false || (force === undefined && publisher.name in state)) {
         delete state[publisher.name];
         // also remove from favorited
         setStoredValue('favoritedPublishers', (prev) => {
@@ -637,7 +701,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         });
         emitStorageEvent('unfollow-publisher', publisher, state);
       } else
-      if (force === true || !(publisher.name in state)) {
+      if (force === true || (force === undefined && !(publisher.name in state))) {
         state[publisher.name] = true;
         // also remove from excluded
         setStoredValue('excludedPublishers', (prev) => {
@@ -656,11 +720,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   const favoritePublisher = async (publisher: PublicPublisherAttributes, force?: boolean) => {
     await setStoredValue('favoritedPublishers', (prev) => {
       const state = { ...prev };
-      if (force === false || publisher.name in state) {
+      if (force === false || (force === undefined && publisher.name in state)) {
         delete state[publisher.name];
         emitStorageEvent('unfavorite-publisher', publisher, state);
       } else
-      if (force === true || !(publisher.name in state)) {
+      if (force === true || (force === undefined && !(publisher.name in state))) {
         state[publisher.name] = true;
         // ensure publisher is also followed
         followPublisher(publisher, true);
@@ -695,7 +759,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   const followCategory = async (category: PublicCategoryAttributes, force?: boolean) => {
     await setStoredValue('followedCategories', (prev) => {
       const state = { ...prev };
-      if (force === false || category.name in state) {
+      if (force === false || (force === undefined && category.name in state)) {
         delete state[category.name];
         // also remove from favorited categories
         setStoredValue('favoritedCategories', (prev) => {
@@ -705,7 +769,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         });
         emitStorageEvent('unfollow-category', category, state);
       } else
-      if (force === true || !(category.name in state)) {
+      if (force === true || (force === undefined && !(category.name in state))) {
         state[category.name] = true;
         // also remove from excluded categories
         setStoredValue('excludedCategories', (prev) => {
@@ -724,11 +788,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   const favoriteCategory = async (category: PublicCategoryAttributes, force?: boolean) => {
     await setStoredValue('favoritedCategories', (prev) => {
       const state = { ...prev };
-      if (force === false || category.name in state) {
+      if (force === false || (force === undefined && category.name in state)) {
         delete state[category.name];
         emitStorageEvent('unfavorite-category', category, state);
       } else
-      if (force === true || !(category.name in state)) {
+      if (force === true || (force === undefined && !(category.name in state))) {
         state[category.name] = true;
         // ensure category is also followed
         followCategory(category, true);
@@ -781,6 +845,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         followPublisher,
         getStoredValue,
         hasPushEnabled,
+        hasReadNotification,
         hasViewedFeature,
         isExcludingCategory,
         isExcludingPublisher,
@@ -788,8 +853,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         isFollowingPublisher,
         loadedInitialUrl,
         longestStreak,
+        notificationCount,
+        notifications,
         publisherIsFavorited,
         publishers,
+        readNotification,
         readRecap,
         readSummary,
         ready,
@@ -803,6 +871,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         storeTranslations,
         syncWithRemote,
         unreadBookmarkCount,
+        unreadNotificationCount,
         viewFeature,
         withHeaders,
       } }>

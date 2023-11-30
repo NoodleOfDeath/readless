@@ -11,6 +11,7 @@ import {
   PublicSummaryGroup,
   ReadingFormat,
   RecapAttributes,
+  SystemNotificationAttributes,
 } from '~/api';
 
 export type NavigationID = `${string}DrawerNav` | `${string}StackNav` | `${string}TabNav`;
@@ -62,7 +63,10 @@ export type NewsRoutingParams = SettingsRoutingParams & {
   search: {
     prefilter?: string;
   };
-  notifications?: undefined;
+  notification: {
+    notification: SystemNotificationAttributes;
+  };
+  notifications: undefined;
   summaryList: {
     prefilter?: string,
     specificIds?: number[];

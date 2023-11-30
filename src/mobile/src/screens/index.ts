@@ -10,7 +10,7 @@ export * from './BookmarksScreen';
 export * from './CategoryScreen';
 export * from './PublisherScreen';
 export * from './LegalScreen';
-export * from './NotificationsScreen';
+export * from './notifications';
 export * from './RecapScreen';
 export * from './SummaryScreen';
 export * from './SearchScreen';

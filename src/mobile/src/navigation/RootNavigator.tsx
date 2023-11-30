@@ -1,6 +1,11 @@
 import React from 'react';
-import { DeviceEventEmitter, Platform } from 'react-native';
+import {
+  DeviceEventEmitter,
+  Linking,
+  Platform,
+} from 'react-native';
 
+import { APP_STORE_LINK, PLAY_STORE_LINK } from '@env';
 import { NavigationContainer } from '@react-navigation/native';
 import ms from 'ms';
 import { SheetProvider } from 'react-native-actions-sheet';
@@ -13,6 +18,8 @@ import { LOGIN_STACK } from './stacks';
 
 import {
   ActivityIndicator,
+  Button,
+  Dialog,
   MediaPlayer,
   Screen,
   Text,
@@ -33,7 +40,7 @@ import { usePlatformTools } from '~/utils';
 
 export function RootNavigator() {
   
-  const { emitStorageEvent } = usePlatformTools();
+  const { emitStorageEvent, needsUpdate } = usePlatformTools();
   const theme = useTheme();
   
   const {
@@ -161,7 +168,28 @@ export function RootNavigator() {
       </Screen>
     );
   }
-   
+
+  if (needsUpdate) {
+    return (
+      <Dialog
+        visible
+        title={ strings.aNewVersionIsAvailable }
+        actions={ [
+          <Button
+            contained
+            key="ok"
+            onPress={ () => {
+              Linking.openURL(Platform.select({ android: PLAY_STORE_LINK, ios: APP_STORE_LINK }) ?? '');
+            } }>
+            {strings.update}
+
+          </Button>,
+        ] }>
+        <Text>{strings.pleaseUpdateToContinue}</Text>
+      </Dialog>
+    );
+  }
+
   return (
     <NavigationContainer
       theme= { theme.navContainerTheme }

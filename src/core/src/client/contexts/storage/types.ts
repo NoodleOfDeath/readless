@@ -14,6 +14,7 @@ import {
   RequestParams,
   Streak,
   SupportedLocale,
+  SystemNotificationAttributes,
 } from '~/api';
 
 export type DatedEventProps = {
@@ -103,6 +104,7 @@ export type Storage = {
   viewedFeatures?: { [key in ViewableFeature]?: DatedEvent<boolean> };
   hasReviewed?: boolean;
   lastRequestForReview: number;
+  readNotifications?: { [key: number]: DatedEvent<boolean> };
   
   // user state
   uuid?: string;
@@ -171,6 +173,7 @@ export const STORAGE_TYPES: { [key in keyof Storage]: 'array' | 'boolean' | 'num
   preferredShortPressFormat: 'string',
   pushNotifications: 'object',
   pushNotificationsEnabled: 'boolean',
+  readNotifications: 'object',
   readRecaps: 'object',
   readSummaries: 'object',
   recapTranslations: 'object',
@@ -231,6 +234,7 @@ export const SYNCABLE_SETTINGS: (keyof Storage)[] = [
   'excludedCategories',
   'viewedFeatures',
   'searchHistory',
+  'readNotifications',
 ];
 
 export type SyncableSetting = typeof SYNCABLE_SETTINGS[number];
@@ -301,7 +305,8 @@ export type FetchState = {
 
 export type SyncState = FetchState & {
   hasLoadedLocalState?: boolean;
-  channels?: FetchState;  
+  channels?: FetchState;
+  notifications?: FetchState;  
   profile?: FetchState;
   bookmarks?: FetchState;
 };
@@ -318,6 +323,10 @@ export type StorageContextType = Storage & SyncState & {
   
   currentStreak?: Streak;
   longestStreak?: Streak;
+
+  notifications?: SystemNotificationAttributes[];
+  notificationCount: number;
+  unreadNotificationCount: number;
 
   categories?: Record<string, PublicCategoryAttributes>;
   setCategories: React.Dispatch<React.SetStateAction<Record<string, PublicCategoryAttributes> | undefined>>;
@@ -343,6 +352,8 @@ export type StorageContextType = Storage & SyncState & {
   enablePush: (key: string, settings?: PushNotificationSettings) => Promise<void>;
   hasViewedFeature: (...features: ViewableFeature[]) => boolean;
   viewFeature: (feature: ViewableFeature, state?: boolean) => Promise<void>;
+  hasReadNotification: (...notifications: (SystemNotificationAttributes | number)[]) => boolean;
+  readNotification: (...notifications: (SystemNotificationAttributes | number)[]) => Promise<void>;
   
   // summary convenience functions
   bookmarkSummary: (summary: PublicSummaryGroup) => Promise<void>;
@@ -397,6 +408,7 @@ export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
   isFollowingCategory: () => false,
   isFollowingPublisher: () => false,
   lastRequestForReview: 0,
+  notificationCount: 0,
   publisherIsFavorited: () => false,
   readRecap: () => Promise.resolve(),
   readSummary: () => Promise.resolve(),
@@ -410,6 +422,7 @@ export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
   storeTranslations: () => Promise.resolve(undefined),
   syncWithRemote: () => Promise.resolve(),
   unreadBookmarkCount: 0,
+  unreadNotificationCount: 0,
   viewFeature: () => Promise.resolve(),
   withHeaders: (fn) => (...args) => fn(...args, {}),
 };

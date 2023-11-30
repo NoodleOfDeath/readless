@@ -18,6 +18,7 @@ import * as Localization from '~/locales';
 export function usePlatformTools() {
 
   const [screenReaderEnabled, setScreenReaderEnabled] = React.useState(false);
+  const [needsUpdate, setNeedsUpdate] = React.useState(false);
 
   const getUserAgent = () => {
     const userAgent = { 
@@ -45,14 +46,20 @@ export function usePlatformTools() {
     DeviceEventEmitter.emit(event, mutation, state);
   };
 
+  const onMount = async () => {
+    setNeedsUpdate((await VersionCheck.needUpdate()).isNeeded);
+  };
+
   React.useEffect(() => {
     const subscription = AccessibilityInfo.addEventListener('screenReaderChanged', setScreenReaderEnabled);
+    onMount();
     return () => subscription.remove();
   }, []);
 
   return {
     emitStorageEvent,
     getUserAgent,
+    needsUpdate,
     screenReaderEnabled,
   };
 
