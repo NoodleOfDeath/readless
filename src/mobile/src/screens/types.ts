@@ -15,12 +15,6 @@ import {
 
 export type NavigationID = `${string}DrawerNav` | `${string}StackNav` | `${string}TabNav`;
 
-export type NavigationTabParams = {
-  news: undefined;
-  games: undefined;
-  profile: undefined;
-};
-
 export type LoginRoutingParams = {
   login: undefined;
   passwordLogin: { email?: string };
@@ -32,6 +26,7 @@ export type LoginRoutingParams = {
 
 export type SettingsRoutingParams = {
   // settings and pickers
+  settings: undefined;
   generalSettings: undefined;
   displayPreferences: undefined;
   notificationSettings: undefined;
@@ -46,7 +41,6 @@ export type SettingsRoutingParams = {
 
 export type NewsRoutingParams = SettingsRoutingParams & {
   // main
-  default: undefined;
   home: undefined;
   // top-tabs
   oldNews: undefined;
@@ -85,26 +79,23 @@ export type NewsRoutingParams = SettingsRoutingParams & {
 };
 
 export type GamesRoutingParams = {
-  default: undefined;
   play: {
     name: string;
   }
 };
 
 export type ProfileRoutingParams = SettingsRoutingParams & {
-  default: undefined;
   account: undefined;
   leaderboards: { metrics?: MetricsResponse, interactionType?: InteractionType };
 };
 
-export type RoutingParams = GamesRoutingParams & LoginRoutingParams & NavigationTabParams & NewsRoutingParams & ProfileRoutingParams;
+export type RoutingParams = GamesRoutingParams & LoginRoutingParams & NewsRoutingParams & ProfileRoutingParams;
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RoutingParams> = {
   config: {
     screens: {
       bookmarks: { path: 'bookmarks' },
       category: { path: 'category' },
-      default: { path: '' },
       generalSettings: { path: 'generalSettings' },
       publisher: { path: 'publisher' },
       search: { path: 'search' },

@@ -4,6 +4,7 @@ import {
   LayoutRectangle,
   NativeScrollEvent, 
   NativeSyntheticEvent,
+  Platform,
   RefreshControl,
 } from 'react-native';
 
@@ -377,7 +378,7 @@ export function SummaryList({
           </View>
         )}
       </View>
-      {enableTts && (
+      {enableTts && Platform.OS === 'android' && (
         <Button
           absolute
           h1

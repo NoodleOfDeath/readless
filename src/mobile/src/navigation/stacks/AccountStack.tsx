@@ -7,34 +7,20 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
-import { BASE_STACK } from './BaseStack';
-import { SETTINGS_STACK } from './SettingsStack';
-
 import { strings } from '~/locales';
 import {
   AccountScreen,
   BookmarksScreen,
-  ProfileScreen,
   RoutingParams,
 } from '~/screens';
 
-export const PROFILE_STACK: RouteConfig<
+export const ACCOUNT_STACK: RouteConfig<
   RoutingParams,
   keyof RoutingParams,
   NavigationState,
   NativeStackNavigationOptions,
   EventMapBase
 >[] = [
-  {
-    component: ProfileScreen, 
-    name: 'default',
-    options: {
-      headerBackTitle: '',
-      headerLeft: () => null,
-      headerRight: () => null, 
-      headerTitle: strings.profile,
-    },
-  },
   {
     component: AccountScreen, 
     name: 'account',
@@ -55,6 +41,4 @@ export const PROFILE_STACK: RouteConfig<
       headerTitle: strings.bookmarks, 
     }, 
   }, 
-  ...BASE_STACK,
-  ...SETTINGS_STACK,
 ];

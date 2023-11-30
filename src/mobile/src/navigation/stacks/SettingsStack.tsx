@@ -17,6 +17,7 @@ import {
   PublisherPickerScreen,
   ReadingFormatPickerScreen,
   RoutingParams,
+  SettingsScreen,
   ShortPressFormatPickerScreen,
   TriggerWordPickerScreen,
 } from '~/screens';
@@ -28,6 +29,16 @@ export const SETTINGS_STACK: RouteConfig<
   NativeStackNavigationOptions,
   EventMapBase
 >[] = [
+  {
+    component: SettingsScreen, 
+    name: 'settings',
+    options: {
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null, 
+      headerTitle: strings.settings,
+    },
+  },
   {
     component: GeneralSettingsScreen, 
     name: 'generalSettings', 

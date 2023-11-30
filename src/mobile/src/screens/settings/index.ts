@@ -1,3 +1,5 @@
+export * from './SettingsScreen';
+
 export * from './GeneralSettingsScreen';
 export * from './DisplayPreferencesScreen';
 

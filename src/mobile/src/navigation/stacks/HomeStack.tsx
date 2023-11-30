@@ -7,10 +7,11 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
+import { ACCOUNT_STACK } from './AccountStack';
 import { BASE_STACK } from './BaseStack';
 import { SETTINGS_STACK } from './SettingsStack';
 
-import { RightToggles } from '~/navigation';
+import { DrawerToggle, RightToggles } from '~/navigation';
 import { HomeScreen, RoutingParams } from '~/screens';
 
 export const HOME_STACK: RouteConfig<
@@ -26,11 +27,12 @@ export const HOME_STACK: RouteConfig<
     name: 'home',
     options: { 
       headerBackTitle: '',
-      headerLeft: () => null,
+      headerLeft: () => <DrawerToggle />,
       headerRight: () => <RightToggles />,
       headerTitle: '',
     },
   },
   ...BASE_STACK,
+  ...ACCOUNT_STACK,
   ...SETTINGS_STACK,
 ];

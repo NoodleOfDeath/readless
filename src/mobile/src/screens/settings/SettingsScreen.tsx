@@ -21,18 +21,15 @@ import { TikTokIcon } from '~/icons';
 import { strings } from '~/locales';
 import { usePlatformTools } from '~/utils';
 
-export function ProfileScreen({
+export function SettingsScreen({
   route: _route,
   navigation,
-}: ScreenComponent<'profile'>) {
+}: ScreenComponent<'settings'>) {
 
   const { openURL } = useInAppBrowser();
   const { getUserAgent } = usePlatformTools();
 
   const {
-    isSyncingBookmarks,
-    bookmarkCount,
-    unreadBookmarkCount,
     followedPublishers,
     followedCategories,
     userData, 
@@ -53,21 +50,6 @@ export function ProfileScreen({
               accessory="DisclosureIndicator"
               title={ strings.account }
               onPress={ () => navigation?.push('account') } />
-            <TableViewCell 
-              cellIcon={ (
-                <Button
-                  leftIcon="bookmark"
-                  indicator={ unreadBookmarkCount > 0 && !hasViewedFeature('bookmarks') } />
-              ) }
-              disabled={ isSyncingBookmarks }
-              cellStyle="RightDetail"
-              title={ `${strings.bookmarks} (${isSyncingBookmarks ? 'syncing...' : bookmarkCount})` }
-              accessory="DisclosureIndicator"
-              detail={ `${unreadBookmarkCount} ${strings.unread}` } 
-              onPress={ isSyncingBookmarks ? undefined : () => {
-                viewFeature('bookmarks');
-                navigation?.push('bookmarks');
-              } } />
           </TableViewSection>
           <TableViewSection
             grouped
@@ -129,7 +111,7 @@ export function ProfileScreen({
               accessory="DisclosureIndicator"
               onPress={ () => {
                 viewFeature('notifications');
-                navigation?.push('notifications');
+                navigation?.push('notificationSettings');
               } } />
           </TableViewSection> 
           <TableViewSection
