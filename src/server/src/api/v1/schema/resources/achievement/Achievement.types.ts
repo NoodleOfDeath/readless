@@ -30,10 +30,12 @@ export type AchievementCreationAttributes = Partial<DatedAttributes> & {
 };
 
 export const PUBLIC_ACHIEVEMENT_ATTRIBUTES = [
+  'id',
   'name',
   'description',
   'displayName',
   'points',
+  'createdAt',
 ] as const;
 
 export type PublicAchievementAttributes = Pick<
