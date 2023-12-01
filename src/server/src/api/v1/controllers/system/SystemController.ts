@@ -35,7 +35,7 @@ export class SystemController {
   public static async getSystemNotifications(
     @Request() req: ExpressRequest
   ): Promise<BulkResponse<PublicSystemNotificationAttributes>> {
-    return await SystemNotification.findAndCountAll();
+    return await SystemNotification.findAndCountAll({ order: [['createdAt', 'DESC']] });
   }
   
   @Get('/sitemap')

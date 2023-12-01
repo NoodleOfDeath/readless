@@ -1,10 +1,12 @@
 import React from 'react';
+import { SafeAreaView } from 'react-native';
 
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
+import { Avatar } from 'react-native-paper';
 
 import { RoutedScreen } from './RoutedScreen';
 import { StackNavigator } from './StackNavigator';
@@ -17,9 +19,8 @@ import {
   DrawerSection,
 } from '~/components';
 import { StorageContext } from '~/contexts';
-import { useNavigation } from '~/hooks';
+import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
-import { usePlatformTools } from '~/utils';
 
 function HomeDrawer() {
   return (
@@ -39,21 +40,29 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
     openCategory,
     openPublisher,
   } = useNavigation();
-  const { getUserAgent } = usePlatformTools();
+  const theme = useTheme();
 
   const {
-    isSyncingBookmarks,
-    bookmarkCount,
+    syncState,
     unreadBookmarkCount,
     categories,
     publishers,
+    followedPublishers,
+    followedCategories,
     favoritedCategories,
     favoritedPublishers,
     favoriteCategory,
     favoritePublisher,
+    publisherIsFavorited,
+    categoryIsFavorited,
     viewFeature,
     hasViewedFeature,
+    userData,
   } = React.useContext(StorageContext);
+
+  const isSyncingBookmarks = React.useMemo(() => {
+    return syncState.bookmarks?.isFetching ?? false;
+  }, [syncState.bookmarks]);
 
   const topPublishers = React.useMemo(() => {
     if (!publishers) {
@@ -102,7 +111,57 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
   }, [categories, favoriteCategory, favoritedCategories, openCategory]);
 
   const favorites = React.useMemo(() => [...topPublishers, ...topCategories], [topPublishers, topCategories]);
-  
+
+  const publisherItems = React.useMemo(() => {
+    if (!publishers) {
+      return [];
+    }
+    const items = Object.keys({ ...followedPublishers }).sort().map((p) => {
+      const publisher = publishers[p];
+      if (!publisher) {
+        return undefined;
+      }
+      return (
+        <DrawerItem
+          key={ publisher.name }
+          label={ publisher.displayName }
+          icon={ (props) => <ChannelIcon { ...props } publisher={ publisher } /> }
+          onPress={ () => openPublisher(publisher) }
+          right={ () => (
+            <Button 
+              leftIcon={ publisherIsFavorited(publisher) ? 'star' : 'star-outline' }
+              onPress={ () => favoritePublisher(publisher) } />
+          ) } />
+      );
+    }).filter(Boolean);
+    return items;
+  }, [publishers, followedPublishers, openPublisher, publisherIsFavorited, favoritePublisher]);
+
+  const categoryItems = React.useMemo(() => {
+    if (!categories) {
+      return [];
+    }
+    const items = Object.keys({ ...followedCategories }).sort().map((c) => {
+      const category = categories[c];
+      if (!category) {
+        return undefined;
+      }
+      return (
+        <DrawerItem
+          key={ category.name }
+          label={ category.displayName }
+          icon={ (props) => <ChannelIcon { ...props } category={ category } /> }
+          onPress={ () => openCategory(category) }
+          right={ () => (
+            <Button
+              leftIcon={ categoryIsFavorited(category) ? 'star' : 'star-outline' }
+              onPress={ () => favoriteCategory(category) } />
+          ) } />
+      );
+    }).filter(Boolean);
+    return items;
+  }, [categories, followedCategories, openCategory, categoryIsFavorited, favoriteCategory]);
+
   return (
     <React.Fragment>
       <DrawerContentScrollView { ...props }>
@@ -114,6 +173,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
                 leftIcon="bookmark"
                 indicator={ unreadBookmarkCount > 0 && !hasViewedFeature('bookmarks') } />
             ) }
+            right={ () => (<Button leftIcon="chevron-right" />) }
             disabled={ isSyncingBookmarks }
             label={ [strings.bookmarks, isSyncingBookmarks ? `${strings.syncing}...` : unreadBookmarkCount > 0 ? `(${unreadBookmarkCount})` : ''].filter(Boolean).join(' ') }
             onPress={ isSyncingBookmarks ? undefined : () => {
@@ -127,27 +187,43 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
             {favorites}
           </DrawerSection>
         )}
+        <DrawerSection
+          title={ strings.publishersYouFollow }
+          onPress={ () => navigate('publisherPicker') }
+          rightIcon={ <Button leftIcon="chevron-right" /> }>
+          {publisherItems}
+        </DrawerSection>
+        <DrawerSection
+          title={ strings.categoriesYouFollow }
+          onPress={ () => navigate('categoryPicker') }
+          rightIcon={ <Button leftIcon="chevron-right" /> }>
+          {categoryItems}
+        </DrawerSection>
       </DrawerContentScrollView>
-      <DrawerSection showDivider={ false }>
-        <DrawerItem
-          label={ strings.settings }
-          icon={ (props) => (
-            <Button
-              indicator={
-                !hasViewedFeature('publishers') || 
+      <SafeAreaView>
+        <DrawerSection 
+          flexGrow={ 1 }
+          showDivider={ false }
+          bg={ theme.colors.headerBackground }
+          py={ 12 }>
+          <DrawerItem
+            label={ userData?.profile?.username }
+            icon={ (props) => (
+              <Button
+                indicator={
+                  !hasViewedFeature('publishers') || 
                 !hasViewedFeature('categories') || 
                 !hasViewedFeature('display-preferences') ||
                 !hasViewedFeature('notifications') || 
                 !hasViewedFeature('app-review')
-              } 
-              leftIcon="cog"
-              { ...props } />
-          ) }
-          onPress={ () => navigate('settings') } />
-        <DrawerItem
-          mb={ 24 }
-          label={ getUserAgent().currentVersion } />
-      </DrawerSection>
+                } 
+                leftIcon={ <Avatar.Text label={ userData?.profile?.username?.slice(0, 2).toUpperCase() ?? '??' } size={ 36 } /> }
+                { ...props } />
+            ) }
+            right={ () => (<Button leftIcon="cog" />) }
+            onPress={ () => navigate('settings') } />
+        </DrawerSection>
+      </SafeAreaView>
     </React.Fragment>
   );
 }

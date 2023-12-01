@@ -147,9 +147,10 @@ export function AccountScreen({
               cellIcon={ <Button leftIcon="logout" /> }
               title={ strings.signOut }
               onPress={ handleSignOut } />
-            <TableViewCell
-              devOnly
-              cellContentView={ <Text>{JSON.stringify(user, null, 2)}</Text> } />
+            {__DEV__ && (
+              <TableViewCell
+                cellContentView={ <Text>{JSON.stringify(user, null, 2)}</Text> } />
+            )}
           </TableViewSection>
           {!user?.unlinked && (
             <TableViewSection

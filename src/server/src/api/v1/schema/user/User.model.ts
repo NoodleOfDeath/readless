@@ -390,8 +390,10 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     }))?.createdAt;
     const longestStreak = await this.calculateLongestStreak();
     const streak = await this.calculateStreak();
+    const achievements = await this.getAchievements();
     const updatedAt = new Date(Math.max(...[longestStreak?.updatedAt, streak?.updatedAt].filter(Boolean).map((d) => d.valueOf())));
     return {
+      achievements,
       interactionCounts: {
         read: (await User.getInteractionCounts('read', undefined, this)).find((s) => s.userId === this.id),
         share: (await User.getInteractionCounts('share', undefined, this)).find((s) => s.userId === this.id),
@@ -447,7 +449,10 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   // achievements
   public async getAchievements() {
-    return await UserAchievement.findAll({ where: { userId: this.id } });
+    return await UserAchievement.findAll({
+      include: [Achievement],
+      where: { userId: this.id },
+    });
   }
 
   public async hasAchievement(achievement: Achievement) {

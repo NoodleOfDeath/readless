@@ -2,30 +2,37 @@ import React from 'react';
 
 import { Drawer } from 'react-native-paper';
 
-import { Button, ButtonProps } from '~/components';
+import { 
+  Button, 
+  ButtonProps,
+  View,
+} from '~/components';
 import { useStyles, useTheme } from '~/hooks';
 
 export type DrawerSectionProps = ButtonProps & Parameters<typeof Drawer.Section>[0];
 
 export function DrawerSection({
   title,
+  children,
   ...props
 }: DrawerSectionProps) {
   const theme = useTheme();
   const style = useStyles(props);
   return (
-    <Drawer.Section
-      { ...props }
-      title={ typeof title === 'string' ? (
-        <Button 
+    <View gap={ 12 } style={ style }>
+      {title && (
+        <Button
           system
-          h6
+          subtitle1
+          justifyEvenly
           color={ theme.colors.textSecondary }
-          justifyStart
+          p={ 12 }
+          mx={ 12 }
           { ...props }>
           {title}
-        </Button> as unknown as string
-      ) : title }
-      style={ style } />
+        </Button>
+      )}
+      { children }
+    </View>
   );
 }

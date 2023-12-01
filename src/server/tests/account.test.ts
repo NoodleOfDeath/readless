@@ -56,6 +56,7 @@ describe('tests the user instance methods', () => {
     }
     const stats = await user.getStats();
     console.log(stats);
+    console.log(stats.achievements.map(a => a.achievement?.name));
     expect(stats).toBeDefined();
   });
 

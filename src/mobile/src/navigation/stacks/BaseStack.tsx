@@ -13,6 +13,7 @@ import { strings } from '~/locales';
 import {
   CategoryScreen,
   LeaderboardsScreen,
+  NotificationScreen,
   NotificationsScreen,
   PublisherScreen,
   RecapScreen,
@@ -39,6 +40,16 @@ export const BASE_STACK: RouteConfig<
       headerLeft: () => null,
       headerRight: () => null,
       headerTitle: strings.search,
+    },
+  },
+  {
+    component: NotificationScreen, 
+    name: 'notification',
+    options: { 
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: '', 
     },
   },
   {

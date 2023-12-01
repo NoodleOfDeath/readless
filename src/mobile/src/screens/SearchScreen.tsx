@@ -12,6 +12,7 @@ import {
   TableView,
   TableViewCell,
   TableViewSection,
+  Text,
   View,
 } from '~/components';
 import { StorageContext } from '~/contexts';
@@ -59,6 +60,7 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
             grouped
             headerComponent={ (
               <Button
+                system
                 alignStart
                 p={ 12 }>
                 {strings.history}
@@ -66,6 +68,7 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
             ) }>
             {filteredHistory?.map((q) => (
               <TableViewCell
+                system
                 key={ q }
                 title={ q }
                 onPress={ () => search({ prefilter: q }) } />
@@ -75,9 +78,12 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
             grouped
             headerComponent={ (
               <Button
+                system
                 alignStart
                 p={ 12 }
                 indicator={ !hasViewedFeature('publishers') }
+                gap={ 12 }
+                rightIcon="chevron-right"
                 onPress={ () => {
                   viewFeature('publishers');
                   navigation?.navigate('publisherPicker');
@@ -89,8 +95,9 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
               cellContentView={ (
                 <ScrollView horizontal>
                   <View flexRow gap={ 12 }>
-                    {filteredPublishers.map((pub) => (
+                    {filteredPublishers.length === 0 ? (<Text>{strings.noResults}</Text>) : filteredPublishers.map((pub) => (
                       <Button
+                        system
                         vertical
                         key={ pub.name }
                         leftIcon={ <ChannelIcon publisher={ pub } /> }
@@ -108,9 +115,12 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
             grouped
             headerComponent={ (
               <Button
+                system
                 alignStart
                 p={ 12 }
                 indicator={ !hasViewedFeature('categories') }
+                gap={ 12 }
+                rightIcon="chevron-right"
                 onPress={ () => {
                   viewFeature('categories');
                   navigation?.push('categoryPicker');
@@ -122,8 +132,9 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
               cellContentView={ (
                 <ScrollView horizontal>
                   <View flexRow gap={ 12 }>
-                    {filteredCategories.map((cat) => (
+                    {filteredCategories.length === 0 ? (<Text>{strings.noResults}</Text>) : filteredCategories.map((cat) => (
                       <Button
+                        system
                         vertical
                         key={ cat.name }
                         leftIcon={ <ChannelIcon category={ cat } /> }

@@ -4,6 +4,7 @@ import { UserData } from './UserData';
 import {
   DEFAULT_STORAGE_CONTEXT,
   DatedEvent,
+  FetchJob,
   FunctionWithRequestParams,
   Methods,
   PushNotificationSettings,
@@ -26,6 +27,7 @@ import {
   PublicSummaryGroup,
   RecapAttributes,
   RequestParams,
+  SystemNotificationAttributes,
 } from '~/api';
 import { getLocale } from '~/locales';
 import { useLocalStorage, usePlatformTools } from '~/utils';
@@ -48,16 +50,23 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
 
   // system state
   const [storage, setStorage] = React.useState<Storage>(DEFAULT_STORAGE_CONTEXT);
-  const [syncState, setSyncState] = React.useState<SyncState>({});
+  const [syncState, setSyncState] = React.useState<SyncState>(new SyncState());
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [errorHandler, setErrorHandler] = React.useState<((e?: any) => void)>();
   
-  const ready = React.useMemo(() => syncState.hasLoadedLocalState && syncState.hasSyncedWithRemote, [syncState.hasLoadedLocalState, syncState.hasSyncedWithRemote]);
+  const ready = React.useMemo(() => Boolean(syncState.hasLoadedLocalState && syncState.lastFetch), [syncState.hasLoadedLocalState, syncState.lastFetch]);
   
   const [loadedInitialUrl, setLoadedInitialUrl] = React.useState<boolean>();
 
   const currentStreak = React.useMemo(() => storage.userData?.profile?.stats?.streak, [storage.userData?.profile?.stats?.streak]);
   const longestStreak = React.useMemo(() => storage.userData?.profile?.stats?.longestStreak, [storage.userData?.profile?.stats?.longestStreak]);
+
+  const [notifications, setNotifications] = React.useState<SystemNotificationAttributes[]>();
+
+  const notificationCount = React.useMemo(() => notifications?.length ?? 0, [notifications]);
+  const unreadNotificationCount = React.useMemo(() => {
+    return notifications?.filter((n) => !(n.id in ({ ...storage.readNotifications }))).length ?? 0;
+  }, [notifications, storage.readNotifications]);
 
   const [categories, setCategories] = React.useState<Record<string, PublicCategoryAttributes>>();
   const [publishers, setPublishers] = React.useState<Record<string, PublicPublisherAttributes>>();
@@ -129,14 +138,10 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const error = e as AuthError;
       if (LOGOUT_ERROR_KEYS.includes(error.errorKey)) {
         resetStorage(true);
+        return;
       }
     }
-    setSyncState((prev) => ({ 
-      ...prev, 
-      hasSyncedWithRemote: true,
-      isFetchingProfile: false,
-      isSyncingWithRemote: false,
-    }));
+    setSyncState((prev) => prev.clone.fail());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorHandler]);
 
@@ -246,7 +251,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     });
   }, [setStoredValue]);
 
-  const loadChannels = React.useCallback(async () => {
+  const syncChannels = React.useCallback(async () => {
     console.log('Loading channels');
     if (!categories) {
       const response = await api.getCategories();
@@ -258,12 +263,17 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     }
   }, [categories, publishers, api]);
 
-  const loadBookmarks = React.useCallback(async (ids: number[]) => {
+  const syncNotifications = React.useCallback(async () => {
+    console.log('Loading notifications');
+    const { data, error } = await api.getSystemNotifications();
+    if (error) {
+      throw error;
+    }
+    setNotifications(data.rows);
+  }, [api]);
+
+  const syncBookmarks = React.useCallback(async (ids: number[]) => {
     console.log('Loading bookmarks');
-    setSyncState((prev) => ({ 
-      ...prev, 
-      isSyncingBookmarks: true,
-    }));
     let offset = 0;
     let summaries: PublicSummaryGroup[] = [];
     while (offset < ids.length) {
@@ -284,94 +294,29 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       Object.fromEntries(summaries.map((s) => [s.id, new DatedEvent(s)])), 
       false
     );
-    setSyncState((prev) => ({ 
-      ...prev, 
-      hasSyncedBookmarks: true,
-      isSyncingBookmarks: false,
-    }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api]);
-
-  const syncWithRemote = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
-    if (!syncState.hasLoadedLocalState) {
-      return;
-    }
+  
+  const syncPreferences = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
     let data: ProfileResponse | undefined = prefs;
-    if (!prefs) {
-      if (!storage.userData?.valid || storage.userData.unlinked) {
-        return;
-      }
-      // fetch channels
-      try {
-        setSyncState((prev) => ({ 
-          ...prev, 
-          channels: {
-            ...prev.channels,
-            isFetching: true,
-            lastFetchFailed: undefined,
-          },
-        }));
-        await loadChannels();
-        setSyncState((prev) => ({ 
-          ...prev, 
-          channels: {
-            ...prev.channels,
-            isFetching: false,
-            lastFetch: new Date(),
-            lastFetchFailed: undefined,
-          },
-        }));
-      } catch (e) {
-        setSyncState((prev) => ({ 
-          ...prev, 
-          channels: {
-            ...prev.channels,
-            isFetching: false,
-            lastFetch: undefined,
-            lastFetchFailed: new Date(),
-          },
-        }));
-        return handleBadRequest(e);
+    if (!data?.profile?.preferences) {
+      if (!storage.userData?.valid || storage.userData?.unlinked) {
+        throw new Error('Bad Request');
       }
       // fetch profile
       try {
-        setSyncState((prev) => ({ 
-          ...prev, 
-          profile: {
-            ...prev.profile,
-            isFetching: true,
-            lastFetchFailed: undefined,
-          },
-        }));
         const response = await api.getProfile();
         data = response.data;
-        setSyncState((prev) => ({ 
-          ...prev, 
-          profile: {
-            isFetching: false,
-            lastFetch: new Date(),
-            lastFetchFailed: undefined,
-          },
-        }));
         if (response.error) {
           throw response.error;
         }
       } catch (e) {
         console.error(e);
-        setSyncState((prev) => ({ 
-          ...prev, 
-          profile: {
-            ...prev.profile,
-            isFetching: false,
-            lastFetch: undefined,
-            lastFetchFailed: new Date(),
-          },
-        }));
-        return handleBadRequest(e);
+        throw new Error(e);
       }
     }
     if (!data?.profile?.preferences) {
-      return handleBadRequest();
+      throw new Error('Bad Request');
     }
     const {
       profile: {
@@ -381,46 +326,51 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     const remoteUpdatedAt = updatedAt && !Number.isNaN(new Date(updatedAt)) ? new Date(updatedAt).valueOf() : 0;
     if (storage.lastRemoteSync && remoteUpdatedAt < storage.lastRemoteSync) {
       console.log('remote data is stale');
-      setSyncState((prev) => ({ 
-        ...prev, 
-        hasSyncedWithRemote: true,
-        isSyncingWithRemote: false,
-      }));
       return;
     }
     if (storage.lastLocalSync && remoteUpdatedAt < storage.lastLocalSync) {
       console.log('local data is stale and needs update');
       await forcePushLocalStateToRemote();
-      setSyncState((prev) => ({ 
-        ...prev, 
-        hasSyncedWithRemote: true,
-        isSyncingWithRemote: false,
-      }));
       return;
     }
     if (!preferences) {
-      return handleBadRequest();
+      throw new Error('Bad Request');
     }
     console.log('syncing prefs and stats');
     for (const key of SYNCABLE_SETTINGS) {
       const remoteValue = preferences[key];
-      if (opts?.loadBookmarks && key === 'bookmarkedSummaries') {
+      if (opts?.syncBookmarks && key === 'bookmarkedSummaries') {
         try {
-          loadBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v)));
+          setSyncState((prev) => {
+            const state = prev.clone;
+            state.bookmarks.prepare();
+            return state;
+          });
+          const job = new FetchJob(async () => syncBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v))));
+          job.dispatch()
+            .then(() => {
+              setSyncState((prev) => {
+                const state = prev.clone;
+                state.bookmarks.success();
+                return state;
+              });
+            })
+            .catch((e) => {
+              setSyncState((prev) => {
+                const state = prev.clone;
+                state.bookmarks.fail(e);
+                return state;
+              });
+            });
         } catch (e) {
           console.error(e);
           handleBadRequest(e);
         }
       } else {
-        try {
-          if (remoteValue) {
-            const trans = SyncableIoIn(key);
-            const value = trans(remoteValue);
-            await setStoredValue(key, value, false);
-          }
-        } catch (e) {
-          console.error(e);
-          return handleBadRequest(e);
+        if (remoteValue) {
+          const trans = SyncableIoIn(key);
+          const value = trans(remoteValue);
+          await setStoredValue(key, value, false);
         }
       }
     }
@@ -434,13 +384,81 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       return new UserData(state);
     }, false);
     await setStoredValue('lastRemoteSync', Date.now());
-    setSyncState((prev) => ({ 
-      ...prev, 
-      hasSyncedWithRemote: true,
-      isSyncingWithRemote: false,
-    }));
+  }, [storage.lastRemoteSync, storage.lastLocalSync, storage.userData?.valid, storage.userData?.unlinked, setStoredValue, api, forcePushLocalStateToRemote, syncBookmarks, handleBadRequest]);
+
+  const syncWithRemote = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
+    if (!syncState.hasLoadedLocalState || syncState.isFetching || syncState.lastFetch || syncState.lastFetchFailed) {
+      return;
+    }
+    // fetch channels
+    try {
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.channels.prepare();
+        return state;
+      });
+      const job = new FetchJob(syncChannels);
+      await job.dispatch();
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.channels.success();
+        return state;
+      });
+    } catch (e) {
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.channels.fail();
+        return state;
+      });
+      return handleBadRequest(e);
+    } 
+    // fetch notifications
+    try {
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.notifications.prepare();
+        return state;
+      });
+      const job = new FetchJob(syncNotifications);
+      await job.dispatch();
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.notifications.success();
+        return state;
+      });
+    } catch (e) {
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.notifications.fail();
+        return state;
+      });
+      return handleBadRequest(e);
+    }
+    try {
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.profile.prepare();
+        return state;
+      });
+      const job = new FetchJob(async () => syncPreferences(prefs, opts));
+      await job.dispatch();
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.profile.success();
+        return state;
+      });
+    } catch (e) {
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.profile.fail();
+        return state;
+      });
+      return handleBadRequest(e);
+    }
+    console.log('state loaded');
+    setSyncState((prev) => prev.clone.success());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncState.hasLoadedLocalState, storage.userData?.valid, handleBadRequest, api, loadBookmarks]);
+  }, [syncState, handleBadRequest, api, syncChannels, syncNotifications, syncPreferences]);
   
   // Load preferences on mount
   const load = async () => {
@@ -459,6 +477,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     state.pushNotifications = await getStoredValue('pushNotifications');
     state.fcmToken = await getStoredValue('fcmToken');
     state.userData = await getStoredValue('userData');
+    state.readNotifications = await getStoredValue('readNotifications');
     
     // summary state
     state.bookmarkedSummaries = await getStoredValue('bookmarkedSummaries');
@@ -500,15 +519,23 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     state.triggerWords = await getStoredValue('triggerWords');
     
     setStorage(state);
-    setSyncState((prev) => ({ ...prev, hasLoadedLocalState: true }));
+    setSyncState((prev) => {
+      const state = prev.clone;
+      state.hasLoadedLocalState = true;
+      return state;
+    });
   };
 
   React.useEffect(() => {
-    if (!syncState.isSyncingWithRemote && !syncState.hasSyncedWithRemote && syncState.hasLoadedLocalState) {
-      syncWithRemote(undefined, { loadBookmarks: true });
-      setSyncState((prev) => ({ ...prev, isSyncingWithRemote: true }));
+    if (!syncState.isFetching && !syncState.lastFetch && syncState.hasLoadedLocalState) {
+      syncWithRemote(undefined, { syncBookmarks: true });
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.isFetching = true;
+        return state;
+      });
     }
-  }, [syncState.hasLoadedLocalState, syncState.isSyncingWithRemote, syncState.hasSyncedWithRemote, syncWithRemote]);
+  }, [syncState.hasLoadedLocalState, syncState.isFetching, syncState.lastFetch, syncWithRemote]);
   
   const resetStorage = async (hard = false) => {
     await removeAll(hard);
@@ -556,6 +583,20 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         newState[feature] = new DatedEvent(true);
       } else {
         delete newState[feature];
+      }
+      return (prev = newState);
+    });
+  };
+
+  const hasReadNotification = React.useCallback((...notifications: (SystemNotificationAttributes | number)[]) => {
+    return notifications.every((n) => (typeof n === 'number' ? n : n.id) in ({ ...storage.readNotifications }));
+  }, [storage.readNotifications]);
+
+  const readNotification = async (...notifications: (SystemNotificationAttributes | number)[]) => {
+    await setStoredValue('readNotifications', (prev) => {
+      const newState = { ...prev };
+      for (const notification of notifications) {
+        newState[typeof notification === 'number' ? notification : notification.id] = new DatedEvent(true);
       }
       return (prev = newState);
     });
@@ -627,7 +668,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   const followPublisher = async (publisher: PublicPublisherAttributes, force?: boolean) => {
     await setStoredValue('followedPublishers', (prev) => {
       const state = { ...prev };
-      if (force === false || publisher.name in state) {
+      if (force === false || (force === undefined && publisher.name in state)) {
         delete state[publisher.name];
         // also remove from favorited
         setStoredValue('favoritedPublishers', (prev) => {
@@ -637,7 +678,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         });
         emitStorageEvent('unfollow-publisher', publisher, state);
       } else
-      if (force === true || !(publisher.name in state)) {
+      if (force === true || (force === undefined && !(publisher.name in state))) {
         state[publisher.name] = true;
         // also remove from excluded
         setStoredValue('excludedPublishers', (prev) => {
@@ -656,11 +697,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   const favoritePublisher = async (publisher: PublicPublisherAttributes, force?: boolean) => {
     await setStoredValue('favoritedPublishers', (prev) => {
       const state = { ...prev };
-      if (force === false || publisher.name in state) {
+      if (force === false || (force === undefined && publisher.name in state)) {
         delete state[publisher.name];
         emitStorageEvent('unfavorite-publisher', publisher, state);
       } else
-      if (force === true || !(publisher.name in state)) {
+      if (force === true || (force === undefined && !(publisher.name in state))) {
         state[publisher.name] = true;
         // ensure publisher is also followed
         followPublisher(publisher, true);
@@ -695,7 +736,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   const followCategory = async (category: PublicCategoryAttributes, force?: boolean) => {
     await setStoredValue('followedCategories', (prev) => {
       const state = { ...prev };
-      if (force === false || category.name in state) {
+      if (force === false || (force === undefined && category.name in state)) {
         delete state[category.name];
         // also remove from favorited categories
         setStoredValue('favoritedCategories', (prev) => {
@@ -705,7 +746,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         });
         emitStorageEvent('unfollow-category', category, state);
       } else
-      if (force === true || !(category.name in state)) {
+      if (force === true || (force === undefined && !(category.name in state))) {
         state[category.name] = true;
         // also remove from excluded categories
         setStoredValue('excludedCategories', (prev) => {
@@ -724,11 +765,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   const favoriteCategory = async (category: PublicCategoryAttributes, force?: boolean) => {
     await setStoredValue('favoritedCategories', (prev) => {
       const state = { ...prev };
-      if (force === false || category.name in state) {
+      if (force === false || (force === undefined && category.name in state)) {
         delete state[category.name];
         emitStorageEvent('unfavorite-category', category, state);
       } else
-      if (force === true || !(category.name in state)) {
+      if (force === true || (force === undefined && !(category.name in state))) {
         state[category.name] = true;
         // ensure category is also followed
         followCategory(category, true);
@@ -762,7 +803,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     <StorageContext.Provider
       value={ {
         ...storage,
-        ...syncState,
         api,
         bookmarkCount,
         bookmarkSummary,
@@ -781,6 +821,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         followPublisher,
         getStoredValue,
         hasPushEnabled,
+        hasReadNotification,
         hasViewedFeature,
         isExcludingCategory,
         isExcludingPublisher,
@@ -788,8 +829,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         isFollowingPublisher,
         loadedInitialUrl,
         longestStreak,
+        notificationCount,
+        notifications,
         publisherIsFavorited,
         publishers,
+        readNotification,
         readRecap,
         readSummary,
         ready,
@@ -801,8 +845,10 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         setPublishers,
         setStoredValue,
         storeTranslations,
+        syncState,
         syncWithRemote,
         unreadBookmarkCount,
+        unreadNotificationCount,
         viewFeature,
         withHeaders,
       } }>

@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Button, View } from '~/components';
 import { StorageContext } from '~/contexts';
-import { useNavigation } from '~/hooks';
+import { DrawerNavigation, useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 
 export const SearchToggle = () => {
@@ -22,11 +22,13 @@ export const SearchToggle = () => {
 
 export const NotificationsToggle = () => {
   const { navigation } = useNavigation();
+  const { unreadNotificationCount } = React.useContext(StorageContext);
   return (
     <Button
       accessible
       accessibilityLabel={ strings.notifications }
       leftIcon="bell"
+      badge={ unreadNotificationCount ?? undefined }
       iconSize={ 24 }
       onPress={ () => navigation?.navigate('notifications') } />
   );
@@ -49,7 +51,7 @@ export const DrawerToggle = () => {
         !hasViewedFeature('notifications') || 
         !hasViewedFeature('app-review')
       } 
-      onPress={ () => (navigation?.getParent('LeftDrawerNav'))?.toggleDrawer() } />
+      onPress={ () => (navigation?.getParent('LeftDrawerNav') as DrawerNavigation)?.toggleDrawer() } />
   );
 };
 export const RightToggles = () => {

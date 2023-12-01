@@ -100,12 +100,9 @@ export function TableViewCell({
     ...rest, 
   };
   const theme= useTheme();
-  const style = useStyles({ ...props, bg: props.devOnly ? 'red' : props.bg });
+  const style = useStyles(props);
   const textStyles = useTextStyles({ ...props, system: true });
   const stylesWithoutFontScaling = { padding: 3, ...textStyles };
-  if (props.devOnly && !__DEV__) {
-    return null;
-  }
   return (
     <Cell
       { ...theme.components.tableViewCell }
