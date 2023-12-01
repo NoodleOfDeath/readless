@@ -1,4 +1,5 @@
 import React from 'react';
+import { SafeAreaView } from 'react-native';
 
 import {
   DrawerContentComponentProps,
@@ -18,9 +19,8 @@ import {
   DrawerSection,
 } from '~/components';
 import { StorageContext } from '~/contexts';
-import { useNavigation } from '~/hooks';
+import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
-import { usePlatformTools } from '~/utils';
 
 function HomeDrawer() {
   return (
@@ -40,7 +40,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
     openCategory,
     openPublisher,
   } = useNavigation();
-  const { getUserAgent } = usePlatformTools();
+  const theme = useTheme();
 
   const {
     bookmarks,
@@ -188,40 +188,44 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
         )}
         {publisherItems.length > 0 && (
           <DrawerSection
-            title={ strings.publishersYouFollow }>
+            title={ strings.publishersYouFollow }
+            onPress={ () => navigate('publisherPicker') }
+            rightIcon={ <Button leftIcon="chevron-right" /> }>
             {publisherItems}
           </DrawerSection>
         )}
         {categoryItems.length > 0 && (
           <DrawerSection
-            title={ strings.categoriesYouFollow }>
+            title={ strings.categoriesYouFollow }
+            onPress={ () => navigate('categoryPicker') }
+            rightIcon={ <Button leftIcon="chevron-right" /> }>
             {categoryItems}
           </DrawerSection>
         )}
       </DrawerContentScrollView>
-      <DrawerSection showDivider={ false }>
-        <DrawerItem
-          label={ strings.settings }
-          icon={ (props) => (
-            <Button
-              indicator={
-                !hasViewedFeature('publishers') || 
+      <SafeAreaView>
+        <DrawerSection 
+          showDivider={ false }
+          bg={ theme.colors.headerBackground }
+          py={ 12 }>
+          <DrawerItem
+            label={ strings.settings }
+            icon={ (props) => (
+              <Button
+                indicator={
+                  !hasViewedFeature('publishers') || 
                 !hasViewedFeature('categories') || 
                 !hasViewedFeature('display-preferences') ||
                 !hasViewedFeature('notifications') || 
                 !hasViewedFeature('app-review')
-              } 
-              leftIcon={ <Avatar.Text label={ userData?.profile?.username?.slice(0, 2).toUpperCase() ?? '??' } size={ 36 } /> }
-              { ...props } />
-          ) }
-          right={ () => (<Button leftIcon="dots-horizontal" />) }
-          onPress={ () => navigate('settings') } />
-        {__DEV__ && (
-          <DrawerItem
-            mb={ 24 }
-            label={ getUserAgent().currentVersion } />
-        )}
-      </DrawerSection>
+                } 
+                leftIcon={ <Avatar.Text label={ userData?.profile?.username?.slice(0, 2).toUpperCase() ?? '??' } size={ 36 } /> }
+                { ...props } />
+            ) }
+            right={ () => (<Button leftIcon="dots-horizontal" />) }
+            onPress={ () => navigate('settings') } />
+        </DrawerSection>
+      </SafeAreaView>
     </React.Fragment>
   );
 }
