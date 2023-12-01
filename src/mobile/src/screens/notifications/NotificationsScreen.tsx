@@ -42,7 +42,7 @@ export function NotificationsScreen({ navigation }: ScreenComponent<'notificatio
                 title={ notification.title }
                 bold={ !hasReadNotification(notification) }
                 cellIcon={ hasReadNotification(notification) ? undefined : 'circle' }
-                detail={ formatDate(new Date(notification.createdAt ?? ''), '(E) h:M a - P', { locale: getFnsLocale() }) }
+                detail={ formatDate(new Date(notification.createdAt ?? ''), '(E) h:mm a - P', { locale: getFnsLocale() }) }
                 onPress={ () => {
                   readNotification(notification);
                   navigation?.push('notification', { notification }); 

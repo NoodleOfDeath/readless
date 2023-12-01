@@ -43,7 +43,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
   const theme = useTheme();
 
   const {
-    bookmarks,
+    syncState,
     unreadBookmarkCount,
     categories,
     publishers,
@@ -61,8 +61,8 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
   } = React.useContext(StorageContext);
 
   const isSyncingBookmarks = React.useMemo(() => {
-    return bookmarks?.isFetching ?? false;
-  }, [bookmarks]);
+    return syncState.bookmarks?.isFetching ?? false;
+  }, [syncState.bookmarks]);
 
   const topPublishers = React.useMemo(() => {
     if (!publishers) {
@@ -173,6 +173,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
                 leftIcon="bookmark"
                 indicator={ unreadBookmarkCount > 0 && !hasViewedFeature('bookmarks') } />
             ) }
+            right={ () => (<Button leftIcon="chevron-right" />) }
             disabled={ isSyncingBookmarks }
             label={ [strings.bookmarks, isSyncingBookmarks ? `${strings.syncing}...` : unreadBookmarkCount > 0 ? `(${unreadBookmarkCount})` : ''].filter(Boolean).join(' ') }
             onPress={ isSyncingBookmarks ? undefined : () => {
@@ -186,30 +187,27 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
             {favorites}
           </DrawerSection>
         )}
-        {publisherItems.length > 0 && (
-          <DrawerSection
-            title={ strings.publishersYouFollow }
-            onPress={ () => navigate('publisherPicker') }
-            rightIcon={ <Button leftIcon="chevron-right" /> }>
-            {publisherItems}
-          </DrawerSection>
-        )}
-        {categoryItems.length > 0 && (
-          <DrawerSection
-            title={ strings.categoriesYouFollow }
-            onPress={ () => navigate('categoryPicker') }
-            rightIcon={ <Button leftIcon="chevron-right" /> }>
-            {categoryItems}
-          </DrawerSection>
-        )}
+        <DrawerSection
+          title={ strings.publishersYouFollow }
+          onPress={ () => navigate('publisherPicker') }
+          rightIcon={ <Button leftIcon="chevron-right" /> }>
+          {publisherItems}
+        </DrawerSection>
+        <DrawerSection
+          title={ strings.categoriesYouFollow }
+          onPress={ () => navigate('categoryPicker') }
+          rightIcon={ <Button leftIcon="chevron-right" /> }>
+          {categoryItems}
+        </DrawerSection>
       </DrawerContentScrollView>
       <SafeAreaView>
         <DrawerSection 
+          flexGrow={ 1 }
           showDivider={ false }
           bg={ theme.colors.headerBackground }
           py={ 12 }>
           <DrawerItem
-            label={ strings.settings }
+            label={ userData?.profile?.username }
             icon={ (props) => (
               <Button
                 indicator={
@@ -222,7 +220,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
                 leftIcon={ <Avatar.Text label={ userData?.profile?.username?.slice(0, 2).toUpperCase() ?? '??' } size={ 36 } /> }
                 { ...props } />
             ) }
-            right={ () => (<Button leftIcon="dots-horizontal" />) }
+            right={ () => (<Button leftIcon="cog" />) }
             onPress={ () => navigate('settings') } />
         </DrawerSection>
       </SafeAreaView>

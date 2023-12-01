@@ -86,17 +86,18 @@ export function SettingsScreen({
                 viewFeature('categories');
                 navigation?.push('categoryPicker'); 
               } } />
-            <TableViewCell
-              devOnly
-              cellIcon={ (
-                <Button
-                  leftIcon="cog" />
-              ) }
-              accessory="DisclosureIndicator"
-              title={ strings.manage }
-              onPress={ () => {
-                navigation?.push('generalSettings');
-              } } />
+            {__DEV__ && (
+              <TableViewCell
+                cellIcon={ (
+                  <Button
+                    leftIcon="cog" />
+                ) }
+                accessory="DisclosureIndicator"
+                title={ strings.manage }
+                onPress={ () => {
+                  navigation?.push('generalSettings');
+                } } />
+            )}
           </TableViewSection>
           <TableViewSection
             grouped

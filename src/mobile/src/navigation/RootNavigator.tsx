@@ -50,9 +50,8 @@ export function RootNavigator() {
   } = React.useContext(LayoutContext);
   const storage = React.useContext(StorageContext);
   const {
-    api: { updateMetadata },
     ready, 
-    isFetching,
+    syncState,
     lastRequestForReview = 0,
     readSummaries,
     pushNotificationsEnabled,
@@ -62,29 +61,32 @@ export function RootNavigator() {
     syncWithRemote,
   } = storage;
   const { showToast } = React.useContext(ToastContext);
-  
   const { isRegisteredForRemoteNotifications, registerRemoteNotifications } = React.useContext(NotificationContext);
   const { currentTrack } = React.useContext(MediaContext);
   
   const [lastSync, setLastSync] = React.useState(0);
-
   const [showedReview, setShowedReview] = React.useState(false);
 
   React.useEffect(() => {
-    if (!ready) {
-      return;
-    }
-    if (!userData?.valid) {
-      return;
-    }
-
     if (!isTablet) {
       lockRotation(OrientationType.PORTRAIT);
     } else {
       unlockRotation();
     }
+  }, [isTablet, lockRotation, unlockRotation]);
+
+  React.useEffect(() => {
+    if (!ready || !userData?.valid) {
+      return;
+    }
     if (pushNotificationsEnabled !== false && !isRegisteredForRemoteNotifications()) {
       registerRemoteNotifications();
+    }
+  }, [ready, userData, pushNotificationsEnabled, isRegisteredForRemoteNotifications, registerRemoteNotifications]);
+
+  React.useEffect(() => {
+    if (!ready || !userData?.valid) {
+      return;
     }
 
     if (!showedReview && 
@@ -132,11 +134,14 @@ export function RootNavigator() {
       };
 
     }
-  }, [ready, isTablet, lockRotation, showedReview, lastRequestForReview, unlockRotation, readSummaries, setStoredValue, emitStorageEvent, registerRemoteNotifications, pushNotificationsEnabled, isRegisteredForRemoteNotifications, updateMetadata, userData, showToast]);
+  }, [ready, userData, readSummaries, lastRequestForReview, showedReview, emitStorageEvent, setStoredValue, showToast]);
 
   React.useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setErrorHandler((e: any) => {
+      if (!e) {
+        return;
+      }
       console.error(e);
       showToast(e);
     });
@@ -153,16 +158,19 @@ export function RootNavigator() {
   });
   
   if (!ready) {
+    const text = syncState?.isFetching ? strings.syncing : strings.loading;
     return (
       <Screen>
         <View
           p={ 24 }
           gap={ 12 }
+          flexGrow={ 1 }
           itemsCenter
-          justifyCenter>
+          justifyCenter
+          bg={ theme.colors.paper }>
           <ActivityIndicator />
           <Text textCenter>
-            {isFetching ? strings.syncing : strings.loading}
+            {text}
           </Text>
         </View>
       </Screen>

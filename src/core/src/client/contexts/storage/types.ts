@@ -294,29 +294,156 @@ export type Methods = {
 };
 
 export type SyncOptions = {
-  loadBookmarks?: boolean;
+  syncBookmarks?: boolean;
 };
 
 export type FetchState = {
   isFetching?: boolean;
   lastFetch?: Date;
   lastFetchFailed?: Date;
+  fetchError?: Error;
 };
 
-export type SyncState = FetchState & {
+export class FetchJob implements FetchState {
+  
+  fn?: () => Promise<void>;
+  interval = ms('3s');
+  maxAttempts = 2;
+  
+  attemptCount = 0;
+  isFetching?: boolean;
+  lastFetch?: Date;
+  lastFetchFailed?: Date;
+  fetchError?: Error;
+  
+  static Success(): FetchState {
+    return {
+      fetchError: undefined,
+      isFetching: false,
+      lastFetch: new Date(),
+      lastFetchFailed: undefined,
+    };
+  }
+  
+  static Fail(e?: Error): FetchState {
+    return {
+      fetchError: e,
+      isFetching: false,
+      lastFetch: undefined,
+      lastFetchFailed: new Date,
+    };
+  }
+  
+  constructor(
+    fn?: () => Promise<void>,
+    interval = ms('3s'), 
+    maxAttempts = 2,
+    isFetching?: boolean,
+    lastFetch?: Date,
+    lastFetchFailed?: Date,
+    fetchError?: Error
+  ) {
+    this.fn = fn;
+    this.interval = interval;
+    this.maxAttempts = maxAttempts;
+    this.isFetching = isFetching;
+    this.lastFetch = lastFetch;
+    this.lastFetchFailed = lastFetchFailed;
+    this.fetchError = fetchError;
+  }
+
+  prepare() {
+    this.isFetching = true;
+    this.lastFetch = undefined;
+    this.lastFetchFailed = undefined;
+    this.fetchError = undefined;
+    return this;
+  }
+  
+  async dispatch() {
+    if (this.isFetching || this.lastFetch || this.lastFetchFailed) {
+      if (this.lastFetchFailed && this.attemptCount >= this.maxAttempts) {
+        throw new Error('Max attempts reached');
+      } else
+      if (this.fetchError) {
+        throw this.fetchError;
+      }
+      return;
+    }
+    this.attemptCount++;
+    this.prepare();
+    try {
+      await this.fn?.();
+      this.lastFetch = new Date();
+    } catch (e) {
+      this.fetchError = e;
+      this.lastFetchFailed = new Date();
+    } finally {
+      this.isFetching = false;
+    }
+    if (this.lastFetchFailed && this.attemptCount < this.maxAttempts) {
+      await new Promise<void>((resolve) => setTimeout(resolve, this.interval));
+      await this.dispatch();
+    } 
+  }
+
+  get clone() {
+    return new FetchJob(this.fn, this.interval, this.maxAttempts, this.isFetching, this.lastFetch, this.lastFetchFailed, this.fetchError);
+  }
+  
+  success() {
+    this.fetchError = undefined;
+    this.isFetching = false;
+    this.lastFetch = new Date();
+    this.lastFetchFailed = undefined;
+    return this;
+  }
+
+  fail(e?: Error) {
+    this.fetchError = e;
+    this.isFetching = false;
+    this.lastFetch = undefined;
+    this.lastFetchFailed = new Date();
+    return this;
+  }
+
+}
+
+export class SyncState extends FetchJob {
+  
   hasLoadedLocalState?: boolean;
-  channels?: FetchState;
-  notifications?: FetchState;  
-  profile?: FetchState;
-  bookmarks?: FetchState;
-};
+  
+  channels = new FetchJob();
+  notifications = new FetchJob();  
+  profile = new FetchJob();
+  bookmarks = new FetchJob();
+  
+  get clone() {
+    return new SyncState(this);
+  }
+  
+  constructor(state?: SyncState) {
+    super();
+    this.hasLoadedLocalState = state?.hasLoadedLocalState;
+    this.isFetching = state?.isFetching;
+    this.lastFetch = state?.lastFetch;
+    this.lastFetchFailed = state?.lastFetchFailed;
+    this.fetchError = state?.fetchError;
+    this.channels = state?.channels.clone ?? new FetchJob();
+    this.notifications = state?.notifications.clone ?? new FetchJob();
+    this.profile = state?.profile.clone ?? new FetchJob();
+    this.bookmarks = state?.bookmarks.clone ?? new FetchJob();
+  }
+
+}
 
 export type ViewableFeature = 
   'app-review' | 'bookmarks' | 'categories' | 'display-preferences' | 'notifications' | 'publishers';
 
-export type StorageContextType = Storage & SyncState & {
+export type StorageContextType = Storage & {
   
   ready?: boolean;
+  syncState: SyncState;
   
   loadedInitialUrl?: boolean;
   setLoadedInitialUrl: React.Dispatch<React.SetStateAction<boolean | undefined>>;
@@ -402,6 +529,7 @@ export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
   followPublisher: () => Promise.resolve(),
   getStoredValue: () => Promise.resolve(undefined),
   hasPushEnabled: () => false,
+  hasReadNotification: () => false,
   hasViewedFeature: () => false,
   isExcludingCategory: () => false,
   isExcludingPublisher: () => false,
@@ -410,6 +538,7 @@ export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
   lastRequestForReview: 0,
   notificationCount: 0,
   publisherIsFavorited: () => false,
+  readNotification: () => Promise.resolve(),
   readRecap: () => Promise.resolve(),
   readSummary: () => Promise.resolve(),
   removeSummary: () => Promise.resolve(),
@@ -420,6 +549,7 @@ export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
   setPublishers: () => Promise.resolve(),
   setStoredValue: () => Promise.resolve(),
   storeTranslations: () => Promise.resolve(undefined),
+  syncState: new SyncState(),
   syncWithRemote: () => Promise.resolve(),
   unreadBookmarkCount: 0,
   unreadNotificationCount: 0,

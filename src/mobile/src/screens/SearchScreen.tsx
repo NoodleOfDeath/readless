@@ -60,6 +60,7 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
             grouped
             headerComponent={ (
               <Button
+                system
                 alignStart
                 p={ 12 }>
                 {strings.history}
@@ -67,6 +68,7 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
             ) }>
             {filteredHistory?.map((q) => (
               <TableViewCell
+                system
                 key={ q }
                 title={ q }
                 onPress={ () => search({ prefilter: q }) } />
@@ -76,6 +78,7 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
             grouped
             headerComponent={ (
               <Button
+                system
                 alignStart
                 p={ 12 }
                 indicator={ !hasViewedFeature('publishers') }
@@ -94,6 +97,7 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
                   <View flexRow gap={ 12 }>
                     {filteredPublishers.length === 0 ? (<Text>{strings.noResults}</Text>) : filteredPublishers.map((pub) => (
                       <Button
+                        system
                         vertical
                         key={ pub.name }
                         leftIcon={ <ChannelIcon publisher={ pub } /> }
@@ -111,6 +115,7 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
             grouped
             headerComponent={ (
               <Button
+                system
                 alignStart
                 p={ 12 }
                 indicator={ !hasViewedFeature('categories') }
@@ -129,6 +134,7 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
                   <View flexRow gap={ 12 }>
                     {filteredCategories.length === 0 ? (<Text>{strings.noResults}</Text>) : filteredCategories.map((cat) => (
                       <Button
+                        system
                         vertical
                         key={ cat.name }
                         leftIcon={ <ChannelIcon category={ cat } /> }

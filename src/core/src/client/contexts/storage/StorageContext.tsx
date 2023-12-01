@@ -4,6 +4,7 @@ import { UserData } from './UserData';
 import {
   DEFAULT_STORAGE_CONTEXT,
   DatedEvent,
+  FetchJob,
   FunctionWithRequestParams,
   Methods,
   PushNotificationSettings,
@@ -49,7 +50,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
 
   // system state
   const [storage, setStorage] = React.useState<Storage>(DEFAULT_STORAGE_CONTEXT);
-  const [syncState, setSyncState] = React.useState<SyncState>({});
+  const [syncState, setSyncState] = React.useState<SyncState>(new SyncState());
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [errorHandler, setErrorHandler] = React.useState<((e?: any) => void)>();
   
@@ -137,14 +138,10 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       const error = e as AuthError;
       if (LOGOUT_ERROR_KEYS.includes(error.errorKey)) {
         resetStorage(true);
+        return;
       }
     }
-    setSyncState((prev) => ({ 
-      ...prev, 
-      hasSyncedWithRemote: true,
-      isFetchingProfile: false,
-      isSyncingWithRemote: false,
-    }));
+    setSyncState((prev) => prev.clone.fail());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorHandler]);
 
@@ -254,7 +251,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     });
   }, [setStoredValue]);
 
-  const loadChannels = React.useCallback(async () => {
+  const syncChannels = React.useCallback(async () => {
     console.log('Loading channels');
     if (!categories) {
       const response = await api.getCategories();
@@ -266,7 +263,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     }
   }, [categories, publishers, api]);
 
-  const loadNotifications = React.useCallback(async () => {
+  const syncNotifications = React.useCallback(async () => {
     console.log('Loading notifications');
     const { data, error } = await api.getSystemNotifications();
     if (error) {
@@ -275,12 +272,8 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     setNotifications(data.rows);
   }, [api]);
 
-  const loadBookmarks = React.useCallback(async (ids: number[]) => {
+  const syncBookmarks = React.useCallback(async (ids: number[]) => {
     console.log('Loading bookmarks');
-    setSyncState((prev) => ({ 
-      ...prev, 
-      isSyncingBookmarks: true,
-    }));
     let offset = 0;
     let summaries: PublicSummaryGroup[] = [];
     while (offset < ids.length) {
@@ -301,126 +294,29 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       Object.fromEntries(summaries.map((s) => [s.id, new DatedEvent(s)])), 
       false
     );
-    setSyncState((prev) => ({ 
-      ...prev, 
-      hasSyncedBookmarks: true,
-      isSyncingBookmarks: false,
-    }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api]);
-
-  const syncWithRemote = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
-    if (!syncState.hasLoadedLocalState) {
-      return;
-    }
+  
+  const syncPreferences = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
     let data: ProfileResponse | undefined = prefs;
-    if (!prefs) {
-      if (!storage.userData?.valid || storage.userData.unlinked) {
-        return;
-      }
-      // fetch channels
-      try {
-        setSyncState((prev) => ({ 
-          ...prev, 
-          channels: {
-            ...prev.channels,
-            isFetching: true,
-            lastFetchFailed: undefined,
-          },
-        }));
-        await loadChannels();
-        setSyncState((prev) => ({ 
-          ...prev, 
-          channels: {
-            ...prev.channels,
-            isFetching: false,
-            lastFetch: new Date(),
-            lastFetchFailed: undefined,
-          },
-        }));
-      } catch (e) {
-        setSyncState((prev) => ({ 
-          ...prev, 
-          channels: {
-            ...prev.channels,
-            isFetching: false,
-            lastFetch: undefined,
-            lastFetchFailed: new Date(),
-          },
-        }));
-        return handleBadRequest(e);
-      }
-      // fetch notifications
-      try {
-        setSyncState((prev) => ({ 
-          ...prev, 
-          notifications: {
-            ...prev.notifications,
-            isFetching: true,
-            lastFetchFailed: undefined,
-          },
-        }));
-        await loadNotifications();
-        setSyncState((prev) => ({ 
-          ...prev, 
-          notifications: {
-            ...prev.notifications,
-            isFetching: false,
-            lastFetch: new Date(),
-            lastFetchFailed: undefined,
-          },
-        }));
-      } catch (e) {
-        setSyncState((prev) => ({ 
-          ...prev, 
-          notifications: {
-            ...prev.notifications,
-            isFetching: false,
-            lastFetch: undefined,
-            lastFetchFailed: new Date(),
-          },
-        }));
-        return handleBadRequest(e);
+    if (!data?.profile?.preferences) {
+      if (!storage.userData?.valid || storage.userData?.unlinked) {
+        throw new Error('Bad Request');
       }
       // fetch profile
       try {
-        setSyncState((prev) => ({ 
-          ...prev, 
-          profile: {
-            ...prev.profile,
-            isFetching: true,
-            lastFetchFailed: undefined,
-          },
-        }));
         const response = await api.getProfile();
         data = response.data;
-        setSyncState((prev) => ({ 
-          ...prev, 
-          profile: {
-            isFetching: false,
-            lastFetch: new Date(),
-            lastFetchFailed: undefined,
-          },
-        }));
         if (response.error) {
           throw response.error;
         }
       } catch (e) {
         console.error(e);
-        setSyncState((prev) => ({ 
-          ...prev, 
-          profile: {
-            ...prev.profile,
-            isFetching: false,
-            lastFetch: undefined,
-            lastFetchFailed: new Date(),
-          },
-        }));
-        return handleBadRequest(e);
+        throw new Error(e);
       }
     }
     if (!data?.profile?.preferences) {
-      return handleBadRequest();
+      throw new Error('Bad Request');
     }
     const {
       profile: {
@@ -430,46 +326,51 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     const remoteUpdatedAt = updatedAt && !Number.isNaN(new Date(updatedAt)) ? new Date(updatedAt).valueOf() : 0;
     if (storage.lastRemoteSync && remoteUpdatedAt < storage.lastRemoteSync) {
       console.log('remote data is stale');
-      setSyncState((prev) => ({ 
-        ...prev, 
-        hasSyncedWithRemote: true,
-        isSyncingWithRemote: false,
-      }));
       return;
     }
     if (storage.lastLocalSync && remoteUpdatedAt < storage.lastLocalSync) {
       console.log('local data is stale and needs update');
       await forcePushLocalStateToRemote();
-      setSyncState((prev) => ({ 
-        ...prev, 
-        hasSyncedWithRemote: true,
-        isSyncingWithRemote: false,
-      }));
       return;
     }
     if (!preferences) {
-      return handleBadRequest();
+      throw new Error('Bad Request');
     }
     console.log('syncing prefs and stats');
     for (const key of SYNCABLE_SETTINGS) {
       const remoteValue = preferences[key];
-      if (opts?.loadBookmarks && key === 'bookmarkedSummaries') {
+      if (opts?.syncBookmarks && key === 'bookmarkedSummaries') {
         try {
-          loadBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v)));
+          setSyncState((prev) => {
+            const state = prev.clone;
+            state.bookmarks.prepare();
+            return state;
+          });
+          const job = new FetchJob(async () => syncBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v))));
+          job.dispatch()
+            .then(() => {
+              setSyncState((prev) => {
+                const state = prev.clone;
+                state.bookmarks.success();
+                return state;
+              });
+            })
+            .catch((e) => {
+              setSyncState((prev) => {
+                const state = prev.clone;
+                state.bookmarks.fail(e);
+                return state;
+              });
+            });
         } catch (e) {
           console.error(e);
           handleBadRequest(e);
         }
       } else {
-        try {
-          if (remoteValue) {
-            const trans = SyncableIoIn(key);
-            const value = trans(remoteValue);
-            await setStoredValue(key, value, false);
-          }
-        } catch (e) {
-          console.error(e);
-          return handleBadRequest(e);
+        if (remoteValue) {
+          const trans = SyncableIoIn(key);
+          const value = trans(remoteValue);
+          await setStoredValue(key, value, false);
         }
       }
     }
@@ -483,13 +384,81 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       return new UserData(state);
     }, false);
     await setStoredValue('lastRemoteSync', Date.now());
-    setSyncState((prev) => ({ 
-      ...prev, 
-      isFetching: false,
-      lastFetch: new Date(),
-    }));
+  }, [storage.lastRemoteSync, storage.lastLocalSync, storage.userData?.valid, storage.userData?.unlinked, setStoredValue, api, forcePushLocalStateToRemote, syncBookmarks, handleBadRequest]);
+
+  const syncWithRemote = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
+    if (!syncState.hasLoadedLocalState || syncState.isFetching || syncState.lastFetch || syncState.lastFetchFailed) {
+      return;
+    }
+    // fetch channels
+    try {
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.channels.prepare();
+        return state;
+      });
+      const job = new FetchJob(syncChannels);
+      await job.dispatch();
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.channels.success();
+        return state;
+      });
+    } catch (e) {
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.channels.fail();
+        return state;
+      });
+      return handleBadRequest(e);
+    } 
+    // fetch notifications
+    try {
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.notifications.prepare();
+        return state;
+      });
+      const job = new FetchJob(syncNotifications);
+      await job.dispatch();
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.notifications.success();
+        return state;
+      });
+    } catch (e) {
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.notifications.fail();
+        return state;
+      });
+      return handleBadRequest(e);
+    }
+    try {
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.profile.prepare();
+        return state;
+      });
+      const job = new FetchJob(async () => syncPreferences(prefs, opts));
+      await job.dispatch();
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.profile.success();
+        return state;
+      });
+    } catch (e) {
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.profile.fail();
+        return state;
+      });
+      return handleBadRequest(e);
+    }
+    console.log('state loaded');
+    setSyncState((prev) => prev.clone.success());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncState.hasLoadedLocalState, storage.userData?.valid, handleBadRequest, api, loadBookmarks]);
+  }, [syncState, handleBadRequest, api, syncChannels, syncNotifications, syncPreferences]);
   
   // Load preferences on mount
   const load = async () => {
@@ -550,13 +519,21 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     state.triggerWords = await getStoredValue('triggerWords');
     
     setStorage(state);
-    setSyncState((prev) => ({ ...prev, hasLoadedLocalState: true }));
+    setSyncState((prev) => {
+      const state = prev.clone;
+      state.hasLoadedLocalState = true;
+      return state;
+    });
   };
 
   React.useEffect(() => {
     if (!syncState.isFetching && !syncState.lastFetch && syncState.hasLoadedLocalState) {
-      syncWithRemote(undefined, { loadBookmarks: true });
-      setSyncState((prev) => ({ ...prev, isFetching: true }));
+      syncWithRemote(undefined, { syncBookmarks: true });
+      setSyncState((prev) => {
+        const state = prev.clone;
+        state.isFetching = true;
+        return state;
+      });
     }
   }, [syncState.hasLoadedLocalState, syncState.isFetching, syncState.lastFetch, syncWithRemote]);
   
@@ -826,7 +803,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     <StorageContext.Provider
       value={ {
         ...storage,
-        ...syncState,
         api,
         bookmarkCount,
         bookmarkSummary,
@@ -869,6 +845,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         setPublishers,
         setStoredValue,
         storeTranslations,
+        syncState,
         syncWithRemote,
         unreadBookmarkCount,
         unreadNotificationCount,
