@@ -4,8 +4,6 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { 
   Button,
-  Icon,
-  Popover,
   Screen,
   SummaryList,
   Text,
@@ -33,39 +31,26 @@ export function BookmarksScreen() {
     <Screen>
       <View gap={ 12 } flex={ 1 }>
         {bookmarkCount === 0 ? (
-          <Text>{strings.youHaveNoBookmarks}</Text>
+          <Text textCenter p={ 12 }>{strings.youHaveNoBookmarks}</Text>
         ) : (
           <SummaryList
             headerComponent={ (
               <View flex={ 1 } m={ 16 } gap={ 6 }>
-                <View row gap={ 6 }>
-                  <Text>
-                    {strings.bookmarks}
-                  </Text>
-                  <Popover
-                    anchor={
-                      <Icon size={ 24 } name="information" />
-                    }>
-                    <Text>{strings.bookmarks}</Text>
-                  </Popover>
-                </View>
-                <View row>
-                  <Button
-                    contained
-                    beveled
-                    p={ 6 }
-                    onPress={ () => setStoredValue('bookmarkedSummaries', (prev) => {
-                      const state = { ...prev };
-                      for (const [id] of Object.entries(state)) {
-                        if (id in (readSummaries ?? {})) {
-                          delete state[Number(id)];
-                        }
+                <Button
+                  contained
+                  beveled
+                  p={ 6 }
+                  onPress={ () => setStoredValue('bookmarkedSummaries', (prev) => {
+                    const state = { ...prev };
+                    for (const [id] of Object.entries(state)) {
+                      if (id in (readSummaries ?? {})) {
+                        delete state[Number(id)];
                       }
-                      return state;
-                    }) }>
-                    {strings.removeReadBookmarks}
-                  </Button>
-                </View>
+                    }
+                    return state;
+                  }) }>
+                  {strings.removeReadBookmarks}
+                </Button>
               </View>
             ) }
             summaries={ bookmarks } />

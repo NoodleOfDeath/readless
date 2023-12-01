@@ -32,6 +32,7 @@ export type UserStats = {
     share: InteractionCount;
   }
   achievements: UserAchievementAttributes[];
+  reputation: number;
   updatedAt: Date;
 };
 

@@ -4,6 +4,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
+import { PublicAchievementAttributes } from './Achievement.types';
 import {
   UserAchievementAttributes,
   UserAchievementCreationAttributes,
@@ -40,5 +41,7 @@ export class UserAchievement<
 
   @Column({ type: DataType.DATE })
   declare achievedAt?: Date;
+
+  declare achievement: PublicAchievementAttributes;
 
 }

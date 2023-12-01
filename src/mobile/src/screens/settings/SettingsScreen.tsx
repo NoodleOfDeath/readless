@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Alert, Platform } from 'react-native';
 
 import { APP_STORE_LINK, PLAY_STORE_LINK } from '@env';
 
@@ -30,12 +30,40 @@ export function SettingsScreen({
   const { getUserAgent } = usePlatformTools();
 
   const {
+    api: { logout },
     followedPublishers,
     followedCategories,
     userData, 
     viewFeature,
     hasViewedFeature,
+    setStoredValue,
   } = React.useContext(StorageContext);
+
+  const signOut = React.useCallback(async () => {
+    await logout({});
+    await setStoredValue('userData', undefined, false);
+  }, [logout, setStoredValue]);
+
+  const handleSignOut = React.useCallback(() => {
+    if (userData?.unlinked) {
+      Alert.alert(
+        strings.accountIsNotLinkedToAnEmail, 
+        strings.ifYouSignOutYouWillNotBeAbleToRecover,
+        [
+          {
+            style: 'cancel',
+            text: strings.cancel,
+          },
+          {
+            onPress: () => signOut(), 
+            text: strings.yesSignOut,
+          },
+        ]
+      );
+    } else {
+      signOut();
+    }
+  }, [signOut, userData?.unlinked]);
 
   return (
     <Screen>
@@ -50,6 +78,10 @@ export function SettingsScreen({
               accessory="DisclosureIndicator"
               title={ strings.account }
               onPress={ () => navigation?.push('account') } />
+            <TableViewCell
+              cellIcon={ <Button leftIcon="logout" /> }
+              title={ strings.signOut }
+              onPress={ handleSignOut } />
           </TableViewSection>
           <TableViewSection
             grouped
