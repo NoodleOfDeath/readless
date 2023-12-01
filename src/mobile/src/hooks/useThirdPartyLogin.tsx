@@ -74,8 +74,8 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
         throw error;
       }
       const userData = new UserData(response);
-      await setStoredValue('userData', userData);
-      await syncWithRemote(userData);
+      await setStoredValue('userData', userData, false);
+      await syncWithRemote(userData, { syncBookmarks: true });
     } catch (e) {
       const error = e as Error;
       console.error(error);
@@ -100,8 +100,8 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
         throw error;
       }
       const userData = new UserData(response);
-      await setStoredValue('userData', userData);
-      await syncWithRemote(userData);
+      await setStoredValue('userData', userData, false);
+      await syncWithRemote(userData, { syncBookmarks: true });
       callback?.(undefined);
     } catch (e) {
       const error = e as Error;
@@ -121,8 +121,9 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
         throw error;
       }
       const userData = new UserData(response);
-      await setStoredValue('userData', userData);
-      await syncWithRemote(userData);
+      await setStoredValue('userData', userData, false);
+      console.log(userData);
+      await syncWithRemote(userData, { syncBookmarks: true });
       callback?.(undefined);
     } catch (error) {
       console.error(error);

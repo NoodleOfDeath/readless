@@ -162,6 +162,9 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
     return items;
   }, [categories, followedCategories, openCategory, categoryIsFavorited, favoriteCategory]);
 
+  const name = React.useMemo(() => userData?.profile?.email || userData?.profile?.username, [userData]);
+  const initials = React.useMemo(() => name?.slice(0, 2).toUpperCase() ?? '??', [name]);
+
   return (
     <React.Fragment>
       <DrawerContentScrollView { ...props }>
@@ -207,7 +210,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
           bg={ theme.colors.headerBackground }
           py={ 12 }>
           <DrawerItem
-            label={ userData?.profile?.username }
+            label={ name }
             icon={ (props) => (
               <Button
                 indicator={
@@ -217,7 +220,7 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
                 !hasViewedFeature('notifications') || 
                 !hasViewedFeature('app-review')
                 } 
-                leftIcon={ <Avatar.Text label={ userData?.profile?.username?.slice(0, 2).toUpperCase() ?? '??' } size={ 36 } /> }
+                leftIcon={ <Avatar.Text label={ initials } size={ 36 } /> }
                 { ...props } />
             ) }
             right={ () => (<Button leftIcon="cog" />) }
