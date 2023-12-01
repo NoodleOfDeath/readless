@@ -1,5 +1,4 @@
 import React from 'react';
-import { Alert } from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -34,9 +33,7 @@ export function AccountScreen({
   const [hasSynced, setHasSynced] = React.useState(false);
   
   const { 
-    api: { logout },
     userData, 
-    setStoredValue,
     syncWithRemote,
   } = React.useContext(StorageContext);
   const { showToast } = React.useContext(ToastContext);
@@ -59,32 +56,6 @@ export function AccountScreen({
       showToast(e);
     }
   }, [hasSynced, syncWithRemote, showToast]);
-
-  const signOut = React.useCallback(async () => {
-    await logout({});
-    await setStoredValue('userData', undefined, false);
-  }, [logout, setStoredValue]);
-
-  const handleSignOut = React.useCallback(() => {
-    if (userData?.unlinked) {
-      Alert.alert(
-        strings.accountIsNotLinkedToAnEmail, 
-        strings.ifYouSignOutYouWillNotBeAbleToRecover,
-        [
-          {
-            style: 'cancel',
-            text: strings.cancel,
-          },
-          {
-            onPress: () => signOut(), 
-            text: strings.yesSignOut,
-          },
-        ]
-      );
-    } else {
-      signOut();
-    }
-  }, [signOut, userData?.unlinked]);
 
   const handleRequestDeleteAccount = React.useCallback(async () => {
     try {
@@ -141,12 +112,6 @@ export function AccountScreen({
                 {i < Object.values(ThirdParty).length - 1 && <Divider key={ `divider-${i}` } />}
               </React.Fragment>
             ))}
-          </TableViewSection>
-          <TableViewSection grouped>
-            <TableViewCell
-              cellIcon={ <Button leftIcon="logout" /> }
-              title={ strings.signOut }
-              onPress={ handleSignOut } />
             {__DEV__ && (
               <TableViewCell
                 cellContentView={ <Text>{JSON.stringify(user, null, 2)}</Text> } />

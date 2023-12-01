@@ -122,7 +122,6 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
       }
       const userData = new UserData(response);
       await setStoredValue('userData', userData, false);
-      console.log(userData);
       await syncWithRemote(userData, { syncBookmarks: true });
       callback?.(undefined);
     } catch (error) {

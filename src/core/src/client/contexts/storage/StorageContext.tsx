@@ -252,7 +252,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   }, [setStoredValue]);
 
   const syncChannels = React.useCallback(async () => {
-    console.log('Loading channels');
+    console.log('syncing channels');
     if (!categories) {
       const response = await api.getCategories();
       setCategories(Object.fromEntries(response.data.rows.map((row) => [row.name, row])));
@@ -264,7 +264,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   }, [categories, publishers, api]);
 
   const syncNotifications = React.useCallback(async () => {
-    console.log('Loading notifications');
+    console.log('syncing notifications');
     const { data, error } = await api.getSystemNotifications();
     if (error) {
       throw error;
@@ -273,7 +273,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   }, [api]);
 
   const syncBookmarks = React.useCallback(async (ids: number[]) => {
-    console.log('Loading bookmarks');
+    console.log('syncing bookmarks');
     let offset = 0;
     let summaries: PublicSummaryGroup[] = [];
     while (offset < ids.length) {
@@ -297,22 +297,18 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api]);
   
-  const syncPreferences = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
+  const syncProfile = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
+    console.log('syncing profile');
     let data: ProfileResponse | undefined = prefs;
     if (!data?.profile?.preferences) {
       if (!storage.userData?.valid || storage.userData?.unlinked) {
         return;
       }
       // fetch profile
-      try {
-        const response = await api.getProfile();
-        data = response.data;
-        if (response.error) {
-          throw response.error;
-        }
-      } catch (e) {
-        console.error(e);
-        throw new Error(e);
+      const response = await api.getProfile();
+      data = response.data;
+      if (response.error) {
+        throw response.error;
       }
     }
     if (!data?.profile?.preferences) {
@@ -336,7 +332,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     if (!preferences) {
       throw new Error('Bad Request');
     }
-    console.log('syncing prefs and stats');
+    console.log('syncing prefs');
     for (const key of SYNCABLE_SETTINGS) {
       const remoteValue = preferences[key];
       if (opts?.syncBookmarks && key === 'bookmarkedSummaries') {
@@ -375,6 +371,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       }
     }
     // syncing stats
+    console.log('syncing stats');
     await setStoredValue('userData', (prev) => {
       const state = { ...prev };
       state.profile = {
@@ -386,7 +383,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   }, [storage.lastRemoteSync, storage.lastLocalSync, storage.userData?.valid, storage.userData?.unlinked, setStoredValue, api, forcePushLocalStateToRemote, syncBookmarks, handleBadRequest]);
 
   const syncWithRemote = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
-    if (!syncState.hasLoadedLocalState || syncState.isFetching || syncState.lastFetch || syncState.lastFetchFailed) {
+    if (!syncState.hasLoadedLocalState || syncState.isFetching || syncState.lastFetchFailed) {
       return;
     }
     // fetch channels
@@ -439,7 +436,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         state.profile.prepare();
         return state;
       });
-      const job = new FetchJob(async () => syncPreferences(prefs, opts));
+      const job = new FetchJob(async () => syncProfile(prefs, opts));
       await job.dispatch();
       setSyncState((prev) => {
         const state = prev.clone;
@@ -454,11 +451,11 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       });
       return handleBadRequest(e);
     }
-    console.log('remote state loaded');
+    console.log('remote state synced');
     await setStoredValue('lastRemoteSync', Date.now());
     setSyncState((prev) => prev.clone.success());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncState, handleBadRequest, api, syncChannels, syncNotifications, syncPreferences]);
+  }, [syncState, handleBadRequest, api, syncChannels, syncNotifications, syncProfile]);
   
   // Load preferences on mount
   const load = async () => {
