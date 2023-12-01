@@ -1,6 +1,6 @@
 import { ThirdParty } from './Alias.types';
 import { DurationString } from '../../../../utils';
-import { DatedAttributes } from '../types';
+import { DatedAttributes, UserAchievementAttributes } from '../types';
 
 export type UserEvent<T> = T & { 
   user?: string; 
@@ -31,6 +31,7 @@ export type UserStats = {
     read: InteractionCount;
     share: InteractionCount;
   }
+  achievements: UserAchievementAttributes[];
   updatedAt: Date;
 };
 
