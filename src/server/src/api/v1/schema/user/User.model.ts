@@ -267,7 +267,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     }
     const role = await UserRole.findOne({ where: { roleId: roleModel.id, userId: this.id } });
     if (role) {
-      return role;
+      return roleModel;
     }
     await UserRole.create({ roleId: roleModel.id, userId: this.id });
     return roleModel;
