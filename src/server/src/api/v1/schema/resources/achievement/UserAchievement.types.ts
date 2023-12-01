@@ -1,11 +1,11 @@
-import { AchievementAttributes, DatedAttributes } from '../../types';
+import { DatedAttributes, PublicAchievementAttributes } from '../../types';
 
 export type UserAchievementAttributes = DatedAttributes & {
   userId: number;
   achievementId: number;
   progress: number;
   achievedAt?: Date;
-  achievement?: AchievementAttributes;
+  achievement?: PublicAchievementAttributes;
 };
 
 export type UserAchievementCreationAttributes = Partial<DatedAttributes> & {

@@ -450,13 +450,16 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   // achievements
   public async getAchievements() {
     return await UserAchievement.findAll({
-      include: [Achievement],
+      include: [Achievement.scope('public')],
       where: { userId: this.id },
     });
   }
 
   public async hasAchievement(achievement: Achievement) {
-    return await UserAchievement.findOne({ where: { achievementId: achievement.id, userId: this.id } });
+    return await UserAchievement.findOne({ 
+      include: [Achievement.scope('public')],
+      where: { achievementId: achievement.id, userId: this.id },
+    });
   }
 
   public async grantAchievement(achievement: Achievement, { progress = 100, achievedAt = progress === 100 ? new Date() : null }: Partial<UserAchievementCreationAttributes> = {}) {
