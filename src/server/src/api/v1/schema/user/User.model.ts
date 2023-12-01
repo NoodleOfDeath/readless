@@ -401,6 +401,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       lastSeen,
       longestStreak,
       memberSince: this.createdAt,
+      reputation: achievements.reduce((acc, a) => acc + a.achievement.points ?? 0, 0),
       streak,
       updatedAt: !Number.isNaN(updatedAt.valueOf()) ? updatedAt : new Date(),
     };
