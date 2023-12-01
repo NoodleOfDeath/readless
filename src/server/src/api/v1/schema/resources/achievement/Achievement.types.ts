@@ -28,3 +28,14 @@ export type AchievementCreationAttributes = Partial<DatedAttributes> & {
   displayName?: string;
   points?: number;
 };
+
+export const PUBLIC_ACHIEVEMENT_ATTRIBUTES = [
+  'name',
+  'description',
+  'displayName',
+  'points',
+] as const;
+
+export type PublicAchievementAttributes = Pick<
+  AchievementAttributes,
+  typeof PUBLIC_ACHIEVEMENT_ATTRIBUTES[number]>;

@@ -301,7 +301,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     let data: ProfileResponse | undefined = prefs;
     if (!data?.profile?.preferences) {
       if (!storage.userData?.valid || storage.userData?.unlinked) {
-        throw new Error('Bad Request');
+        return;
       }
       // fetch profile
       try {
@@ -383,7 +383,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       };
       return new UserData(state);
     }, false);
-    await setStoredValue('lastRemoteSync', Date.now());
   }, [storage.lastRemoteSync, storage.lastLocalSync, storage.userData?.valid, storage.userData?.unlinked, setStoredValue, api, forcePushLocalStateToRemote, syncBookmarks, handleBadRequest]);
 
   const syncWithRemote = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
@@ -455,7 +454,8 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       });
       return handleBadRequest(e);
     }
-    console.log('state loaded');
+    console.log('remote state loaded');
+    await setStoredValue('lastRemoteSync', Date.now());
     setSyncState((prev) => prev.clone.success());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncState, handleBadRequest, api, syncChannels, syncNotifications, syncPreferences]);

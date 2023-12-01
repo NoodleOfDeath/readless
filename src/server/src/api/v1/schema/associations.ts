@@ -38,6 +38,7 @@ import {
   Worker,
 } from './models';
 import { 
+  PUBLIC_ACHIEVEMENT_ATTRIBUTES,
   PUBLIC_CATEGORY_ATTRIBUTES,
   PUBLIC_CATEGORY_TRANSLATION_ATTRIBUTES,
   PUBLIC_PUBLISHER_ATTRIBUTES,
@@ -557,6 +558,8 @@ export function makeAssociations() {
 }
 
 export function addScopes() {
+  
+  Achievement.addScope('public', { attributes: [...PUBLIC_ACHIEVEMENT_ATTRIBUTES] });
   
   SystemNotification.addScope('public', { attributes: [...PUBLIC_SYSTEM_NOTIFICATION_ATTRIBUTES] });
 
