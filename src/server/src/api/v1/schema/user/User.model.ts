@@ -265,6 +265,10 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (!roleModel) {
       throw new AuthError('BAD_REQUEST');
     }
+    const role = await UserRole.findOne({ where: { roleId: roleModel.id, userId: this.id } });
+    if (role) {
+      return role;
+    }
     await UserRole.create({ roleId: roleModel.id, userId: this.id });
     return roleModel;
   }
