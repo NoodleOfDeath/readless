@@ -5,7 +5,7 @@ export type UserAchievementAttributes = DatedAttributes & {
   achievementId: number;
   progress: number;
   achievedAt?: Date;
-  achievement?: PublicAchievementAttributes;
+  achievement: PublicAchievementAttributes;
 };
 
 export type UserAchievementCreationAttributes = Partial<DatedAttributes> & {
