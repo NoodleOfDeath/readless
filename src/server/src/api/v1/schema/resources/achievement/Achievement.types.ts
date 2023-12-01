@@ -35,6 +35,7 @@ export const PUBLIC_ACHIEVEMENT_ATTRIBUTES = [
   'description',
   'displayName',
   'points',
+  'createdAt',
 ] as const;
 
 export type PublicAchievementAttributes = Pick<
