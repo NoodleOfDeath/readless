@@ -269,7 +269,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (userRole) {
       return roleModel;
     }
-    await UserRole.create({ roleId: roleModel.id, userId: this.id });
+    await UserRole.upsert({ roleId: roleModel.id, userId: this.id });
     return roleModel;
   }
 
