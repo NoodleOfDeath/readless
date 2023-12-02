@@ -11,6 +11,8 @@ import { RightToggles } from '../header';
 
 import { strings } from '~/locales';
 import {
+  AchievementScreen,
+  AchievementsScreen,
   CategoryScreen,
   LeaderboardsScreen,
   NotificationScreen,
@@ -40,6 +42,26 @@ export const BASE_STACK: RouteConfig<
       headerLeft: () => null,
       headerRight: () => null,
       headerTitle: strings.search,
+    },
+  },
+  {
+    component: AchievementScreen, 
+    name: 'achievement',
+    options: { 
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: '', 
+    },
+  },
+  {
+    component: AchievementsScreen,
+    name: 'achievements',
+    options: { 
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null,
+      headerTitle: strings.achievements, 
     },
   },
   {

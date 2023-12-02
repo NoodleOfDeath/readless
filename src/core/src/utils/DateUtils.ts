@@ -90,7 +90,7 @@ export function filterDates(dates: (Date | string | null | undefined)[], filterO
   });
 }
 
-export const DateSorter = (a?: Date | string, b?: Date | string) => { 
+export const DateSorter = (a?: Date | string | null, b?: Date | string | null) => { 
   const lhs = typeof a === 'string' ? parseDate(a) : a;
   const rhs = typeof b === 'string' ? parseDate(b) : b;
   return lhs && rhs ? lhs.valueOf() - rhs.valueOf() : 0;
@@ -139,4 +139,30 @@ export function formatTimestamp(
     return formatDistance(date, new Date(relativeTo), { addSuffix: true, locale });
   }
   return date.toLocaleDateString();
+}
+
+export type TimeAgoOptions = {
+  from?: Date | number;
+  defaultValue?: string;
+};
+
+export function timeAgo(date: Date, { from = Date.now(), defaultValue = 'just now' }: TimeAgoOptions = {}) {
+  const diff = (typeof from === 'number' ? from : from.valueOf()) - date.valueOf();
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor(diff / 3600000);
+  const minutes = Math.floor(diff / 60000);
+  const seconds = Math.floor(diff / 1000);
+  if (days > 0) {
+    return `${days}d`;
+  }
+  if (hours > 0) {
+    return `${hours}h`;
+  }
+  if (minutes > 0) {
+    return `${minutes}m`;
+  }
+  if (seconds > 0) {
+    return `${seconds}s`;
+  }
+  return defaultValue;
 }
