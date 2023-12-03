@@ -27,6 +27,7 @@ export type UserStats = {
   lastSeen?: Date;
   streak?: Streak;
   longestStreak?: Streak;
+  daysActive: InteractionCount;
   interactionCounts?: {
     read: InteractionCount;
     share: InteractionCount;
