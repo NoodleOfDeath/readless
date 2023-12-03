@@ -83,10 +83,10 @@ export function SummaryList({
   const { isTablet, screenWidth } = React.useContext(LayoutContext);
   const { queueStream } = React.useContext(MediaContext);
   const { 
+    api: { interactWithSummary },
     preferredReadingFormat,
     removedSummaries,
     excludeFilter,
-    api: { interactWithSummary },
   } = React.useContext(StorageContext);
   
   // search state

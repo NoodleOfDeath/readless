@@ -237,6 +237,19 @@ router.get(
   }
 );
 
+router.get(
+  '/stats',
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await AccountController.getUserStats(req);
+      return res.status(200).json(response);
+    } catch (e) {
+      return internalErrorHandler(res, e);
+    }
+  }
+);
+
 router.patch(
   '/metadata',
   body('key').isString(),

@@ -48,11 +48,13 @@ export function YourNewsTab({
       filter={ filter }
       headerComponent={ (
         <MetricCounter
+          reputation
           streak
           disclosureIndicator
           m={ 12 }
           mt={ 0 }
-          onPress={ () => navigation?.getParent()?.navigate('leaderboards') } />
+          onReputationPress={ () => navigation?.navigate('achievements') }
+          onStreakPress={ () => navigation?.navigate('leaderboards', {}) } />
       ) } />
   );
 }
@@ -71,11 +73,13 @@ export function TopStoriesTab({
       interval='1d'
       headerComponent={ !followFilter ? (
         <MetricCounter 
+          reputation
           streak
           disclosureIndicator
           m={ 12 }
           mt={ 0 }
-          onPress={ () => navigation?.getParent()?.navigate('leaderboards') } />
+          onReputationPress={ () => navigation?.navigate('achievements') }
+          onStreakPress={ () => navigation?.navigate('leaderboards', {}) } />
       ) : undefined } />
   );
 }

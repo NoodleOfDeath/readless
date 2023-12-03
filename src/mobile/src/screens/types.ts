@@ -12,6 +12,7 @@ import {
   ReadingFormat,
   RecapAttributes,
   SystemNotificationAttributes,
+  UserAchievementAttributes,
 } from '~/api';
 
 export type NavigationID = `${string}DrawerNav` | `${string}StackNav` | `${string}TabNav`;
@@ -40,7 +41,7 @@ export type SettingsRoutingParams = {
   triggerWordPicker: undefined;
 };
 
-export type NewsRoutingParams = SettingsRoutingParams & {
+export type NewsRoutingParams = {
   // main
   home: undefined;
   // top-tabs
@@ -88,12 +89,14 @@ export type GamesRoutingParams = {
   }
 };
 
-export type ProfileRoutingParams = SettingsRoutingParams & {
+export type ProfileRoutingParams = {
   account: undefined;
+  achievements: undefined;
+  achievement: UserAchievementAttributes;
   leaderboards: { metrics?: MetricsResponse, interactionType?: InteractionType };
 };
 
-export type RoutingParams = GamesRoutingParams & LoginRoutingParams & NewsRoutingParams & ProfileRoutingParams;
+export type RoutingParams = GamesRoutingParams & LoginRoutingParams & NewsRoutingParams & ProfileRoutingParams & SettingsRoutingParams;
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RoutingParams> = {
   config: {

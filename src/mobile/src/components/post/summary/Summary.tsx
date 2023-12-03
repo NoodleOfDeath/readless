@@ -2,7 +2,7 @@ import React from 'react';
 import {  Platform, useWindowDimensions } from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
-import { format as formatDate, formatDistance } from 'date-fns';
+import { format as formatDate } from 'date-fns';
 import ms from 'ms';
 import pluralize from 'pluralize';
 import { SheetManager } from 'react-native-actions-sheet';
@@ -45,7 +45,11 @@ import {
   getLocale,
   strings,
 } from '~/locales';
-import { fixedSentiment, usePlatformTools } from '~/utils';
+import {
+  fixedSentiment,
+  timeAgo,
+  usePlatformTools,
+} from '~/utils';
 
 type SummaryProps = ChildlessViewProps & ScrollViewProps & {
   sample?: boolean;
@@ -245,7 +249,7 @@ export function Summary({
     if (dateFormat) {
       return formatDate(date, dateFormat, { locale: getFnsLocale() });
     }
-    return formatDistance(date, lastTick, { addSuffix: true, locale: getFnsLocale() });
+    return timeAgo(date, { defaultValue: strings.justNow, from: lastTick });
   }, [lastTick, dateFormat]);
   
   const content = React.useMemo(() => {

@@ -7,6 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useInAppBrowser } from './useInAppBrowser';
 
 import { 
+  InteractionType,
   PublicCategoryAttributes, 
   PublicPublisherAttributes,
   ReadingFormat,
@@ -27,6 +28,7 @@ export function useNavigation() {
   const { openURL } = useInAppBrowser();
   
   const { 
+    api: { interactWithSummary },
     preferredReadingFormat, 
     setStoredValue,
   } = React.useContext(StorageContext);
@@ -51,11 +53,12 @@ export function useNavigation() {
   }, [navigate, setStoredValue]);
   
   const openSummary = React.useCallback((props: RoutingParams['summary'], stackNav?: Navigation) => {
+    interactWithSummary(props.summary, InteractionType.Read, { metadata: { format: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Bullets } });
     navigate('summary', {
       ...props,
       initialFormat: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Bullets,
     }, stackNav);
-  }, [navigate, preferredReadingFormat]);
+  }, [navigate, preferredReadingFormat, interactWithSummary]);
 
   const openPublisher = React.useCallback((publisher: PublicPublisherAttributes, stackNav?: Navigation) => {
     navigate('publisher', { publisher }, stackNav);

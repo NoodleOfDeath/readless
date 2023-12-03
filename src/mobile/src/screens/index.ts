@@ -6,6 +6,7 @@ export * from './games';
 export * from './profile';
 export * from './login';
 
+export * from './achievements';
 export * from './BookmarksScreen';
 export * from './CategoryScreen';
 export * from './PublisherScreen';

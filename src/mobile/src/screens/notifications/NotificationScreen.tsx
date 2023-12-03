@@ -22,11 +22,11 @@ export function NotificationScreen({ route }: ScreenComponent<'notification'>) {
           flexRow
           justifyBetween
           itemsCenter>
-          <Text h6>{notification?.title}</Text>
-          <Text>{formatDate(new Date(notification?.createdAt ?? ''), '(E) h:mm a - P', { locale: getFnsLocale() })}</Text>
+          <Text h6 system>{notification?.title}</Text>
+          <Text system>{formatDate(new Date(notification?.createdAt ?? ''), '(E) h:mm a - P', { locale: getFnsLocale() })}</Text>
         </View>
         <Divider />
-        <Markdown>{notification?.text}</Markdown> 
+        <Markdown system>{notification?.text}</Markdown> 
       </View>
     </Screen>
   );

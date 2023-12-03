@@ -116,6 +116,7 @@ export type Storage = {
   // summary state
   readSummaries?: { [key: number]: DatedEvent<boolean> };
   bookmarkedSummaries?: { [key: number]: DatedEvent<PublicSummaryGroup> };
+  saveBookmarksOffline?: boolean;
   removedSummaries?: { [key: number]: boolean };
   locale?: SupportedLocale;
   summaryTranslations?: { [key: number]: { [key in keyof PublicSummaryGroup]?: string } };

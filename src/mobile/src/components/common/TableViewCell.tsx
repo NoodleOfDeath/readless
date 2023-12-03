@@ -89,8 +89,8 @@ export type TableViewCellProps = ChildlessViewProps & TextProps & {
 export function TableViewCell({
   detail,
   leftDetail,
-  rightDetail = !leftDetail && Boolean(detail),
   subtitle,
+  rightDetail = !subtitle && !leftDetail && Boolean(detail),
   cellStyle = leftDetail ? 'LeftDetail' : rightDetail ? 'RightDetail' : subtitle ? 'Subtitle' : 'Basic',
   ...rest
 }: TableViewCellProps) {

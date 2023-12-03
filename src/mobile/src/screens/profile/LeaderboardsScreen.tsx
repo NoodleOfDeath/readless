@@ -3,6 +3,7 @@ import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 import pluralize from 'pluralize';
+import { Avatar } from 'react-native-paper';
 
 import { ScreenComponent } from '../types';
 
@@ -11,7 +12,6 @@ import {
   ActivityIndicator,
   Button,
   ChildlessViewProps,
-  Divider,
   Icon,
   Popover,
   SYSTEM_FONT,
@@ -34,18 +34,24 @@ import { strings } from '~/locales';
 
 export type MetricCounterProps = ChildlessViewProps & {
   disclosureIndicator?: boolean;
+  reputation?: boolean;
   streak?: boolean;
   longestStreak?: boolean;
   interactionType?: InteractionType;
-  horizontal?: boolean;
+  vertical?: boolean;
+  onReputationPress?: () => void;
+  onStreakPress?: () => void;
 };
 
 export function MetricCounter({
   disclosureIndicator,
   longestStreak: showLongestStreak, 
+  reputation: showReputation,
   streak: showStreak = showLongestStreak,
   interactionType,
-  horizontal,
+  vertical,
+  onReputationPress,
+  onStreakPress,
   ...props 
 }: MetricCounterProps) {
   const theme = useTheme();
@@ -73,22 +79,51 @@ export function MetricCounter({
       beveled
       p={ 12 }
       bg={ theme.colors.headerBackground }
-      flexRow={ horizontal }
-      justifySpaceEvenly={ horizontal }
+      flexRow={ !vertical }
+      flexWrap='wrap'
+      justifySpaceEvenly={ !vertical }
       { ...props }>
+      {showReputation && (
+        <Button
+          body2
+          contained
+          gap={ 12 }
+          leftIcon={ (
+            <Avatar.Icon
+              accessible
+              accessibilityLabel={ strings.reputation }
+              icon="trophy"
+              size={ 24 } />
+          ) }
+          onPress={ onReputationPress }
+          rightIcon={ disclosureIndicator ? 'chevron-right' : undefined }>
+          {`${userData?.profile?.stats?.reputation ?? 0}`}
+        </Button>
+      )}
       <Button
         body2
-        gap={ 6 }
-        leftIcon={ 'flash' }
-        rightIcon={ disclosureIndicator ? 'chevron-right' : undefined }>
+        contained
+        gap={ 12 }
+        leftIcon={ (
+          <Avatar.Icon
+            accessible
+            accessibilityLabel={ strings.streak }
+            icon="flash"
+            size={ 24 } />
+        ) }
+        rightIcon={ disclosureIndicator ? 'chevron-right' : undefined }
+        onPress={ onStreakPress }>
         { count }
       </Button>
       {showLongestStreak && (
-        <React.Fragment>
-          <Divider my={ horizontal ? 0 : 6 } vertical={ horizontal } />
-          <Text body2>{strings.yourLongestStreak}</Text>
+        <Button
+          body2
+          contained
+          gap={ 12 }
+          itemsCenter>
+          <Text body2>{strings.allTime}</Text>
           <Text body2>{ `${longestStreak?.length ?? 1} ${pluralize(strings.day, longestStreak?.length ?? 1)}`}</Text> 
-        </React.Fragment>
+        </Button>
       )}
     </View>
   );
@@ -115,7 +150,7 @@ export function LongestStreakLeaderboardScreen({ route }: ScreenComponent<'leade
           <Text>{strings.yourRank}</Text>
           <Text h3>{`${strings.rank} #${(metrics?.userRankings?.streaks ?? Number.MAX_SAFE_INTEGER) > 100 ? '100+' : (metrics?.userRankings?.streaks ?? '???')}`}</Text>
         </View>
-        <MetricCounter horizontal longestStreak />
+        <MetricCounter longestStreak />
         <View flexRow gap={ 6 } justifyCenter>
           <Text textCenter>
             {strings.thanksForBeingAnActiveReader}
@@ -194,7 +229,7 @@ export function InteractionCountLeaderboardScreen({ route }: ScreenComponent<'le
           <Text>{strings.yourRank}</Text>
           <Text h3>{`${strings.rank} #${(metrics.userRankings?.interactionCounts[interactionType] ?? Number.MAX_SAFE_INTEGER) > 100 ? '100+' : (metrics.userRankings?.interactionCounts[interactionType] ?? '???')}`}</Text>
         </View>
-        <MetricCounter horizontal interactionType={ interactionType } />
+        <MetricCounter vertical interactionType={ interactionType } />
         <View flexRow gap={ 6 } justifyCenter>
           <Text textCenter>
             {strings.thanksForBeingAnActiveReader}
@@ -294,10 +329,12 @@ export function LeaderboardsScreen({ route: _route }: ScreenComponent<'leaderboa
             name={ strings.mostReadsInThsPastWeek }
             component={ InteractionCountLeaderboardScreen }
             initialParams={ { interactionType: InteractionType.Read, metrics } } />
-          {/* <Tab.Screen
-            name={ strings.mostSharesInThsPastWeek }
-            component={ InteractionCountLeaderboardScreen }
-            initialParams={ { interactionType: InteractionType.Share, metrics } } /> */}
+          {__DEV__ && (
+            <Tab.Screen
+              name={ strings.mostSharesInThsPastWeek }
+              component={ InteractionCountLeaderboardScreen }
+              initialParams={ { interactionType: InteractionType.Share, metrics } } />
+          )}
         </Tab.Navigator>
       ) : <ActivityIndicator animating />}
     </Screen>

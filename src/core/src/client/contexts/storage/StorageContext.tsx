@@ -54,7 +54,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [errorHandler, setErrorHandler] = React.useState<((e?: any) => void)>();
   
-  const ready = React.useMemo(() => Boolean(syncState.hasLoadedLocalState && syncState.lastFetch), [syncState.hasLoadedLocalState, syncState.lastFetch]);
+  const ready = React.useMemo(() => Boolean(syncState.hasLoadedLocalState && (syncState.lastFetch || !storage.userData)), [storage.userData, syncState.hasLoadedLocalState, syncState.lastFetch]);
   
   const [loadedInitialUrl, setLoadedInitialUrl] = React.useState<boolean>();
 
@@ -477,6 +477,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     state.readNotifications = await getStoredValue('readNotifications');
     
     // summary state
+    state.saveBookmarksOffline = await getStoredValue('saveBookmarksOffline');
     state.bookmarkedSummaries = await getStoredValue('bookmarkedSummaries');
     state.readSummaries = await getStoredValue('readSummaries');
     state.removedSummaries = await getStoredValue('removedSummaries');
