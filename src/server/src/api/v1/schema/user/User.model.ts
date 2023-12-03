@@ -309,6 +309,26 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return response;
   }
 
+  public static async getDaysActive({
+    limit = 100,
+    userId = null,
+  }: CalculateStreakOptions = {}): Promise<InteractionCount[]> {
+    const replacements = {
+      limit: limit === 'ALL' ? 100 : limit,
+      userId, 
+    };
+    const response: InteractionCount[] = (await User.store.query(QueryFactory.getQuery('days_active'), {
+      nest: true,
+      replacements,
+      type: QueryTypes.SELECT,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }) as InteractionCount[]).map((e) => ({ 
+      rank: e.userId === userId ? 0 : Number.MAX_SAFE_INTEGER,
+      ...e,
+    }));
+    return response;
+  }
+
   public static async getInteractionCounts(type: InteractionType, req?: MetricsRequest, user?: User): Promise<InteractionCount[]> {
     const replacements = {
       interval: null,
@@ -398,9 +418,10 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     const updatedAt = new Date(Math.max(...[longestStreak?.updatedAt, streak?.updatedAt].filter(Boolean).map((d) => d.valueOf())));
     return {
       achievements,
+      daysActive: (await User.getDaysActive()).find((s) => s.userId === this.id) ?? { count: 1 },
       interactionCounts: {
-        read: (await User.getInteractionCounts('read', undefined, this)).find((s) => s.userId === this.id),
-        share: (await User.getInteractionCounts('share', undefined, this)).find((s) => s.userId === this.id),
+        read: (await User.getInteractionCounts('read', undefined, this)).find((s) => s.userId === this.id) ?? { count: 0 },
+        share: (await User.getInteractionCounts('share', undefined, this)).find((s) => s.userId === this.id) ?? { count: 0 },
       },
       lastSeen,
       longestStreak,
