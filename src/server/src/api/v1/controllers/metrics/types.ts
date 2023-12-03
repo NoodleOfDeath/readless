@@ -6,6 +6,7 @@ import {
 
 export type Metrics = {
   streaks: Streak[];
+  daysActive: InteractionCount[];
   interactionCounts: Record<InteractionType, InteractionCount[]>;
 };
 
@@ -19,6 +20,7 @@ export type MetricsRequest = {
 export type MetricsResponse = Metrics & {
   userRankings?: {
     streaks: number;
+    daysActive: number;
     interactionCounts: Record<InteractionType, number>;
   };
 };
