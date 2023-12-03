@@ -353,6 +353,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     const readCounts = await User.getInteractionCounts('read', req);
     const shareCounts = await User.getInteractionCounts('share', req);
     return {
+      daysActive: await User.getDaysActive(),
       interactionCounts: {
         ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, []])) as { [key in InteractionType]: [] },
         read: readCounts,
@@ -360,6 +361,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       },
       streaks,
       userRankings: { 
+        daysActive: (await User.getDaysActive()).find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
         interactionCounts: {
           ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, 0])) as { [key in InteractionType]: number },
           read: readCounts.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
