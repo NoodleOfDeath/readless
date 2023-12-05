@@ -19,20 +19,22 @@ export function DrawerSection({
   const theme = useTheme();
   const style = useStyles(props);
   return (
-    <View gap={ 12 } style={ style }>
+    <View 
+      gap={ 12 }
+      mb={ 12 }
+      style={ style }>
       {title && (
         <Button
           system
-          subtitle1
-          justifyEvenly
+          justifyBetween
+          contained
           color={ theme.colors.textSecondary }
-          p={ 12 }
           mx={ 12 }
           { ...props }>
           {title}
         </Button>
       )}
-      { children }
+      {children}
     </View>
   );
 }

@@ -87,7 +87,7 @@ export function TablePicker<
                   value={ filter }
                   onChangeText={ setFilter }
                   clearButtonMode="while-editing" />
-                <ScrollView maxHeight={ (layout?.height ?? screenHeight) / 3 }>
+                <ScrollView mx={ 12 } maxHeight={ (layout?.height ?? screenHeight) / 3 }>
                   <View flexRow p={ 6 } flexWrap='wrap' gap={ 6 }>
                     {value.sort().map((value) => {
                       const option = options.find((option) => option.value === value);

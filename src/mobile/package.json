@@ -38,7 +38,7 @@
     "@react-navigation/material-top-tabs": "^6.6.5",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
-    "@shopify/flash-list": "^1.6.2",
+    "@shopify/flash-list": "^1.6.3",
     "date-fns": "^2.29.3",
     "expo": "^49.0.4",
     "expo-blur": "^12.4.1",

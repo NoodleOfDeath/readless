@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { useFocusEffect } from '@react-navigation/native';
-
 import { ScreenComponent } from '../types';
 
 import { ThirdParty } from '~/api';
@@ -16,11 +14,7 @@ import {
   TableViewSection,
   Text,
 } from '~/components';
-import {
-  StorageContext,
-  ToastContext,
-  UserData,
-} from '~/contexts';
+import { StorageContext, ToastContext } from '~/contexts';
 import { useThirdPartyLogin } from '~/hooks';
 import { strings } from '~/locales';
 
@@ -29,13 +23,7 @@ export function AccountScreen({
   navigation: _navigation, 
 }: ScreenComponent<'account'>) {
 
-  const [user, setUser] = React.useState<UserData>();
-  const [hasSynced, setHasSynced] = React.useState(false);
-  
-  const { 
-    userData, 
-    syncWithRemote,
-  } = React.useContext(StorageContext);
+  const { userData } = React.useContext(StorageContext);
   const { showToast } = React.useContext(ToastContext);
   
   const {
@@ -43,19 +31,6 @@ export function AccountScreen({
     unlinkThirdPartyAccount,
     requestDeleteAccount,
   } = useThirdPartyLogin(showToast);
-
-  const onMount = React.useCallback(async () => {
-    try {
-      if (hasSynced) {
-        return;
-      }
-      setHasSynced(true);
-      await syncWithRemote();
-    } catch (e) {
-      console.error(e);
-      showToast(e);
-    }
-  }, [hasSynced, syncWithRemote, showToast]);
 
   const handleRequestDeleteAccount = React.useCallback(async () => {
     try {
@@ -65,11 +40,6 @@ export function AccountScreen({
       console.error(e);
     }
   }, [requestDeleteAccount, showToast]);
-
-  useFocusEffect(React.useCallback(() => {
-    setUser(userData);
-    onMount();
-  }, [userData, onMount]));
   
   return (
     <Screen>
@@ -78,17 +48,17 @@ export function AccountScreen({
           <TableViewSection
             grouped 
             header={ strings.personalInformation }>
-            {user?.profile?.email && (
+            {userData?.profile?.email && (
               <TableViewCell
                 cellIcon={ <Icon name="email" /> }
                 title={ strings.email }
-                detail={ user?.profile?.email } />
+                detail={ userData?.profile?.email } />
             )}
-            {user?.profile?.username && (
+            {userData?.profile?.username && (
               <TableViewCell
                 cellIcon={ <Icon name="pen" /> }
                 title={ strings.username }
-                detail={ user?.profile?.username } />
+                detail={ userData?.profile?.username } />
             )}
           </TableViewSection>
           <TableViewSection
@@ -101,9 +71,9 @@ export function AccountScreen({
                   capitalize
                   cellIcon={ <Icon name={ p } /> }
                   title={ p }
-                  detail={ user?.profile?.linkedThirdPartyAccounts?.includes(p) ? strings.disconnect : strings.connect }
+                  detail={ userData?.profile?.linkedThirdPartyAccounts?.includes(p) ? strings.disconnect : strings.connect }
                   onPress={ () => {
-                    if (user?.profile?.linkedThirdPartyAccounts?.includes(p)) {
+                    if (userData?.profile?.linkedThirdPartyAccounts?.includes(p)) {
                       unlinkThirdPartyAccount(p);
                     } else {
                       linkThirdPartyAccount(p);
@@ -114,10 +84,10 @@ export function AccountScreen({
             ))}
             {__DEV__ && (
               <TableViewCell
-                cellContentView={ <Text>{JSON.stringify(user, null, 2)}</Text> } />
+                cellContentView={ <Text>{JSON.stringify(userData, null, 2)}</Text> } />
             )}
           </TableViewSection>
-          {!user?.unlinked && (
+          {!userData?.unlinked && (
             <TableViewSection
               grouped
               header={ strings.dangerZone }>

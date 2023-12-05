@@ -3504,10 +3504,10 @@
     component-type "^1.2.1"
     join-component "^1.1.0"
 
-"@shopify/flash-list@^1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@shopify/flash-list/-/flash-list-1.6.2.tgz#5e10e3659fe95dba3f50d595f45b990b31dff55e"
-  integrity sha512-8wcri0z/6Skv9y0bDOOVERMEoi+51saNSAMMRXmImJKgWb/jSI1FJeUSlzrw+RLUlgKndwcwVlqFvPuX5xpq8g==
+"@shopify/flash-list@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@shopify/flash-list/-/flash-list-1.6.3.tgz#463dc1703815bf916f8173afc22c852bf26337ad"
+  integrity sha512-XM2iu4CeD9SOEUxaGG3UkxfUxGPWG9yacga1yQSgskAjUsRDFTsD3y4Dyon9n8MfDwgrRpEwuijd+7NeQQoWaQ==
   dependencies:
     recyclerlistview "4.2.0"
     tslib "2.4.0"

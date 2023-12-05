@@ -5,7 +5,7 @@ import { TextStyle, ViewStyle } from 'react-native';
 import { Section } from 'react-native-tableview-simple';
 
 import { View, ViewProps } from '~/components';
-import { useTheme } from '~/hooks';
+import {  useTheme } from '~/hooks';
 
 export type TableViewSectionProps = ViewProps & {
     grouped?: boolean;
@@ -39,8 +39,7 @@ export function TableViewSection({
 }: TableViewSectionProps) {
   const theme = useTheme();
   return (
-    <View 
-      mx={ grouped ? 12 : 0 }>
+    <View mx={ grouped ? 12 : 0 } { ...props }>
       <Section
         hideSurroundingSeparators
         roundedCorners={ grouped }
