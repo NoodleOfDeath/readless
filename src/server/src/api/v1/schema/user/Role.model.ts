@@ -37,14 +37,15 @@ export class Role<
       scope: ['*'],
     },
     standard: {
-      lifetime: '1d',
+      lifetime: '30d',
       name: 'standard',
       priority: 0,
       refreshable: true,
       scope: ['standard:read', 'standard:write'],
     },
     verified: {
-      lifetime: '1d',
+      extends: 'standard',
+      lifetime: '30d',
       name: 'verified',
       priority: 20,
       refreshable: true,
@@ -67,24 +68,28 @@ export class Role<
 
   @Column({
     allowNull: false,
+    defaultValue: 0,
     type: DataType.INTEGER,
   })
   declare priority: number;
 
   @Column({
     allowNull: false,
+    defaultValue: '30d',
     type: DataType.STRING,
   })
   declare lifetime: string;
     
   @Column({
     allowNull: false,
+    defaultValue: false,
     type: DataType.BOOLEAN,
   })
   declare refreshable: boolean;
   
   @Column({
     allowNull: false,
+    defaultValue: [],
     type: DataType.ARRAY(DataType.STRING),
   })
   declare scope: string[];
@@ -102,5 +107,8 @@ export class Role<
     type: DataType.STRING,
   })
   declare defaultsTo: string;
+
+  @Column({ type: DataType.STRING })
+  declare extends?: string;
 
 }

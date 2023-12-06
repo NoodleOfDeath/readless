@@ -176,13 +176,15 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       value = rawValue;
     } else {
       value = rawValue.signed;
-      expiresAt = new Date(Date.now() + ms(rawValue.expiresIn));
+      if (rawValue.expiresIn) {
+        expiresAt = new Date(Date.now() + ms(rawValue.expiresIn));
+      }
     }
     if (type === 'password') {
       value = bcrypt.hashSync(value, process.env.PASSWORD_HASH_ROUNDS || 10);
     } else
     if (type === 'otp' || type === 'deleteToken') {
-      expiresAt = new Date(Date.now() + ms('15m'));
+      expiresAt = new Date(Date.now() + ms(process.env.OTP_LIFESPAN || '15m'));
     }
     return await Credential.create({ 
       expiresAt,
