@@ -840,6 +840,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         setCategories,
         setErrorHandler,
         setLoadedInitialUrl,
+        setNotifications,
         setPublishers,
         setStoredValue,
         storeTranslations,

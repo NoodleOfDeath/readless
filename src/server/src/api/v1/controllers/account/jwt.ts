@@ -7,7 +7,7 @@ import { Credential, User } from '../../schema';
 export type JwtBaseAccessOperation = '*' | 'delete' | 'has' | 'read' | 'write';
 export type JwtAccessOperation = JwtBaseAccessOperation | `deny.${JwtBaseAccessOperation}`;
 
-export const JWT_REFERSH_THRESHOLD_MS = ms(process.env.JWT_REFERSH_THRESHOLD || '100y');
+export const JWT_REFRESH_THRESHOLD_MS = ms(process.env.JWT_REFRESH_THRESHOLD || '100y');
 
 export type JsonWebToken = {
   userId: number;
@@ -65,7 +65,7 @@ export class JWT implements JsonWebToken {
 
   get expiresSoon() {
     const { exp } = jwt.decode(this.signed) as { exp: number };
-    return exp < (Date.now() + JWT_REFERSH_THRESHOLD_MS) / 1_000;
+    return exp < (Date.now() + JWT_REFRESH_THRESHOLD_MS) / 1_000;
   }
 
   get scopedAccess() {

@@ -373,6 +373,7 @@ export function SummaryList({
                   keywords={ parseKeywords(filter) }
                   onFormatChange={ (format) => handleFormatChange(item, format) } />
               ) }
+              ItemSeparatorComponent={ () => <View my={ 6 } /> }
               ListHeaderComponent={ detailComponent }
               ListFooterComponentStyle={ { paddingBottom: 64 } } />
           </View>

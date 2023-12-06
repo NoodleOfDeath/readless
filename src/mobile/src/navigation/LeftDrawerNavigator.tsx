@@ -12,6 +12,7 @@ import { RoutedScreen } from './RoutedScreen';
 import { StackNavigator } from './StackNavigator';
 import { HOME_STACK } from './stacks';
 
+import { PublicCategoryAttributes, PublicPublisherAttributes } from '~/api';
 import {
   Button,
   ChannelIcon,
@@ -64,103 +65,15 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
     return syncState.bookmarks?.isFetching ?? false;
   }, [syncState.bookmarks]);
 
-  const topPublishers = React.useMemo(() => {
-    if (!publishers) {
-      return [];
-    }
-    const items = Object.keys({ ...favoritedPublishers }).sort().map((p) => {
-      const publisher = publishers[p];
-      if (!publisher) {
-        return undefined;
-      }
-      return (
-        <DrawerItem
-          key={ publisher.name }
-          label={ publisher.displayName }
-          icon={ (props) => <ChannelIcon { ...props } publisher={ publisher } /> }
-          onPress={ () => openPublisher(publisher) }
-          right={ () => (
-            <Button leftIcon="star" onPress={ () => favoritePublisher(publisher) } />
-          ) } />
-      );
-    }).filter(Boolean);
-    return items;
-  }, [publishers, favoritedPublishers, openPublisher, favoritePublisher]);
+  const topPublishers = React.useMemo(() => Object.keys({ ...favoritedPublishers }).sort().map((p) => publishers?.[p]).filter(Boolean) as PublicPublisherAttributes[], [publishers, favoritedPublishers]);
 
-  const topCategories = React.useMemo(() => {
-    if (!categories) {
-      return [];
-    }
-    const items = Object.keys({ ...favoritedCategories }).sort().map((c) => {
-      const category = categories[c];
-      if (!category) {
-        return undefined;
-      }
-      return (
-        <DrawerItem
-          key={ category.name }
-          label={ category.displayName }
-          icon={ (props) => <ChannelIcon { ...props } category={ category } /> }
-          onPress={ () => openCategory(category) }
-          right={ () => (
-            <Button leftIcon="star" onPress={ () => favoriteCategory(category) } />
-          ) } />
-      );
-    }).filter(Boolean);
-    return items;
-  }, [categories, favoriteCategory, favoritedCategories, openCategory]);
+  const topCategories = React.useMemo(() => Object.keys({ ...favoritedCategories }).sort().map((c) => categories?.[c]).filter(Boolean) as PublicCategoryAttributes[], [categories, favoritedCategories]);
 
   const favorites = React.useMemo(() => [...topPublishers, ...topCategories], [topPublishers, topCategories]);
 
-  const publisherItems = React.useMemo(() => {
-    if (!publishers) {
-      return [];
-    }
-    const items = Object.keys({ ...followedPublishers }).sort().map((p) => {
-      const publisher = publishers[p];
-      if (!publisher) {
-        return undefined;
-      }
-      return (
-        <DrawerItem
-          key={ publisher.name }
-          label={ publisher.displayName }
-          icon={ (props) => <ChannelIcon { ...props } publisher={ publisher } /> }
-          onPress={ () => openPublisher(publisher) }
-          right={ () => (
-            <Button 
-              leftIcon={ publisherIsFavorited(publisher) ? 'star' : 'star-outline' }
-              onPress={ () => favoritePublisher(publisher) } />
-          ) } />
-      );
-    }).filter(Boolean);
-    return items;
-  }, [publishers, followedPublishers, openPublisher, publisherIsFavorited, favoritePublisher]);
+  const sortedPublishers = React.useMemo(() => Object.keys({ ...followedPublishers }).sort().map((p) => publishers?.[p]).filter(Boolean) as PublicPublisherAttributes[], [publishers, followedPublishers]);
 
-  const categoryItems = React.useMemo(() => {
-    if (!categories) {
-      return [];
-    }
-    const items = Object.keys({ ...followedCategories }).sort().map((c) => {
-      const category = categories[c];
-      if (!category) {
-        return undefined;
-      }
-      return (
-        <DrawerItem
-          key={ category.name }
-          label={ category.displayName }
-          icon={ (props) => <ChannelIcon { ...props } category={ category } /> }
-          onPress={ () => openCategory(category) }
-          right={ () => (
-            <Button
-              leftIcon={ categoryIsFavorited(category) ? 'star' : 'star-outline' }
-              onPress={ () => favoriteCategory(category) } />
-          ) } />
-      );
-    }).filter(Boolean);
-    return items;
-  }, [categories, followedCategories, openCategory, categoryIsFavorited, favoriteCategory]);
+  const sortedCategories = React.useMemo(() => Object.keys({ ...followedCategories }).sort().map((c) => categories?.[c]).filter(Boolean) as PublicCategoryAttributes[], [categories, followedCategories]);
 
   const name = React.useMemo(() => userData?.profile?.email || userData?.profile?.username, [userData]);
   const initials = React.useMemo(() => name?.slice(0, 2).toUpperCase() ?? '??', [name]);
@@ -186,21 +99,67 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
         </DrawerSection>
         {favorites.length > 0 && (
           <DrawerSection
-            title={ strings.favorites }>
-            {favorites}
+            title={ strings.favorites }
+            minHeight={ 40 }>
+            {topPublishers.map((publisher) => (
+              <DrawerItem
+                key={ publisher.name }
+                label={ publisher.displayName }
+                icon={ (props) => <ChannelIcon { ...props } publisher={ publisher } /> }
+                onPress={ () => openPublisher(publisher) }
+                right={ () => (
+                  <Button 
+                    leftIcon={ publisherIsFavorited(publisher) ? 'star' : 'star-outline' }
+                    onPress={ () => favoritePublisher(publisher) } />
+                ) } />
+            ))}
+            {topCategories.map((category) => (
+              <DrawerItem
+                key={ category.name }
+                label={ category.displayName }
+                icon={ (props) => <ChannelIcon { ...props } category={ category } /> }
+                onPress={ () => openCategory(category) }
+                right={ () => (
+                  <Button 
+                    leftIcon={ categoryIsFavorited(category) ? 'star' : 'star-outline' }
+                    onPress={ () => favoriteCategory(category) } />
+                ) } />
+            ))}
           </DrawerSection>
         )}
         <DrawerSection
           title={ strings.publishersYouFollow }
           onPress={ () => navigate('publisherPicker') }
           rightIcon={ <Button leftIcon="chevron-right" /> }>
-          {publisherItems}
+          {sortedPublishers.map((publisher) => (
+            <DrawerItem
+              key={ publisher.name }
+              label={ publisher.displayName }
+              icon={ (props) => <ChannelIcon { ...props } publisher={ publisher } /> }
+              onPress={ () => openPublisher(publisher) }
+              right={ () => (
+                <Button 
+                  leftIcon={ publisherIsFavorited(publisher) ? 'star' : 'star-outline' }
+                  onPress={ () => favoritePublisher(publisher) } />
+              ) } />
+          )) }
         </DrawerSection>
         <DrawerSection
           title={ strings.categoriesYouFollow }
           onPress={ () => navigate('categoryPicker') }
           rightIcon={ <Button leftIcon="chevron-right" /> }>
-          {categoryItems}
+          {sortedCategories.map((category) => (
+            <DrawerItem
+              key={ category.name }
+              label={ category.displayName }
+              icon={ (props) => <ChannelIcon { ...props } category={ category } /> }
+              onPress={ () => openCategory(category) }
+              right={ () => (
+                <Button 
+                  leftIcon={ categoryIsFavorited(category) ? 'star' : 'star-outline' }
+                  onPress={ () => favoriteCategory(category) } />
+              ) } />
+          ))}
         </DrawerSection>
       </DrawerContentScrollView>
       <SafeAreaView>
@@ -215,10 +174,10 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
               <Button
                 indicator={
                   !hasViewedFeature('publishers') || 
-                !hasViewedFeature('categories') || 
-                !hasViewedFeature('display-preferences') ||
-                !hasViewedFeature('notifications') || 
-                !hasViewedFeature('app-review')
+                  !hasViewedFeature('categories') || 
+                  !hasViewedFeature('display-preferences') ||
+                  !hasViewedFeature('notifications') || 
+                  !hasViewedFeature('app-review')
                 } 
                 leftIcon={ <Avatar.Text label={ initials } size={ 36 } /> }
                 { ...props } />

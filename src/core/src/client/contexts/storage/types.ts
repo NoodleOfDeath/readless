@@ -9,12 +9,12 @@ import {
   PublicCategoryAttributes,
   PublicPublisherAttributes,
   PublicSummaryGroup,
+  PublicSystemNotificationAttributes,
   ReadingFormat,
   RecapAttributes,
   RequestParams,
   Streak,
   SupportedLocale,
-  SystemNotificationAttributes,
 } from '~/api';
 
 export type DatedEventProps = {
@@ -452,7 +452,8 @@ export type StorageContextType = Storage & {
   currentStreak?: Streak;
   longestStreak?: Streak;
 
-  notifications?: SystemNotificationAttributes[];
+  notifications?: PublicSystemNotificationAttributes[];
+  setNotifications: React.Dispatch<React.SetStateAction<PublicSystemNotificationAttributes[] | undefined>>;
   notificationCount: number;
   unreadNotificationCount: number;
 

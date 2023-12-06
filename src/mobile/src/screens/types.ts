@@ -93,7 +93,7 @@ export type ProfileRoutingParams = {
   account: undefined;
   achievements: undefined;
   achievement: UserAchievementAttributes;
-  leaderboards: { metrics?: MetricsResponse, interactionType?: InteractionType };
+  leaderboards: { metrics?: MetricsResponse, interactionType?: InteractionType, daysActive?: boolean };
 };
 
 export type RoutingParams = GamesRoutingParams & LoginRoutingParams & NewsRoutingParams & ProfileRoutingParams & SettingsRoutingParams;
