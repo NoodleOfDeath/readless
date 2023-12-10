@@ -336,19 +336,19 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
 
   public static async getInteractionCounts(type: InteractionType, { 
-    minCount = 0,
+    minCount = null,
     limit = 100,
     offset = 0, 
     ...req 
   }: MetricsRequest = {}, user?: User): Promise<InteractionCount[]> {
     const replacements = {
+      ...req,
       interval: null,
       limit,
       minCount,
       offset,
       type,
       userId: null,
-      ...req,
     };
     const response = (await User.store.query(QueryFactory.getQuery('summary_interaction_count'), {
       nest: true,
