@@ -12,6 +12,8 @@
   "type": "module",
   "scripts": {
     "preinstall": "cd ../../ && yarn install && cd -",
+    "postinstall": "yarn patch",
+    "patch": "npx patch-package",
     "start:api": "node dist/serve-api.cjs",
     "start:scheduler": "node dist/serve-scheduler.cjs",
     "start:worker": "node dist/serve-worker.cjs",
