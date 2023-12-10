@@ -289,10 +289,14 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   public static async getStreaks({ 
     expiresIn = '1h',
     limit = 100,
+    offset = 0,
+    minCount = 0,
     userId = null,
   }: CalculateStreakOptions = {}): Promise<Streak[]> {
     const replacements = {
       limit: limit === 'ALL' ? 100 : limit,
+      minCount,
+      offset,
       userId, 
     };
     const response: Streak[] = (await User.store.query(QueryFactory.getQuery('streak'), {
@@ -331,12 +335,20 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return response;
   }
 
-  public static async getInteractionCounts(type: InteractionType, req?: MetricsRequest, user?: User): Promise<InteractionCount[]> {
+  public static async getInteractionCounts(type: InteractionType, { 
+    minCount = 0,
+    limit = 100,
+    offset = 0, 
+    ...req 
+  }: MetricsRequest = {}, user?: User): Promise<InteractionCount[]> {
     const replacements = {
       interval: null,
-      limit: 100,
+      limit,
+      minCount,
+      offset,
       type,
       userId: null,
+      ...req,
     };
     const response = (await User.store.query(QueryFactory.getQuery('summary_interaction_count'), {
       nest: true,
@@ -352,18 +364,19 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   public static async getMetrics(user?: User, req?: MetricsRequest): Promise<MetricsResponse> {
     const streaks = await User.getStreaks();
+    const daysActive = await User.getDaysActive();
     const readCounts = await User.getInteractionCounts('read', req);
     const shareCounts = await User.getInteractionCounts('share', req);
     return {
-      daysActive: await User.getDaysActive(),
+      daysActive,
       interactionCounts: {
         ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, []])) as { [key in InteractionType]: [] },
         read: readCounts,
         share: shareCounts,
-      },
+      },  
       streaks,
       userRankings: { 
-        daysActive: (await User.getDaysActive()).find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
+        daysActive: daysActive.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
         interactionCounts: {
           ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, 0])) as { [key in InteractionType]: number },
           read: readCounts.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,

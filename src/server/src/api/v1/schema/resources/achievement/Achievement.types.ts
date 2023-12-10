@@ -1,32 +1,25 @@
-import {
-  Attributes,
-  FindOptions,
-  Model,
-} from 'sequelize';
-
-import { RequestLog } from '../../models';
+import { User } from '../../models';
 import { DatedAttributes } from '../../types';
 
 export type AchievementCriteriaMetric = 'count' | 'time';
 
-export type AchievementCriteria<T extends Model = RequestLog> = Partial<FindOptions<Attributes<T>>> & {
-  table: string;
-};
+export type AchievementTable = 'logs' | 'summary_interactions';
 
 export type AchievementAttributes = DatedAttributes & {
   name: string;
-  criteria?: AchievementCriteria;
   description?: string;
   displayName?: string;
+  beforeDateBased?: Date;
   points?: number;
 };
 
 export type AchievementCreationAttributes = Partial<DatedAttributes> & {
   name: string;
-  criteria?: AchievementCriteria;
   description?: string;
   displayName?: string;
   points?: number;
+  beforeDateBased?: Date;
+  findCandidates?: () => Promise<User[]>;
 };
 
 export const PUBLIC_ACHIEVEMENT_ATTRIBUTES = [

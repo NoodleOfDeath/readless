@@ -15,6 +15,9 @@ export type MetricType = keyof Metrics;
 export type MetricsRequest = {
   after?: Date;
   before?: Date;
+  minCount?: number;
+  limit?: number;
+  offset?: number;
 };
 
 export type MetricsResponse = Metrics & {

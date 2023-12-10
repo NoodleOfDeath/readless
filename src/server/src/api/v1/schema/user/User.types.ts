@@ -51,6 +51,8 @@ export type Profile = {
 
 export type CalculateStreakOptions = {
   limit?: number | 'ALL';
+  offset?: number;
+  minCount?: number;
   longest?: boolean;
   userId?: number;
   expiresIn?: DurationString;

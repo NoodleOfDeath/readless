@@ -4,7 +4,6 @@ import { Op } from 'sequelize';
 import {
   Achievement,
   Queue,
-  RequestLog,
   Subscription,
   User,
   Worker,
@@ -21,11 +20,9 @@ async function main() {
   await Queue.prepare();
   await Achievement.prepare();
   ScribeService.prepare();
-  if ('1' === `${process.env.TWO}`) {
-    doWork();
-    sendDailyPushNotifications();
-    sendStreakPushNotifications();
-  }
+  doWork();
+  sendDailyPushNotifications();
+  sendStreakPushNotifications();
   detectAndAssignAchievements();
 }
 
@@ -138,14 +135,12 @@ async function detectAndAssignAchievements() {
   try {
     for (const criteria of Achievement.ACHIEVEMENT_CRITERIA) {
       const achievement = await Achievement.findOne({ where: { name: criteria.name } });
-      if (criteria.criteria?.table === 'RequestLog') {
-        console.log('checking achievement:', criteria.name);
-        const logs = await RequestLog.findAll(criteria.criteria);
-        for (const log of logs) {
-          const user = await User.from({ userId: log.userId });
-          await user.grantAchievement(achievement);
-        }
+      if (!achievement || (criteria.beforeDateBased && criteria.beforeDateBased < new Date())) {
+        continue;
       }
+      const users = await criteria.findCandidates();
+      console.log(`found ${users.length} candidates for achievement ${achievement.name}`);
+      users.forEach(async (user) => await user.grantAchievement(achievement));
     }
   } catch (e) {
     console.error(e);
