@@ -1,7 +1,11 @@
 import { Transporter, createTransport } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
-import { VerifySubscriptionTemplate, WelcomeTemplate } from './templates';
+import {
+  NewsletterTemplate,
+  VerifySubscriptionTemplate,
+  WelcomeTemplate,
+} from './templates';
 import { DeleteAccountTemplate } from './templates/deleteAccount/DeleteAccountTemplate';
 import { ResetPasswordTemplate } from './templates/resetPassword/ResetPasswordTemplate';
 import { VerifyEmailTemplate } from './templates/verifyEmail/VerifyEmailTemplate';
@@ -10,8 +14,11 @@ import { BaseService } from '../base';
 
 export type MailServiceOptions = SMTPTransport.Options;
 
+const BASE_DOMAIN = /localhost/.test(process.env.BASE_DOMAIN) ? 'readless://' : process.env.BASE_DOMAIN;
+
 const TEMPLATES = { 
   deleteAccount: DeleteAccountTemplate,
+  newsletter: NewsletterTemplate,
   resetPassword: ResetPasswordTemplate,
   verifyEmail: VerifyEmailTemplate,
   verifySubscription: VerifySubscriptionTemplate,
@@ -53,20 +60,23 @@ export class MailService extends BaseService {
   async sendMailFromTemplate<
     TemplateName extends keyof typeof TEMPLATES,
   >(
+    templateName: TemplateName,
     opts: SMTPTransport.Options,
-    templateName?: TemplateName,
     params?: Optional<typeof TEMPLATES[TemplateName]['prototype']['params'], 'domain' | 'ssl'>
   ) {
     const options = {
       from: process.env.MAIL_REPLY_TO,
       ...opts,
     };
-    if (templateName) {
-      const template = new TEMPLATES[templateName]();
-      options.subject = template.subject;
+    const args = {
+      domain: [BASE_DOMAIN === 'readless://' ? '' : (process.env.SSL ? 'https://' : 'http://'), BASE_DOMAIN].filter(Boolean).join(''),
+      ssl: Boolean(process.env.SSL),
+      ...params,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      options.html = template.render(params as any);
-    }
+    } as any;
+    const template = new TEMPLATES[templateName](args);
+    options.subject = template.subject;
+    options.html = template.rendered;
     return await this.client.sendMail(options);
   }
 

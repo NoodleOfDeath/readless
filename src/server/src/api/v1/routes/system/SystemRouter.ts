@@ -21,7 +21,7 @@ router.get(
       internalErrorHandler(res, e);
     }
   }
-);
+); 
 
 router.get(
   '/sitemap',

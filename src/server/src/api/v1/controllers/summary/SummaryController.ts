@@ -144,7 +144,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       throw new InternalError('Failed to create interaction');
     }
     if (type === 'feedback') {
-      await new MailService().sendMailFromTemplate({
+      await new MailService().sendMail({
         from: 'hello@readless.ai',
         subject: 'Feedback',
         text: [content, JSON.stringify(metadata)].join('\n\n'),

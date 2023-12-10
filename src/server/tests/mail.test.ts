@@ -35,4 +35,8 @@ describe('tests mail service', () => {
     }
   });
 
+  test('welcome', async () => {
+    await new MailService().sendMailFromTemplate('welcome', { to: 'thommy.morgan@gmail.com' });
+  });
+  
 });
