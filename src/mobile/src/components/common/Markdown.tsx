@@ -1,47 +1,60 @@
 import React from 'react';
+import { Text as RNText } from 'react-native';
 
-import {
-  ButtonProps,
-  Highlighter,
-  HighlighterProps,
-} from '~/components';
-
-export const MarkdownSearchPattern = { default: /\*\*(.*?)\*\*/g };
-
-export type MarkdownProps = Omit<ButtonProps & HighlighterProps, 'searchWords'> & {
-  searchPattern?: RegExp | string;
+export type Chunk = {
+  start: number;
+  end: number;
+  highlight: boolean;
 };
 
-export function Markdown({
-  children,
-  searchPattern = MarkdownSearchPattern.default,
-  ...props
-}: MarkdownProps) {
+import { ChildlessViewProps, TextProps } from '~/components';
 
-  const [words, setWords] = React.useState<string[]>([]);
+export type Token = {
+  pattern: RegExp;
+  style?: TextProps['style'];
+  render?: (matches?: RegExpExecArray) => React.ReactNode;
+};
 
-  const parsedChildren = React.useMemo(() => {
-    return children?.replace(searchPattern, (_, word) => word);
-  }, [children, searchPattern]);
+export const TOKENS: { [key: string]: Token } = {
+  bold: {
+    pattern: /\*\*(.*?)\*\*/g,
+    render: (matches) => {
+      return (
+        <RNText
+          key={ matches?.index }
+          style={ { fontWeight: 'bold' } }>
+          {matches?.[1]}
+        </RNText>
+      );
+    },
+    style: { fontWeight: 'bold' },
+  },
+  code: {
+    pattern: /`(.*?)`/g,
+    style: { fontFamily: 'monospace' },
+  },
+  italic: {
+    pattern: /\*(.*?)\*/g,
+    style: { fontStyle: 'italic' },
+  },
+  strikethrough: {
+    pattern: /~~(.*?)~~/g,
+    style: { textDecorationLine: 'line-through' },
+  },
+  underline: {
+    pattern: /__(.*?)__/g,
+    style: { textDecorationLine: 'underline' },
+  },
+};
 
-  React.useEffect(() => {
-    const boldWords: string[] = [];
-    const matches = children?.matchAll(typeof searchPattern === 'string' ? new RegExp(searchPattern, 'g') : searchPattern);
-    if (!matches) {
-      return;
-    }
-    for (const match of Array.from(matches)) {
-      boldWords.push(match[1]);
-    }
-    setWords(boldWords);
-  }, [children, searchPattern]);
+export type MarkdownProps = Omit<ChildlessViewProps & TextProps, 'children'> & {
+  children?: string;
+};
 
+export function Markdown({ children, ...props }: MarkdownProps) {
   return (
-    <Highlighter
-      { ...props }
-      highlightStyle={ props.highlightStyle ?? { fontWeight: 'bold' } }
-      searchWords={ words }>
-      {parsedChildren}
-    </Highlighter>
-  );
+    <RNText { ...props }>
+      {children}
+    </RNText>
+  ); 
 }

@@ -6,7 +6,7 @@ import { ScreenComponent } from '../types';
 
 import {
   Divider,
-  Markdown,
+  HighlightedText,
   Screen,
   Text,
   View,
@@ -27,7 +27,7 @@ export function AchievementScreen({ route }: ScreenComponent<'achievement'>) {
           <Text system>{formatDate(new Date(achievedAt ?? ''), '(E) h:mm a - P', { locale: getFnsLocale() })}</Text>
         </View>
         <Divider />
-        <Markdown system>{achievement?.description}</Markdown> 
+        <HighlightedText system>{achievement?.description}</HighlightedText> 
       </View>
     </Screen>
   );

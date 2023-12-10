@@ -53,7 +53,7 @@ export function useNavigation() {
   }, [navigate, setStoredValue]);
   
   const openSummary = React.useCallback((props: RoutingParams['summary'], stackNav?: Navigation) => {
-    interactWithSummary(props.summary, InteractionType.Read, { metadata: { format: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Bullets } });
+    interactWithSummary(typeof props.summary === 'number' ? props.summary : props.summary.id, InteractionType.Read, { metadata: { format: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Bullets } });
     navigate('summary', {
       ...props,
       initialFormat: props.initialFormat ?? preferredReadingFormat ?? ReadingFormat.Bullets,
@@ -126,7 +126,7 @@ export function useNavigation() {
       openCategory({
         displayName: '', icon: '', name: category, 
       }, stackNav);
-    } 
+    }
   }, [navigate, openURL, openSummary, search, openPublisher, openCategory]);
   
   return {

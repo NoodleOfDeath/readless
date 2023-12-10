@@ -7,8 +7,8 @@ import Orientation from 'react-native-orientation-locker';
 import { 
   ActionSheet,
   Button,
+  HighlightedText,
   Image,
-  Markdown,
   View,
   WalkthroughSlider,
   WalkthroughSliderRef,
@@ -73,29 +73,29 @@ export const Walkthrough = React.forwardRef(function Walkthrough<Step extends Wa
         <View gap={ 12 } key={ i }>
           {!(step.artworkBelow || step.tallImage) && image}
           {typeof step.title === 'string' ? (
-            <Markdown 
+            <HighlightedText 
               h4
               bold
               textCenter
               system
               highlightStyle={ { textDecorationLine: 'underline' } }>
               {step.title}
-            </Markdown>
+            </HighlightedText>
           ) : step.title}
           {(step.artworkBelow || step.tallImage) && image}
           {typeof step.body === 'string' ? (
-            <Markdown 
+            <HighlightedText 
               subtitle1
               system>
               {step.body}
-            </Markdown>
+            </HighlightedText>
           ) : step.body}
           {typeof step.footer === 'string' ? (
-            <Markdown 
+            <HighlightedText 
               subtitle1
               system>
               {step.footer}
-            </Markdown>
+            </HighlightedText>
           ) : step.footer}
         </View>
       );

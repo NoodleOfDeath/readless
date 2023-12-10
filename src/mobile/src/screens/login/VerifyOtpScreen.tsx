@@ -36,7 +36,7 @@ export function VerifyOtpScreen({
         }
         if (data) {
           await setStoredValue('userData', new UserData(data));
-          navigation?.push('setNewPassword');
+          navigation?.replace('setNewPassword');
         }
       } else 
       if (code) {
