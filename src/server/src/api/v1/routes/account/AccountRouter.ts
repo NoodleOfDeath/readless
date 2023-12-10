@@ -28,10 +28,13 @@ router.post(
     .isString(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.register(req, req.body);
+      await t.commit();
       return res.status(201).json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -54,10 +57,13 @@ router.post(
     .isString(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.login(req, req.body);
+      await t.commit();
       return res.json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -68,10 +74,13 @@ router.post(
   body('force').isBoolean().optional(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.logout(req, req.body);
+      await t.commit();
       return res.status(204).json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -83,10 +92,13 @@ router.post(
   body('otherAlias').isObject(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.registerAlias(req, req.body);
+      await t.commit();
       return res.json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -99,10 +111,13 @@ router.post(
   body('otherAlias').isObject(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.registerAlias(req, req.body);
+      await t.commit();
       return res.json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -113,10 +128,13 @@ router.post(
   body('otherAlias').isObject(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.unregisterAlias(req, req.body);
+      await t.commit();
       return res.json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -128,10 +146,13 @@ router.post(
   body('otherAlias').isObject(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.unregisterAlias(req, req.body);
+      await t.commit();
       return res.json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -141,10 +162,13 @@ router.post(
   '/alias/verify',
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.verifyAlias(req, req.body);
+      await t.commit();
       return res.json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -155,10 +179,13 @@ router.post(
   '/verify/alias',
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.verifyAlias(req, req.body);
+      await t.commit();
       return res.json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -170,10 +197,13 @@ router.post(
   body('deleteAccount').isBoolean().optional(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.requestOtp(req, req.body);
+      await t.commit();
       return res.json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -185,10 +215,13 @@ router.post(
   body('deleteAccount').isBoolean().optional(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.verifyOtp(req, req.body);
+      await t.commit();
       return res.json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -201,10 +234,13 @@ router.post(
   body('deleteAccount').isBoolean().optional(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.verifyOtp(req, req.body);
+      await t.commit();
       return res.json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -257,10 +293,13 @@ router.patch(
   body('type').isString().optional(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.updateMetadata(req, req.body);
+      await t.commit();
       return res.status(200).json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -274,10 +313,13 @@ router.patch(
   body('type').isString().optional(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.updateMetadata(req, req.body);
+      await t.commit();
       return res.status(200).json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -289,10 +331,13 @@ router.put(
   authMiddleware('jwt', { required: true, scope: ['account:write'] }),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.updateCredential(req, req.body);
+      await t.commit();
       return res.status(200).json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -305,10 +350,13 @@ router.put(
   authMiddleware('jwt', { required: true, scope: ['account:write'] }),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       const response = await AccountController.updateCredential(req, req.body);
+      await t.commit();
       return res.status(200).json(response);
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
@@ -321,10 +369,13 @@ router.delete(
   body('password').isString().optional(),
   validationMiddleware,
   async (req, res) => {
+    const t = await AccountController.store.transaction();
     try {
       await AccountController.deleteAccount(req, req.body);
+      await t.commit();
       return res.status(204).send();
     } catch (e) {
+      await t.rollback();
       return internalErrorHandler(res, e);
     }
   }
