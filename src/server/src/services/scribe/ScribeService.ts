@@ -13,6 +13,7 @@ import {
 import {
   Category,
   Recap,
+  RecapSummary,
   SentimentMethod,
   Subscription,
   Summary,
@@ -431,6 +432,13 @@ export class ScribeService extends BaseService {
       }
       
       const recap = await Recap.create(newRecap);
+      
+      for (const summary of summaries) {
+        await RecapSummary.create({
+          parentId: recap.id,
+          summaryId: summary.id,
+        });
+      }
 
       await Subscription.notify('daily-recap', 'email', {
         html: await recap.formatAsHTML(summaries),

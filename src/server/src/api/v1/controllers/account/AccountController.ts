@@ -242,15 +242,19 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     if (verified) {
       await newUser.grantRole('verified');
       if (newAliasType === 'email') {
-        await new MailService().sendMailFromTemplate({ to: newAliasValue }, 'welcome', { email: newAliasValue });
+        await new MailService().sendMailFromTemplate('welcome', { to: newAliasValue }, { email: newAliasValue });
       }
       return await this.login(req, body);
     } else {
       if (newAliasType === 'email') {
-        await new MailService().sendMailFromTemplate({ to: newAliasValue }, 'verifyEmail', {
-          email: newAliasValue,
-          verificationCode,
-        });
+        await new MailService().sendMailFromTemplate(
+          'verifyEmail', 
+          { to: newAliasValue },
+          {
+            email: newAliasValue,
+            verificationCode,
+          }
+        );
       }
       if (thirdPartyId) {
         return await this.login(req, body);
@@ -465,8 +469,8 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     await user.createAlias(type as AliasType, value, options);
     if (body.otherAlias.email) {
       await new MailService().sendMailFromTemplate(
-        { to: body.otherAlias.email },
         'verifyEmail',
+        { to: body.otherAlias.email },
         {
           email: body.otherAlias.email, 
           verificationCode, 
@@ -533,8 +537,8 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     const emailData = email;
     const mailer = new MailService();
     await mailer.sendMailFromTemplate(
-      { to: emailData.value }, 
       body.deleteAccount ? 'deleteAccount' : 'resetPassword',
+      { to: emailData.value }, 
       {
         email: emailData.value,
         otp,

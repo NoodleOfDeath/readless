@@ -18,7 +18,8 @@
     "target": "esnext",
     "lib": [
       "esnext",
-      "dom"
+      "dom",
+      "dom.iterable"
     ],
     "declaration": true,
     "esModuleInterop": true,
@@ -34,11 +35,13 @@
     "outDir": "./dist",
     "baseUrl": ".",
     "allowJs": false,
+    "jsx": "preserve",
     "resolveJsonModule": true,
     "noUnusedLocals": true
   },
   "include": [
     "src/**/*.ts",
+    "src/api/v1/routes/system/SystemRouter.ts",
   ],
   "exclude": [
     "node_modules",
