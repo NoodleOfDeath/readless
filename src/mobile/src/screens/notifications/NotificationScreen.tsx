@@ -18,12 +18,13 @@ export function NotificationScreen({ route }: ScreenComponent<'notification'>) {
   return (
     <Screen>
       <View p={ 12 } gap={ 12 }>
-        <View
-          flexRow
-          justifyBetween
-          itemsCenter>
+        <View gap={ 6 }>
           <Text h6 system>{notification?.title}</Text>
-          <Text system>{formatDate(new Date(notification?.createdAt ?? ''), '(E) h:mm a - P', { locale: getFnsLocale() })}</Text>
+          <Text
+            body2 
+            system>
+            {formatDate(new Date(notification?.createdAt ?? ''), 'PP @ h:mm a', { locale: getFnsLocale() })}
+          </Text>
         </View>
         <Divider />
         <Markdown system>{notification?.text}</Markdown> 

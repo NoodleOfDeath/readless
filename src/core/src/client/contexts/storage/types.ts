@@ -385,7 +385,7 @@ export class FetchJob implements FetchState {
     if (this.lastFetchFailed && this.attemptCount < this.maxAttempts) {
       await new Promise<void>((resolve) => setTimeout(resolve, this.interval));
       await this.dispatch();
-    } 
+    }
   }
 
   get clone() {

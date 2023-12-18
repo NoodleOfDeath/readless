@@ -135,8 +135,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       errorHandler?.(e);
     }
     if (e?.errorKey) {
-      const error = e as AuthError;
-      if (LOGOUT_ERROR_KEYS.includes(error.errorKey)) {
+      if (LOGOUT_ERROR_KEYS.includes((e as AuthError).errorKey)) {
         resetStorage(true);
         return;
       }
@@ -383,61 +382,56 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
   }, [storage.lastRemoteSync, storage.lastLocalSync, storage.userData?.valid, storage.userData?.unlinked, setStoredValue, api, forcePushLocalStateToRemote, syncBookmarks, handleBadRequest]);
 
   const syncWithRemote = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
-    if (!syncState.hasLoadedLocalState || syncState.isFetching || syncState.lastFetchFailed) {
+    if (!syncState.hasLoadedLocalState || syncState.isFetching) {
       return;
     }
     // fetch channels
-    try {
-      setSyncState((prev) => {
-        const state = prev.clone;
-        state.channels.prepare();
-        return state;
-      });
-      const job = new FetchJob(syncChannels);
-      await job.dispatch();
+    setSyncState((prev) => {
+      const state = prev.clone;
+      state.channels.prepare();
+      return state;
+    });
+    new FetchJob(syncChannels).dispatch().then(() => {
       setSyncState((prev) => {
         const state = prev.clone;
         state.channels.success();
         return state;
       });
-    } catch (e) {
+    }).catch((e) => {
       setSyncState((prev) => {
         const state = prev.clone;
         state.channels.fail();
         return state;
       });
-      return handleBadRequest(e);
-    } 
+      handleBadRequest(e);
+    });
     // fetch notifications
-    try {
-      setSyncState((prev) => {
-        const state = prev.clone;
-        state.notifications.prepare();
-        return state;
-      });
-      const job = new FetchJob(syncNotifications);
-      await job.dispatch();
+    setSyncState((prev) => {
+      const state = prev.clone;
+      state.notifications.prepare();
+      return state;
+    });
+    new FetchJob(syncNotifications).dispatch().then(() => {
       setSyncState((prev) => {
         const state = prev.clone;
         state.notifications.success();
         return state;
       });
-    } catch (e) {
+    }).catch((e) => {
       setSyncState((prev) => {
         const state = prev.clone;
         state.notifications.fail();
         return state;
       });
-      return handleBadRequest(e);
-    }
+      handleBadRequest(e);
+    });
     try {
       setSyncState((prev) => {
         const state = prev.clone;
         state.profile.prepare();
         return state;
       });
-      const job = new FetchJob(async () => syncProfile(prefs, opts));
-      await job.dispatch();
+      await new FetchJob(async () => syncProfile(prefs, opts)).dispatch();
       setSyncState((prev) => {
         const state = prev.clone;
         state.profile.success();
