@@ -65,7 +65,7 @@ export class Achievement<
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       name: 'newbie',
-      points: 5,
+      points: 10,
     },
     {
       description: 'This achievement is given to users who have read at least 10 articles',
@@ -75,7 +75,7 @@ export class Achievement<
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       name: 'reader',
-      points: 5,
+      points: 25,
     },
     {
       description: 'This achievement is given to users who have read at least 25 articles',
@@ -85,7 +85,7 @@ export class Achievement<
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       name: 'bookworm',
-      points: 10,
+      points: 50,
     },
     {
       description: 'This achievement is given to users who have at least one streak of 3 days or more',
@@ -106,6 +106,16 @@ export class Achievement<
       },
       name: 'stweeker',
       points: 25,
+    },
+    {
+      description: 'This achievement is given to users who have at least one streak of 14 days or more',
+      displayName: 'Double Stweeker',
+      findCandidates: async () => {
+        const interactions = await User.getStreaks({ minCount: 14 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      name: 'double-stweeker',
+      points: 50,
     },
   ];
 
