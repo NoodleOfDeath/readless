@@ -117,6 +117,26 @@ export class Achievement<
       name: 'double-stweeker',
       points: 50,
     },
+    {
+      description: 'This achievement is given to users who have at least one streak of 21 days or more',
+      displayName: 'Triple Stweeker',
+      findCandidates: async () => {
+        const interactions = await User.getStreaks({ minCount: 21 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      name: 'triple-stweeker',
+      points: 75,
+    },
+    {
+      description: 'This achievement is given to users who have at least one streak of 28 days or more',
+      displayName: 'Monthly Master',
+      findCandidates: async () => {
+        const interactions = await User.getStreaks({ minCount: 28 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      name: 'monthly-master',
+      points: 100,
+    },
   ];
 
   static async prepare() {
