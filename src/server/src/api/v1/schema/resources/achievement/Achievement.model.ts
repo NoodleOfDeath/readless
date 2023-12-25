@@ -88,6 +88,26 @@ export class Achievement<
       points: 50,
     },
     {
+      description: 'This achievement is given to users who have read at least 50 articles',
+      displayName: 'Page Sage',
+      findCandidates: async () => {
+        const interactions = await User.getInteractionCounts('read', { minCount: 50 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      name: 'page-sage',
+      points: 75,
+    },
+    {
+      description: 'This achievement is given to users who have read at least 100 articles',
+      displayName: 'Century Scribe',
+      findCandidates: async () => {
+        const interactions = await User.getInteractionCounts('read', { minCount: 100 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      name: 'century-scribe',
+      points: 100,
+    },
+    {
       description: 'This achievement is given to users who have at least one streak of 3 days or more',
       displayName: 'Streaker',
       findCandidates: async () => {
