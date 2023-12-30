@@ -16,7 +16,11 @@ import { SummaryMedia } from './SummaryMedia.model';
 import { SummaryRelation } from './SummaryRelation.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
-import { QueryFactory, QueryKey } from '../../../../../api/v1/schema';
+import {
+  QueryFactory,
+  QueryKey,
+  SentimentMethodName,
+} from '../../../../../api/v1/schema';
 import {
   DeepAiService,
   S3Service,
@@ -599,32 +603,42 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     });
   }
   
-  async generateSentiment(...props: (keyof SummaryAttributes)[]) {
-    if (props.length === 0) {
-      props = ['title', 'shortSummary'];
+  async generateSentiment(method: SentimentMethodName, score?: number) {
+    const payload = [this.title, this.shortSummary].join('\n\n');
+    if (method === 'openai') {
+      await SummarySentiment.create({
+        method: 'openai',
+        parentId: this.id,
+        payload,
+        score: score ?? await SentimentService.sentiment('openai', payload),
+      });
+    } else
+    if (method === 'afinn') {
+      await SummarySentiment.create({
+        method: 'afinn',
+        parentId: this.id,
+        payload,
+        score: score ?? (await SentimentService.sentiment('afinn', payload))?.comparative,
+      });
+    } else
+    if (method === 'vader') {
+      await SummarySentiment.create({
+        method: 'vader',
+        parentId: this.id,
+        payload,
+        score: score ?? (await SentimentService.sentiment('vader', payload))?.compound,
+      });
     }
-    const payload = props.map((p) => this[p]).join('\n\n');
-    const openAiSentiment = await SentimentService.sentiment('openai', payload);
-    await SummarySentiment.create({
-      method: 'openai',
-      parentId: this.id,
-      payload,
-      score: openAiSentiment,
-    });
-    const afinnSentimentScores = await SentimentService.sentiment('afinn', payload);
-    await SummarySentiment.create({
-      method: 'afinn',
-      parentId: this.id,
-      payload,
-      score: afinnSentimentScores.comparative,
-    });
-    const vaderSentimentScores = await SentimentService.sentiment('vader', payload);
-    await SummarySentiment.create({
-      method: 'vader',
-      parentId: this.id,
-      payload,
-      score: vaderSentimentScores.compound,
-    });
+  }
+
+  async generateSentiments(...methods: SentimentMethodName[]) {
+    if (methods.length === 0) {
+      methods = ['openai', 'afinn', 'vader'];
+    }
+    for (const method of methods) {
+      await this.generateSentiment(method);
+    }
+    return await SummarySentiment.findAll({ where: { parentId: this.id } });
   }
 
 }

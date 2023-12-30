@@ -1,64 +1,65 @@
+import { ClientOptions, OpenAI } from 'openai';
 import {
-  ChatCompletionRequestMessage,
-  ChatCompletionResponseMessage,
-  Configuration,
-  CreateCompletionRequest,
-  OpenAIApi,
-} from 'openai';
+  ChatCompletionCreateParams,
+  ChatCompletionMessage,
+  ChatCompletionUserMessageParam,
+} from 'openai/resources';
 
 import { BaseService } from '../base';
-
-export type ChatMessage = ChatCompletionRequestMessage & ChatCompletionResponseMessage;
 
 export type Prompt = {
   text: string;
   handleReply: (reply: string) => Promise<void>;
 };
 
-export type OpenAIServiceInitProps = {
-  apiKey?: string;
+export type OpenAIServiceOptions = ClientOptions & {
+  persist: boolean;
 };
-
-export function encodePrompt(prompt: string) {
-  const prompts: string[] = [];
-  let remainingPrompt = prompt;
-  while (remainingPrompt.length) {
-    if (remainingPrompt.length > 2048) {
-      const splitIndex = remainingPrompt.lastIndexOf('.', 2048);
-      prompts.push(remainingPrompt.slice(0, splitIndex + 1));
-      remainingPrompt = remainingPrompt.slice(splitIndex + 1);
-    } else {
-      prompts.push(remainingPrompt);
-      remainingPrompt = '';
-    }
-  }
-  return prompts.map((prompt, i) => `----- Part ${i + 1} of ${prompts.length} -----\n\n${prompt}`);
-}
 
 export class OpenAIService extends BaseService {
 
-  api: OpenAIApi;
-  messages: ChatMessage[] = [];
+  api: OpenAI;
+  persist = false;
+  messages: (ChatCompletionMessage | ChatCompletionUserMessageParam)[] = [];
 
-  constructor({ apiKey = process.env.OPENAI_API_KEY }: OpenAIServiceInitProps = {}) {
+  constructor({ apiKey = process.env.OPENAI_API_KEY, persist = false }: Partial<OpenAIServiceOptions> = {}) {
     super();
-    this.api = new OpenAIApi(new Configuration({ apiKey }));
+    this.api = new OpenAI({ apiKey });
+    this.persist = persist;
   }
   
-  async send(prompt: string, { model = 'gpt-3.5-turbo-0613' }: Partial<CreateCompletionRequest> = {}) {
-    this.messages.push(({
+  async send<T = string>(prompt: string, { 
+    model = 'gpt-3.5-turbo-0613',
+    functions,
+    function_call,
+  }: Partial<ChatCompletionCreateParams> = {}) {
+    const message: ChatCompletionUserMessageParam = {
       content: prompt.slice(0, 4096),
-      role: 'user' as const,
-    }));
-    const response = await this.api.createChatCompletion({
-      messages: this.messages,
+      role: 'user',
+    };
+    if (this.persist) {
+      this.messages.push(message);
+    }
+    const response = await this.api.chat.completions.create({
+      function_call,
+      functions,
+      messages: !this.persist ? [message] : this.messages,
       model,
     });
-    if (response.status === 200 && response.data?.choices?.length && response.data.choices[0].message) {
-      this.messages.push(response.data.choices[0].message);
-      return response.data.choices[0].message.content;
+    if (response.choices) {
+      const message = response.choices[0].message;
+      if (this.persist) {
+        this.messages.push(message);
+      }
+      if (function_call && message.function_call) {
+        if (!message.function_call.arguments) {
+          return undefined;
+        }
+        return JSON.parse(message.function_call.arguments) as T;
+      }
+      return message.content as T;
     }
-    throw new Error(response.statusText);
+    throw new Error('Bad response from OpenAI');
   }
 
   clearConversation() {
