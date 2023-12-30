@@ -1,9 +1,8 @@
 import Sentiment from 'sentiment';
 
 import { SentimentIntensityAnalyzer } from './vader';
-import { SentimentMethodName } from '../../api/v1/schema';
+import { SentimentMethodName, SystemLog } from '../../api/v1/schema';
 import { BaseService } from '../base';
-import { MailService } from '../mail';
 import { OpenAIService } from '../openai';
 
 export class SentimentService extends BaseService {
@@ -32,13 +31,10 @@ export class SentimentService extends BaseService {
       const reply = await chatService.send(['For the following text, please provide a floating point sentiment score between -1 and 1. Please respond with the score only:', text].join('\n\n'));
       const score = Number.parseFloat(reply);
       if (Number.isNaN(score)) {
-        await new MailService().sendMail({
-          from: 'debug@readless.ai',
-          subject: 'Not a valid sentiment score', 
-          text: [reply, text].join('\n\n'),
-          to: 'debug@readless.ai',
+        await SystemLog.create({
+          level: 'error',
+          message: `Invalid sentiment score response: ${text} => ${reply}`,
         });
-        throw new Error('invalid sentiment');
       }
       return score;
     } catch (e) {

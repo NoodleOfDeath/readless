@@ -17,6 +17,7 @@ import {
   SentimentMethod,
   Subscription,
   Summary,
+  SummaryCreationAttributes,
   SummaryMedia,
   SystemLog,
 } from '../../api/v1/schema';
@@ -45,7 +46,7 @@ export class ScribeService extends BaseService {
   }
 
   public static async error(message: string, throws = true): Promise<void> {
-    console.log(message);
+    console.error(message);
     await SystemLog.create({
       level: 'error',
       message,
@@ -57,15 +58,18 @@ export class ScribeService extends BaseService {
   
   public static async readAndSummarize(
     {
-      url, imageUrls, content, publisher, force, priority,
+      url, imageUrls = [], content, publisher, force, priority,
     }: ReadAndSummarizePayload
   ): Promise<Summary> {
+
     if (this.categories.length === 0) {
       await this.prepare();
     }
+
     if (!publisher) {
       throw new Error('no publisher id specified');
     }
+
     if (!force) {
       const existingSummary = await Summary.findOne({ where: { url } });
       if (existingSummary) {
@@ -75,9 +79,11 @@ export class ScribeService extends BaseService {
     } else {
       console.log(`Forcing summary rewrite for ${url}`);
     }
+
     if (!PuppeteerService.EXCLUDE_EXPRS.depth1.every((e) => !new RegExp(e, 'i').test(url.replace(/^https?:\/\/.*?(?=\/)/, '')))) {
       throw new Error('Probably not a news article');
     }
+
     // fetch web content with the spider
     let loot: Loot; 
     try {
@@ -93,6 +99,7 @@ export class ScribeService extends BaseService {
       }
       throw e;
     }
+    
     if (priority > 0) {
       const parsedDate = new Date(parseInt(`${priority}`));
       if (!Number.isNaN(parsedDate.valueOf())) {
@@ -100,7 +107,7 @@ export class ScribeService extends BaseService {
       }
     }
     loot.imageUrls = Array.from(new Set([...loot.imageUrls, ...imageUrls]));
-    // create the prompt onReply map to be sentto ChatGPT
+
     if (!force) {
       const existingMedia = await SummaryMedia.findOne({ where: { originalUrl: loot.imageUrls } });
       if (existingMedia) {
@@ -123,10 +130,12 @@ export class ScribeService extends BaseService {
     if (loot.date > new Date(Date.now() + ms('3h'))) {
       await this.error(['News is from the future', url, loot.date.toISOString()].join('\n\n'));
     }
+
     while (loot.date > new Date()) {
       loot.date = new Date(loot.date.valueOf() - ms('1h'));
     }
-    const newSummary = Summary.json<Summary>({
+
+    let newSummary = Summary.json<Summary>({
       filteredText: loot.content,
       imageUrl: loot.imageUrls?.[0],
       originalDate: loot.date,
@@ -135,123 +144,97 @@ export class ScribeService extends BaseService {
       rawText: loot.rawText,
       url,
     });
-    let categoryDisplayName: string;
-    const prompts: Prompt[] = [
-      {
-        handleReply: async (reply) => { 
-          if (/no/i.test(reply)) {
-            throw new Error('Not an actual article');
-          }
-          newSummary.title = reply;
-        },
-        text: [
-          'Does the following appear to be a news article or story? A collection of article headlines, pictures, videos, advertisements, description of a news website, or subscription program should not be considered a news article/story. Please respond with just "yes" or "no"\n\n', 
-          newSummary.filteredText,
-        ].join(''),
-      },
-      {
-        handleReply: async (reply) => { 
-          categoryDisplayName = reply
-            .replace(/^.*?:\s*/, '')
-            .replace(/\.$/, '')
-            .trim();
-          if (!this.categories.some((c) => new RegExp(`^${c}$`, 'i').test(categoryDisplayName))) {
-            await this.error(['Bad category', url, categoryDisplayName, reply].join('\n\n'));
-          }
-        },
-        text: `Please select a best category for this article from the following choices: ${this.categories.join(',')}. Respond with only the category name`,
-      },
-      {
-        handleReply: async (reply) => { 
-          if (reply.split(' ').length > 15) {
-            await this.error(`Title too long for ${url}\n\n${reply}`);
-          }
-          newSummary.title = reply;
-        },
-        text: [
-          'Please summarize the same article using no more than 10 words to be used as a title. Prioritize important names, places, events, dates, and numeric values. Make the title as unbiased and not clickbaity as possible. Respond with just the title.',
-        ].join(''),
-      },
-      {
-        handleReply: async (reply) => { 
-          if (reply.split(' ').length > 40) {
-            await this.error(`Short summary too long for ${url}\n\n${reply}`);
-          }
-          newSummary.shortSummary = reply;
-        },
-        text: [
-          'Please provide another unbiased summary using no more than 30 words. Prioritize important names, places, events, dates, and numeric values. Make the summary as unbiased as possible. Do not use phrases like "The article" or "This article".', 
-        ].join(''),
-      },
-      {
-        handleReply: async (reply) => { 
-          if (reply.split(' ').length > 120) {
-            await this.error(`Summary too long for ${url}\n\n${reply}`);
-          }
-          newSummary.summary = reply;
-        },
-        text: [
-          'Please provide another longer unbiased summary using no more than 100 words. Prioritize important names, places, events, dates, and numeric values. Make the summary as unbiased as possible. Do not use phrases like "The article" or "This article".', 
-        ].join(''),
-      },
-      {
-        handleReply: async (reply) => {
-          newSummary.bullets = reply
-            .replace(/•\s*/g, '')
-            .replace(/^\.*?:\s*/, '')
-            .replace(/<br\s*\/?>/g, '')
-            .split(/\n/)
-            .map((bullet) => bullet.trim()
-              .replace(/\n*/g, '')
-              .replace(/[\\.]*$/, ''))
-            .filter(Boolean);
-        },
-        text: 'Please provide 5 concise unbiased bullet point sentences no longer than 10 words each that summarize this article using • as the bullet symbol. Prioritize important names, places, events, dates, and numeric values.',
-      },
-    ];
-      
+
     // initialize chatService service and send the prompt
-    const chatService = new OpenAIService();
-    // iterate through each summary prompt and send themto ChatGPT
-    for (const prompt of prompts) {
-      if (await Summary.findOne({ where: { url } })) {
-        await this.error('job already completed by another worker');
+    const openai = new OpenAIService();
+
+    try {
+
+      const { filteredText } = await openai.send<{ filteredText: string }>([
+        'Call filterText to filter all text from the following that does not appear to be news related. If most of the text is not news related, please respond with "NOT NEWS".\n\n',
+        newSummary.filteredText,
+      ].join('\n\n'), {
+        function_call: { name: 'filterText' },
+        functions: [
+          {
+            name: 'filterText',
+            parameters: {
+              properties: { filteredText: { maxLength: 4096, type: 'string' } },
+              required: ['filteredText'],
+              type: 'object',
+            },
+          },
+        ],
+      });
+      if (/not news/i.test(filteredText)) {
+        await this.error(['Not news', url, filteredText].join('\n\n'));
+        return;
       }
-      let reply = await chatService.send(prompt.text);
-      if (BAD_RESPONSE_EXPR.test(reply)) {
-        // attempt single retry
-        reply = await chatService.send(prompt.text);
-        if (BAD_RESPONSE_EXPR.test(reply)) {
-          await this.error(['Bad response from chatService', '--repl--', reply, '--prompt--', prompt.text].join('\n'));
-        }
+      if (filteredText.length < MIN_TOKEN_COUNT) {
+        await this.error(['Article too short', url, filteredText].join('\n\n'));
+        return;
       }
-      try {
-        await prompt.handleReply(reply);
-      } catch (e) {
-        if (/too long|sentiment|category/i.test(e.message)) {
-          reply = await chatService.send(prompt.text);
-          console.log(e);
-          // attempt single retry
-          await prompt.handleReply(reply);
-        } else {
-          throw e;
-        }
+      newSummary.filteredText = filteredText;
+
+      const reply = await openai.send<SummaryCreationAttributes>(`Call createSummary and return a new summary for the following article:\n\n${newSummary.filteredText}`, {
+        function_call: { name: 'createSummary' },
+        functions: [
+          {
+            name: 'createSummary',
+            parameters: {
+              properties: {
+                bullets: {
+                  items: {
+                    maxLength: 50, 
+                    type: 'string', 
+                  }, 
+                  length: 5,
+                  type: 'array', 
+                },
+                category: {
+                  enum: this.categories,
+                  type: 'string',
+                },
+                shortSummary: { maxLength: 150, type: 'string' },
+                subcategory: {
+                  enum: this.categories,
+                  type: 'string',
+                },
+                summary: { maxLength: 500, type: 'string' },
+                title: { maxLength: 50, type: 'string' },
+              },
+              required: ['title', 'shortSummary', 'summary', 'bullets', 'category'],
+              type: 'object',
+            },
+          },
+        ],
+      });
+      if (!reply) {
+        await this.error('createSummary returned null');
       }
-      this.log(reply);
+      newSummary = {
+        ...newSummary,
+        ...reply,
+      };
+
+    } catch (e) {
+      await this.error(['There was an issue generating the summary on openai', e].join('\n\n'));
+      return;
     }
-      
+
     try {
     
-      const category = await Category.findOne({ where: { displayName: categoryDisplayName } });
+      const category = await Category.findOne({ where: { displayName: newSummary.category } });
       newSummary.categoryId = category.id;
       
       if (await Summary.findOne({ where: { url } })) {
         await this.error('job already completed by another worker');
+        return;
       }
     
       // Save summary to database
       const summary = await Summary.create(newSummary);
-      
+
       // Save article media
       if (loot.imageUrls && loot.imageUrls.length > 0) {
         // download looted images
@@ -301,13 +284,11 @@ export class ScribeService extends BaseService {
       
       try {
         await summary.generateThumbnails();
+        await summary.generateSentiments();
       } catch (e) {
         console.error(e);
       }
-        
-      // Generate sentiment scores
-      await summary.generateSentiment();
-      
+
       if (this.features.tts) {
       
         this.log('Generating tts');
@@ -328,19 +309,20 @@ export class ScribeService extends BaseService {
         }
         
       }
-      
+
       try {
         await Summary.refreshViews(['refresh_summary_media_view', 'refresh_summary_sentiment_view']);
       } catch (e) {
         console.error(e);
       }
-      
+
       this.log('🥳 Created new summary from', url, newSummary.title);
       
       return summary;
       
     } catch (e) {
-      await this.error(['😤 Unexpected Error Encountered', url, JSON.stringify(e), JSON.stringify(newSummary, null, 2)].join('\n\n'));
+      await this.error(['😤 Unexpected Error Encountered', url, e, JSON.stringify(newSummary, null, 2)].join('\n\n'));
+      return;
     }
     
   }
@@ -405,7 +387,7 @@ export class ScribeService extends BaseService {
       ];
       
       // initialize chat service
-      const chatService = new OpenAIService();
+      const chatService = new OpenAIService({ persist: true });
       // iterate through each summary prompt and send them to ChatGPT
       for (const prompt of prompts) {
         let reply = await chatService.send(prompt.text);

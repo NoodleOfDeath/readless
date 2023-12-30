@@ -73,7 +73,8 @@ export async function doWork() {
               {
                 content,
                 imageUrls: JSON.parse(imageUrls ?? '[]') as string[], 
-                priority: job.priority,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                priority: job.priority as any,
                 publisher, 
                 url,
               }

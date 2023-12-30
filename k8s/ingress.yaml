@@ -208,3 +208,123 @@ spec:
                 name: readless-applink-dev
                 port:
                   number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: motm-web
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - www.mergingoftheminds.com
+      secretName: tls-www.mergingoftheminds.com
+  rules:
+    - host: www.mergingoftheminds.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: readless-web-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: motm-web-redirect
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      set $FLAGS "";
+      if ($request_uri = '/.well-known/assetlinks.json') {
+        set $FLAGS "W";
+      }
+      if ($host = 'mergingoftheminds.com') {
+        set $FLAGS "${FLAGS}X";
+      }
+      if ($FLAGS !~ "W") {
+        rewrite ^ https://www.mergingoftheminds.com$request_uri permanent;
+      }
+spec:
+  tls:
+    - hosts:
+        - mergingoftheminds.com
+      secretName: tls-mergingoftheminds.com
+  rules:
+    - host: mergingoftheminds.com
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: readless-web-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: 2nerds1cup-web
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - www.2nerds1cup.com
+      secretName: tls-www.2nerds1cup.com
+  rules:
+    - host: www.2nerds1cup.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: readless-web-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: 2nerds1cup-web-redirect
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      set $FLAGS "";
+      if ($request_uri = '/.well-known/assetlinks.json') {
+        set $FLAGS "W";
+      }
+      if ($host = '2nerds1cup.com') {
+        set $FLAGS "${FLAGS}X";
+      }
+      if ($FLAGS !~ "W") {
+        rewrite ^ https://www.2nerds1cup.com$request_uri permanent;
+      }
+spec:
+  tls:
+    - hosts:
+        - 2nerds1cup.com
+      secretName: tls-2nerds1cup.com
+  rules:
+    - host: 2nerds1cup.com
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: readless-web-prod
+                port:
+                  number: 80
