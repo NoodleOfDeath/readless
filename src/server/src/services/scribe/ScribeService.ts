@@ -4,7 +4,6 @@ import { ReadAndSummarizePayload, RecapPayload } from './types';
 import {
   Loot,
   OpenAIService,
-  Prompt,
   PuppeteerError,
   PuppeteerService,
   S3Service,
@@ -13,6 +12,7 @@ import {
 import {
   Category,
   Recap,
+  RecapCreationAttributes,
   RecapSummary,
   SentimentMethod,
   Subscription,
@@ -25,7 +25,6 @@ import { BaseService } from '../base';
 
 const MIN_TOKEN_COUNT = 50;
 const MAX_OPENAI_TOKEN_COUNT = Number(process.env.MAX_OPENAI_TOKEN_COUNT || 1500);
-const BAD_RESPONSE_EXPR = /^["']?[\s\n]*(?:Understood,|Alright,|okay, i|Okay. How|I am an AI|I'm sorry|stay (?:informed|updated)|got it|keep yourself updated|CNBC: stay|CNBC is offering|sign\s?up|HuffPost|got it. |how can i|hello!|okay, i'm|sure,)/i;
 
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
 
@@ -200,8 +199,12 @@ export class ScribeService extends BaseService {
                   enum: this.categories,
                   type: 'string',
                 },
-                summary: { maxLength: 500, type: 'string' },
-                title: { maxLength: 50, type: 'string' },
+                summary: {
+                  maxLength: 600,
+                  minLength: 300,
+                  type: 'string', 
+                },
+                title: { maxLength: 100, type: 'string' },
               },
               required: ['title', 'shortSummary', 'summary', 'bullets', 'category'],
               type: 'object',
@@ -371,47 +374,34 @@ export class ScribeService extends BaseService {
         key,
         length: duration,
       });
-      const prompts: Prompt[] = [
-        {
-          handleReply: async (reply) => {
-            newRecap.text = reply;
-          },
-          text: mainPrompt,
-        },
-        {
-          handleReply: async (reply) => {
-            newRecap.title = reply;
-          },
-          text: 'Give this recap a 10-15 word title that does not reflexively reference that this is a recap/daily highlight. For example: Trump Impeached and Lethal Forest Fires in California',
-        },
-      ];
       
       // initialize chat service
-      const chatService = new OpenAIService({ persist: true });
+      const openai = new OpenAIService();
+
       // iterate through each summary prompt and send them to ChatGPT
-      for (const prompt of prompts) {
-        let reply = await chatService.send(prompt.text);
-        if (BAD_RESPONSE_EXPR.test(reply)) {
-          // attempt single retry
-          reply = await chatService.send(prompt.text);
-          if (BAD_RESPONSE_EXPR.test(reply)) {
-            await this.error(['Bad response from chatService', '--repl--', reply, '--prompt--', prompt.text].join('\n'));
-          }
-        }
-        try {
-          await prompt.handleReply(reply);
-        } catch (e) {
-          if (/too long|sentiment|category/i.test(e.message)) {
-            reply = await chatService.send(prompt.text);
-            console.error(e);
-            // attempt single retry
-            await prompt.handleReply(reply);
-          } else {
-            throw e;
-          }
-        }
-        this.log(reply);
-      }
+      
+      const data = await openai.send<RecapCreationAttributes>(mainPrompt, {
+        function_call: { name: 'createRecap' },
+        functions: [
+          {
+            name: 'createRecap',
+            parameters: {
+              properties: {
+                text: {
+                  maxLength: 750,
+                  minLength: 250,
+                  type: 'string', 
+                },
+                title: { maxLength: 100, type: 'string' },
+              },
+              required: ['title', 'text'],
+              type: 'object',
+            },
+          },
+        ],
+      });
+      newRecap.title = data.title;
+      newRecap.text = data.text;
       
       const recap = await Recap.create(newRecap);
       

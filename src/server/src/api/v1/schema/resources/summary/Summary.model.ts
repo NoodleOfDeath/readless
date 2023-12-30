@@ -607,7 +607,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     const payload = [this.title, this.shortSummary].join('\n\n');
     if (method === 'openai') {
       await SummarySentiment.create({
-        method,
+        method: 'openai',
         parentId: this.id,
         payload,
         score: score ?? await SentimentService.sentiment('openai', payload),
@@ -618,7 +618,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         method: 'afinn',
         parentId: this.id,
         payload,
-        score: score ?? (await SentimentService.sentiment('afinn', payload))?.score,
+        score: score ?? (await SentimentService.sentiment('afinn', payload))?.comparative,
       });
     } else
     if (method === 'vader') {

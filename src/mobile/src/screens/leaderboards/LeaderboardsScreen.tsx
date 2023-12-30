@@ -298,7 +298,7 @@ export function LeaderboardsScreen({ route: _route }: ScreenComponent<'leaderboa
             component={ LongestStreakLeaderboardScreen }
             initialParams={ { metrics } } />
           {__DEV__ && (
-              <Tab.Screen
+            <Tab.Screen
               name={ strings.daysActive }
               component={ DaysActiveLeaderboardScreen } />
           )}
