@@ -175,7 +175,7 @@ export class ScribeService extends BaseService {
       }
       newSummary.filteredText = filteredText;
 
-      const reply = await openai.send<SummaryCreationAttributes>(`Call createSummary and return a new summary for the following article. Generate 5 bullets 20 words each. The title 20 words. Short summary 200 words and summary 500 words:\n\n${newSummary.filteredText}`, {
+      const reply = await openai.send<SummaryCreationAttributes>(`Call createSummary and return a new summary for the following article. Generate 5 bullets 20 words each. The title 20 words. Short summary 100 words and summary 400 words:\n\n${newSummary.filteredText}`, {
         function_call: { name: 'createSummary' },
         functions: [
           {
