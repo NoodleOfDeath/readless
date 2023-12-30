@@ -175,7 +175,7 @@ export class ScribeService extends BaseService {
       }
       newSummary.filteredText = filteredText;
 
-      const reply = await openai.send<SummaryCreationAttributes>(`Call createSummary and return a new summary for the following article:\n\n${newSummary.filteredText}`, {
+      const reply = await openai.send<SummaryCreationAttributes>(`Call createSummary and return a new summary for the following article. Generate 5 bullets 20 words each. The title 20 words. Short summary 200 words and summary 500 words:\n\n${newSummary.filteredText}`, {
         function_call: { name: 'createSummary' },
         functions: [
           {
@@ -187,14 +187,18 @@ export class ScribeService extends BaseService {
                     maxLength: 50, 
                     type: 'string', 
                   }, 
-                  length: 5,
+                  maxLength: 5,
+                  minLength: 5,
                   type: 'array', 
                 },
                 category: {
                   enum: this.categories,
                   type: 'string',
                 },
-                shortSummary: { maxLength: 150, type: 'string' },
+                shortSummary: { 
+                  maxLength: 150, 
+                  type: 'string',
+                },
                 subcategory: {
                   enum: this.categories,
                   type: 'string',
@@ -204,7 +208,10 @@ export class ScribeService extends BaseService {
                   minLength: 300,
                   type: 'string', 
                 },
-                title: { maxLength: 100, type: 'string' },
+                title: { 
+                  maxLength: 100,
+                  type: 'string',
+                },
               },
               required: ['title', 'shortSummary', 'summary', 'bullets', 'category'],
               type: 'object',
