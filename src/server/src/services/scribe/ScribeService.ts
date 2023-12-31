@@ -43,17 +43,6 @@ export class ScribeService extends BaseService {
     this.categories = categories.map((c) => c.displayName);
     await SentimentMethod.prepare();
   }
-
-  public static async error(message: string, throws = true): Promise<void> {
-    console.error(message);
-    await SystemLog.create({
-      level: 'error',
-      message,
-    });
-    if (throws === true) {
-      throw new Error(message);
-    }
-  }
   
   public static async readAndSummarize(
     {
@@ -72,11 +61,11 @@ export class ScribeService extends BaseService {
     if (!force) {
       const existingSummary = await Summary.findOne({ where: { url } });
       if (existingSummary) {
-        console.log(`Summary already exists for ${url}`);
+        await this.log(`Summary already exists for ${url}`);
         return existingSummary;
       }
     } else {
-      console.log(`Forcing summary rewrite for ${url}`);
+      await this.log(`Forcing summary rewrite for ${url}`);
     }
 
     if (!PuppeteerService.EXCLUDE_EXPRS.depth1.every((e) => !new RegExp(e, 'i').test(url.replace(/^https?:\/\/.*?(?=\/)/, '')))) {
@@ -110,7 +99,7 @@ export class ScribeService extends BaseService {
     if (!force) {
       const existingMedia = await SummaryMedia.findOne({ where: { originalUrl: loot.imageUrls } });
       if (existingMedia) {
-        console.log(`Media already exists for ${url}`);
+        await this.log(`Media already exists for ${url}`);
         return await Summary.findOne({ where: { id: existingMedia.parentId } });
       }
     }
@@ -141,6 +130,7 @@ export class ScribeService extends BaseService {
       originalTitle: loot.title,
       publisherId: publisher.id,
       rawText: loot.rawText,
+      summary: 'This reading format will be removed in the next update! After all, it\'s called Read Less!',
       url,
     });
 
@@ -175,7 +165,7 @@ export class ScribeService extends BaseService {
       }
       newSummary.filteredText = filteredText;
 
-      const reply = await openai.send<SummaryCreationAttributes>(`Call createSummary and return a new summary for the following article. Generate 5 bullets 20 words each. The title 20 words. Short summary 100 words and summary 400 words:\n\n${newSummary.filteredText}`, {
+      const reply = await openai.send<SummaryCreationAttributes>(`Call createSummary and return a new summary for the following article. Generate 5 bullets 20 words each. The title 20 words. Short summary 3 sentences:\n\n${newSummary.filteredText}`, {
         function_call: { name: 'createSummary' },
         functions: [
           {
@@ -199,21 +189,12 @@ export class ScribeService extends BaseService {
                   maxLength: 150, 
                   type: 'string',
                 },
-                subcategory: {
-                  enum: this.categories,
-                  type: 'string',
-                },
-                summary: {
-                  maxLength: 600,
-                  minLength: 300,
-                  type: 'string', 
-                },
                 title: { 
                   maxLength: 100,
                   type: 'string',
                 },
               },
-              required: ['title', 'shortSummary', 'summary', 'bullets', 'category'],
+              required: ['title', 'shortSummary', 'bullets', 'category'],
               type: 'object',
             },
           },
