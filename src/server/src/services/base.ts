@@ -1,3 +1,4 @@
+import { SystemLog } from '../api/v1/schema';
 
 export class BaseService {
 

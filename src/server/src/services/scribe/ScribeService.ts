@@ -19,7 +19,6 @@ import {
   Summary,
   SummaryCreationAttributes,
   SummaryMedia,
-  SystemLog,
 } from '../../api/v1/schema';
 import { BaseService } from '../base';
 
