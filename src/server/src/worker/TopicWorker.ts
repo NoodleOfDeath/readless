@@ -12,7 +12,7 @@ export async function main() {
 
 const RELATIONSHIP_THRESHOLD = process.env.RELATIONSHIP_THRESHOLD ? Number(process.env.RELATIONSHIP_THRESHOLD) : 0.75;
 const DUPLICATE_LOOKBACK_INTERVAL = process.env.DUPLICATE_LOOKBACK_INTERVAL || '1d';
-const TOPIC_RECALCULATE_RATE = ms(process.env.TOPIC_RECALCULATE_RATE || '10m');
+const TOPIC_RECALCULATE_RATE = ms(process.env.TOPIC_RECALCULATE_RATE || '5m');
 
 export async function doWork() {
   try {
@@ -29,9 +29,19 @@ export async function doWork() {
         const filteredSummaries = summaries.filter((s) => s.id !== summary.id && !existingSiblings.includes(s.id));
         console.log('filtered summaries', filteredSummaries.length);
         for (const possibleSibling of filteredSummaries) {
-          const score = await compareSimilarity(summary.shortSummary, possibleSibling.shortSummary);
-          if (score > RELATIONSHIP_THRESHOLD) {
-            siblings.push(possibleSibling);
+          try {
+            const score = await compareSimilarity(summary.shortSummary, possibleSibling.shortSummary);
+            if (score > RELATIONSHIP_THRESHOLD) {
+              siblings.push(possibleSibling);
+            }
+          } catch (e) {
+            if (process.env.ERROR_REPORTING) {
+              console.error(e);
+            }
+            await SystemLog.create({
+              level: 'error',
+              message: `${e}`,
+            });
           }
         }
         console.log('making associations for', summary.id);
