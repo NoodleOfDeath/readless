@@ -7,7 +7,7 @@ import { Summary, SystemLog } from '../api/v1/schema/models';
 import { DBService } from '../services';
 import { compareSimilarity } from '../utils';
 
-const model?: any;
+let model: any;
 
 export async function main() {
   await DBService.prepare();
