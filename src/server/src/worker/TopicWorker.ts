@@ -1,12 +1,17 @@
 import ms from 'ms';
 import { Op } from 'sequelize';
 
+import * as use from '@tensorflow-models/universal-sentence-encoder';
+
 import { Summary, SystemLog } from '../api/v1/schema/models';
 import { DBService } from '../services';
 import { compareSimilarity } from '../utils';
 
+const model?: any;
+
 export async function main() {
   await DBService.prepare();
+  model = await use.load();
   doWork();
 }
 
@@ -30,7 +35,7 @@ export async function doWork() {
         console.log('filtered summaries', filteredSummaries.length);
         for (const possibleSibling of filteredSummaries) {
           try {
-            const score = await compareSimilarity(summary.shortSummary, possibleSibling.shortSummary);
+            const score = await compareSimilarity(summary.shortSummary, possibleSibling.shortSummary, model);
             if (score > RELATIONSHIP_THRESHOLD) {
               siblings.push(possibleSibling);
             }
