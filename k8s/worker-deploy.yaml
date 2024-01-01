@@ -78,6 +78,8 @@ spec:
               value: '$S3_KEY'
             - name: S3_SECRET
               value: '$S3_SECRET'
+            - name: TOPIC_RECALCULATE_RATE
+              value: '$TOPIC_RECALCULATE_RATE'
             - name: WORKER_QUEUE
               value: '$WORKER_QUEUE'
             - name: WORKER_RETRY_EXPRS

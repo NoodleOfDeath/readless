@@ -156,20 +156,10 @@ async function scheduleJobs() {
       },
       { group: 'caches' }
     );
-    console.log('done scheduling cache jobs');
-    console.log('queuing topic jobs');
-    const topicQueue = await Queue.from(Queue.QUEUES.topics);
-    await topicQueue.clear();
-    await topicQueue.add(
-      'topics-resolution', 
-      { summary: 0 },
-      { group: 'topics' }
-    );
-    console.log('done scheduling topic jobs');
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(scheduleJobs, ms(process.env.CACHE_HALFLIFE || '150s') * 2 * TOP_STORIES_RECACHE_RATE);
+    setTimeout(scheduleJobs, ms(process.env.CACHE_HALFLIFE || '2m') * 2 * TOP_STORIES_RECACHE_RATE);
   }
 }
 
