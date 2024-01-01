@@ -2,14 +2,15 @@ import ms from 'ms';
 import { Op } from 'sequelize';
 
 import { Summary, SystemLog } from '../api/v1/schema/models';
-import { DBService, OpenAIService } from '../services';
+import { DBService } from '../services';
+import { compareSimilarity } from '../utils';
 
 export async function main() {
   await DBService.prepare();
   doWork();
 }
 
-const RELATIONSHIP_THRESHOLD = process.env.RELATIONSHIP_THRESHOLD ? Number(process.env.RELATIONSHIP_THRESHOLD) : 0.4;
+const RELATIONSHIP_THRESHOLD = process.env.RELATIONSHIP_THRESHOLD ? Number(process.env.RELATIONSHIP_THRESHOLD) : 0.75;
 const DUPLICATE_LOOKBACK_INTERVAL = process.env.DUPLICATE_LOOKBACK_INTERVAL || '1d';
 const TOPIC_RECALCULATE_RATE = ms(process.env.TOPIC_RECALCULATE_RATE || '10m');
 
@@ -23,39 +24,13 @@ export async function doWork() {
     for (const summary of summaries) {
       console.log('finding siblings for', summary.id);
       const siblings: Summary[] = [];
-      const words = summary.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
       const existingSiblings = await summary.getSiblings();
       const filteredSummaries = summaries.filter((s) => s.id !== summary.id && !existingSiblings.includes(s.id));
       console.log('filtered summaries', filteredSummaries.length);
       for (const possibleSibling of filteredSummaries) {
-        const siblingWords = possibleSibling.title.replace(/[ \W]+/g, ' ').split(' ').map((w) => w);
-        const score = words.map((a) => {
-          if (siblingWords.some((b) => a.toLowerCase() === b.toLowerCase())) {
-            return 4;
-          }
-          if (siblingWords.some((b) => a.replace(/\W/g, '').length > 0 && new RegExp(`${a.replace(/\W/g, '')}(?:ies|es|s|ed|ing)?`, 'i').test(b))) {
-            return 2;
-          }
-          return 0;
-        }).reduce((prev, curr) => curr + prev, 0) / (words.length * 4) + (summary.categoryId === possibleSibling.categoryId ? 0.05 : 0.0);
+        const score = await compareSimilarity(summary.shortSummary, possibleSibling.shortSummary);
         if (score > RELATIONSHIP_THRESHOLD) {
-          console.log('----------');
-          console.log();
-          console.log('Comparing');
-          console.log(`>>> "${summary.title}"`);
-          console.log('with');
-          console.log(`>>> "${possibleSibling.title}"`);
-          console.log('Score: ', score);
-          console.log();
-          const chatService = new OpenAIService();
-          const yesOrNo = await chatService.send(`
-            Are the following articles about the same exact topic? Please respond only with YES or NO:
-            [Article 1] ${summary.title}: ${summary.shortSummary.slice(0, Math.min(summary.shortSummary.length, 100))}
-            [Article 2] ${possibleSibling.title}: ${possibleSibling.shortSummary.slice(0, Math.min(possibleSibling.shortSummary.length, 100))}
-          `);
-          if (/yes/i.test(yesOrNo)) {
-            siblings.push(possibleSibling);
-          }
+          siblings.push(possibleSibling);
         }
       }
       console.log('making associations for', summary.id);
@@ -70,7 +45,7 @@ export async function doWork() {
     }
     await SystemLog.create({
       level: 'error',
-      message: e,
+      message: `${e}`,
     });
   } finally {
     setTimeout(doWork, TOPIC_RECALCULATE_RATE);

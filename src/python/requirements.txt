@@ -1,6 +1,0 @@
-Pattern==3.6.0
-textblob==0.17.1
-vaderSentiment==3.3.2
-spacy==3.6.0
-polyglot==16.7.4
-flair==0.12.2
