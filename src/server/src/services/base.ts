@@ -18,7 +18,7 @@ export class BaseService {
   public static async log(message: string, ...args: any[]): Promise<void> {
     console.log(`[${new Date()}]`, ...args);
     await SystemLog.create({
-      level: 'log',
+      level: 'info',
       message,
     });
   }

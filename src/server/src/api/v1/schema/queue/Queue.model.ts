@@ -10,7 +10,6 @@ import {
   CrawlJobData,
   JobNameOptions,
   SiteMapJobData,
-  TopicResolutionJobData,
 } from './Job.types';
 import {
   AddJobOptions,
@@ -40,8 +39,6 @@ export class Queue<D extends Serializable = Serializable, R = Serializable, Q ex
     crawler: new QueueSpecifier<CrawlJobData, any>('crawler'),
     recaps: new QueueSpecifier<RecapPayload, Recap>('recaps'),
     sitemaps: new QueueSpecifier<SiteMapJobData, Summary>('sitemaps'),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    topics: new QueueSpecifier<TopicResolutionJobData, any>('topics'),
   };
   
   static async prepare() {
