@@ -22,20 +22,30 @@ export async function doWork() {
       where: { originalDate: { [Op.gt]: new Date(Date.now() - ms(DUPLICATE_LOOKBACK_INTERVAL)) } },
     });
     for (const summary of summaries) {
-      console.log('finding siblings for', summary.id);
-      const siblings: Summary[] = [];
-      const existingSiblings = await summary.getSiblings();
-      const filteredSummaries = summaries.filter((s) => s.id !== summary.id && !existingSiblings.includes(s.id));
-      console.log('filtered summaries', filteredSummaries.length);
-      for (const possibleSibling of filteredSummaries) {
-        const score = await compareSimilarity(summary.shortSummary, possibleSibling.shortSummary);
-        if (score > RELATIONSHIP_THRESHOLD) {
-          siblings.push(possibleSibling);
+      try {
+        console.log('finding siblings for', summary.id);
+        const siblings: Summary[] = [];
+        const existingSiblings = await summary.getSiblings();
+        const filteredSummaries = summaries.filter((s) => s.id !== summary.id && !existingSiblings.includes(s.id));
+        console.log('filtered summaries', filteredSummaries.length);
+        for (const possibleSibling of filteredSummaries) {
+          const score = await compareSimilarity(summary.shortSummary, possibleSibling.shortSummary);
+          if (score > RELATIONSHIP_THRESHOLD) {
+            siblings.push(possibleSibling);
+          }
         }
-      }
-      console.log('making associations for', summary.id);
-      for (const sibling of siblings) {
-        await summary.associateWith(sibling);
+        console.log('making associations for', summary.id);
+        for (const sibling of siblings) {
+          await summary.associateWith(sibling);
+        }
+      } catch (e) {
+        if (process.env.ERROR_REPORTING) {
+          console.error(e);
+        }
+        await SystemLog.create({
+          level: 'error',
+          message: `${e}`,
+        });
       }
     }
     console.log('done resolving duplicates');

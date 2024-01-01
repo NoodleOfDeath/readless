@@ -59,6 +59,12 @@ describe('summary unit tests', () => {
     );
     console.log(score);
     expect(score).toBeLessThan(0.75);
+    score = await compareSimilarity(
+      'Donald Trump\'s ex-attorney Ty Cobb describes Trump\'s legal tactics as \'frivolous\' attempts at delaying his trials. Trump faces four criminal trials this year, including charges related to alleged election interference and mishandling of classified documents. He maintains his innocence and accuses federal prosecutors of targeting him for political purposes. Legal analysts speculate that Trump may seek to delay his trials to potentially pardon himself. Cobb criticizes Trump\'s attacks against prosecutors, calling them a \'formulaic game.\'',
+      'Gardner Minshew and Jonathan Taylor help the Indianapolis Colts secure a 23-20 victory over the Las Vegas Raiders, keeping them in the AFC playoff chase. The Colts will head into their regular-season finale with three straight home wins and are tied with the Houston Texans atop the AFC South standings. The Jacksonville Jaguars also have a share of the division lead.'
+    );
+    console.log(score);
+    expect(score).toBeLessThan(0.75);
   });
   
   test('summarize', async () => {
