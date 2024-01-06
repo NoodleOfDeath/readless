@@ -28,7 +28,6 @@ import {
 } from '../../../../../services';
 import { parseDate } from '../../../../../utils';
 import { BulkMetadataResponse } from '../../../controllers';
-import { Cache } from '../../system/Cache.model';
 import { Post } from '../Post.model';
 import { Category } from '../channel/Category.model';
 import { PublicCategoryAttributes } from '../channel/Category.types';
@@ -257,12 +256,12 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   
   public static async refreshViews(views: QueryKey | QueryKey[] = ['refresh_summary_media_view', 'refresh_summary_sentiment_view', 'refresh_summary_translation_view']) {
     for (const view of Array.isArray(views) ? views : [views]) {
-      await this.store.query(QueryFactory.getQuery(view));
+      await this.sql.query(QueryFactory.getQuery(view));
     }
   }
 
   public static async getSitemapData() {
-    const [summaries] = await this.store.query(QueryFactory.getQuery('sitemap'));
+    const [summaries] = await this.sql.query(QueryFactory.getQuery('sitemap'));
     return summaries as Summary[];
   }
 
@@ -274,7 +273,6 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     filter,
     ids,
     excludeIds = false,
-    matchType,
     interval: interval0,
     locale = 'en',
     start,
@@ -282,9 +280,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     pageSize = 10,
     page = 0,
     offset = pageSize * page,
-    forceCache,
-    cacheHalflife = process.env.CACHE_HALFLIFE || '150s',
-  }: SearchSummariesPayload, queryKey: QueryKey = 'search'): Promise<BulkMetadataResponse<PublicSummaryGroup & Summary, { sentiment: number }>> {
+  }: SearchSummariesPayload, queryKey: QueryKey = 'search'): Promise<BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>> {
     
     const { 
       categories, 
@@ -297,132 +293,62 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     
     const startDate = parseDate(start) ? parseDate(start) : end !== undefined ? new Date(0) : undefined;
     const endDate = parseDate(end) ? parseDate(end) : start !== undefined ? new Date() : undefined;
-    const idArray = typeof ids === 'number' || typeof ids === 'string' ? [ids] : !ids || ids.length === 0 ? [-1] : ids;
+    const idArray = typeof ids === 'number' || typeof ids === 'string' ? [ids] : !ids || ids.length === 0 ? null : ids;
     const interval = (start !== undefined || end !== undefined) ? '0m' : (pastInterval ?? interval0 ?? '100y');
     
     const replacements = {
-      categories: categories.length === 0 ? [''] : categories,
+      categories: categories.length === 0 ? null : categories,
       endDate: endDate ?? new Date(0),
-      excludeIds,
-      excludedCategories: excludedCategories.length === 0 ? [''] : excludedCategories,
-      excludedPublishers: excludedPublishers.length === 0 ? [''] : excludedPublishers,
+      excludeIds: excludeIds ? true : null,
+      excludedCategories: excludedCategories.length === 0 ? null : excludedCategories,
+      excludedPublishers: excludedPublishers.length === 0 ? null : excludedPublishers,
       filter: query,
       ids: idArray,
       interval,
       limit: Number(pageSize),
       locale: locale.replace(/-[a-z]{2}$/i, '') ?? '',
-      noCategories: categories.length === 0,
-      noExcludedCategories: excludedCategories.length === 0,
-      noExcludedPublishers: excludedPublishers.length === 0,
-      noFilter: !filter,
-      noIds: !ids || excludeIds,
-      noPublishers: publishers.length === 0,
       offset: Number(offset),
-      publishers: publishers.length === 0 ? [''] : publishers,
+      publishers: publishers.length === 0 ? null : publishers,
+      rankInterval: interval,
       startDate: startDate ?? new Date(),
     };
     
-    const cacheKey = [
-      queryKey,
-      filter,
-      idArray?.join(','),
-      excludeIds,
-      matchType,
-      interval,
-      queryKey === 'top_stories' ? '' : locale,
-      start,
-      end,
-      pageSize,
-      offset,
-    ].join(':');
-    
-    if (queryKey === 'top_stories' && !forceCache) {
-      const cache = await Cache.fromKey(cacheKey);
-      if (cache && cache.expiresSoon === false) {
-        try {
-          return JSON.parse(cache.value);
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    }
-    
-    const siblings: PublicSummaryGroup[] = [];
-    const fetch = async (previousRecords: PublicSummaryGroup[] = []) => {
+    let records = ((await this.sql.query(QueryFactory.getQuery(queryKey), {
+      nest: true,
+      replacements,
+      type: QueryTypes.SELECT,
+    })) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>[])[0];
       
-      let records = ((await this.store.query(QueryFactory.getQuery(queryKey), {
+    if (!records?.rows) {
+      return {
+        count: 0,
+        rows: [],
+      };
+    }
+      
+    // If exact search fails search partial words
+    if (records.rows.length === 0) {
+      const { filter: partialFilter } = buildFilter(filter, 'any');
+      replacements.filter = partialFilter;
+      records = ((await this.sql.query(QueryFactory.getQuery(queryKey), {
         nest: true,
         replacements,
         type: QueryTypes.SELECT,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       })) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>[])[0];
-      
-      if (!records || !records.rows) {
-        return {
-          count: 0,
-          rows: [],
-        };
-      }
-      
-      // If exact search fails search partial words
-      if (records.rows.length === 0) {
-        const { filter: partialFilter } = buildFilter(filter, 'any');
-        replacements.filter = partialFilter;
-        records = ((await this.store.query(QueryFactory.getQuery(queryKey), {
-          nest: true,
-          replacements,
-          type: QueryTypes.SELECT,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        })) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>[])[0];
-      }
-      
-      if (filter || records.rows.length < replacements.limit) {
-        return records;
-      }
-      
-      const filteredRecords = records.rows.filter((a) => {
-        const result = ![...previousRecords, ...siblings].some((r) => r.id === a.id && (!excludeIds || (excludeIds && !idArray.includes(r.id))) && !(a.publisher.name in excludedPublishers) && !(a.category.name in excludedCategories));
-        if (a.siblings) {
-          siblings.push(...a.siblings);
-        }
-        return result;
-      });
-      
-      console.log('filtered', filteredRecords.length);
-      
-      if (filteredRecords.length < replacements.limit) {
-        replacements.offset += replacements.limit;
-        replacements.limit -= filteredRecords.length;
-        return {
-          count: records.count,
-          metadata: records.metadata,
-          rows: [...filteredRecords, ...(await fetch(filteredRecords)).rows],
-        };
-      }
+    }
     
-      return {
-        count: records.count,
-        metadata: records.metadata,
-        rows: filteredRecords,
-      };
-    };
+    for (const row of records.rows) {
+      if (row.siblings?.some((s) => s.id === row.id)) {
+        console.log('FUCK - found self in siblings', row.id);
+      }
+    }
+      
+    if (filter || records.rows.length < replacements.limit) {
+      return records;
+    }
     
-    const filteredRecords = await fetch();
-
-    const response = {
-      count: filteredRecords.count,
-      metadata: filteredRecords.metadata,
-      next: filteredRecords.count === 0 ? 0 : replacements.offset + replacements.limit,
-      rows: filteredRecords.rows,
-    };
-    
-    await Cache.upsert({
-      halflife: cacheHalflife,
-      key: cacheKey,
-      value: JSON.stringify(response),
-    });
-    
-    return response;
+    return records;
   }
 
   async getInteractions(userId?: number, type?: InteractionType | InteractionType[]) {
