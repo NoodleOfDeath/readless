@@ -44,19 +44,20 @@ WHERE
   AND ((s."originalDate" > NOW() - INTERVAL :interval)
     OR ((s."originalDate" >= :startDate)
       AND (s."originalDate" <= :endDate)))
-  AND ((s.id IN (:ids))
-    OR :noIds)
+  AND (:ids IS NULL
+    OR (s.id IN (:ids)))
   AND ((:excludeIds
-      AND s.id NOT IN (:ids))
-    OR NOT :excludeIds)
-  AND ((pub.name IN (:publishers))
-    OR :noPublishers)
-  AND ((pub.name NOT IN (:excludedPublishers))
-    OR :noExcludedPublishers)
-  AND ((cat.name NOT IN (:excludedCategories))
-    OR :noExcludedCategories)
-  AND (:noFilter
-    OR ((cat.name IN (:categories)))
+      OR :ids IS NULL)
+    OR s.id NOT IN (:ids))
+  AND (:publishers IS NULL
+    OR (pub.name IN (:publishers)))
+  AND (:excludedPublishers IS NULL
+    OR (pub.name NOT IN (:excludedPublishers)))
+  AND (:excludedCategories IS NULL
+    OR (cat.name NOT IN (:excludedCategories)))
+  AND (LENGTH(:filter) = 0
+    OR (:categories IS NULL
+      OR (cat.name IN (:categories)))
     OR (s.title ~* :filter)
     OR (s."shortSummary" ~* :filter)
     OR (s.summary ~* :filter)
@@ -78,8 +79,7 @@ LIMIT :limit OFFSET :offset) b
   LEFT OUTER JOIN summary_sentiment_view ss ON ss."parentId" = s.id
   LEFT OUTER JOIN summary_media_view sm ON sm."parentId" = s.id
   LEFT OUTER JOIN summary_translation_view st ON st."parentId" = s.id
-    AND st.locale = :locale
-    -- siblings
+  -- siblings
   LEFT OUTER JOIN summary_relations sr ON b.id = sr."parentId"
   LEFT OUTER JOIN summaries sibling ON sibling.id = sr."siblingId"
     AND (sibling."deletedAt" IS NULL)

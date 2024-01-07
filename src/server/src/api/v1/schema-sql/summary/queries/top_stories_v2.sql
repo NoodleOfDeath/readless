@@ -18,7 +18,7 @@ FROM (
     sm.media::jsonb media,
     st.translations::jsonb translations,
     "siblingCount",
-    COALESCE(JSON_AGG(DISTINCT sr."siblingId") FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::json) siblings,
+    COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT('id', sibling.id, 'url', sibling.url, 'originalDate', sibling."originalDate", 'createdAt', sibling."createdAt", 'title', sibling.title, 'shortSummary', sibling."shortSummary", 'summary', sibling.summary, 'bullets', sibling.bullets, 'imageUrl', sibling."imageUrl", 'publisher', JSON_BUILD_OBJECT('id', sibling_pub.id, 'name', sibling_pub.name, 'displayName', sibling_pub."displayName"), 'category', JSON_BUILD_OBJECT('id', sibling_cat.id, 'name', sibling_cat.name, 'displayName', sibling_cat."displayName", 'icon', sibling_cat.icon), 'sentiment', sibling_ss.sentiment, 'sentiments', sibling_ss.sentiments, 'media', sibling_sm.media, 'translations', sibling_st.translations)) FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::json) siblings,
     "totalCount"
   FROM (
     SELECT
@@ -90,6 +90,16 @@ LIMIT :limit OFFSET :offset) b
   LEFT OUTER JOIN summary_relations sr ON b.id = sr."parentId"
   LEFT OUTER JOIN summaries sibling ON sibling.id = sr."siblingId"
     AND (sibling."deletedAt" IS NULL)
+  LEFT OUTER JOIN publisher_view sibling_pub ON sibling."publisherId" = sibling_pub.id
+  AND (sibling_pub.locale = :locale
+    OR sibling_pub.locale IS NULL)
+  LEFT OUTER JOIN category_view sibling_cat ON sibling."categoryId" = sibling_cat.id
+  AND (sibling_cat.locale = :locale
+    OR sibling_cat.locale IS NULL)
+  LEFT OUTER JOIN summary_sentiment_view sibling_ss ON sibling_ss."parentId" = sibling.id
+  LEFT OUTER JOIN summary_media_view sibling_sm ON sibling_sm."parentId" = sibling.id
+  LEFT OUTER JOIN summary_translation_view sibling_st ON sibling_st."parentId" = sibling.id
+    AND sibling_st.locale = :locale
 GROUP BY
   b.id,
   s.url,

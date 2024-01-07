@@ -393,13 +393,40 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     let siblings = [...siblingIds];
     for (const id of siblingIds) {
       const sibling = await Summary.findByPk(id);
-      siblings.push(...(await sibling.getSiblings([...ignore, ...siblingIds, this.id])));
+      const stepSiblings = await sibling.getSiblings([...ignore, ...siblingIds, this.id]);
+      siblings.push(...stepSiblings);
     }
     siblings = Array.from(new Set(siblings));
     if (deep) {
       return await Promise.all(siblings.map(async (r) => await Summary.findByPk(r))) as R;
     }
     return siblings as R;
+  } 
+  
+  async isRelatedLHS(sibling: SummaryAttributes | number) {
+    const siblingId = typeof sibling === 'number' ? sibling : sibling.id;
+    const r = await SummaryRelation.findOne({ 
+      where: {
+        parentId: this.id,
+        siblingId,
+      },
+    });
+    return r != null;
+  }
+  
+  async isRelatedRHS(sibling: SummaryAttributes | number) {
+    const siblingId = typeof sibling === 'number' ? sibling : sibling.id;
+    const r = await SummaryRelation.findOne({ 
+      where: {
+        parentId: siblingId,
+        siblingId: this.id,
+      },
+    });
+    return r != null;
+  }
+  
+  async isRelated(sibling: SummaryAttributes | number) {
+    return await this.isRelatedLHS(sibling) && await this.isRelatedRHS(sibling);
   }
   
   async dropAllSiblings() {
@@ -413,35 +440,49 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     });
   }
   
+  async dropSibling(sibling: SummaryAttributes | number) {
+    const siblingId = typeof sibling === 'number' ? sibling : sibling.id;
+    const relation = await SummaryRelation.findOne({ 
+      where: {
+        parentId: this.id,
+        siblingId,
+      },
+    });
+    await relation?.destroy();
+  }
+  
   async associateWith(sibling: SummaryAttributes | number, ignore: number[] = []) {
     const siblingId = typeof sibling === 'number' ? sibling : sibling.id;
     const newSibling = await Summary.findByPk(siblingId);
     const siblings = await this.getSiblings([...ignore, siblingId]);
     const stepSiblings = await newSibling.getSiblings([...ignore, this.id]);
     const relations = Array.from(new Set([...siblings, ...stepSiblings]));
+    const associated: number[] = [...ignore];
     for (const relation of relations) {
       if (relation === this.id || relation === siblingId || ignore.includes(relation)) {
         continue;
       }
-      const siblingSummary = await Summary.scope('public').findByPk(relation);
+      const siblingSummary = await Summary.findByPk(relation);
       if (!siblingSummary) {
+        await this.dropSibling(relation);
         continue;
       }
-      await siblingSummary.associateWith(siblingId, [...ignore, ...relations, this.id]);
-      await siblingSummary.associateWith(this.id, [...ignore, ...relations, siblingId]);
+      await siblingSummary.associateWith(siblingId, [...associated, this.id]);
+      await siblingSummary.associateWith(this.id, [...associated, siblingId]);
+      associated.push(relation);
     }
-    await SummaryRelation.findOrCreate({
-      where: {
+    if (!(await this.isRelatedLHS(siblingId))) {
+      await SummaryRelation.create({
         parentId: this.id,
         siblingId,
-      },
-    });
-    await SummaryRelation.findOrCreate({
-      where: {
+      });
+    }
+    if (!(await this.isRelatedRHS(siblingId))) {
+      await SummaryRelation.create({
         parentId: siblingId,
         siblingId: this.id,
-      },
-    });
+      });
+    }
     console.log('associated', this.id, siblingId);
   }
   
