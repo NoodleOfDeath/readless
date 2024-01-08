@@ -18,8 +18,8 @@ export abstract class BaseModel<ModelAttributes extends object, CreationAttribut
     return defaults ?? {};
   }
   
-  static get store() {
-    return DBService.sq;
+  static get sql() {
+    return DBService.sql;
   }
   
   static loadQuery(path: string) {

@@ -299,7 +299,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       offset,
       userId, 
     };
-    const response: Streak[] = (await User.store.query(QueryFactory.getQuery('streak'), {
+    const response: Streak[] = (await User.sql.query(QueryFactory.getQuery('streak'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,
@@ -323,7 +323,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       limit: limit === 'ALL' ? 100 : limit,
       userId, 
     };
-    const response: InteractionCount[] = (await User.store.query(QueryFactory.getQuery('days_active'), {
+    const response: InteractionCount[] = (await User.sql.query(QueryFactory.getQuery('days_active'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,
@@ -350,7 +350,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       type,
       userId: null,
     };
-    const response = (await User.store.query(QueryFactory.getQuery('summary_interaction_count'), {
+    const response = (await User.sql.query(QueryFactory.getQuery('summary_interaction_count'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,

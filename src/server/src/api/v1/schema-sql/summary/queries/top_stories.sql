@@ -1,134 +1,137 @@
-SELECT
-  "totalCount"::int "count",
-  JSON_AGG(c.*) AS rows
-FROM (
-  SELECT
-    b.id,
-    s."title",
-    s."shortSummary",
-    s.summary,
-    s.bullets,
-    s.url,
-    s."originalDate",
-    s."imageUrl",
-    JSON_BUILD_OBJECT('id', pub.id, 'name', pub.name, 'displayName', pub."displayName") publisher,
-    JSON_BUILD_OBJECT('id', cat.id, 'name', cat.name, 'displayName', cat."displayName", 'icon', cat.icon) category,
-    ss.sentiment,
-    ss.sentiments::jsonb sentiments,
-    sm.media::jsonb media,
-    st.translations::jsonb translations,
-    "siblingCount",
-    COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT('id', sibling.id, 'url', sibling.url, 'originalDate', sibling."originalDate", 'createdAt', sibling."createdAt", 'title', sibling.title, 'shortSummary', sibling."shortSummary", 'summary', sibling.summary, 'bullets', sibling.bullets, 'imageUrl', sibling."imageUrl", 'publisher', JSON_BUILD_OBJECT('id', sibling_pub.id, 'name', sibling_pub.name, 'displayName', sibling_pub."displayName"), 'category', JSON_BUILD_OBJECT('id', sibling_cat.id, 'name', sibling_cat.name, 'displayName', sibling_cat."displayName", 'icon', sibling_cat.icon), 'sentiment', sibling_ss.sentiment, 'sentiments', sibling_ss.sentiments, 'media', sibling_sm.media, 'translations', sibling_st.translations)) FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::json) siblings,
-    "totalCount"
-  FROM (
-    SELECT
-      *,
-      COUNT(a.id) OVER () AS "totalCount"
-    FROM (
+--CREATE EXTENSION intarray;
+WITH SummariesWithCount AS (
+  WITH SummariesWithSiblings AS (
+    WITH DistinctSiblings AS (
+      WITH SiblingRanks AS (
+        SELECT
+          s.id,
+          s.title,
+          s."originalDate",
+          COUNT(ranked_sib.id)
+          rank,
+          COUNT(sib.id) total,
+          SORT(COALESCE(ARRAY_AGG(DISTINCT sib.id), '{}') || ARRAY[s.id]) siblings
+        FROM
+          summaries s
+        LEFT OUTER JOIN summary_relations sr ON s.id = sr."parentId"
+        AND sr."deletedAt" IS NULL
+    LEFT OUTER JOIN summaries ranked_sib ON ranked_sib.id = sr."siblingId"
+    AND ranked_sib."deletedAt" IS NULL
+    AND (ranked_sib."originalDate" > NOW() - INTERVAL :rankInterval)
+    LEFT OUTER JOIN summaries sib ON sib.id = sr."siblingId"
+    AND sib."deletedAt" IS NULL
+  WHERE
+    s."deletedAt" IS NULL
+    AND s."originalDate" > NOW() - INTERVAL :rankInterval
+    AND EXISTS (
       SELECT
-        s.id,
-        s."originalDate",
-        COUNT(sibling.id) AS "siblingCount"
+        1
       FROM
-        summaries s
-      LEFT OUTER JOIN categories cat ON s."categoryId" = cat.id
-    LEFT OUTER JOIN publishers pub ON s."publisherId" = pub.id
-    LEFT OUTER JOIN summary_translations st ON st."parentId" = s.id
-      AND st.locale = :locale
-  LEFT OUTER JOIN "summary_relations" sr ON (s.id = sr."parentId")
-  AND (sr."deletedAt" IS NULL)
-  LEFT OUTER JOIN summaries sibling ON (sibling.id = sr."siblingId")
-  AND (sibling."deletedAt" IS NULL)
-  AND (sibling."originalDate" > NOW() - INTERVAL :interval)
-WHERE
-  s."deletedAt" IS NULL
-  AND ((s."originalDate" > NOW() - INTERVAL :interval)
-    OR ((s."originalDate" >= :startDate)
-      AND (s."originalDate" <= :endDate)))
-  AND ((s.id IN (:ids))
-    OR :noIds)
-  AND ((:excludeIds
-      AND s.id NOT IN (:ids))
-    OR NOT :excludeIds)
-  AND ((pub.name IN (:publishers))
-    OR :noPublishers)
-  AND ((pub.name NOT IN (:excludedPublishers))
-    OR :noExcludedPublishers)
-  AND ((cat.name IN (:categories))
-    OR :noCategories)
-  AND ((cat.name NOT IN (:excludedCategories))
-    OR :noExcludedCategories)
-  AND (:noFilter
-    OR (s.title ~* :filter)
-    OR (s."shortSummary" ~* :filter)
-    OR (s.summary ~* :filter)
-    OR (s.bullets::text ~* :filter)
-    OR (st.value ~* :filter))
-GROUP BY
+        summaries sib
+      WHERE
+        sib.id = sr."siblingId"
+        AND sib."deletedAt" IS NULL)
+    GROUP BY
+      s.id,
+      s.title,
+      s."originalDate"
+    ORDER BY
+      COUNT(sib.id) DESC,
+      s."originalDate" DESC
+)
+    SELECT DISTINCT ON (siblings)
+      *
+    FROM
+      SiblingRanks
+)
+    SELECT
+      rank,
+      COUNT(DistinctSiblings.id) OVER () "totalCount",
+      AVG(ss.sentiment) OVER () "averageSentiment",
+      DistinctSiblings.id,
+      ss.sentiment,
+      ss.sentiments::jsonb sentiments
+    FROM DistinctSiblings
+    LEFT OUTER JOIN summary_sentiment_view ss ON ss."parentId" = DistinctSiblings.id
+GROUP BY DistinctSiblings.id,
+ss.sentiment,
+ss.sentiments::jsonb,
+rank ORDER BY rank DESC
+)
+SELECT
+  "rank",
+  "totalCount",
+  "averageSentiment",
+  SummariesWithSiblings.sentiment,
+  SummariesWithSiblings.sentiments::jsonb sentiments,
   s.id,
-  s."originalDate"
-ORDER BY
-  "siblingCount" DESC,
-  s."originalDate" DESC) a
-ORDER BY
-  a."siblingCount" DESC,
-  a."originalDate" DESC
-LIMIT :limit OFFSET :offset) b
-  LEFT OUTER JOIN summaries s ON b.id = s.id
-  AND (s."deletedAt" IS NULL)
+  s.url,
+  s."originalDate",
+  s.title,
+  s."shortSummary",
+  s.summary,
+  s.bullets,
+  JSON_BUILD_OBJECT('name', pub.name, 'displayName', pub."displayName") publisher,
+  JSON_BUILD_OBJECT('name', cat.name, 'displayName', cat."displayName", 'icon', cat.icon) category,
+  sm.media::jsonb media,
+  st.translations::jsonb translations,
+  COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT('id', sibling.id, 'url', sibling.url, 'originalDate', sibling."originalDate", 'createdAt', sibling."createdAt", 'title', sibling.title, 'shortSummary', sibling."shortSummary", 'summary', sibling.summary, 'bullets', sibling.bullets, 'imageUrl', sibling."imageUrl", 'publisher', JSON_BUILD_OBJECT('id', sibling_pub.id, 'name', sibling_pub.name, 'displayName', sibling_pub."displayName"), 'category', JSON_BUILD_OBJECT('id', sibling_cat.id, 'name', sibling_cat.name, 'displayName', sibling_cat."displayName", 'icon', sibling_cat.icon), 'sentiment', sibling_ss.sentiment, 'sentiments', sibling_ss.sentiments, 'media', sibling_sm.media, 'translations', sibling_st.translations)) FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::json) siblings
+FROM SummariesWithSiblings
+  LEFT OUTER JOIN summaries s ON s.id = SummariesWithSiblings.id
+  AND s."deletedAt" IS NULL
   LEFT OUTER JOIN publisher_view pub ON s."publisherId" = pub.id
   AND (pub.locale = :locale
-    OR pub.locale IS NULL)
+  OR pub.locale IS NULL)
   LEFT OUTER JOIN category_view cat ON s."categoryId" = cat.id
   AND (cat.locale = :locale
-    OR cat.locale IS NULL)
-  LEFT OUTER JOIN summary_sentiment_view ss ON ss."parentId" = s.id
+  OR cat.locale IS NULL)
   LEFT OUTER JOIN summary_media_view sm ON sm."parentId" = s.id
   LEFT OUTER JOIN summary_translation_view st ON st."parentId" = s.id
     AND st.locale = :locale
     -- siblings
-  LEFT OUTER JOIN summary_relations sr ON b.id = sr."parentId"
+  LEFT OUTER JOIN summary_relations sr ON s.id = sr."parentId"
   LEFT OUTER JOIN summaries sibling ON sibling.id = sr."siblingId"
     AND (sibling."deletedAt" IS NULL)
   LEFT OUTER JOIN publisher_view sibling_pub ON sibling."publisherId" = sibling_pub.id
   AND (sibling_pub.locale = :locale
-    OR sibling_pub.locale IS NULL)
+  OR sibling_pub.locale IS NULL)
   LEFT OUTER JOIN category_view sibling_cat ON sibling."categoryId" = sibling_cat.id
   AND (sibling_cat.locale = :locale
-    OR sibling_cat.locale IS NULL)
+  OR sibling_cat.locale IS NULL)
   LEFT OUTER JOIN summary_sentiment_view sibling_ss ON sibling_ss."parentId" = sibling.id
   LEFT OUTER JOIN summary_media_view sibling_sm ON sibling_sm."parentId" = sibling.id
-  LEFT OUTER JOIN summary_translation_view sibling_st ON sibling_st."parentId" = sibling.id
-    AND sibling_st.locale = :locale
-GROUP BY
-  b.id,
+    LEFT OUTER JOIN summary_translation_view sibling_st ON sibling_st."parentId" = sibling.id
+      AND sibling_st.locale = :locale
+  GROUP BY rank,
+  "totalCount",
+  "averageSentiment",
+  SummariesWithSiblings.sentiment,
+  SummariesWithSiblings.sentiments::jsonb,
+  s.id,
   s.url,
   s."originalDate",
-  s."createdAt",
   s.title,
   s."shortSummary",
   s.summary,
   s.bullets,
   s."imageUrl",
-  pub.id,
   pub.name,
   pub."displayName",
-  pub.description,
-  pub.translations::jsonb,
-  cat.id,
   cat.name,
   cat."displayName",
   cat.icon,
-  cat.translations::jsonb,
-  ss.sentiment,
-  ss.sentiments::jsonb,
   sm.media::jsonb,
-  st.translations::jsonb,
-  "siblingCount",
-  "totalCount"
-ORDER BY
-  b."siblingCount" DESC,
-  s."originalDate" DESC) c
+  st.translations::jsonb ORDER BY "rank" DESC,
+  s."originalDate" DESC
+LIMIT :limit OFFSET :offset
+)
+SELECT
+  "totalCount"::int count,
+  JSON_AGG(SummariesWithCount.*) "rows",
+  JSON_BUILD_OBJECT('sentiment', "averageSentiment") metadata
+FROM
+  SummariesWithCount
 GROUP BY
+  "averageSentiment",
   "totalCount";
 
