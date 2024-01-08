@@ -37,8 +37,8 @@ FROM (
       LEFT OUTER JOIN categories cat ON s."categoryId" = cat.id
     LEFT OUTER JOIN publishers pub ON s."publisherId" = pub.id
     LEFT OUTER JOIN summary_translations st ON st."parentId" = s.id
-      AND st.locale = :locale
-  LEFT OUTER JOIN summary_sentiment_view ss ON ss."parentId" = s.id
+      AND (st.locale = :locale)
+    LEFT OUTER JOIN summary_sentiment_view ss ON ss."parentId" = s.id
 WHERE
   s."deletedAt" IS NULL
   AND ((s."originalDate" > NOW() - INTERVAL :interval)
@@ -80,7 +80,9 @@ LIMIT :limit OFFSET :offset) b
   LEFT OUTER JOIN summary_sentiment_view ss ON ss."parentId" = s.id
   LEFT OUTER JOIN summary_media_view sm ON sm."parentId" = s.id
   LEFT OUTER JOIN summary_translation_view st ON st."parentId" = s.id
-  -- siblings
+    AND (st.locale = :locale
+      OR st.locale IS NULL)
+    -- siblings
   LEFT OUTER JOIN summary_relations sr ON b.id = sr."parentId"
   LEFT OUTER JOIN summaries sibling ON sibling.id = sr."siblingId"
     AND (sibling."deletedAt" IS NULL)
@@ -93,7 +95,8 @@ LIMIT :limit OFFSET :offset) b
   LEFT OUTER JOIN summary_sentiment_view sibling_ss ON sibling_ss."parentId" = sibling.id
   LEFT OUTER JOIN summary_media_view sibling_sm ON sibling_sm."parentId" = sibling.id
   LEFT OUTER JOIN summary_translation_view sibling_st ON sibling_st."parentId" = sibling.id
-    AND sibling_st.locale = :locale
+    AND (sibling_st.locale = :locale
+      OR sibling_st.locale IS NULL)
 GROUP BY
   s.id,
   s.url,
