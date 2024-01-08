@@ -53,8 +53,8 @@ export class SystemController {
     }
     const sitemap = await StaticGeneratorService.generateSitemap();
     await Cache.upsert({
-      halflife: '1h',
       key: 'sitemap',
+      lifespan: '1h',
       value: sitemap,
     });
     return sitemap;

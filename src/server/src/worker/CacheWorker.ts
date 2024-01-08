@@ -29,7 +29,7 @@ async function cacheTopStories(locale: string, interval = '1d', depth = 1) {
   let offset = 0;
   for (let page = 0; page < depth; page++) {
     const { next } = await Summary.getTopStories({
-      cacheHalflife: '3m',
+      cacheLifespan: '3m',
       forceCache: true,
       interval,
       locale,

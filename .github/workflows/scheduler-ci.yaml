@@ -48,7 +48,7 @@ jobs:
     environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
     env:
       API_ENDPOINT: ${{ vars.API_ENDPOINT }}
-      CACHE_HALFLIFE: ${{ vars.CACHE_HALFLIFE }}
+      CACHE_LIFESPAN: ${{ vars.CACHE_LIFESPAN }}
       CHROMIUM_EXECUTABLE_PATH: ${{ vars.CHROMIUM_EXECUTABLE_PATH }}
       ENABLED_FEATURES: ${{ vars.ENABLED_FEATURES }}
       K8S_NAMESPACE: ${{ secrets.K8S_NAMESPACE }}
@@ -62,7 +62,7 @@ jobs:
       PG_CONNECTION_STRING: ${{ secrets.PG_CONNECTION_STRING }}
       PUBLISHER_MAX_ATTEMPT_LIMIT: ${{ vars.PUBLISHER_MAX_ATTEMPT_LIMIT }}
       SPIDER_FETCH_INTERVAL: ${{ vars.SPIDER_FETCH_INTERVAL }}
-      TOP_STORIES_RECACHE_RATE: ${{ vars.TOP_STORIES_RECACHE_RATE }}
+      TOPIC_RECALCULATE_RATE: ${{ vars.TOPIC_RECALCULATE_RATE }}
     steps:
       - name: Print Job Description
         run: |

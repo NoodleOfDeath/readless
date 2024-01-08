@@ -28,8 +28,8 @@ spec:
           env:
             - name: API_ENDPOINT
               value: '$API_ENDPOINT'
-            - name: CACHE_HALFLIFE
-              value: '$CACHE_HALFLIFE'
+            - name: CACHE_LIFESPAN
+              value: '$CACHE_LIFESPAN'
             - name: CHROMIUM_EXECUTABLE_PATH
               value: '$CHROMIUM_EXECUTABLE_PATH'
             - name: ENABLED_FEATURES
@@ -44,8 +44,8 @@ spec:
               value: '$PUBLISHER_MAX_ATTEMPT_LIMIT'
             - name: SPIDER_FETCH_INTERVAL
               value: '$SPIDER_FETCH_INTERVAL'
-            - name: TOP_STORIES_RECACHE_RATE
-              value: '$TOP_STORIES_RECACHE_RATE'
+            - name: TOPIC_RECALCULATE_RATE
+              value: '$TOPIC_RECALCULATE_RATE'
 ---
 apiVersion: v1
 kind: Service
