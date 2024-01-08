@@ -86,7 +86,7 @@ export class Recap extends Post<RecapAttributes, RecapCreationAttributes> implem
     return await Recap.findOne({ where: { key: this.key(payload).key } });
   }
 
-  public async formatAsHTML(summaries0: PublicSummaryAttributes[] = [], baseUrl = process.env.BASE_DOMAIN) {
+  public async formatAsHTML(summaries0: Partial<PublicSummaryAttributes>[] = [], baseUrl = process.env.BASE_DOMAIN) {
     const summaries = Object.fromEntries(summaries0.map((s) => [s.id, s]));
     const sources: string[] = [];
     const body = this.text.replace(/\[([\d,\s]+)\]/g, (_, $1) => {

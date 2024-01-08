@@ -42,7 +42,7 @@ export class Category<
 
   static async getCategories(locale: SupportedLocale = 'en') {
     const replacements = { locale };
-    const categories: CategoryAttributes[] = await this.store.query(QueryFactory.getQuery('get_categories'), {
+    const categories: CategoryAttributes[] = await this.sql.query(QueryFactory.getQuery('get_categories'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,

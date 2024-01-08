@@ -69,7 +69,7 @@ export class Publisher<
 
   static async getPublishers(locale: SupportedLocale = 'en') {
     const replacements = { locale };
-    const publishers: PublisherAttributes[] = await this.store.query(QueryFactory.getQuery('get_publishers'), {
+    const publishers: PublisherAttributes[] = await this.sql.query(QueryFactory.getQuery('get_publishers'), {
       nest: true,
       replacements,
       type: QueryTypes.SELECT,

@@ -51,7 +51,7 @@ export abstract class BaseController {
 export abstract class BaseControllerWithPersistentStorageAccess extends BaseController {
   
   public static get store() { 
-    return DBService.sq;
+    return DBService.sql;
   }
   
 }
