@@ -52,14 +52,13 @@ WHERE
     OR :excludeIds = FALSE)
   AND ((:publishers) IS NULL
     OR (pub.name IN (:publishers)))
+  AND ((:categories) IS NULL
+    OR (cat.name IN (:categories)))
   AND ((:excludedPublishers) IS NULL
     OR (pub.name NOT IN (:excludedPublishers)))
   AND ((:excludedCategories) IS NULL
     OR (cat.name NOT IN (:excludedCategories)))
-  AND (:filter IS NULL
-    OR LENGTH(:filter) = 0
-    OR ((:categories) IS NULL
-      OR (cat.name IN (:categories)))
+  AND (LENGTH(:filter) = 0
     OR (s.title ~* :filter)
     OR (s."shortSummary" ~* :filter)
     OR (s.summary ~* :filter)
