@@ -88,6 +88,7 @@ FROM SummariesWithSiblings
   LEFT OUTER JOIN summary_media_view sm ON sm."parentId" = s.id
   LEFT OUTER JOIN summary_translation_view st ON st."parentId" = s.id
     AND st.locale = :locale
+    OR st.locale IS NULL
     -- siblings
   LEFT OUTER JOIN summary_relations sr ON s.id = sr."parentId"
   LEFT OUTER JOIN summaries sibling ON sibling.id = sr."siblingId"
@@ -102,6 +103,7 @@ FROM SummariesWithSiblings
   LEFT OUTER JOIN summary_media_view sibling_sm ON sibling_sm."parentId" = sibling.id
     LEFT OUTER JOIN summary_translation_view sibling_st ON sibling_st."parentId" = sibling.id
       AND sibling_st.locale = :locale
+      OR sibling_st.locale IS NULL
   GROUP BY rank,
   "totalCount",
   "averageSentiment",
