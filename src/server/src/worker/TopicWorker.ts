@@ -33,14 +33,13 @@ export async function doWork() {
       try {
         console.log('finding siblings for', summary.id);
         const siblings: Summary[] = [];
-        const existingSiblings = await summary.getSiblings();
-        const filteredSummaries = summaries.filter((s) => s.id !== summary.id && !existingSiblings.some((es) => es.id === s.id));
-        console.log('filtered summaries', filteredSummaries.length);
-        for (const possibleSibling of filteredSummaries) {
+        for (const possibleSibling of summaries) {
           try {
-            const score = await compareSimilarity(summary.shortSummary, possibleSibling.shortSummary, model);
-            if (score >= RELATIONSHIP_THRESHOLD) {
-              siblings.push(possibleSibling);
+            if (!(await summary.isRelatedTo(possibleSibling))) {
+              const score = await compareSimilarity(summary.shortSummary, possibleSibling.shortSummary, model);
+              if (score >= RELATIONSHIP_THRESHOLD) {
+                siblings.push(possibleSibling);
+              } 
             }
           } catch (e) {
             if (process.env.ERROR_REPORTING) {
