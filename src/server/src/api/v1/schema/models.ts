@@ -41,6 +41,8 @@ export * from './resources/summary/SummaryInteraction.model';
 export * from './resources/summary/SummaryTranslation.model';
 export * from './resources/summary/SummaryMedia.model';
 export * from './resources/summary/SummaryRelation.model';
+export * from './resources/summary/topic/Topic.model';
+export * from './resources/summary/topic/TopicSummary.model';
 
 // Recap
 export * from './resources/recap/Recap.model';

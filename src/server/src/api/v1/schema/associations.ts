@@ -27,10 +27,11 @@ import {
   SummaryCategory,
   SummaryInteraction,
   SummaryMedia,
-  SummaryRelation,
   SummarySentiment,
   SummaryTranslation,
   SystemNotification,
+  Topic,
+  TopicSummary,
   User,
   UserAchievement,
   UserMetadata,
@@ -330,17 +331,29 @@ export function makeAssociations() {
     onDelete: 'cascade',
     onUpdate: 'cascade',
   });
-  
-  // summary relations
-  SummaryRelation.belongsTo(Summary, { 
-    as: 'sibling',
-    foreignKey: 'siblingId',
+
+  // summary topics
+  TopicSummary.belongsTo(Summary, {
+    as: 'summary',
+    foreignKey: 'childId',
     onDelete: 'cascade',
     onUpdate: 'cascade',
   });
-  Summary.hasMany(SummaryRelation, {
-    as: 'sibling',
-    foreignKey: 'siblingId',
+  Summary.hasMany(TopicSummary, {
+    as: 'topics',
+    foreignKey: 'childId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  });
+  TopicSummary.belongsTo(Topic, {
+    as: 'topic',
+    foreignKey: 'groupId',
+    onDelete: 'cascade',
+    onUpdate: 'cascade',
+  });
+  Topic.hasMany(TopicSummary, {
+    as: 'summaries',
+    foreignKey: 'groupId',
     onDelete: 'cascade',
     onUpdate: 'cascade',
   });
