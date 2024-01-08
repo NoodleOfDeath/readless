@@ -8,9 +8,9 @@ import {
 import { BaseModel } from '../../base';
 
 export abstract class Interaction<
-    A extends InteractionAttributes = InteractionAttributes,
-    B extends InteractionCreationAttributes = InteractionCreationAttributes,
-  >
+  A extends InteractionAttributes = InteractionAttributes,
+  B extends InteractionCreationAttributes = InteractionCreationAttributes,
+>
   extends BaseModel<A, B>
   implements InteractionAttributes {
 

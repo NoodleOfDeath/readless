@@ -1,4 +1,4 @@
-import { Op, QueryTypes } from 'sequelize';
+import { QueryTypes } from 'sequelize';
 import {
   Column,
   DataType,
@@ -13,7 +13,6 @@ import {
 } from './Summary.types';
 import { SummaryInteraction } from './SummaryInteraction.model';
 import { SummaryMedia } from './SummaryMedia.model';
-import { SummaryRelation } from './SummaryRelation.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
 import {
@@ -21,6 +20,7 @@ import {
   QueryFactory,
   QueryKey,
   SentimentMethodName,
+  Topic,
 } from '../../../../../api/v1/schema';
 import {
   DeepAiService,
@@ -403,115 +403,16 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     return await Category.findByPk(this.categoryId);
   }
 
-  async getSiblingCount() {
-    return await SummaryRelation.count({ where: { parentId: this.id } });
+  async getSiblings() {
+    const topic = await Topic.topicOfChild(this);
+    return (await topic?.getChildren() ?? []).filter((s) => s.id !== this.id);
   }
   
-  async getSiblings<
-    Deep extends boolean = false,
-    R extends Deep extends true ? Summary[] : number[] = Deep extends true ? Summary[] : number[]
-  >(ignore: number[] = [], deep?: Deep): Promise<R> {
-    const siblingIds = (await SummaryRelation.findAll({ 
-      where: { 
-        parentId: this.id,
-        siblingId: { [Op.notIn]: [...ignore, this.id] },
-      },
-    })).map((r) => r.siblingId).sort();
-    let siblings = [...siblingIds];
-    for (const id of siblingIds) {
-      const sibling = await Summary.findByPk(id);
-      const stepSiblings = await sibling.getSiblings([...ignore, ...siblingIds, this.id]);
-      siblings.push(...stepSiblings);
-    }
-    siblings = Array.from(new Set(siblings)).sort();
-    if (deep) {
-      return await Promise.all(siblings.map(async (r) => await Summary.findByPk(r))) as R;
-    }
-    return siblings as R;
-  } 
-  
-  async isRelatedLHS(sibling: SummaryAttributes | number) {
-    const siblingId = typeof sibling === 'number' ? sibling : sibling.id;
-    const r = await SummaryRelation.findOne({ 
-      where: {
-        parentId: this.id,
-        siblingId,
-      },
-    });
-    return r != null;
-  }
-  
-  async isRelatedRHS(sibling: SummaryAttributes | number) {
-    const siblingId = typeof sibling === 'number' ? sibling : sibling.id;
-    const r = await SummaryRelation.findOne({ 
-      where: {
-        parentId: siblingId,
-        siblingId: this.id,
-      },
-    });
-    return r != null;
-  }
-  
-  async isRelated(sibling: SummaryAttributes | number) {
-    return await this.isRelatedLHS(sibling) && await this.isRelatedRHS(sibling);
-  }
-  
-  async dropAllSiblings() {
-    await SummaryRelation.destroy({
-      where: {
-        [Op.or]: [
-          { parentId: this.id },
-          { siblingId: this.id },
-        ],
-      },
-    });
-  }
-  
-  async dropSibling(sibling: SummaryAttributes | number) {
-    const siblingId = typeof sibling === 'number' ? sibling : sibling.id;
-    const relation = await SummaryRelation.findOne({ 
-      where: {
-        parentId: this.id,
-        siblingId,
-      },
-    });
-    await relation?.destroy();
-  }
-  
-  async associateWith(sibling: SummaryAttributes | number, ignore: number[] = []) {
+  async associateWith(sibling: SummaryAttributes | number) {
     const siblingId = typeof sibling === 'number' ? sibling : sibling.id;
     const newSibling = await Summary.findByPk(siblingId);
-    const siblings = await this.getSiblings([...ignore, siblingId]);
-    const stepSiblings = await newSibling.getSiblings([...ignore, this.id]);
-    const relations = Array.from(new Set([...siblings, ...stepSiblings])).sort();
-    for (const relation of relations) {
-      if (relation === this.id || relation === siblingId || ignore.includes(relation)) {
-        continue;
-      }
-      const siblingSummary = await Summary.findByPk(relation);
-      if (!siblingSummary) {
-        await this.dropSibling(relation);
-        continue;
-      }
-      await siblingSummary.associateWith(siblingId, [...ignore, ...relations, this.id]);
-      await siblingSummary.associateWith(this.id, [...ignore, ...relations, siblingId]);
-    }
-    if (!(await this.isRelatedLHS(siblingId))) {
-      await SummaryRelation.create({
-        parentId: this.id,
-        siblingId,
-      });
-    } else {
-      console.log('already associated', this.id, siblingId);
-    }
-    if (!(await this.isRelatedRHS(siblingId))) {
-      await SummaryRelation.create({
-        parentId: siblingId,
-        siblingId: this.id,
-      });
-    } else {
-      console.log('already associated', siblingId, this.id);
-    }
+    const topic = await Topic.topicOfChild(this) ?? await Topic.create();
+    await topic.addChildren(this, newSibling);
     console.log('associated', this.id, siblingId);
   }
   

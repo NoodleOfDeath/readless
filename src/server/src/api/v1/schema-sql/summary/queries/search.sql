@@ -19,7 +19,7 @@ FROM (
     ss.sentiments::jsonb sentiments,
     sm.media::jsonb media,
     st.translations::jsonb translations,
-    COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT('id', sibling.id, 'url', sibling.url, 'originalDate', sibling."originalDate", 'createdAt', sibling."createdAt", 'title', sibling.title, 'shortSummary', sibling."shortSummary", 'summary', sibling.summary, 'bullets', sibling.bullets, 'imageUrl', sibling."imageUrl", 'publisher', JSON_BUILD_OBJECT('id', sibling_pub.id, 'name', sibling_pub.name, 'displayName', sibling_pub."displayName"), 'category', JSON_BUILD_OBJECT('id', sibling_cat.id, 'name', sibling_cat.name, 'displayName', sibling_cat."displayName", 'icon', sibling_cat.icon), 'sentiment', sibling_ss.sentiment, 'sentiments', sibling_ss.sentiments, 'media', sibling_sm.media, 'translations', sibling_st.translations)) FILTER (WHERE sr."siblingId" IS NOT NULL), '[]'::json) siblings,
+    COALESCE(JSON_AGG(DISTINCT JSONB_BUILD_OBJECT('id', sibling.id, 'url', sibling.url, 'originalDate', sibling."originalDate", 'createdAt', sibling."createdAt", 'title', sibling.title, 'shortSummary', sibling."shortSummary", 'summary', sibling.summary, 'bullets', sibling.bullets, 'imageUrl', sibling."imageUrl", 'publisher', JSON_BUILD_OBJECT('id', sibling_pub.id, 'name', sibling_pub.name, 'displayName', sibling_pub."displayName"), 'category', JSON_BUILD_OBJECT('id', sibling_cat.id, 'name', sibling_cat.name, 'displayName', sibling_cat."displayName", 'icon', sibling_cat.icon), 'sentiment', sibling_ss.sentiment, 'sentiments', sibling_ss.sentiments, 'media', sibling_sm.media, 'translations', sibling_st.translations)) FILTER (WHERE sr."childId" IS NOT NULL), '[]'::json) siblings,
     "averageSentiment",
     "totalCount"
   FROM (
@@ -83,9 +83,12 @@ LIMIT :limit OFFSET :offset) b
     AND (st.locale = :locale
       OR st.locale IS NULL)
     -- siblings
-  LEFT OUTER JOIN summary_relations sr ON b.id = sr."parentId"
-  LEFT OUTER JOIN summaries sibling ON sibling.id = sr."siblingId"
-    AND (sibling."deletedAt" IS NULL)
+  LEFT OUTER JOIN topic_summaries tr ON s.id = tr."childId"
+  LEFT OUTER JOIN topics t ON t.id = tr."groupId"
+  LEFT OUTER JOIN topic_summaries sr ON sr."groupId" = t.id
+    AND sr."childId" <> s.id
+  LEFT OUTER JOIN summaries sibling ON sibling.id = sr."childId"
+  AND (sibling."deletedAt" IS NULL)
   LEFT OUTER JOIN publisher_view sibling_pub ON sibling."publisherId" = sibling_pub.id
   AND (sibling_pub.locale = :locale
     OR sibling_pub.locale IS NULL)

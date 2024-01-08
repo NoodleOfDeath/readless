@@ -34,7 +34,7 @@ export async function doWork() {
         console.log('finding siblings for', summary.id);
         const siblings: Summary[] = [];
         const existingSiblings = await summary.getSiblings();
-        const filteredSummaries = summaries.filter((s) => s.id !== summary.id && !existingSiblings.includes(s.id));
+        const filteredSummaries = summaries.filter((s) => s.id !== summary.id && !existingSiblings.some((es) => es.id === s.id));
         console.log('filtered summaries', filteredSummaries.length);
         for (const possibleSibling of filteredSummaries) {
           try {
