@@ -18,7 +18,7 @@ import {
 
 const SPIDER_FETCH_INTERVAL = process.env.SPIDER_FETCH_INTERVAL || '5m';
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
-const TOP_STORIES_RECACHE_RATE = Number.isNaN(process.env.TOP_STORIES_RECACHE_RATE) ? 0.5 : Number.parseFloat(process.env.TOP_STORIES_RECACHE_RATE);
+const TOPIC_RECALCULATE_RATE = ms(process.env.TOPIC_RECALCULATE_RATE || '5m');
 
 async function main() {
   await DBService.prepare();
@@ -159,7 +159,7 @@ async function scheduleJobs() {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(scheduleJobs, ms(process.env.CACHE_HALFLIFE || '2m') * 2 * TOP_STORIES_RECACHE_RATE);
+    setTimeout(scheduleJobs, TOPIC_RECALCULATE_RATE);
   }
 }
 
@@ -189,15 +189,6 @@ async function scheduleRecapJobs() {
     console.log('scheduling recaps');
     await scheduleRecapJob();
     console.log('done scheduling recap jobs');
-    console.log('queuing topic jobs');
-    const queue = await Queue.from(Queue.QUEUES.topics);
-    await queue.clear();
-    await queue.add(
-      'topics-resolution', 
-      { summary: 0 },
-      { group: 'topics' }
-    );
-    console.log('done scheduling topic jobs');
   } catch (e) {
     console.error(e);
   } finally {

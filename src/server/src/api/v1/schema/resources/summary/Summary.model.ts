@@ -17,6 +17,7 @@ import { SummaryRelation } from './SummaryRelation.model';
 import { SummarySentiment } from './SummarySentiment.model';
 import { PublicSummarySentimentAttributes } from './SummarySentiment.types';
 import {
+  Cache,
   QueryFactory,
   QueryKey,
   SentimentMethodName,
@@ -49,7 +50,7 @@ export type SearchSummariesPayload = {
   end?: string;
   version?: string;
   forceCache?: boolean;
-  cacheHalflife?: string;
+  cacheLifespan?: string;
 };
 
 class Size {
@@ -265,12 +266,13 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     return summaries as Summary[];
   }
 
-  public static async getTopStories(payload: SearchSummariesPayload) {
-    return await this.getSummaries(payload, 'top_stories');
+  public static async getTopStories({ interval = '1d', ...rest }: SearchSummariesPayload = {}) {
+    return await this.getSummaries({ interval, ...rest }, 'top_stories');
   }
   
   public static async getSummaries({
     filter,
+    forceCache,
     ids,
     excludeIds = false,
     interval: interval0,
@@ -280,7 +282,8 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     pageSize = 10,
     page = 0,
     offset = pageSize * page,
-  }: SearchSummariesPayload, queryKey: QueryKey = 'search'): Promise<BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>> {
+    cacheLifespan = process.env.CACHE_lifespan || '3m',
+  }: SearchSummariesPayload = {}, queryKey: QueryKey = 'search'): Promise<BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>> {
     
     const { 
       categories, 
@@ -312,6 +315,30 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       rankInterval: interval,
       startDate: startDate ?? new Date(),
     };
+
+    const cacheKey = [
+      queryKey,
+      filter,
+      idArray?.join(','),
+      excludeIds,
+      interval,
+      queryKey === 'top_stories' ? '' : locale,
+      start,
+      end,
+      pageSize,
+      offset,
+    ].join(':');
+
+    if (queryKey === 'top_stories' && !forceCache) {
+      const cache = await Cache.fromKey(cacheKey);
+      if (cache && cache.expiresSoon === false) {
+        try {
+          return JSON.parse(cache.value);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
     
     let records = ((await this.sql.query(QueryFactory.getQuery(queryKey), {
       nest: true,
@@ -338,15 +365,15 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       })) as BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>[])[0];
     }
     
-    for (const row of records.rows) {
-      if (row.siblings?.some((s) => s.id === row.id)) {
-        console.log('FUCK - found self in siblings', row.id);
-      }
-    }
-      
     if (filter || records.rows.length < replacements.limit) {
       return records;
     }
+
+    await Cache.upsert({
+      key: cacheKey,
+      lifespan: cacheLifespan,
+      value: JSON.stringify(records),
+    });
     
     return records;
   }
@@ -389,14 +416,14 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         parentId: this.id,
         siblingId: { [Op.notIn]: [...ignore, this.id] },
       },
-    })).map((r) => r.siblingId);
+    })).map((r) => r.siblingId).sort();
     let siblings = [...siblingIds];
     for (const id of siblingIds) {
       const sibling = await Summary.findByPk(id);
       const stepSiblings = await sibling.getSiblings([...ignore, ...siblingIds, this.id]);
       siblings.push(...stepSiblings);
     }
-    siblings = Array.from(new Set(siblings));
+    siblings = Array.from(new Set(siblings)).sort();
     if (deep) {
       return await Promise.all(siblings.map(async (r) => await Summary.findByPk(r))) as R;
     }
@@ -456,8 +483,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     const newSibling = await Summary.findByPk(siblingId);
     const siblings = await this.getSiblings([...ignore, siblingId]);
     const stepSiblings = await newSibling.getSiblings([...ignore, this.id]);
-    const relations = Array.from(new Set([...siblings, ...stepSiblings]));
-    const associated: number[] = [...ignore];
+    const relations = Array.from(new Set([...siblings, ...stepSiblings])).sort();
     for (const relation of relations) {
       if (relation === this.id || relation === siblingId || ignore.includes(relation)) {
         continue;
@@ -467,21 +493,24 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         await this.dropSibling(relation);
         continue;
       }
-      await siblingSummary.associateWith(siblingId, [...associated, this.id]);
-      await siblingSummary.associateWith(this.id, [...associated, siblingId]);
-      associated.push(relation);
+      await siblingSummary.associateWith(siblingId, [...ignore, ...relations, this.id]);
+      await siblingSummary.associateWith(this.id, [...ignore, ...relations, siblingId]);
     }
     if (!(await this.isRelatedLHS(siblingId))) {
       await SummaryRelation.create({
         parentId: this.id,
         siblingId,
       });
+    } else {
+      console.log('already associated', this.id, siblingId);
     }
     if (!(await this.isRelatedRHS(siblingId))) {
       await SummaryRelation.create({
         parentId: siblingId,
         siblingId: this.id,
       });
+    } else {
+      console.log('already associated', siblingId, this.id);
     }
     console.log('associated', this.id, siblingId);
   }

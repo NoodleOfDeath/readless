@@ -1,12 +1,12 @@
+import * as use from '@tensorflow-models/universal-sentence-encoder';
 import ms from 'ms';
 import { Op } from 'sequelize';
-
-import * as use from '@tensorflow-models/universal-sentence-encoder';
 
 import { Summary, SystemLog } from '../api/v1/schema/models';
 import { DBService } from '../services';
 import { compareSimilarity } from '../utils';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let model: any;
 
 export async function main() {
@@ -24,9 +24,12 @@ export async function doWork() {
     console.log('Resolving duplicates');
     const summaries = await Summary.findAll({ 
       order: [['originalDate', 'desc']],
-      where: { originalDate: { [Op.gt]: new Date(Date.now() - ms(DUPLICATE_LOOKBACK_INTERVAL)) } },
+      where: { originalDate: { [Op.gte]: new Date(Date.now() - ms(DUPLICATE_LOOKBACK_INTERVAL)) } },
     });
-    for (const summary of summaries) {
+    console.log('found summaries', summaries.length);
+    const topSummaries = await Promise.all((await Summary.getTopStories()).rows.map(async (s) => await Summary.findByPk(s.id)));
+    console.log('found top summaries', topSummaries.length);
+    for (const summary of [...summaries, ...topSummaries]) {
       try {
         console.log('finding siblings for', summary.id);
         const siblings: Summary[] = [];
@@ -36,7 +39,7 @@ export async function doWork() {
         for (const possibleSibling of filteredSummaries) {
           try {
             const score = await compareSimilarity(summary.shortSummary, possibleSibling.shortSummary, model);
-            if (score > RELATIONSHIP_THRESHOLD) {
+            if (score >= RELATIONSHIP_THRESHOLD) {
               siblings.push(possibleSibling);
             }
           } catch (e) {

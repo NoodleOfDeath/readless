@@ -34,8 +34,8 @@ spec:
               value: '$APPLE_SECRET_KEY'
             - name: BASE_DOMAIN
               value: '$BASE_DOMAIN'
-            - name: CACHE_HALFLIFE
-              value: '$CACHE_HALFLIFE'
+            - name: CACHE_LIFESPAN
+              value: '$CACHE_LIFESPAN'
             - name: CORS_ORIGIN
               value: '$CORS_ORIGIN'
             - name: ENABLED_FEATURES

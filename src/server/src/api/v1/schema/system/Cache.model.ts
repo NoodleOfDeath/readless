@@ -30,7 +30,7 @@ export class Cache<A extends CacheAttributes = CacheAttributes, B extends CacheC
     allowNull: false, 
     type: DataType.STRING, 
   })
-  declare halflife: string;
+  declare lifespan: string;
 
   @Column({ 
     allowNull: false, 
@@ -39,7 +39,7 @@ export class Cache<A extends CacheAttributes = CacheAttributes, B extends CacheC
   declare value: string;
   
   get expiresSoon() {
-    return (this.updatedAt.valueOf() + (ms(this.halflife) * 2)) < Date.now();
+    return (this.updatedAt.valueOf() + ms(this.lifespan)) < Date.now();
   }
 
 }

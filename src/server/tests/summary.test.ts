@@ -18,11 +18,11 @@ describe('summary unit tests', () => {
   test('associateSibling', async () => {
     try {
       await DBService.prepare();
-      const summary = await Summary.findByPk(112027);
+      const summary = await Summary.findByPk(112269);
       if (!summary) {
         throw new Error('Summary not found');
       }
-      await summary.associateWith(112114);
+      await summary.associateWith(112162);
       const siblings = await summary.getSiblings();
       console.log(siblings);
       expect(siblings).toBeDefined();
