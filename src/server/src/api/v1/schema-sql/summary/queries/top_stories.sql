@@ -1,4 +1,3 @@
---CREATE EXTENSION intarray;
 WITH SummariesWithCount AS (
   WITH SummariesWithSiblings AS (
     WITH DistinctSiblings AS (
