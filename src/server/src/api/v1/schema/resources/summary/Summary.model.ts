@@ -402,16 +402,26 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   async getCategory() {
     return await Category.findByPk(this.categoryId);
   }
+  
+  async getTopic() {
+    return await Topic.topicOfChild(this);
+  }
 
   async getSiblings() {
-    const topic = await Topic.topicOfChild(this);
-    return (await topic?.getChildren() ?? []).filter((s) => s.id !== this.id);
+    return (await (await this.getTopic())?.getChildren() ?? []).filter((s) => s.id !== this.id);
+  }
+  
+  async isRelatedTo(sibling: SummaryAttributes | number) {
+    const siblingId = typeof sibling === 'number' ? sibling : sibling.id;
+    const newSibling = await Summary.findByPk(siblingId);
+    const topic = await this.getTopic();
+    return topic && topic.id === (await newSibling.getTopic())?.id;
   }
   
   async associateWith(sibling: SummaryAttributes | number) {
     const siblingId = typeof sibling === 'number' ? sibling : sibling.id;
     const newSibling = await Summary.findByPk(siblingId);
-    const topic = await Topic.topicOfChild(this) ?? await Topic.create();
+    const topic = await this.getTopic() ?? await newSibling.getTopic() ?? await Topic.create();
     await topic.addChildren(this, newSibling);
     console.log('associated', this.id, siblingId);
   }
