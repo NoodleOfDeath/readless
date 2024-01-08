@@ -87,8 +87,9 @@ FROM SummariesWithSiblings
   OR cat.locale IS NULL)
   LEFT OUTER JOIN summary_media_view sm ON sm."parentId" = s.id
   LEFT OUTER JOIN summary_translation_view st ON st."parentId" = s.id
-    AND st.locale = :locale
-    -- siblings
+    AND (st.locale = :locale
+    OR st.locale IS NULL)
+  -- siblings
   LEFT OUTER JOIN summary_relations sr ON s.id = sr."parentId"
   LEFT OUTER JOIN summaries sibling ON sibling.id = sr."siblingId"
     AND (sibling."deletedAt" IS NULL)
@@ -101,28 +102,29 @@ FROM SummariesWithSiblings
   LEFT OUTER JOIN summary_sentiment_view sibling_ss ON sibling_ss."parentId" = sibling.id
   LEFT OUTER JOIN summary_media_view sibling_sm ON sibling_sm."parentId" = sibling.id
     LEFT OUTER JOIN summary_translation_view sibling_st ON sibling_st."parentId" = sibling.id
-      AND sibling_st.locale = :locale
-  GROUP BY rank,
-  "totalCount",
-  "averageSentiment",
-  SummariesWithSiblings.sentiment,
-  SummariesWithSiblings.sentiments::jsonb,
-  s.id,
-  s.url,
-  s."originalDate",
-  s.title,
-  s."shortSummary",
-  s.summary,
-  s.bullets,
-  s."imageUrl",
-  pub.name,
-  pub."displayName",
-  cat.name,
-  cat."displayName",
-  cat.icon,
-  sm.media::jsonb,
-  st.translations::jsonb ORDER BY "rank" DESC,
-  s."originalDate" DESC
+      AND (sibling_st.locale = :locale
+      OR sibling_st.locale IS NULL)
+GROUP BY rank,
+"totalCount",
+"averageSentiment",
+SummariesWithSiblings.sentiment,
+SummariesWithSiblings.sentiments::jsonb,
+s.id,
+s.url,
+s."originalDate",
+s.title,
+s."shortSummary",
+s.summary,
+s.bullets,
+s."imageUrl",
+pub.name,
+pub."displayName",
+cat.name,
+cat."displayName",
+cat.icon,
+sm.media::jsonb,
+st.translations::jsonb ORDER BY "rank" DESC,
+s."originalDate" DESC
 LIMIT :limit OFFSET :offset
 )
 SELECT
