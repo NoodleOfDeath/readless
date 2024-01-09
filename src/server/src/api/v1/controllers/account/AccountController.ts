@@ -553,7 +553,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Body() body: UpdateMetadataRequest
   ): Promise<UpdateMetadataResponse> {
     const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
-    await user.setMetadata(body.key, body.value, body.type);
+    await user?.setMetadata(body.key, body.value, body.type);
     return { success: true };
   }
   

@@ -202,6 +202,20 @@ export class Achievement<
       name: 'monthly-master',
       points: 100,
     },
+    {
+      description: 'This achievement is given to users who have at least one streak of 60 days or more',
+      displayName: 'Monthly Master 2x',
+      findCandidates: async () => {
+        const streaks = await User.getStreaks({ minCount: 60 });
+        return await User.findAll({ where : { id : streaks.map((streak) => streak.userId) } });
+      },
+      getProgress: async (user) => {
+        const longestStreak = await user.calculateLongestStreak();
+        return (longestStreak?.length ?? 0) / 60;
+      },
+      name: 'monthly-master-2x',
+      points: 100,
+    },
   ];
 
   static async prepare() {

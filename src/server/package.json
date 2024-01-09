@@ -24,7 +24,7 @@
     "build:scheduler": "rimraf dist/serve-scheduler.cjs && esbuild ./src/scheduler --bundle --platform=node --external:sharp --external:jsdom --external:@tensorflow/tfjs-node --external:@tensorflow-models/universal-sentence-encoder --outfile=./dist/serve-scheduler.cjs",
     "build:worker": "rimraf dist/serve-worker.cjs && esbuild ./src/worker --bundle --platform=node --external:sharp --external:jsdom --external:@tensorflow/tfjs-node --external:@tensorflow-models/universal-sentence-encoder --outfile=./dist/serve-worker.cjs",
     "gen:site": "yarn test gen",
-    "cp:core": "if [[ -d src/core ]]; then rm -rf src/core; fi && mkdir -p ./src/core/utils && cp -rf ../core/src/utils/* ./src/core/utils && cp -rf ../core/src/client/locales ./src/core/locales && if [[ -d node_modules/sharp/build ]]; then cp -rf node_modules/sharp/build .; fi",
+    "cp:core": "if [[ -d src/core ]]; then rm -rf src/core; fi && mkdir -p ./src/core/utils && cp -rf ../core/src/utils/* ./src/core/utils && cp -rf ../core/src/server ./src/core && cp -rf ../core/src/client/locales ./src/core/locales && if [[ -d node_modules/sharp/build ]]; then cp -rf node_modules/sharp/build .; fi",
     "sql": "ts-node ./gen-sql-queries",
     "test": "jest",
     "tsoa": "tsoa spec -c tsoa.config.json",

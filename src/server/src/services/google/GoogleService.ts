@@ -4,8 +4,6 @@ import { v2 } from '@google-cloud/translate';
 import axios from 'axios';
 import { OAuth2Client } from 'google-auth-library';
 
-import { BaseService } from '../base';
-
 export const GOOGLE_MP_ENDPOINT = 'https://www.google-analytics.com/mp/collect';
 export const GOOGLE_MP_DEBUG_ENDPOINT = 'https://www.google-analytics.com/debug/mp/collect';
 
@@ -24,7 +22,7 @@ export type MPCollectPayload = {
   events: MPCollectEvent[];
 };
 
-export class GoogleService extends BaseService {
+export class GoogleService {
 
   // auth
 
