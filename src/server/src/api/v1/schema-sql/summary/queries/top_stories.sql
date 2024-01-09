@@ -1,3 +1,4 @@
+-- rank summaries
 WITH RankedSummaries AS (
   SELECT
     s.id,
@@ -36,12 +37,14 @@ WITH RankedSummaries AS (
       COUNT(sib.id) DESC,
       s."originalDate" DESC
 ),
+-- filter out rows that are siblings of rows above
 DistinctSiblings AS (
   SELECT DISTINCT ON (siblings)
     *
   FROM
     RankedSummaries
 ),
+-- get total count and average sentiment
 SummariesWithSentiments AS (
   SELECT
     rank,
@@ -61,6 +64,7 @@ GROUP BY
 ORDER BY
   rank DESC
 ),
+-- get all summary data
 SummariesWithCount AS (
   SELECT
     "rank",
@@ -138,6 +142,7 @@ SummariesWithCount AS (
     s."originalDate" DESC
   LIMIT :limit OFFSET :offset
 )
+-- convert to rows and count
 SELECT
   "totalCount"::int AS count,
   JSON_AGG(SummariesWithCount.*) AS "rows",
