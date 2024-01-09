@@ -3,8 +3,8 @@ import ms from 'ms';
 import { Op } from 'sequelize';
 
 import { Summary, SystemLog } from '../api/v1/schema/models';
+import { compareSimilarity } from '../core/server';
 import { DBService } from '../services';
-import { compareSimilarity } from '../utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let model: any;
