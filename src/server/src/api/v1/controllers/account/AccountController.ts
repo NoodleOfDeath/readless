@@ -6,7 +6,6 @@ import ms from 'ms';
 import {
   Body,
   Delete,
-  Get,
   Patch,
   Post,
   Put,
@@ -26,7 +25,6 @@ import {
   LoginResponse,
   LogoutRequest,
   LogoutResponse,
-  ProfileResponse,
   RegisterAliasRequest,
   RegistrationRequest,
   RegistrationResponse,
@@ -54,7 +52,6 @@ import {
   AliasType,
   Credential,
   User,
-  UserStats,
 } from '../../schema';
 import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
@@ -381,26 +378,6 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
       token: token.wrapped,
       userId: userData.id,
     };
-  }
-
-  @Get('/profile')
-  @Security('jwt', ['standard:read'])
-  public static async getProfile(
-    @Request() req: ExpressRequest
-  ): Promise<ProfileResponse> {
-    const user = await User.from({ jwt: req.body.jwt });
-    await user.syncProfile();
-    const userData = user.toJSON();
-    return { profile: userData.profile };
-  }
-
-  @Get('/stats')
-  @Security('jwt', ['standard:read'])
-  public static async getUserStats(
-    @Request() req: ExpressRequest
-  ): Promise<UserStats> {
-    const user = await User.from({ jwt: req.body.jwt });
-    return await user.getStats();
   }
 
   @Post('/logout')

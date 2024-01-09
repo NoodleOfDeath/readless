@@ -19,6 +19,7 @@ export type AchievementCreationAttributes = Partial<DatedAttributes> & {
   displayName?: string;
   points?: number;
   beforeDateBased?: Date;
+  getProgress?: (user: User) => Promise<number>;
   findCandidates?: () => Promise<User[]>;
 };
 

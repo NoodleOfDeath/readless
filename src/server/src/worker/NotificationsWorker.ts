@@ -20,9 +20,11 @@ async function main() {
   await Queue.prepare();
   await Achievement.prepare();
   ScribeService.prepare();
-  doWork();
-  sendDailyPushNotifications();
-  sendStreakPushNotifications();
+  if (process.env.NODE_ENV === 'production') {
+    doWork();
+    sendDailyPushNotifications();
+    sendStreakPushNotifications();
+  }
   detectAndAssignAchievements();
 }
 
@@ -141,6 +143,16 @@ async function detectAndAssignAchievements() {
       const users = await criteria.findCandidates();
       console.log(`found ${users.length} candidates for achievement ${achievement.name}`);
       users.forEach(async (user) => await user.grantAchievement(achievement));
+      if (criteria.getProgress) {
+        console.log(`calculating progress for achievement ${achievement.name}...`);
+        const candidates = await User.findAll({ where: { id: { [Op.notIn]: users.map(user => user.id) } } });
+        for (const candidate of candidates) {
+          const progress = await criteria.getProgress(candidate);
+          if (!Number.isNaN(progress)) {
+            await candidate.grantAchievement(achievement, { progress });
+          }
+        }
+      }
     }
   } catch (e) {
     console.error(e);

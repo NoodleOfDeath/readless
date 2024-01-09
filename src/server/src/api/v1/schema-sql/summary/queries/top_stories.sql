@@ -1,4 +1,4 @@
--- rank summaries
+-- rank summaries by number of siblings within the rank interval
 WITH RankedSummaries AS (
   SELECT
     s.id,
@@ -37,7 +37,7 @@ WITH RankedSummaries AS (
       COUNT(sib.id) DESC,
       s."originalDate" DESC
 ),
--- filter out rows that are siblings of rows above
+-- filter out rows that are siblings of already selected rows
 DistinctSiblings AS (
   SELECT DISTINCT ON (siblings)
     *
@@ -62,6 +62,7 @@ GROUP BY
   ss.sentiments::jsonb,
   rank
 ORDER BY
+  -- then order by rank descending
   rank DESC
 ),
 -- get all summary data
@@ -140,8 +141,7 @@ SummariesWithCount AS (
   ORDER BY
     "rank" DESC,
     s."originalDate" DESC
-  LIMIT :limit OFFSET :offset
-)
+  LIMIT :limit OFFSET :offset)
 -- convert to rows and count
 SELECT
   "totalCount"::int AS count,

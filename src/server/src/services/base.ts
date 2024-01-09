@@ -15,6 +15,7 @@ export class BaseService {
     }
   }
   
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static async log(message: string, ...args: any[]): Promise<void> {
     console.log(`[${new Date()}]`, ...args);
     await SystemLog.create({

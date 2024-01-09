@@ -7,17 +7,11 @@ import {
   AliasPayload,
   DestructuredCredentialPayload,
   MetadataType, 
-  Profile,
   ThirdParty,
 } from '../../schema';
+import { ProfileResponse } from '../profile';
 
 export * from './jwt';
-
-export type ProfileRequest = JwtRequest;
-
-export type ProfileResponse = {
-  profile?: Profile;
-};
 
 export type LoginRequest = AliasPayload & DestructuredCredentialPayload & JwtRequest & {
   createIfNotExists?: boolean;
