@@ -22,6 +22,12 @@ export type InteractionCount = UserEvent<{
   count: number;
 }>;
 
+export type Achievements = {
+  inProgress: UserAchievementAttributes[];
+  completed: UserAchievementAttributes[];
+  reputation: number;
+};
+
 export type UserStats = {
   memberSince?: Date;
   lastSeen?: Date;

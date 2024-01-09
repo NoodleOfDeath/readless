@@ -35,7 +35,7 @@ export class UserAchievement<
 
   @Column({
     defaultValue: 0,
-    type: DataType.INTEGER,
+    type: DataType.FLOAT,
   })
   declare progress: number;
 

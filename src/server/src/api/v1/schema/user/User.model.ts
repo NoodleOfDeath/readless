@@ -10,6 +10,7 @@ import { MetricsRequest, MetricsResponse } from '../../controllers/metrics/types
 import { AuthError } from '../../middleware';
 import {
   Achievement,
+  Achievements,
   Alias,
   AliasCreationAttributes,
   AliasPayload,
@@ -434,7 +435,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     const achievements = await this.getAchievements();
     const updatedAt = new Date(Math.max(...[longestStreak?.updatedAt, streak?.updatedAt].filter(Boolean).map((d) => d.valueOf())));
     return {
-      achievements,
+      achievements: achievements.completed,
       daysActive: (await User.getDaysActive()).find((s) => s.userId === this.id) ?? { count: 1 },
       interactionCounts: {
         read: (await User.getInteractionCounts('read', undefined, this)).find((s) => s.userId === this.id) ?? { count: 0 },
@@ -443,7 +444,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       lastSeen,
       longestStreak,
       memberSince: this.createdAt,
-      reputation: achievements.reduce((acc, a) => acc + a.achievement.points ?? 0, 0),
+      reputation: achievements.completed.reduce((acc, a) => acc + a.achievement.points ?? 0, 0),
       streak,
       updatedAt: !Number.isNaN(updatedAt.valueOf()) ? updatedAt : new Date(),
     };
@@ -491,25 +492,41 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
 
   // achievements
-  public async getAchievements() {
-    return await UserAchievement.findAll({
+  public async getAchievements(): Promise<Achievements> {
+    const completed = await UserAchievement.findAll({
       include: [Achievement.scope('public')],
-      where: { userId: this.id },
+      where: { progress: { [Op.gte]: 1 }, userId: this.id },
     });
+    const inProgress = await UserAchievement.findAll({
+      include: [Achievement.scope('public')],
+      where: { progress: { [Op.lt]: 1 }, userId: this.id },
+    });
+    return {
+      completed,
+      inProgress,
+      reputation: completed.reduce((acc, a) => acc + a.achievement.points ?? 0, 0),
+    };
   }
 
-  public async hasAchievement(achievement: Achievement) {
+  public async hasCompletedAchievement(achievement: Achievement) {
     return await UserAchievement.findOne({ 
       include: [Achievement.scope('public')],
-      where: { achievementId: achievement.id, userId: this.id },
+      where: {
+        achievementId: achievement.id, 
+        progress: { [Op.gte]: 1 },
+        userId: this.id,
+      },
     });
   }
 
-  public async grantAchievement(achievement: Achievement, { progress = 100, achievedAt = progress === 100 ? new Date() : null }: Partial<UserAchievementCreationAttributes> = {}) {
-    if (await this.hasAchievement(achievement)) {
+  public async grantAchievement(achievement: Achievement, {
+    progress = 1, 
+    achievedAt = progress === 1 ? new Date() : null, 
+  }: Partial<UserAchievementCreationAttributes> = {}) {
+    if (await this.hasCompletedAchievement(achievement)) {
       return achievement;
     }
-    return await UserAchievement.create({
+    return await UserAchievement.upsert({
       achievedAt,
       achievementId: achievement.id,
       progress, 

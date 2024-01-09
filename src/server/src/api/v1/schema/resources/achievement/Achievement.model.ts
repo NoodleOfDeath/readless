@@ -64,6 +64,11 @@ export class Achievement<
         const interactions = await User.getInteractionCounts('read', { minCount: 3 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('read', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 3;
+      },
       name: 'newbie',
       points: 10,
     },
@@ -73,6 +78,11 @@ export class Achievement<
       findCandidates: async () => {
         const interactions = await User.getInteractionCounts('read', { minCount: 10 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('read', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 10;
       },
       name: 'reader',
       points: 25,
@@ -84,6 +94,11 @@ export class Achievement<
         const interactions = await User.getInteractionCounts('read', { minCount: 25 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('read', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 25;
+      },
       name: 'bookworm',
       points: 50,
     },
@@ -93,6 +108,11 @@ export class Achievement<
       findCandidates: async () => {
         const interactions = await User.getInteractionCounts('read', { minCount: 50 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('read', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 50;
       },
       name: 'page-sage',
       points: 75,
@@ -104,6 +124,11 @@ export class Achievement<
         const interactions = await User.getInteractionCounts('read', { minCount: 100 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('read', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 100;
+      },
       name: 'century-scribe',
       points: 100,
     },
@@ -111,8 +136,12 @@ export class Achievement<
       description: 'This achievement is given to users who have at least one streak of 3 days or more',
       displayName: 'Streaker',
       findCandidates: async () => {
-        const interactions = await User.getStreaks({ minCount: 3 });
-        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+        const streaks = await User.getStreaks({ minCount: 3 });
+        return await User.findAll({ where : { id : streaks.map((streak) => streak.userId) } });
+      },
+      getProgress: async (user) => {
+        const longestStreak = await user.calculateLongestStreak();
+        return (longestStreak?.length ?? 0) / 3;
       },
       name: 'streaker',
       points: 10,
@@ -122,7 +151,11 @@ export class Achievement<
       displayName: 'Stweeker',
       findCandidates: async () => {
         const interactions = await User.getStreaks({ minCount: 7 });
-        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+        return await User.findAll({ where : { id : interactions.map((streak) => streak.userId) } });
+      },
+      getProgress: async (user) => {
+        const longestStreak = await user.calculateLongestStreak();
+        return (longestStreak?.length ?? 0) / 7;
       },
       name: 'stweeker',
       points: 25,
@@ -131,8 +164,12 @@ export class Achievement<
       description: 'This achievement is given to users who have at least one streak of 14 days or more',
       displayName: 'Double Stweeker',
       findCandidates: async () => {
-        const interactions = await User.getStreaks({ minCount: 14 });
-        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+        const streaks = await User.getStreaks({ minCount: 14 });
+        return await User.findAll({ where : { id : streaks.map((streak) => streak.userId) } });
+      },
+      getProgress: async (user) => {
+        const longestStreak = await user.calculateLongestStreak();
+        return (longestStreak?.length ?? 0) / 14;
       },
       name: 'double-stweeker',
       points: 50,
@@ -141,18 +178,26 @@ export class Achievement<
       description: 'This achievement is given to users who have at least one streak of 21 days or more',
       displayName: 'Triple Stweeker',
       findCandidates: async () => {
-        const interactions = await User.getStreaks({ minCount: 21 });
-        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+        const streaks = await User.getStreaks({ minCount: 21 });
+        return await User.findAll({ where : { id : streaks.map((streak) => streak.userId) } });
+      },
+      getProgress: async (user) => {
+        const longestStreak = await user.calculateLongestStreak();
+        return (longestStreak?.length ?? 0) / 21;
       },
       name: 'triple-stweeker',
       points: 75,
     },
     {
-      description: 'This achievement is given to users who have at least one streak of 28 days or more',
+      description: 'This achievement is given to users who have at least one streak of 30 days or more',
       displayName: 'Monthly Master',
       findCandidates: async () => {
-        const interactions = await User.getStreaks({ minCount: 28 });
-        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+        const streaks = await User.getStreaks({ minCount: 30 });
+        return await User.findAll({ where : { id : streaks.map((streak) => streak.userId) } });
+      },
+      getProgress: async (user) => {
+        const longestStreak = await user.calculateLongestStreak();
+        return (longestStreak?.length ?? 0) / 30;
       },
       name: 'monthly-master',
       points: 100,

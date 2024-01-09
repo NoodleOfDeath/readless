@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, oneOf } from 'express-validator';
 
-import { AccountController, MetricsController } from '../../controllers';
+import { AccountController, ProfileController } from '../../controllers';
 import {
   authMiddleware,
   internalErrorHandler,
@@ -104,25 +104,6 @@ router.post(
   }
 );
 
-// legacy v1.17.2
-router.post(
-  '/register/alias',
-  rateLimitMiddleware('5 per 5m'),
-  body('otherAlias').isObject(),
-  validationMiddleware,
-  async (req, res) => {
-    const t = await AccountController.store.transaction();
-    try {
-      const response = await AccountController.registerAlias(req, req.body);
-      await t.commit();
-      return res.json(response);
-    } catch (e) {
-      await t.rollback();
-      return internalErrorHandler(res, e);
-    }
-  }
-);
-
 router.post(
   '/alias/unregister',
   body('otherAlias').isObject(),
@@ -140,43 +121,8 @@ router.post(
   }
 );
 
-// legacy v1.17.2
-router.post(
-  '/unregister/alias',
-  body('otherAlias').isObject(),
-  validationMiddleware,
-  async (req, res) => {
-    const t = await AccountController.store.transaction();
-    try {
-      const response = await AccountController.unregisterAlias(req, req.body);
-      await t.commit();
-      return res.json(response);
-    } catch (e) {
-      await t.rollback();
-      return internalErrorHandler(res, e);
-    }
-  }
-);
-
 router.post(
   '/alias/verify',
-  validationMiddleware,
-  async (req, res) => {
-    const t = await AccountController.store.transaction();
-    try {
-      const response = await AccountController.verifyAlias(req, req.body);
-      await t.commit();
-      return res.json(response);
-    } catch (e) {
-      await t.rollback();
-      return internalErrorHandler(res, e);
-    }
-  }
-);
-
-// legacy v1.17.2
-router.post(
-  '/verify/alias',
   validationMiddleware,
   async (req, res) => {
     const t = await AccountController.store.transaction();
@@ -227,45 +173,13 @@ router.post(
   }
 );
 
-// legacy v1.17.2
-router.post(
-  '/verify/otp',
-  body('otp').isString(),
-  body('deleteAccount').isBoolean().optional(),
-  validationMiddleware,
-  async (req, res) => {
-    const t = await AccountController.store.transaction();
-    try {
-      const response = await AccountController.verifyOtp(req, req.body);
-      await t.commit();
-      return res.json(response);
-    } catch (e) {
-      await t.rollback();
-      return internalErrorHandler(res, e);
-    }
-  }
-);
-
-// legacy v1.17.4
-router.get(
-  '/metrics',
-  validationMiddleware,
-  async (req, res) => {
-    try {
-      const response = await MetricsController.getMetricsInternal(req, req.query);
-      return res.status(200).json(response);
-    } catch (e) {
-      return internalErrorHandler(res, e);
-    }
-  }
-);
-
+// legacy v1.17.9
 router.get(
   '/profile',
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.getProfile(req);
+      const response = await ProfileController.getProfile(req);
       return res.status(200).json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
@@ -273,12 +187,13 @@ router.get(
   }
 );
 
+// legacy v1.17.9
 router.get(
   '/stats',
   validationMiddleware,
   async (req, res) => {
     try {
-      const response = await AccountController.getUserStats(req);
+      const response = await ProfileController.getUserStats(req);
       return res.status(200).json(response);
     } catch (e) {
       return internalErrorHandler(res, e);
@@ -305,48 +220,9 @@ router.patch(
   }
 );
 
-// legacy v1.17.2
-router.patch(
-  '/update/metadata',
-  body('key').isString(),
-  body('value').isString(),
-  body('type').isString().optional(),
-  validationMiddleware,
-  async (req, res) => {
-    const t = await AccountController.store.transaction();
-    try {
-      const response = await AccountController.updateMetadata(req, req.body);
-      await t.commit();
-      return res.status(200).json(response);
-    } catch (e) {
-      await t.rollback();
-      return internalErrorHandler(res, e);
-    }
-  }
-);
-
 router.put(
   '/credential', 
   rateLimitMiddleware('5 per 3m'),
-  authMiddleware('jwt', { required: true, scope: ['account:write'] }),
-  validationMiddleware,
-  async (req, res) => {
-    const t = await AccountController.store.transaction();
-    try {
-      const response = await AccountController.updateCredential(req, req.body);
-      await t.commit();
-      return res.status(200).json(response);
-    } catch (e) {
-      await t.rollback();
-      return internalErrorHandler(res, e);
-    }
-  }
-);
-
-// legacy v1.17.2
-router.put(
-  '/update/credential', 
-  rateLimitMiddleware('10 per 10m'),
   authMiddleware('jwt', { required: true, scope: ['account:write'] }),
   validationMiddleware,
   async (req, res) => {
