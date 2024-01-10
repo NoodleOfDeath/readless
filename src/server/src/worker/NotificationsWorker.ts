@@ -20,11 +20,9 @@ async function main() {
   await Queue.prepare();
   await Achievement.prepare();
   ScribeService.prepare();
-  if (process.env.NODE_ENV === 'production') {
-    doWork();
-    sendDailyPushNotifications();
-    sendStreakPushNotifications();
-  }
+  doWork();
+  sendDailyPushNotifications();
+  sendStreakPushNotifications();
   detectAndAssignAchievements();
 }
 
