@@ -4,6 +4,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { useFocusEffect } from '@react-navigation/native';
 import pluralize from 'pluralize';
 
+import { LeaderboardScreen } from './LeaderboardScreen';
 import { MetricCounter } from './MetricCounter';
 import { ScreenComponent } from '../types';
 
@@ -11,6 +12,8 @@ import { InteractionType, MetricsResponse } from '~/api';
 import {
   ActivityIndicator,
   Button,
+  Divider,
+  FlatList,
   Icon,
   Popover,
   SYSTEM_FONT,
@@ -27,14 +30,17 @@ import { StorageContext } from '~/core';
 import { useInAppBrowser, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
-export function LongestStreakLeaderboardScreen({ route }: ScreenComponent<'leaderboards'>) {
+export function LongestStreakLeaderboardScreen({ route }: ScreenComponent<'leaderboard'>) {
+
   const { metrics } = route?.params ?? {};
   const theme = useTheme();
   const { openURL } = useInAppBrowser();
   const { userData } = React.useContext(StorageContext);
+
   if (!metrics) {
     return null;
   }
+  
   return (
     <Screen>
       <View
@@ -81,29 +87,32 @@ export function LongestStreakLeaderboardScreen({ route }: ScreenComponent<'leade
             </View>
           </Popover>
         </View>
-        <ScrollView>
-          <TableView mx={ 12 }>
-            <TableViewSection>
-              {metrics.streaks.map((streak, index) => (
-                <TableViewCell
-                  key={ index }
+        <ScrollView beveled overflow='hidden'>
+          <View flexGrow={ 1 } minHeight={ 600 } beveled overflow='hidden'>
+            <FlatList
+              flexGrow={ 1 }
+              data={ metrics.streaks }
+              renderItem={ ({ item: streak, index }) => (
+                <TableViewCell 
+                  key={ `${streak.userId}${streak.createdAt}` }
                   bold={ streak.userId === userData?.userId }
                   cellIcon={ <Text bold={ streak.userId === userData?.userId }>{`#${index + 1}`}</Text> }
                   title={ `${streak.user}${streak.userId === userData?.userId ? ` (${strings.you})`: ''}` }
                   detail={ `${streak.length} ${pluralize(strings.day, streak.length)}` } />
-              ))}
-            </TableViewSection>
-          </TableView>
+              ) }
+              ItemSeparatorComponent={ ({ index }) => <Divider key={ `divider-${index}` } /> }
+              estimatedItemSize={ 50 } />
+          </View>
         </ScrollView>
       </View>
     </Screen>
   );
 }
 
-export function DaysActiveLeaderboardScreen({ route }: ScreenComponent<'leaderboards'>) {
+export function DaysActiveLeaderboardScreen({ route }: ScreenComponent<'leaderboard'>) {
+  
   const { metrics } = route?.params ?? {};
   const theme = useTheme();
-  const { openURL } = useInAppBrowser();
   const { userData } = React.useContext(StorageContext);
   if (!metrics) {
     return null;
@@ -125,35 +134,6 @@ export function DaysActiveLeaderboardScreen({ route }: ScreenComponent<'leaderbo
           <Text h3>{`${strings.rank} #${(metrics?.userRankings?.daysActive ?? Number.MAX_SAFE_INTEGER) > 100 ? '100+' : (metrics?.userRankings?.daysActive ?? '???')}`}</Text>
         </View>
         <MetricCounter longestStreak />
-        <View flexRow gap={ 6 } justifyCenter>
-          <Text textCenter>
-            {strings.thanksForBeingAnActiveReader}
-          </Text>
-          <Popover
-            anchor={
-              <Icon size={ 24 } name="information" />
-            }>
-            <View p={ 24 } gap={ 6 }>
-              <Text>{strings.thanksForBeingAnActiveReaderLong}</Text>
-              <View />
-              <View gap={ 6 } itemsCenter>
-                <Text>{strings.contactUs}</Text>
-                <Button
-                  bold 
-                  underline
-                  onPress={ () => openURL('mailto:hello@readless.ai') }>
-                  hello@readless.ai
-                </Button>
-                <Button
-                  bold 
-                  underline
-                  onPress={ () => openURL('https://discord.gg/2gw3dP2a4u') }>
-                  https://discord.gg/2gw3dP2a4u
-                </Button>
-              </View>
-            </View>
-          </Popover>
-        </View>
         <ScrollView>
           <TableView mx={ 12 }>
             <TableViewSection>
@@ -173,7 +153,7 @@ export function DaysActiveLeaderboardScreen({ route }: ScreenComponent<'leaderbo
   );
 }
 
-export function InteractionCountLeaderboardScreen({ route }: ScreenComponent<'leaderboards'>) {
+export function InteractionCountLeaderboardScreen({ route }: ScreenComponent<'leaderboard'>) {
   const { metrics, interactionType } = route?.params ?? {};
   const theme = useTheme();
   const { openURL } = useInAppBrowser();
@@ -297,21 +277,18 @@ export function LeaderboardsScreen({ route: _route }: ScreenComponent<'leaderboa
             name={ strings.longestStreak }
             component={ LongestStreakLeaderboardScreen }
             initialParams={ { metrics } } />
-          {__DEV__ && (
-            <Tab.Screen
-              name={ strings.daysActive }
-              component={ DaysActiveLeaderboardScreen } />
-          )}
           <Tab.Screen
-            name={ strings.mostReadsInThsPastWeek }
+            name={ strings.daysActive }
+            component={ LeaderboardScreen }
+            initialParams={ { metrics } } />
+          <Tab.Screen
+            name={ strings.mostReads }
             component={ InteractionCountLeaderboardScreen }
             initialParams={ { interactionType: InteractionType.Read, metrics } } />
-          {__DEV__ && (
-            <Tab.Screen
-              name={ strings.mostSharesInThsPastWeek }
-              component={ InteractionCountLeaderboardScreen }
-              initialParams={ { interactionType: InteractionType.Share, metrics } } />
-          )}
+          <Tab.Screen
+            name={ strings.mostShares }
+            component={ InteractionCountLeaderboardScreen }
+            initialParams={ { interactionType: InteractionType.Share, metrics } } />
         </Tab.Navigator>
       ) : <View flex={ 1 } justifyCenter><ActivityIndicator animating /></View>}
     </Screen>
