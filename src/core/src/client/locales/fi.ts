@@ -155,6 +155,7 @@ export const fiStrings: typeof enStrings = {
   insteadOfRemoving: '**Sentimentin poistamisen sijaan** Read Less pyrkii **mittaamaan tunteita** ajan mittaan.',
   isReadingForYouAChore: 'Onko uutisten lukeminen mielestäsi työnteko?',
   isReadingForYouAChoreDescription: 'Read Lessin tavoitteena on sopeutua saumattomasti päivittäiseen rutiinisi ja tehdä uutisten lukemisesta nautinnollisempi ja vähemmän aikaa vievä kokemus.',
+  item: 'Tuote',
   justNow: 'Juuri nyt',
   keepYourStreakGoing: 'Tämä on päivittäinen muistutus lukea uutiset ja pysyä ajan tasalla!',
   leaderboard: 'Tulostaulu',

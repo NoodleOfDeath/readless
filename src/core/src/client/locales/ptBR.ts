@@ -155,6 +155,7 @@ export const ptBRStrings: typeof enStrings = {
   insteadOfRemoving: '**Em vez de remover completamente o sentimento**, o Read Less pretende **medir o sentimento** ao longo do tempo.',
   isReadingForYouAChore: 'Você acha que ler as notícias é uma tarefa árdua?',
   isReadingForYouAChoreDescription: 'O objetivo do Read Less é se encaixar perfeitamente em sua rotina diária e tornar a leitura das notícias uma experiência mais agradável e menos demorada.',
+  item: 'Item',
   justNow: 'Agora mesmo',
   keepYourStreakGoing: 'Este é o seu lembrete diário para ler as notícias e se manter informado!',
   leaderboard: 'Entre os melhores',

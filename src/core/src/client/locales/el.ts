@@ -155,6 +155,7 @@ export const elStrings: typeof enStrings = {
   insteadOfRemoving: '**Αντί να αφαιρέσει εντελώς το συναίσθημα**, το Read Less στοχεύει να **μετρήσει το συναίσθημα** με την πάροδο του χρόνου.',
   isReadingForYouAChore: 'Βρίσκετε το να διαβάζετε ειδήσεις αγγαρεία;',
   isReadingForYouAChoreDescription: 'Ο στόχος του Read Less είναι να ενταχθεί απρόσκοπτα στην καθημερινή σας ρουτίνα και να κάνει την ανάγνωση των ειδήσεων μια πιο ευχάριστη, λιγότερο χρονοβόρα εμπειρία.',
+  item: 'Είδος',
   justNow: 'Μόλις τώρα',
   keepYourStreakGoing: 'Αυτή είναι η καθημερινή σας υπενθύμιση για να διαβάζετε τα νέα και να ενημερώνεστε!',
   leaderboard: 'Leaderboard',

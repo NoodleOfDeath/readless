@@ -155,6 +155,7 @@ export const trStrings: typeof enStrings = {
   insteadOfRemoving: '**Duyarlılığı tamamen ortadan kaldırmak yerine**, Daha Az Oku özelliği zamanla **duyarlılığı ölçmeyi** amaçlar.',
   isReadingForYouAChore: 'Haber okumayı bir angarya mı buluyorsunuz?',
   isReadingForYouAChoreDescription: 'Daha Az Oku\'nun amacı, günlük rutininize sorunsuz bir şekilde uyum sağlamak ve haberleri okumayı daha az zaman alan daha keyifli bir deneyim haline getirmektir.',
+  item: 'Öğe',
   justNow: 'Şu anda',
   keepYourStreakGoing: 'Bu, haberleri okumak ve haberdar olmak için günlük hatırlatıcınız!',
   leaderboard: 'Liderler Sıralaması',

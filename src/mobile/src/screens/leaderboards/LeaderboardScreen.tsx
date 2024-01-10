@@ -2,9 +2,14 @@ import React from 'react';
 
 import pluralize from 'pluralize';
 
-import { MetricCounter } from './MetricCounter';
+import { MetricButtonProps, MetricCounter } from './MetricCounter';
 import { ScreenComponent } from '../types';
 
+import {
+  InteractionCount,
+  InteractionType,
+  Streak,
+} from '~/api';
 import {
   Button,
   Divider,
@@ -13,9 +18,7 @@ import {
   Popover,
   Screen,
   ScrollView,
-  TableView,
   TableViewCell,
-  TableViewSection,
   Text,
   View,
 } from '~/components';
@@ -26,20 +29,63 @@ import { strings } from '~/locales';
 export function LeaderboardScreen({ route }: ScreenComponent<'leaderboard'>) {
 
   const {
-    metrics, interactionType, unit, 
+    metrics, title, unit, 
   } = route?.params ?? {};
   const theme = useTheme();
   const { openURL } = useInAppBrowser();
   const { userData } = React.useContext(StorageContext);
 
   const ranking = React.useMemo(() => {
-    if (interactionType === 'read') {
-      return metrics?.userRankings?.interactionCounts.read;
+    let rank = 100;
+    if (title === strings.longestStreak) {
+      rank = metrics?.userRankings?.streaks ?? Number.MAX_SAFE_INTEGER;
     } else
-    if (interactionType === 'share') {
-      return metrics?.userRankings?.interactionCounts.share;
+    if (title === strings.daysActive) {
+      rank = metrics?.userRankings?.daysActive ?? Number.MAX_SAFE_INTEGER;
+    } else
+    if (title === strings.mostReads) {
+      rank = metrics?.userRankings?.interactionCounts.read ?? Number.MAX_SAFE_INTEGER;
+    } else
+    if (title === strings.mostShares) {
+      rank = metrics?.userRankings?.interactionCounts.share ?? Number.MAX_SAFE_INTEGER;
     }
-  }, [interactionType, metrics?.userRankings]);
+    return rank > 100 ? '100+' : rank;
+  }, [metrics?.userRankings?.daysActive, metrics?.userRankings?.interactionCounts.read, metrics?.userRankings?.interactionCounts.share, metrics?.userRankings?.streaks, title]);
+
+  const counters = React.useMemo<MetricButtonProps[]>(() => {
+    if (title === strings.longestStreak) {
+      return [
+        { streak: true },
+        { longestStreak: true },
+      ];
+    } else
+    if (title === strings.daysActive) {
+      return [{ daysActive: true }];
+    } else
+    if (title === strings.mostReads) {
+      return [{ interactionType: InteractionType.Read }];
+    } else
+    if (title === strings.mostShares) {
+      return [{ interactionType: InteractionType.Share }];
+    }
+    return [];
+  }, [title]);
+
+  const data = React.useMemo<(InteractionCount | Streak)[]>(() => {
+    if (title === strings.longestStreak) {
+      return metrics?.streaks ?? [];
+    } else
+    if (title === strings.daysActive) {
+      return metrics?.daysActive ?? [];
+    } else
+    if (title === strings.mostReads) {
+      return metrics?.interactionCounts?.read ?? [];
+    } else
+    if (title === strings.mostShares) {
+      return metrics?.interactionCounts?.share ?? [];
+    }
+    return [];
+  }, [metrics?.daysActive, metrics?.interactionCounts?.read, metrics?.interactionCounts?.share, metrics?.streaks, title]);
 
   if (!metrics) {
     return null;
@@ -51,7 +97,7 @@ export function LeaderboardScreen({ route }: ScreenComponent<'leaderboard'>) {
         p={ 12 }
         gap={ 12 }
         flex={ 1 }>
-        <Text h2 textCenter>{strings.longestStreak}</Text>
+        <Text h2 textCenter>{title}</Text>
         <View
           p={ 12 }
           beveled
@@ -59,9 +105,9 @@ export function LeaderboardScreen({ route }: ScreenComponent<'leaderboard'>) {
           itemsCenter
           bg={ theme.colors.headerBackground }>
           <Text>{strings.yourRank}</Text>
-          <Text h3>{`${strings.rank} #${(metrics?.userRankings?.streaks ?? Number.MAX_SAFE_INTEGER) > 100 ? '100+' : (metrics?.userRankings?.streaks ?? '???')}`}</Text>
+          <Text h3>{`${strings.rank} #${ranking}`}</Text>
         </View>
-        <MetricCounter longestStreak />
+        <MetricCounter metrics={ counters } />
         <View flexRow gap={ 6 } justifyCenter>
           <Text textCenter>
             {strings.thanksForBeingAnActiveReader}
@@ -92,17 +138,22 @@ export function LeaderboardScreen({ route }: ScreenComponent<'leaderboard'>) {
           </Popover>
         </View>
         <ScrollView beveled overflow='hidden'>
-          <View flexGrow={ 1 } minHeight={ 600 } beveled overflow='hidden'>
+          <View
+            beveled
+            overflow='hidden'
+            flexGrow={ 1 }
+            minHeight={ 600 } 
+            bg={ theme.colors.headerBackground }>
             <FlatList
               flexGrow={ 1 }
-              data={ metrics.streaks }
-              renderItem={ ({ item: streak, index }) => (
+              data={ data }
+              renderItem={ ({ item, index }) => (
                 <TableViewCell 
-                  key={ `${streak.userId}${streak.createdAt}` }
-                  bold={ streak.userId === userData?.userId }
-                  cellIcon={ <Text bold={ streak.userId === userData?.userId }>{`#${index + 1}`}</Text> }
-                  title={ `${streak.user}${streak.userId === userData?.userId ? ` (${strings.you})`: ''}` }
-                  detail={ `${streak.length} ${pluralize(strings.day, streak.length)}` } />
+                  key={ `${item.userId}${item.createdAt}` }
+                  bold={ item.userId === userData?.userId }
+                  cellIcon={ <Text bold={ item.userId === userData?.userId }>{`#${index + 1}`}</Text> }
+                  title={ `${item.user}${item.userId === userData?.userId ? ` (${strings.you})`: ''}` }
+                  detail={ `${item.count} ${pluralize(unit ?? strings.item, item.count)}` } />
               ) }
               ItemSeparatorComponent={ ({ index }) => <Divider key={ `divider-${index}` } /> }
               estimatedItemSize={ 50 } />

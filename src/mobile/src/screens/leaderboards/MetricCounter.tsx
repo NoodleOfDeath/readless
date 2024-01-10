@@ -1,115 +1,105 @@
 import React from 'react';
 
 import pluralize from 'pluralize';
-import { Avatar } from 'react-native-paper';
 
 import { InteractionType } from '~/api';
 import {
   Button,
+  ButtonProps,
   ChildlessViewProps,
-  Text,
   View,
 } from '~/components';
 import { StorageContext } from '~/core';
-import { useShare, useTheme } from '~/hooks';
+import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
-export type MetricProps = ChildlessViewProps;
-
-export type MetricCounterProps = ChildlessViewProps & {
-  disclosureIndicator?: boolean;
+export type MetricButtonProps = ButtonProps & {
   reputation?: boolean;
   streak?: boolean;
   longestStreak?: boolean;
+  daysActive?: boolean;
   interactionType?: InteractionType;
-  vertical?: boolean;
-  onReputationPress?: () => void;
-  onStreakPress?: () => void;
 };
 
-export function MetricCounter({
-  disclosureIndicator,
-  longestStreak: showLongestStreak, 
-  reputation: showReputation,
-  streak: showStreak = showLongestStreak,
+export function MetricButton({
+  children,
+  reputation,
+  streak: showStreak,
+  longestStreak: showLongestStreak,
+  daysActive,
   interactionType,
-  vertical,
-  onReputationPress,
-  onStreakPress,
-  ...props 
-}: MetricCounterProps) {
-  const theme = useTheme();
-  const { shareStandard: _, shareSocial: __ } = useShare({});
-  const { 
+  ...props
+}: Partial<MetricButtonProps> = {}) {
+  
+  const {
     currentStreak, 
     longestStreak,
     userData,
   } = React.useContext(StorageContext);
-  const count = React.useMemo(() => {
+  
+  const text = React.useMemo(() => {
+    if (children) {
+      return children;
+    } else
+    if (reputation) {
+      return userData?.profile?.stats?.reputation ?? 0;
+    } else
     if (showStreak) {
       return `${currentStreak?.length ?? 1} ${strings.day} ${strings.streak}`;
+    } else
+    if (showLongestStreak) {
+      return `${strings.allTime} | ${longestStreak?.length ?? 1} ${pluralize(strings.day, longestStreak?.length ?? 1)}`;
+    } else
+    if (daysActive) {
+      const days = userData?.profile?.stats?.daysActive.count ?? 1;
+      return `${days} ${pluralize(strings.day, days)}`;
     } else
     if (interactionType === InteractionType.Read) {
       const readCount = userData?.profile?.stats?.interactionCounts?.read?.count ?? 0;
       return `${readCount} ${pluralize(strings.article, readCount)}`;
-    } else if (interactionType === InteractionType.Share) {
+    } else 
+    if (interactionType === InteractionType.Share) {
       const shareCount = userData?.profile?.stats?.interactionCounts?.share?.count ?? 0;
       return `${shareCount} ${pluralize(strings.share, shareCount)}`;
     }
     return '';
-  }, [currentStreak, interactionType, showStreak, userData?.profile?.stats]);
+  }, [children, reputation, showStreak, showLongestStreak, daysActive, interactionType, currentStreak, longestStreak, userData?.profile?.stats]);
+  
+  return (
+    <Button
+      accessible
+      body2
+      contained
+      avatar
+      flexGrow={ 1 } 
+      gap={ 12 }
+      iconSize={ 24 }
+      { ...props }>
+      { text }
+    </Button>
+  );
+}
+
+export type MetricCounterProps = ChildlessViewProps & {
+  metrics?: MetricButtonProps[];
+};
+
+export function MetricCounter({
+  metrics,
+  ...props 
+}: MetricCounterProps) {
+  const theme = useTheme();
   return (
     <View
       beveled
+      flexRow
       p={ 12 }
+      gap={ 12 }
       bg={ theme.colors.headerBackground }
-      flexRow={ !vertical }
-      justifySpaceEvenly={ !vertical }
       { ...props }>
-      {showReputation && (
-        <Button
-          accessible
-          accessibilityLabel={ strings.reputation }
-          body2
-          contained
-          gap={ 12 }
-          leftIcon={ (
-            <Avatar.Icon
-              icon="trophy"
-              size={ 24 } />
-          ) }
-          onPress={ onReputationPress }
-          rightIcon={ disclosureIndicator ? 'chevron-right' : undefined }>
-          {`${userData?.profile?.stats?.reputation ?? 0}`}
-        </Button>
-      )}
-      <Button
-        accessible
-        accessibilityLabel={ strings.streak }
-        body2
-        contained
-        gap={ 12 }
-        leftIcon={ (
-          <Avatar.Icon
-            icon="flash"
-            size={ 24 } />
-        ) }
-        rightIcon={ disclosureIndicator ? 'chevron-right' : undefined }
-        onPress={ onStreakPress }>
-        { count }
-      </Button>
-      {showLongestStreak && (
-        <Button
-          accessible
-          accessibilityLabel={ strings.longestStreak }
-          body2
-          contained
-          gap={ 12 }
-          itemsCenter>
-          <Text body2>{strings.allTime}</Text>
-          <Text body2>{ `${longestStreak?.length ?? 1} ${pluralize(strings.day, longestStreak?.length ?? 1)}`}</Text> 
-        </Button>
-      )}
+      {metrics?.map((m, i) => (
+        <MetricButton key={ i } { ...m } />
+      ))}
     </View>
   );
 }

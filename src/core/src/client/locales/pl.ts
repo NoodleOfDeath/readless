@@ -155,6 +155,7 @@ export const plStrings: typeof enStrings = {
   insteadOfRemoving: '**Zamiast całkowicie usuwać nastroje**, celem Czytaj mniej jest **mierzenie nastrojów** w czasie.',
   isReadingForYouAChore: 'Czy uważasz, że czytanie wiadomości jest obowiązkiem?',
   isReadingForYouAChoreDescription: 'Celem Read Less jest bezproblemowe dopasowanie się do codziennej rutyny i uczynienie czytania wiadomości przyjemniejszym i mniej czasochłonnym doświadczeniem.',
+  item: 'Przedmiot',
   justNow: 'Właśnie',
   keepYourStreakGoing: 'To jest twoje codzienne przypomnienie, aby czytać wiadomości i być na bieżąco!',
   leaderboard: 'Tabela liderów',

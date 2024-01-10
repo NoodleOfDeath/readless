@@ -155,6 +155,7 @@ export const arStrings: typeof enStrings = {
   insteadOfRemoving: '** بدلاً من إزالة المشاعر تمامًا ** ، تهدف "قراءة أقل" إلى ** قياس المشاعر ** بمرور الوقت.',
   isReadingForYouAChore: 'هل تجد قراءة الأخبار عمل روتيني؟',
   isReadingForYouAChoreDescription: 'الهدف من "قراءة أقل" هو التوافق بسلاسة مع روتينك اليومي وجعل قراءة الأخبار أكثر إمتاعًا وتجربة أقل استهلاكا للوقت.',
+  item: 'غرض',
   justNow: 'الآن',
   keepYourStreakGoing: 'هذا هو تذكيرك اليومي لقراءة الأخبار والبقاء على اطلاع!',
   leaderboard: 'المتصدرين',

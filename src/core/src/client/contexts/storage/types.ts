@@ -481,8 +481,8 @@ export type StorageContextType = Storage & {
   enablePush: (key: string, settings?: PushNotificationSettings) => Promise<void>;
   hasViewedFeature: (...features: ViewableFeature[]) => boolean;
   viewFeature: (feature: ViewableFeature, state?: boolean) => Promise<void>;
-  hasReadNotification: (...notifications: (SystemNotificationAttributes | number)[]) => boolean;
-  readNotification: (...notifications: (SystemNotificationAttributes | number)[]) => Promise<void>;
+  hasReadNotification: (...notifications: (PublicSystemNotificationAttributes | number)[]) => boolean;
+  readNotification: (...notifications: (PublicSystemNotificationAttributes | number)[]) => Promise<void>;
   
   // summary convenience functions
   bookmarkSummary: (summary: PublicSummaryGroup) => Promise<void>;
@@ -548,6 +548,7 @@ export const DEFAULT_STORAGE_CONTEXT: StorageContextType = {
   setCategories: () => Promise.resolve(),
   setErrorHandler: () => Promise.resolve(),
   setLoadedInitialUrl: () => Promise.resolve(),
+  setNotifications: () => Promise.resolve(),
   setPublishers: () => Promise.resolve(),
   setStoredValue: () => Promise.resolve(),
   storeTranslations: () => Promise.resolve(undefined),

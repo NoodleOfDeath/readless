@@ -155,6 +155,7 @@ export const idStrings: typeof enStrings = {
   insteadOfRemoving: '**Daripada menghapus sentimen sama sekali**, Baca Lebih Sedikit bertujuan untuk **mengukur sentimen** dari waktu ke waktu.',
   isReadingForYouAChore: 'Apakah Anda menganggap membaca berita sebagai tugas?',
   isReadingForYouAChoreDescription: 'Tujuan dari Baca Lebih Sedikit adalah untuk menyesuaikan dengan mulus ke dalam rutinitas harian Anda dan membuat membaca berita menjadi pengalaman yang lebih menyenangkan dan tidak memakan waktu.',
+  item: 'Barang',
   justNow: 'Baru saja',
   keepYourStreakGoing: 'Ini adalah pengingat harian Anda untuk membaca berita dan tetap mendapat informasi!',
   leaderboard: 'Papan peringkat',

@@ -155,6 +155,7 @@ export const heStrings: typeof enStrings = {
   insteadOfRemoving: '**במקום להסיר סנטימנטים לגמרי**, Read Less שואפת **למדוד סנטימנט** לאורך זמן.',
   isReadingForYouAChore: 'האם קריאת החדשות היא בעיניך מטלה?',
   isReadingForYouAChoreDescription: 'המטרה של Read Less היא להשתלב בצורה חלקה בשגרת היומיום שלך ולהפוך את קריאת החדשות לחוויה מהנה יותר שגוזלת זמן פחות.',
+  item: 'פריט',
   justNow: 'זֶה עַתָה',
   keepYourStreakGoing: 'זו התזכורת היומית שלך לקרוא את החדשות ולהישאר מעודכן!',
   leaderboard: 'Leaderboard',

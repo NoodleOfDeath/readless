@@ -48,13 +48,19 @@ export function YourNewsTab({
       filter={ filter }
       headerComponent={ (
         <MetricCounter
-          reputation
-          streak
-          disclosureIndicator
+          metrics={ [{
+            disclosureIndicator: true,
+            leftIcon: 'trophy',
+            onPress: () => navigation?.navigate('achievements'),
+            reputation: true,
+          }, {
+            disclosureIndicator: true,
+            leftIcon: 'flash',
+            onPress: () => navigation?.navigate('leaderboards'),
+            streak: true,
+          }] }
           m={ 12 }
-          mt={ 0 }
-          onReputationPress={ () => navigation?.navigate('achievements') }
-          onStreakPress={ () => navigation?.navigate('leaderboards', {}) } />
+          mt={ 0 } />
       ) } />
   );
 }
@@ -72,14 +78,20 @@ export function TopStoriesTab({
       fetch={ getTopStories }
       interval='1d'
       headerComponent={ !followFilter ? (
-        <MetricCounter 
-          reputation
-          streak
-          disclosureIndicator
+        <MetricCounter
+          metrics={ [{
+            disclosureIndicator: true,
+            leftIcon: 'trophy',
+            onPress: () => navigation?.navigate('achievements'),
+            reputation: true,
+          }, {
+            disclosureIndicator: true,
+            leftIcon: 'flash',
+            onPress: () => navigation?.navigate('leaderboards'),
+            streak: true,
+          }] }
           m={ 12 }
-          mt={ 0 }
-          onReputationPress={ () => navigation?.navigate('achievements') }
-          onStreakPress={ () => navigation?.navigate('leaderboards', {}) } />
+          mt={ 0 } />
       ) : undefined } />
   );
 }

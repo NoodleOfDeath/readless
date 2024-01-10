@@ -155,6 +155,7 @@ export const nbStrings: typeof enStrings = {
   insteadOfRemoving: '**I stedet for å fjerne følelser helt**, har Les Less som mål å **måle følelser** over tid.',
   isReadingForYouAChore: 'Synes du det er vanskelig å lese nyheter?',
   isReadingForYouAChoreDescription: 'Målet med Les Less er å sømløst passe inn i din daglige rutine og gjøre lesing av nyheter til en morsommere og mindre tidkrevende opplevelse.',
+  item: 'Punkt',
   justNow: 'Akkurat nå',
   keepYourStreakGoing: 'Dette er din daglige påminnelse om å lese nyhetene og holde deg oppdatert!',
   leaderboard: 'Leaderboard',

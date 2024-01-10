@@ -155,6 +155,7 @@ export const huStrings: typeof enStrings = {
   insteadOfRemoving: '**Ahelyett, hogy teljesen eltávolítaná a hangulatot**, a Read Less célja, hogy **mérje a hangulatot** az idő múlásával.',
   isReadingForYouAChore: 'Feladatnak találja a hírek olvasását?',
   isReadingForYouAChoreDescription: 'A Read Less célja, hogy zökkenőmentesen illeszkedjen a napi rutinjába, és a hírek olvasása élvezetesebbé, kevésbé időigényes élménnyé tegye.',
+  item: 'Tétel',
   justNow: 'Pont most',
   keepYourStreakGoing: 'Ez a napi emlékeztető, hogy olvassa el a híreket és maradjon tájékozott!',
   leaderboard: 'Ranglista',

@@ -155,6 +155,7 @@ export const ukStrings: typeof enStrings = {
   insteadOfRemoving: '**Замість того, щоб повністю видаляти настрої**, Read Less прагне **вимірювати настрої** з часом.',
   isReadingForYouAChore: 'Ви вважаєте читання новин важким завданням?',
   isReadingForYouAChoreDescription: 'Мета «Читати менше» — плавно вписатися у вашу повсякденну рутину та зробити читання новин приємнішим і не займати багато часу.',
+  item: 'Пункт',
   justNow: 'Прямо зараз',
   keepYourStreakGoing: 'Це ваше щоденне нагадування читати новини та бути в курсі!',
   leaderboard: 'Таблиця лідерів',

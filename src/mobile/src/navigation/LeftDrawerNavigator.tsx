@@ -1,11 +1,12 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
+import { InteractionManager, SafeAreaView } from 'react-native';
 
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
+import { useFocusEffect } from '@react-navigation/native';
 import { Avatar } from 'react-native-paper';
 
 import { RoutedScreen } from './RoutedScreen';
@@ -23,7 +24,7 @@ import { StorageContext } from '~/contexts';
 import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
-function HomeDrawer() {
+export function HomeDrawer() {
   return (
     <RoutedScreen navigationID='LeftDrawerNav' safeArea={ false }>
       <StackNavigator
@@ -64,16 +65,34 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
   const isSyncingBookmarks = React.useMemo(() => {
     return syncState.bookmarks?.isFetching ?? false;
   }, [syncState.bookmarks]);
-
-  const topPublishers = React.useMemo(() => Object.keys({ ...favoritedPublishers }).sort().map((p) => publishers?.[p]).filter(Boolean) as PublicPublisherAttributes[], [publishers, favoritedPublishers]);
-
-  const topCategories = React.useMemo(() => Object.keys({ ...favoritedCategories }).sort().map((c) => categories?.[c]).filter(Boolean) as PublicCategoryAttributes[], [categories, favoritedCategories]);
-
+  
+  const [topPublishers, setTopPublishers] = React.useState<PublicPublisherAttributes[]>([]);
+  const [topCategories, setTopCategories] = React.useState<PublicCategoryAttributes[]>([]);
   const favorites = React.useMemo(() => [...topPublishers, ...topCategories], [topPublishers, topCategories]);
+  const [sortedPublishers, setSortedPublishers] = React.useState<PublicPublisherAttributes[]>([]);
+  const [sortedCategories, setSortedCategories] = React.useState<PublicCategoryAttributes[]>([]);
 
-  const sortedPublishers = React.useMemo(() => Object.keys({ ...followedPublishers }).sort().map((p) => publishers?.[p]).filter(Boolean) as PublicPublisherAttributes[], [publishers, followedPublishers]);
-
-  const sortedCategories = React.useMemo(() => Object.keys({ ...followedCategories }).sort().map((c) => categories?.[c]).filter(Boolean) as PublicCategoryAttributes[], [categories, followedCategories]);
+  useFocusEffect(React.useCallback(() => {
+    const interaction = InteractionManager.runAfterInteractions(() => {
+      
+      const topPublishers = Object.keys({ ...favoritedPublishers }).sort().map((p) => publishers?.[p]).filter(Boolean) as PublicPublisherAttributes[];
+      
+      const topCategories = Object.keys({ ...favoritedCategories }).sort().map((c) => categories?.[c]).filter(Boolean) as PublicCategoryAttributes[];
+    
+      setTopPublishers(topPublishers);
+      setTopCategories(topCategories);
+    
+      const sortedPublishers = Object.keys({ ...followedPublishers }).sort().map((p) => publishers?.[p]).filter(Boolean) as PublicPublisherAttributes[];
+      setSortedPublishers(sortedPublishers);
+    
+      const sortedCategories = Object.keys({ ...followedCategories }).sort().map((c) => categories?.[c]).filter(Boolean) as PublicCategoryAttributes[];
+      setSortedCategories(sortedCategories);
+      
+    });
+    return () => {
+      interaction.cancel();
+    };
+  }, [publishers, categories, favoritedPublishers, favoritedCategories, followedPublishers, followedCategories]));
 
   const name = React.useMemo(() => userData?.profile?.email || userData?.profile?.username, [userData]);
   const initials = React.useMemo(() => name?.slice(0, 2).toUpperCase() ?? '??', [name]);

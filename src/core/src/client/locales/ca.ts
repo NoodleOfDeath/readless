@@ -155,6 +155,7 @@ export const caStrings: typeof enStrings = {
   insteadOfRemoving: '**En lloc d\'eliminar el sentiment del tot**, Llegir menys té com a objectiu **mesurar el sentiment** al llarg del temps.',
   isReadingForYouAChore: 'Trobeu que llegir la notícia és una tasca?',
   isReadingForYouAChoreDescription: 'L\'objectiu de Llegir menys és encaixar perfectament a la vostra rutina diària i fer que llegir les notícies sigui una experiència més agradable i que requereixi menys temps.',
+  item: 'Article',
   justNow: 'Ara mateix',
   keepYourStreakGoing: 'Aquest és el vostre recordatori diari per llegir les notícies i mantenir-vos informat!',
   leaderboard: 'Tauler de classificació',

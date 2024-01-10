@@ -1,4 +1,6 @@
-import React from 'react';
+import React from 'react'; 
+
+import { Avatar } from 'react-native-paper';
 
 import { 
   Badge,
@@ -18,6 +20,7 @@ import {
 export type ButtonProps = TextProps & ViewProps & {
   badge?: boolean | number;
   indicator?: boolean;
+  avatar?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   iconProps?: IconProps;
@@ -28,14 +31,17 @@ export type ButtonProps = TextProps & ViewProps & {
   contained?: boolean;
   primary?: boolean;
   destructive?: boolean;
+  disclosureIndicator?: boolean;
 };
 
 export function Button({
   children,
   badge,
   indicator,
+  avatar,
   leftIcon,
-  rightIcon,
+  disclosureIndicator,
+  rightIcon = disclosureIndicator ? 'chevron-right' : undefined,
   iconProps,
   vertical,
   iconSize,
@@ -72,6 +78,16 @@ export function Button({
 
   const leftIconComponent = React.useMemo(() => {
     if (typeof leftIcon === 'string') {
+      if (avatar) {
+        return (
+          <Avatar.Icon
+            accessible={ false }
+            { ...iconProps }
+            icon={ leftIcon } 
+            size={ iconSize ?? textStyle.fontSize } 
+            color={ buttonStyle.color ?? textStyle.color } />
+        );
+      }
       return (
         <Icon 
           accessible={ false }
@@ -82,7 +98,7 @@ export function Button({
       );
     }
     return leftIcon;
-  }, [iconProps, leftIcon, iconSize, textStyle.fontSize, textStyle.color, buttonStyle.color]);
+  }, [iconProps, leftIcon, avatar, iconSize, textStyle.fontSize, textStyle.color, buttonStyle.color]);
   
   const rightIconComponent = React.useMemo(() => {
     if (typeof rightIcon === 'string') {

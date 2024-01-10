@@ -155,6 +155,7 @@ export const zhTWStrings: typeof enStrings = {
   insteadOfRemoving: '**Read Less 不是完全消除情緒**，而是旨在隨著時間的推移**衡量情緒**。',
   isReadingForYouAChore: '你覺得看新聞是件苦差事嗎？',
   isReadingForYouAChoreDescription: 'Read Less 的目標是無縫融入您的日常生活，讓閱讀新聞成為一種更愉快、更省時的體驗。',
+  item: '物品',
   justNow: '現在',
   keepYourStreakGoing: '這是每天提醒您閱讀新聞並了解最新情況！',
   leaderboard: '排行榜',

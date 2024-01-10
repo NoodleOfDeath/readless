@@ -155,6 +155,7 @@ export const svStrings: typeof enStrings = {
   insteadOfRemoving: '**Istället för att ta bort sentiment helt**, syftar Read Less till att **mäta sentiment** över tid.',
   isReadingForYouAChore: 'Tycker du att det är jobbigt att läsa nyheter?',
   isReadingForYouAChoreDescription: 'Målet med Läs mindre är att sömlöst passa in i din dagliga rutin och göra läsningen av nyheterna till en roligare och mindre tidskrävande upplevelse.',
+  item: 'Artikel',
   justNow: 'Precis nu',
   keepYourStreakGoing: 'Det här är din dagliga påminnelse om att läsa nyheterna och hålla dig informerad!',
   leaderboard: 'Leaderboard',

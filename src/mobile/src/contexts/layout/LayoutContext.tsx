@@ -57,7 +57,6 @@ export function LayoutContextProvider({ children }: React.PropsWithChildren) {
   }, []);
   
   React.useEffect(() => {
-    Orientation.unlockAllOrientations();
     Orientation.addOrientationListener(setOrientation);
     return () => {
       Orientation.removeOrientationListener(setOrientation);

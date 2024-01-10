@@ -8,7 +8,7 @@ import {
 
 export const MarkdownSearchPattern = { default: /\*\*(.*?)\*\*/g };
 
-export type MarkdownProps = Omit<ButtonProps & HighlighterProps, 'searchWords'> & {
+export type HighlightedTextProps = Omit<ButtonProps & HighlighterProps, 'searchWords'> & {
   searchPattern?: RegExp | string;
 };
 
@@ -16,7 +16,7 @@ export function HighlightedText({
   children,
   searchPattern = MarkdownSearchPattern.default,
   ...props
-}: MarkdownProps) {
+}: HighlightedTextProps) {
 
   const [words, setWords] = React.useState<string[]>([]);
 

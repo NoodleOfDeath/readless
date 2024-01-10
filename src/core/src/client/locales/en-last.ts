@@ -153,6 +153,7 @@ export const enStrings = {
   insteadOfRemoving: '**Instead of removing sentiment altogether**, Read Less aims to **measure sentiment** over time.',
   isReadingForYouAChore: 'Do you find reading the news a chore?',
   isReadingForYouAChoreDescription: 'The goal of Read Less is to seamlessly fit into your daily routine and make reading the news a more enjoyable less time consuming experience.',
+  item: 'Item',
   justNow: 'Just Now',
   keepYourStreakGoing: 'Come read some news and keep your streak going!',
   leaderboard: 'Leaderboard',
