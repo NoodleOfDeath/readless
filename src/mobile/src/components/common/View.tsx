@@ -48,16 +48,16 @@ export function View({
   }, [inactive, style, theme.colors.inactive]);
 
   const underlay = React.useMemo(() => {
-    if (progress) {
+    if (progress != null) {
       return (
         <View
           absolute
-          left={ 0 }
+          left={ `-${progress * 100 * 4}%` }
           top={ 0 }
-          width={ `${progress * layout.width}%` }
-          height={ '1000%' }
+          transform={ [ { scaleX: progress }] }
           zIndex={ 0 }
           style={ {
+            ...StyleSheet.absoluteFillObject, 
             backgroundColor: progressColor ?? theme.colors.primary,
             borderBottomLeftRadius: style.borderBottomLeftRadius ?? 0, 
             borderBottomRightRadius: style.borderBottomRightRadius ?? 0,
@@ -69,14 +69,14 @@ export function View({
           } } />
       );
     }
-  }, [layout.width, progress, progressColor, progressOpacity, style.borderBottomLeftRadius, style.borderBottomRightRadius, style.borderRadius, style.borderTopLeftRadius, style.borderTopRightRadius, theme.colors.primary]);
+  }, [progress, progressColor, progressOpacity, style.borderBottomLeftRadius, style.borderBottomRightRadius, style.borderRadius, style.borderTopLeftRadius, style.borderTopRightRadius, theme.colors.primary]);
   
   const contents = React.useMemo(() => (
-    <View onLayout={ (e) => setLayout(e.nativeEvent.layout) }>
+    <React.Fragment>
       {inactive && overlay}
       {children}
       {underlay}
-    </View>
+    </React.Fragment>
   ), [children, inactive, overlay, underlay]);
   
   const onPress = React.useCallback((event: GestureResponderEvent) => {
