@@ -385,6 +385,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
         },
         streaks: streaks.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
       },
+      userStats: user ? await user.getStats() : undefined,
     };
   }
   

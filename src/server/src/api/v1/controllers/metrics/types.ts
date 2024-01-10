@@ -2,6 +2,7 @@ import {
   InteractionCount,
   InteractionType,
   Streak,
+  UserStats,
 } from '../../schema';
 
 export type Metrics = {
@@ -26,4 +27,5 @@ export type MetricsResponse = Metrics & {
     daysActive: number;
     interactionCounts: Record<InteractionType, number>;
   };
+  userStats?: UserStats;
 };
