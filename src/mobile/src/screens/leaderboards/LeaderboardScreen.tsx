@@ -7,6 +7,8 @@ import { ScreenComponent } from '../types';
 
 import {
   Button,
+  Divider,
+  FlatList,
   Icon,
   Popover,
   Screen,
@@ -21,14 +23,28 @@ import { StorageContext } from '~/core';
 import { useInAppBrowser, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
-export function LeaderboardScreen({ route }: ScreenComponent<'leaderboards'>) {
-  const { metrics } = route?.params ?? {};
+export function LeaderboardScreen({ route }: ScreenComponent<'leaderboard'>) {
+
+  const {
+    metrics, interactionType, unit, 
+  } = route?.params ?? {};
   const theme = useTheme();
   const { openURL } = useInAppBrowser();
   const { userData } = React.useContext(StorageContext);
+
+  const ranking = React.useMemo(() => {
+    if (interactionType === 'read') {
+      return metrics?.userRankings?.interactionCounts.read;
+    } else
+    if (interactionType === 'share') {
+      return metrics?.userRankings?.interactionCounts.share;
+    }
+  }, [interactionType, metrics?.userRankings]);
+
   if (!metrics) {
     return null;
   }
+
   return (
     <Screen>
       <View
@@ -75,19 +91,22 @@ export function LeaderboardScreen({ route }: ScreenComponent<'leaderboards'>) {
             </View>
           </Popover>
         </View>
-        <ScrollView>
-          <TableView mx={ 12 }>
-            <TableViewSection>
-              {metrics.streaks.map((streak, index) => (
-                <TableViewCell
-                  key={ index }
+        <ScrollView beveled overflow='hidden'>
+          <View flexGrow={ 1 } minHeight={ 600 } beveled overflow='hidden'>
+            <FlatList
+              flexGrow={ 1 }
+              data={ metrics.streaks }
+              renderItem={ ({ item: streak, index }) => (
+                <TableViewCell 
+                  key={ `${streak.userId}${streak.createdAt}` }
                   bold={ streak.userId === userData?.userId }
                   cellIcon={ <Text bold={ streak.userId === userData?.userId }>{`#${index + 1}`}</Text> }
                   title={ `${streak.user}${streak.userId === userData?.userId ? ` (${strings.you})`: ''}` }
                   detail={ `${streak.length} ${pluralize(strings.day, streak.length)}` } />
-              ))}
-            </TableViewSection>
-          </TableView>
+              ) }
+              ItemSeparatorComponent={ ({ index }) => <Divider key={ `divider-${index}` } /> }
+              estimatedItemSize={ 50 } />
+          </View>
         </ScrollView>
       </View>
     </Screen>

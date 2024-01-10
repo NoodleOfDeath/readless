@@ -51,7 +51,7 @@ export const FetchableList = React.forwardRef(function FetchableList<T>(
 
   const [data, setData] = React.useState(initialData ?? []);
   const [refreshing, setRefreshing] = React.useState(false);
-
+  
   const onMount = React.useCallback(async (autofetch = false) => {
     if (!autofetch || refreshing) {
       return;

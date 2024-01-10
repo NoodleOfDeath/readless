@@ -1,6 +1,7 @@
 import {
   Column,
   DataType,
+  Index,
   Table,
 } from 'sequelize-typescript';
 
@@ -21,12 +22,20 @@ export class UserAchievement<
   B extends UserAchievementCreationAttributes = UserAchievementCreationAttributes,
 > extends BaseModel<A, B> implements UserAchievementAttributes {
 
+  @Index({
+    name: 'user_achievements_userId_achievementId_key',
+    unique: true,
+  })
   @Column({
     allowNull: false,
     type: DataType.INTEGER,
   })
   declare userId: number;
 
+  @Index({
+    name: 'user_achievements_userId_achievementId_key',
+    unique: true,
+  })
   @Column({
     allowNull: false,
     type: DataType.INTEGER,

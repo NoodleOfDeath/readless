@@ -116,7 +116,7 @@ export function Button({
       {leftIconComponent && <View>{leftIconComponent }</View>}
       {(Array.isArray(children) ? children : [children]).map((child, i) => (
         <React.Fragment key={ i }>
-          {typeof child === 'string' ? (
+          {typeof child === 'string' || typeof child === 'number' ? (
             <Text style={ { ...textStyle, color: buttonStyle.color ?? textStyle.color } }>
               { child }
             </Text>

@@ -14,6 +14,8 @@ import { StorageContext } from '~/core';
 import { useShare, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
+export type MetricProps = ChildlessViewProps;
+
 export type MetricCounterProps = ChildlessViewProps & {
   disclosureIndicator?: boolean;
   reputation?: boolean;

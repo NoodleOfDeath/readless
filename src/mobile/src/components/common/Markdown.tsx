@@ -7,7 +7,12 @@ export type Chunk = {
   highlight: boolean;
 };
 
-import { ChildlessViewProps, TextProps } from '~/components';
+import {
+  ChildlessViewProps,
+  Text,
+  TextProps,
+  View,
+} from '~/components';
 
 export type Token = {
   pattern: RegExp;
@@ -52,9 +57,16 @@ export type MarkdownProps = Omit<ChildlessViewProps & TextProps, 'children'> & {
 };
 
 export function Markdown({ children, ...props }: MarkdownProps) {
+  const sections = React.useMemo(() => {
+    return children?.split('\n\n') ?? [];
+  }, [children]);
   return (
-    <RNText { ...props }>
-      {children}
-    </RNText>
+    <View { ...props } gap={ 12 }>
+      {sections.map((s) => {
+        return (
+          <Text key={ s }>{s}</Text>
+        );
+      })}
+    </View>
   ); 
 }
