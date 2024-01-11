@@ -59,6 +59,7 @@ export async function doWork() {
         for (const sibling of siblings) {
           await summary.associateWith(sibling);
         }
+        await Topic.resolveDuplicates();
       } catch (e) {
         if (process.env.ERROR_REPORTING) {
           console.error(e);
@@ -70,7 +71,6 @@ export async function doWork() {
       }
     }
     console.log('done resolving duplicates');
-    await Topic.resolveDuplicates();
   } catch (e) {
     if (process.env.ERROR_REPORTING) {
       console.error(e);
