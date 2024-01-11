@@ -2,7 +2,11 @@ import * as use from '@tensorflow-models/universal-sentence-encoder';
 import ms from 'ms';
 import { Op } from 'sequelize';
 
-import { Summary, SystemLog } from '../api/v1/schema/models';
+import { 
+  Summary,
+  SystemLog,
+  Topic,
+} from '../api/v1/schema/models';
 import { compareSimilarity } from '../core/server';
 import { DBService } from '../services';
 
@@ -66,6 +70,7 @@ export async function doWork() {
       }
     }
     console.log('done resolving duplicates');
+    await Topic.resolveDuplicates();
   } catch (e) {
     if (process.env.ERROR_REPORTING) {
       console.error(e);

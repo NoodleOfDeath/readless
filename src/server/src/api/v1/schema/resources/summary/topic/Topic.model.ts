@@ -1,3 +1,4 @@
+import { QueryTypes } from 'sequelize';
 import {
   Column,
   DataType,
@@ -6,6 +7,7 @@ import {
 
 import { TopicAttributes, TopicCreationAttributes } from './Topic.types';
 import { TopicSummary } from './TopicSummary.model';
+import { QueryFactory } from '../../../';
 import { Group } from '../../group/Group.model';
 import { GroupType } from '../../group/Group.types';
 import { Summary } from '../Summary.model';
@@ -28,6 +30,26 @@ export class Topic extends Group<TopicAttributes, TopicCreationAttributes> imple
     const relation = await TopicSummary.findOne({ where: { childId } });
     return await Topic.findByPk(relation?.groupId);
   }
+  
+  static async resolveDuplicates() {
+    const records = await this.sql.query(QueryFactory.getQuery('duplicate_topics'), {
+      nest: true,
+      type: QueryTypes.SELECT,
+    }) as ({ siblings: number[] })[];
+    for (const { siblings } of records) {
+      const topic = await this.findByPk(siblings.shift());
+      if (!topic) {
+        continue;
+      }
+      for (const sibling of siblings) {
+        const fromTopic = await this.findByPk(sibling);
+        if (fromTopic) {
+          await fromTopic.transferChildren(topic);
+          await fromTopic.destroy();
+        }
+      }
+    }
+  }
 
   async addChildren(...children: SummaryAttributes[]) {
     for (const child of children) {
@@ -39,6 +61,15 @@ export class Topic extends Group<TopicAttributes, TopicCreationAttributes> imple
         });
       }
     }
+  }
+  
+  async transferChildren(toTopic: Topic | number) {
+    const toTopicId = typeof toTopic === 'number' ? toTopic : toTopic.id;
+    console.log(`transferring children from ${this.id} to ${toTopicId}`);
+    await TopicSummary.update(
+      { groupId: toTopicId },
+      { where: { groupId: this.id } }
+    );
   }
 
   async getChildren() {
