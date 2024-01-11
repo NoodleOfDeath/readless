@@ -155,6 +155,7 @@ export const daStrings: typeof enStrings = {
   insteadOfRemoving: '**I stedet for at fjerne følelser helt**, sigter Read Less efter at **måle følelser** over tid.',
   isReadingForYouAChore: 'Synes du det er en opgave at læse nyhederne?',
   isReadingForYouAChoreDescription: 'Målet med Læs Mindre er at passe problemfrit ind i din daglige rutine og gøre læsning af nyheder til en sjovere og mindre tidskrævende oplevelse.',
+  item: 'Vare',
   justNow: 'Lige nu',
   keepYourStreakGoing: 'Dette er din daglige påmindelse om at læse nyhederne og holde dig informeret!',
   leaderboard: 'Leaderboard',

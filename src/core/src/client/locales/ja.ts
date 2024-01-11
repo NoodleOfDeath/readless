@@ -155,6 +155,7 @@ export const jaStrings: typeof enStrings = {
   insteadOfRemoving: '**感情を完全に削除する**のではなく、Read Less は時間をかけて**感情を測定**することを目的としています。',
   isReadingForYouAChore: 'ニュースを読むのは面倒だと思いますか?',
   isReadingForYouAChoreDescription: 'Read Less の目標は、日常生活にシームレスに溶け込み、ニュースを読む時間をより楽しく、より少ない時間で楽しめるようにすることです。',
+  item: 'アイテム',
   justNow: 'ちょうど今',
   keepYourStreakGoing: 'これは、ニュースを読んで最新情報を入手するための毎日のリマインダーです。',
   leaderboard: 'リーダーボード',

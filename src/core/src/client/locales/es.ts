@@ -155,6 +155,7 @@ export const esStrings: typeof enStrings = {
   insteadOfRemoving: '**En lugar de eliminar la opinión por completo**, Read Less tiene como objetivo **medir la opinión** a lo largo del tiempo.',
   isReadingForYouAChore: '¿Encuentras que leer las noticias es una tarea?',
   isReadingForYouAChoreDescription: 'El objetivo de Read Less es adaptarse perfectamente a su rutina diaria y hacer que leer las noticias sea una experiencia más placentera que requiera menos tiempo.',
+  item: 'Artículo',
   justNow: 'En este momento',
   keepYourStreakGoing: '¡Este es su recordatorio diario para leer las noticias y mantenerse informado!',
   leaderboard: 'Tabla de clasificación',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { 
   DeviceEventEmitter,
+  InteractionManager,
   LayoutRectangle,
   NativeScrollEvent, 
   NativeSyntheticEvent,
@@ -232,19 +233,22 @@ export function SummaryList({
     const excludeCategorySub = DeviceEventEmitter.addListener('exclude-category', (data) => {
       setSummaries((prev) => prev.filter((s) => s.category.name !== data.name));
     });
-    if (!loading && !lastFetchFailed && ((!loaded && summaries.length === 0) || filter !== filter0)) {
-      setFilter(filter0);
-      navigation?.setOptions({
-        headerTitle: () => {
-          return <SearchViewController initialValue={ filter0 } />;
-        },
-      });
-      load(true, filter0);
-    }
+    const interaction = InteractionManager.runAfterInteractions(() => {
+      if (!loading && !lastFetchFailed && ((!loaded && summaries.length === 0) || filter !== filter0)) {
+        setFilter(filter0);
+        navigation?.setOptions({
+          headerTitle: () => {
+            return <SearchViewController initialValue={ filter0 } />;
+          },
+        });
+        load(true, filter0);
+      }
+    });
     return () => {
       hideSummarySub.remove();
       excludePublisherSub.remove();
       excludeCategorySub.remove();
+      interaction.cancel();
     };
   }, [loading, navigation, filter, filter0, lastFetchFailed, loaded, load, summaries.length]));
   

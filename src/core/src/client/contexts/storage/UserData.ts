@@ -1,6 +1,7 @@
 import {
   LoginResponse,
   Profile,
+  UserStats,
   WrappedJwt,
 } from '~/api';
 
@@ -53,6 +54,15 @@ export class UserData implements UserDataProps {
   
   addToken(token: WrappedJwt) {
     this.tokens = [...this.tokens, token].filter((t) => !UserData.tokenHasExpired(t)).sort((a, b) => b.priority - a.priority);
+    return this;
+  }
+
+  updateStats(stats: UserStats) {
+    this.profile = {
+      ...this.profile,
+      stats,
+    };
+    return this;
   }
 
 }

@@ -155,6 +155,7 @@ export const hiStrings: typeof enStrings = {
   insteadOfRemoving: '**भावना को पूरी तरह से हटाने के बजाय**, कम पढ़ें का लक्ष्य समय के साथ **भावना को मापना** है।',
   isReadingForYouAChore: 'क्या आपको समाचार पढ़ना एक दैनिक कार्य लगता है?',
   isReadingForYouAChoreDescription: 'कम पढ़ें का लक्ष्य आपकी दैनिक दिनचर्या में सहजता से फिट होना और समाचार पढ़ने को कम समय लेने वाले अनुभव को अधिक मनोरंजक बनाना है।',
+  item: 'वस्तु',
   justNow: 'बस अब',
   keepYourStreakGoing: 'समाचार पढ़ने और सूचित रहने के लिए यह आपका दैनिक अनुस्मारक है!',
   leaderboard: 'लीडरबोर्ड',

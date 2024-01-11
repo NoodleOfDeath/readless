@@ -24,7 +24,7 @@ export function AchievementScreen({ route }: ScreenComponent<'achievement'>) {
           justifyBetween
           itemsCenter>
           <Text system h6>{achievement?.displayName}</Text>
-          <Text system>{formatDate(new Date(achievedAt ?? ''), '(E) h:mm a - P', { locale: getFnsLocale() })}</Text>
+          <Text system>{achievedAt && formatDate(new Date(achievedAt), '(E) h:mm a - P', { locale: getFnsLocale() })}</Text>
         </View>
         <Divider />
         <HighlightedText system>{achievement?.description}</HighlightedText> 

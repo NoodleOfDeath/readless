@@ -19,11 +19,15 @@ export function View({
   haptic,
   inactive,
   elevated,
+  progress,
+  progressColor,
+  progressOpacity,
   ...props
 }: ViewProps) {
   
   const style = useStyles({ ...props, elevated });
   const theme = useTheme();
+  const [layout, setLayout] = React.useState<{ width: number, height: number }>({ height: 0, width: 0 });
   
   const overlay = React.useMemo(() => {
     if (inactive) {
@@ -42,13 +46,38 @@ export function View({
       );
     }
   }, [inactive, style, theme.colors.inactive]);
+
+  const underlay = React.useMemo(() => {
+    if (progress != null) {
+      return (
+        <View
+          absolute
+          left={ `-${progress * 100 * 4}%` }
+          top={ 0 }
+          transform={ [ { scaleX: progress }] }
+          zIndex={ 0 }
+          style={ {
+            ...StyleSheet.absoluteFillObject, 
+            backgroundColor: progressColor ?? theme.colors.primary,
+            borderBottomLeftRadius: style.borderBottomLeftRadius ?? 0, 
+            borderBottomRightRadius: style.borderBottomRightRadius ?? 0,
+            borderRadius: style.borderRadius ?? 0,
+            borderTopLeftRadius: style.borderTopLeftRadius ?? 0,
+            borderTopRightRadius: style.borderTopRightRadius ?? 0,
+            opacity: progressOpacity ?? 0.3,
+            overflow: 'hidden',
+          } } />
+      );
+    }
+  }, [progress, progressColor, progressOpacity, style.borderBottomLeftRadius, style.borderBottomRightRadius, style.borderRadius, style.borderTopLeftRadius, style.borderTopRightRadius, theme.colors.primary]);
   
   const contents = React.useMemo(() => (
     <React.Fragment>
       {inactive && overlay}
       {children}
+      {underlay}
     </React.Fragment>
-  ), [children, inactive, overlay]);
+  ), [children, inactive, overlay, underlay]);
   
   const onPress = React.useCallback((event: GestureResponderEvent) => {
     if (!props.onPress || props.disabled) {

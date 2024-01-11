@@ -155,6 +155,7 @@ export const faStrings: typeof enStrings = {
   insteadOfRemoving: '**به جای حذف کلی احساسات**، Read Less قصد دارد **احساسات** را در طول زمان اندازه گیری کند.',
   isReadingForYouAChore: 'آیا خواندن اخبار را کاری طاقت فرسا می دانید؟',
   isReadingForYouAChoreDescription: 'هدف از Read Less این است که به طور یکپارچه در برنامه روزانه شما قرار بگیرد و خواندن اخبار را به تجربه ای لذت بخش تر تبدیل کند که وقت گیر کمتری دارد.',
+  item: 'مورد',
   justNow: 'همین الان',
   keepYourStreakGoing: 'این یادآوری روزانه شما برای خواندن اخبار و مطلع شدن است!',
   leaderboard: 'تابلوی امتیازات',

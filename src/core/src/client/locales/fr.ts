@@ -155,6 +155,7 @@ export const frStrings: typeof enStrings = {
   insteadOfRemoving: '**Au lieu de supprimer complètement le sentiment**, Lire moins vise à **mesurer le sentiment** au fil du temps.',
   isReadingForYouAChore: 'Trouvez-vous la lecture des nouvelles une corvée?',
   isReadingForYouAChoreDescription: 'L\'objectif de Read Less est de s\'intégrer parfaitement à votre routine quotidienne et de faire de la lecture des actualités une expérience plus agréable et moins chronophage.',
+  item: 'Article',
   justNow: 'Tout à l\' heure',
   keepYourStreakGoing: 'Ceci est votre rappel quotidien pour lire les nouvelles et rester informé !',
   leaderboard: 'Classement',

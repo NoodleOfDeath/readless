@@ -155,6 +155,7 @@ export const viStrings: typeof enStrings = {
   insteadOfRemoving: '**Thay vì loại bỏ cảm tính hoàn toàn**, Read Less nhằm mục đích **đo lường cảm tính** theo thời gian.',
   isReadingForYouAChore: 'Bạn có thấy đọc tin tức là một việc vặt?',
   isReadingForYouAChoreDescription: 'Mục tiêu của Read Less là phù hợp liền mạch với thói quen hàng ngày của bạn và làm cho việc đọc tin tức trở thành một trải nghiệm thú vị ít tốn thời gian hơn.',
+  item: 'Mục',
   justNow: 'Ngay bây giờ',
   keepYourStreakGoing: 'Đây là lời nhắc hàng ngày của bạn để đọc tin tức và cập nhật thông tin!',
   leaderboard: 'Bảng xếp hạng',

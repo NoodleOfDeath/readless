@@ -10,21 +10,27 @@ import {
   FetchableList,
   Screen,
   TableViewCell,
+  Text,
   View,
 } from '~/components';
 import { StorageContext } from '~/contexts';
+import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 const Tab = createMaterialTopTabNavigator();
 
 export function InProgressAchievementsScreen({ navigation }: ScreenComponent<'achievements'>) {
 
+  const theme = useTheme();
   const { api: { getAchievements } } = React.useContext(StorageContext);
 
   return (
     <Screen>
       <View
+        beveled
+        overflow={ 'hidden' }
         flexGrow={ 1 } 
+        bg={ theme.colors.headerBackground }
         m={ 12 }>
         <FetchableList
           autofetch
@@ -39,9 +45,17 @@ export function InProgressAchievementsScreen({ navigation }: ScreenComponent<'ac
               accessory={ 'DisclosureIndicator' }
               title={ item.achievement.displayName }
               cellIcon={ (
-                <Button gap={ 12 } width={ 60 }>
+                <Button
+                  caption
+                  contained
+                  overflow={ 'hidden' }
+                  leftIcon={ <Text caption zIndex={ 100 }>{`${(item.progress * 100).toFixed(0)}%`}</Text> } 
+                  progress={ item.progress }
+                  progressColor={ 'green' }
+                  progressOpacity={ 0.5 }
+                  gap={ 12 }
+                  width={ 80 }>
                   {item.achievement.points}
-                  {`${(item.progress * 100).toFixed(0)}%`}
                 </Button>
               ) }
               detail={ item.achievement.description }
@@ -57,12 +71,16 @@ export function InProgressAchievementsScreen({ navigation }: ScreenComponent<'ac
 
 export function CompletedAchievementsScreen({ navigation }: ScreenComponent<'achievements'>) {
 
+  const theme = useTheme();
   const { api: { getAchievements } } = React.useContext(StorageContext);
 
   return (
     <Screen>
       <View
-        flexGrow={ 1 } 
+        beveled
+        overflow={ 'hidden' }
+        bg={ theme.colors.headerBackground }
+        flexGrow={ 1 }
         m={ 12 }>
         <FetchableList
           autofetch
@@ -77,7 +95,12 @@ export function CompletedAchievementsScreen({ navigation }: ScreenComponent<'ach
               accessory={ 'DisclosureIndicator' }
               title={ item.achievement.displayName }
               cellIcon={ (
-                <Button leftIcon={ 'star' } gap={ 12 } width={ 60 }>
+                <Button
+                  caption
+                  contained
+                  leftIcon={ 'check' }
+                  gap={ 12 }
+                  width={ 80 }>
                   {item.achievement.points}
                 </Button>
               ) }

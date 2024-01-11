@@ -155,6 +155,7 @@ export const msStrings: typeof enStrings = {
   insteadOfRemoving: '**Daripada membuang sentimen sama sekali**, Read Less bertujuan untuk **mengukur sentimen** dari semasa ke semasa.',
   isReadingForYouAChore: 'Adakah anda mendapati membaca berita itu tugas?',
   isReadingForYouAChoreDescription: 'Matlamat Baca Kurang adalah untuk menyesuaikan diri dengan lancar ke dalam rutin harian anda dan menjadikan membaca berita sebagai pengalaman yang tidak memakan masa yang lebih menyeronokkan.',
+  item: 'item',
   justNow: 'Baru sekarang',
   keepYourStreakGoing: 'Ini adalah peringatan harian anda untuk membaca berita dan kekal dimaklumkan!',
   leaderboard: 'Papan pendahulu',

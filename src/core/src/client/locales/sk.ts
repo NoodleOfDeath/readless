@@ -155,6 +155,7 @@ export const skStrings: typeof enStrings = {
   insteadOfRemoving: '**Namiesto úplného odstránenia sentimentu** sa Read Less snaží **merať sentiment** v priebehu času.',
   isReadingForYouAChore: 'Zdá sa vám čítanie správ fuška?',
   isReadingForYouAChoreDescription: 'Cieľom Read Menej je bez problémov zapadnúť do vašej každodennej rutiny a urobiť z čítania správ príjemnejšie a menej časovo náročné skúsenosti.',
+  item: 'Položka',
   justNow: 'Práve teraz',
   keepYourStreakGoing: 'Toto je vaša denná pripomienka, aby ste si prečítali správy a zostali informovaní!',
   leaderboard: 'Rebríček',

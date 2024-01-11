@@ -8,8 +8,6 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { PulseProps } from '~/components';
-
 export const AVAILABLE_FONTS = [
   'Anek Latin',
   'Faustina',
@@ -96,7 +94,9 @@ export type ViewProps = PressableProps & RNViewProps & TouchableOpacityProps & V
   inactive?: boolean;
   
   // preset animations
-  pulse?: PulseProps | boolean;
+  progress?: number;
+  progressColor?: ViewStyle['backgroundColor'];
+  progressOpacity?: ViewStyle['opacity'];
   
   // position
   absolute?: boolean;

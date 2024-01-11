@@ -155,6 +155,7 @@ export const deStrings: typeof enStrings = {
   insteadOfRemoving: '**Anstatt die Stimmung ganz zu entfernen**, zielt Read Less darauf ab, die Stimmung über einen längeren Zeitraum zu messen.',
   isReadingForYouAChore: 'Finden Sie das Lesen der Nachrichten eine lästige Pflicht?',
   isReadingForYouAChoreDescription: 'Das Ziel von Read Less ist es, sich nahtlos in Ihren Alltag einzufügen und das Lesen von Nachrichten zu einem angenehmeren, weniger zeitraubenden Erlebnis zu machen.',
+  item: 'Artikel',
   justNow: 'Soeben',
   keepYourStreakGoing: 'Dies ist Ihre tägliche Erinnerung, die Nachrichten zu lesen und auf dem Laufenden zu bleiben!',
   leaderboard: 'Bestenliste',

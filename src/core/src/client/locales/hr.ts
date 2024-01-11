@@ -155,6 +155,7 @@ export const hrStrings: typeof enStrings = {
   insteadOfRemoving: '**Umjesto potpunog uklanjanja raspoloženja**, Read Less ima za cilj **mjeriti raspoloženje** tijekom vremena.',
   isReadingForYouAChore: 'Smatrate li čitanje vijesti zadatkom?',
   isReadingForYouAChoreDescription: 'Cilj Read Less je neprimjetno se uklopiti u vašu svakodnevnu rutinu i učiniti čitanje vijesti ugodnijim iskustvom koje oduzima manje vremena.',
+  item: 'Artikal',
   justNow: 'Upravo sad',
   keepYourStreakGoing: 'Ovo je vaš dnevni podsjetnik da čitate vijesti i budete informirani!',
   leaderboard: 'Leaderboard',

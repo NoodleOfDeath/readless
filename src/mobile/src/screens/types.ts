@@ -95,7 +95,7 @@ export type ProfileRoutingParams = {
   achievement: UserAchievementAttributes;
   leaderboard: { 
     metrics: MetricsResponse;
-    interactionType?: InteractionType;
+    title?: string;
     unit?: string;
   };
   leaderboards: undefined;

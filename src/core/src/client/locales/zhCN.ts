@@ -155,6 +155,7 @@ export const zhCNStrings: typeof enStrings = {
   insteadOfRemoving: '**Read Less 不是完全消除情绪**，而是旨在随着时间的推移**衡量情绪**。',
   isReadingForYouAChore: '你觉得看新闻是件苦差事吗？',
   isReadingForYouAChoreDescription: 'Read Less 的目标是无缝融入您的日常生活，让阅读新闻成为一种更愉快、更省时的体验。',
+  item: '物品',
   justNow: '现在',
   keepYourStreakGoing: '这是每天提醒您阅读新闻并了解最新情况！',
   leaderboard: '排行榜',

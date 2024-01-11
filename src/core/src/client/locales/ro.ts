@@ -155,6 +155,7 @@ export const roStrings: typeof enStrings = {
   insteadOfRemoving: '**În loc să elimine total sentimentul**, Read Less își propune să **măsoare sentimentul** în timp.',
   isReadingForYouAChore: 'Ți se pare că citirea știrilor este o corvoadă?',
   isReadingForYouAChoreDescription: 'Scopul Read Less este de a se integra perfect în rutina ta zilnică și de a face citirea știrilor o experiență mai plăcută, care necesită mai puțin timp.',
+  item: 'Articol',
   justNow: 'Chiar acum',
   keepYourStreakGoing: 'Acesta este mementoul tău zilnic să citești știrile și să fii informat!',
   leaderboard: 'Clasament',

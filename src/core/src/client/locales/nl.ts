@@ -155,6 +155,7 @@ export const nlStrings: typeof enStrings = {
   insteadOfRemoving: '**In plaats van het sentiment helemaal weg te nemen**, probeert Read Less het sentiment in de loop van de tijd te **meten**.',
   isReadingForYouAChore: 'Vind je het lezen van het nieuws een hele klus?',
   isReadingForYouAChoreDescription: 'Het doel van Read Less is om naadloos in uw dagelijkse routine te passen en het lezen van het nieuws een aangenamere, minder tijdrovende ervaring te maken.',
+  item: 'Item',
   justNow: 'Net nu',
   keepYourStreakGoing: 'Dit is je dagelijkse herinnering om het nieuws te lezen en op de hoogte te blijven!',
   leaderboard: 'Scorebord',

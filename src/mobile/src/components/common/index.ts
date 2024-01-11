@@ -22,7 +22,6 @@ export * from './Highlighter';
 export * from './HighlightedText';
 export * from './OnscreenKeyboard';
 export * from './Popover';
-export * from './Pulse';
 export * from './Markdown';
 export * from './MeterDial';
 export * from './Screen';

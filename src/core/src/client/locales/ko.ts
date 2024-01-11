@@ -155,6 +155,7 @@ export const koStrings: typeof enStrings = {
   insteadOfRemoving: '**감정을 완전히 제거하는 대신** Read Less는 시간 경과에 따라 **감정을 측정**하는 것을 목표로 합니다.',
   isReadingForYouAChore: '뉴스를 읽는 것이 귀찮은 일이라고 생각하십니까?',
   isReadingForYouAChoreDescription: 'Read Less의 목표는 일상 생활에 원활하게 적응하고 뉴스 읽기를 더 즐겁고 덜 시간 소모적인 경험으로 만드는 것입니다.',
+  item: '안건',
   justNow: '방금',
   keepYourStreakGoing: '이것은 뉴스를 읽고 최신 정보를 얻기 위한 일일 알림입니다!',
   leaderboard: '리더보드',

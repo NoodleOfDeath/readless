@@ -155,6 +155,7 @@ export const csStrings: typeof enStrings = {
   insteadOfRemoving: '**Namísto úplného odstranění sentimentu** se Read Less snaží **měřit sentiment** v průběhu času.',
   isReadingForYouAChore: 'Připadá vám čtení zpráv fuška?',
   isReadingForYouAChoreDescription: 'Cílem Read Less je hladce zapadnout do vaší každodenní rutiny a učinit ze čtení zpráv příjemnější a méně časově náročný zážitek.',
+  item: 'Položka',
   justNow: 'Právě teď',
   keepYourStreakGoing: 'Toto je vaše každodenní připomínka, abyste si přečetli zprávy a zůstali informováni!',
   leaderboard: 'Žebříček',

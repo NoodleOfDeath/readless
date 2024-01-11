@@ -51,6 +51,7 @@ export const FetchableList = React.forwardRef(function FetchableList<T>(
 
   const [data, setData] = React.useState(initialData ?? []);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [fetched, setFetched] = React.useState(false);
   
   const onMount = React.useCallback(async (autofetch = false) => {
     if (!autofetch || refreshing) {
@@ -66,6 +67,7 @@ export const FetchableList = React.forwardRef(function FetchableList<T>(
         setData(response.data.rows);
         onFetch?.(response.data.rows);
       }
+      setFetched(true);
     } catch (e) {
       console.error(e);
       onError?.(e);
@@ -79,7 +81,7 @@ export const FetchableList = React.forwardRef(function FetchableList<T>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autofetch]));
 
-  if (data.length === 0) {
+  if (data.length === 0 && fetched) {
     return fallbackComponent;
   }
 
