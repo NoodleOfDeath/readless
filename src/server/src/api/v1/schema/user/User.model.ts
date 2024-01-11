@@ -527,12 +527,26 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (await this.hasCompletedAchievement(achievement)) {
       return achievement;
     }
-    return await UserAchievement.upsert({
-      achievedAt,
-      achievementId: achievement.id,
-      progress, 
-      userId: this.id,
+    const userAchievement = await UserAchievement.findOne({
+      where: {
+        achievementId: achievement.id,
+        userId: this.id,
+      },
     });
+    if (userAchievement) {
+      await userAchievement.update({
+        achievedAt,
+        progress,
+      });
+      return userAchievement;
+    } else {
+      return await UserAchievement.create({
+        achievedAt,
+        achievementId: achievement.id,
+        progress, 
+        userId: this.id,
+      });
+    }
   }
 
   // summary methods

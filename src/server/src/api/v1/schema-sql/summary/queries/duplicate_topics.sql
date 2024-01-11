@@ -5,7 +5,7 @@ WITH DuplicateTopics AS (
   FROM topic_summaries ts
   GROUP BY ts."childId"
 )
-SELECT
+SELECT DISTINCT ON (siblings)
   siblings
 FROM DuplicateTopics
 WHERE
