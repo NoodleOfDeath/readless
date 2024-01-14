@@ -396,7 +396,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     let streak: Streak = {
       end: new Date(new Date().toLocaleDateString()),
       expiresSoon: false,
-      length: 1,
+      length: 0,
       start: new Date(new Date().toLocaleDateString()), 
       updatedAt: new Date(),
       user: (await this.findAlias('username'))?.value,
