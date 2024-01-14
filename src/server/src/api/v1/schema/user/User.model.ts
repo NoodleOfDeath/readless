@@ -493,7 +493,26 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
   }
 
   // achievements
-  public async getAchievements(): Promise<Achievements> {
+  public async getAchievements(updateProgress = true): Promise<Achievements> {
+    if (updateProgress) {
+      for (const criteria of Achievement.ACHIEVEMENT_CRITERIA) {
+        const achievement = await Achievement.findOne({ where: { name: criteria.name } });
+        if (!achievement) {
+          continue;
+        }
+        if (criteria.getProgress) {
+          console.log(`calculating progress for achievement ${achievement.name}...`);
+          const progress = await criteria.getProgress(this);
+          if (!Number.isNaN(progress)) {
+            await this.grantAchievement(achievement, { progress });
+          }
+        } else {
+          if (!(await this.hasCompletedAchievement(achievement))) {
+            await this.grantAchievement(achievement, { progress: 0 });
+          }
+        }
+      }
+    }
     const completed = await UserAchievement.findAll({
       include: [Achievement.scope('public')],
       where: { progress: { [Op.gte]: 1 }, userId: this.id },
@@ -546,6 +565,13 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
         progress, 
         userId: this.id,
       });
+    }
+  }
+  
+  public async initializeAchievements() {
+    const achievements = await Achievement.findAll();
+    for (const achievement of achievements) {
+      await this.grantAchievement(achievement, { progress: 0 });
     }
   }
 

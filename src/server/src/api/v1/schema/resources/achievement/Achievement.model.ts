@@ -39,7 +39,7 @@ export class Achievement<
   static ACHIEVEMENT_CRITERIA: AchievementCreationAttributes[] = [
     {
       beforeDateBased: new Date('11/30/2023'),
-      description: 'This achievement is given only to users who signed up before November 30, 2023 (the 1-year anniversary of ChatGPT). Thanks for being an OG USer!',
+      description: 'Signed up before November 30, 2023 (the 1-year anniversary of ChatGPT). Thanks for being an OG USer!',
       displayName: 'OG',
       findCandidates: async () => {
         const logs = await RequestLog.findAll({
@@ -58,7 +58,7 @@ export class Achievement<
       points: 500,
     },
     {
-      description: 'This achievement is given to users who have read at least 3 articles',
+      description: 'Read at least 3 articles',
       displayName: 'Newbie',
       findCandidates: async () => {
         const interactions = await User.getInteractionCounts('read', { minCount: 3 });
@@ -73,7 +73,7 @@ export class Achievement<
       points: 10,
     },
     {
-      description: 'This achievement is given to users who have read at least 10 articles',
+      description: 'Read at least 10 articles',
       displayName: 'Reader',
       findCandidates: async () => {
         const interactions = await User.getInteractionCounts('read', { minCount: 10 });
@@ -88,7 +88,7 @@ export class Achievement<
       points: 25,
     },
     {
-      description: 'This achievement is given to users who have read at least 25 articles',
+      description: 'Read at least 25 articles',
       displayName: 'Bookworm',
       findCandidates: async () => {
         const interactions = await User.getInteractionCounts('read', { minCount: 25 });
@@ -103,7 +103,7 @@ export class Achievement<
       points: 50,
     },
     {
-      description: 'This achievement is given to users who have read at least 50 articles',
+      description: 'Read at least 50 articles',
       displayName: 'Page Sage',
       findCandidates: async () => {
         const interactions = await User.getInteractionCounts('read', { minCount: 50 });
@@ -118,7 +118,7 @@ export class Achievement<
       points: 75,
     },
     {
-      description: 'This achievement is given to users who have read at least 100 articles',
+      description: 'Read at least 100 articles',
       displayName: 'Century Scribe',
       findCandidates: async () => {
         const interactions = await User.getInteractionCounts('read', { minCount: 100 });
@@ -133,7 +133,52 @@ export class Achievement<
       points: 100,
     },
     {
-      description: 'This achievement is given to users who have at least one streak of 3 days or more',
+      description: 'Share at least 3 articles',
+      displayName: 'Advocate',
+      findCandidates: async () => {
+        const interactions = await User.getInteractionCounts('share', { minCount: 3 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('share', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 3;
+      },
+      name: 'advocate',
+      points: 25,
+    },
+    {
+      description: 'Share at least 10 articles',
+      displayName: 'Community Catalyst',
+      findCandidates: async () => {
+        const interactions = await User.getInteractionCounts('share', { minCount: 10 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('share', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 10;
+      },
+      name: 'community-catalyst',
+      points: 50,
+    },
+    {
+      description: 'Share at least 30 articles',
+      displayName: 'Pioneering Patron',
+      findCandidates: async () => {
+        const interactions = await User.getInteractionCounts('share', { minCount: 30 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('share', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 30;
+      },
+      name: 'pioneering-patron',
+      points: 250,
+    },
+    {
+      description: 'Have at least one streak of 3 days or more',
       displayName: 'Streaker',
       findCandidates: async () => {
         const streaks = await User.getStreaks({ minCount: 3 });
@@ -147,7 +192,7 @@ export class Achievement<
       points: 10,
     },
     {
-      description: 'This achievement is given to users who have at least one streak of 7 days or more',
+      description: 'Have at least one streak of 7 days or more',
       displayName: 'Stweeker',
       findCandidates: async () => {
         const interactions = await User.getStreaks({ minCount: 7 });
@@ -161,7 +206,7 @@ export class Achievement<
       points: 25,
     },
     {
-      description: 'This achievement is given to users who have at least one streak of 14 days or more',
+      description: 'Have at least one streak of 14 days or more',
       displayName: 'Double Stweeker',
       findCandidates: async () => {
         const streaks = await User.getStreaks({ minCount: 14 });
@@ -175,7 +220,7 @@ export class Achievement<
       points: 50,
     },
     {
-      description: 'This achievement is given to users who have at least one streak of 21 days or more',
+      description: 'Have at least one streak of 21 days or more',
       displayName: 'Triple Stweeker',
       findCandidates: async () => {
         const streaks = await User.getStreaks({ minCount: 21 });
@@ -189,7 +234,7 @@ export class Achievement<
       points: 75,
     },
     {
-      description: 'This achievement is given to users who have at least one streak of 30 days or more',
+      description: 'Have at least one streak of 30 days or more',
       displayName: 'Monthly Master',
       findCandidates: async () => {
         const streaks = await User.getStreaks({ minCount: 30 });
@@ -203,7 +248,7 @@ export class Achievement<
       points: 100,
     },
     {
-      description: 'This achievement is given to users who have at least one streak of 60 days or more',
+      description: 'Have at least one streak of 60 days or more',
       displayName: 'Monthly Master 2x',
       findCandidates: async () => {
         const streaks = await User.getStreaks({ minCount: 60 });
