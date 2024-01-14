@@ -188,6 +188,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     }
     await newUser.grantRole('standard');
     await newUser.grantRole('account');
+    await newUser.initializeAchievements();
     if (!verified) {
       verificationCode = await generateVerificationCode();
     }
@@ -208,13 +209,17 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     if (createAlias) {
       try {
         console.log('creating alias', newAliasType, newAliasValue);
-        await newUser.createAlias(newAliasType, newAliasValue, {
-          verificationCode: verified ? undefined : verificationCode,
-          verificationExpiresAt: verified
-            ? undefined
-            : new Date(Date.now() + ms('20m')),
-          verifiedAt: verified ? new Date() : undefined,
-        });
+        await newUser.createAlias(
+          newAliasType,
+          newAliasValue,
+          {
+            verificationCode: verified ? undefined : verificationCode,
+            verificationExpiresAt: verified
+              ? undefined
+              : new Date(Date.now() + ms('20m')),
+            verifiedAt: verified ? new Date() : undefined,
+          }
+        );
       } catch (e) {
         console.log(e);
       }
