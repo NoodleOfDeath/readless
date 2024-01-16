@@ -39,7 +39,7 @@ export class Achievement<
   static ACHIEVEMENT_CRITERIA: AchievementCreationAttributes[] = [
     {
       beforeDateBased: new Date('11/30/2023'),
-      description: 'Signed up before November 30, 2023 (the 1-year anniversary of ChatGPT). Thanks for being an OG USer!',
+      description: 'Signed up before November 30, 2023 (the 1-year anniversary of ChatGPT). Thanks for being an OG User!',
       displayName: 'OG',
       findCandidates: async () => {
         const logs = await RequestLog.findAll({

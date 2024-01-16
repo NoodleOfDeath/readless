@@ -20,18 +20,28 @@ export type PublicSentimentMethodAttributes = {
   description?: string;
 };
 
-export const SENTIMENT_METHOD_NAMES = ['afinn', 'openai', 'vader'] as const;
+export const SENTIMENT_METHOD_NAMES = ['afinn', 'claude-2.1', 'gpt-3.5', 'openai', 'vader'] as const;
 
 export type SentimentMethodName = typeof SENTIMENT_METHOD_NAMES[number];
 
-export const SENTIMENT_METHODS: Record<string, SentimentMethodCreationAttributes> = {
+export const SENTIMENT_METHODS: Record<SentimentMethodName, SentimentMethodCreationAttributes> = {
   'afinn': {
     description: 'AFINN is a list of English words rated for valence with an integer between minus five (negative) and plus five (positive).',
     displayName: 'AFINN',
     name: 'afinn',
   },
+  'claude-2.1': {
+    description: 'Anthropic\'s Claude 2.5 LLM',
+    displayName: 'Anthropic Claude 2.1',
+    name: 'claude-2.1',
+  },
+  'gpt-3.5': {
+    description: 'OpenAI\'s ChatGPT 3.5 LLM',
+    displayName: 'OpenAI ChatGPT 3.5',
+    name: 'gpt-3.5',
+  },
   'openai': {
-    description: 'OpenAI\'s sentiment analysis model is a single model that yields state-of-the-art results on a number of domains by learning from a large and diverse training set.',
+    description: 'OpenAI\'s ChatGPT 3.5 LLM',
     displayName: 'OpenAI',
     name: 'openai',
   },

@@ -36,10 +36,6 @@ export function SearchViewController({
   const { screenWidth } = React.useContext(LayoutContext);
 
   const [value, setValue] = React.useState(initialValue);
-  const [_showMenu, setShowMenu] = React.useState(false);
-  const [_searchbarLayout, setSearchbarLayout] = React.useState<LayoutRectangle>({
-    height: 0, width: 0, x: 0, y: 0, 
-  });
 
   const searchRef = React.useRef<TextInputHandles>(null);
   
@@ -67,11 +63,8 @@ export function SearchViewController({
         autoFocus
         accessible
         accessibilityLabel={ strings.search }
-        onLayout={ (e) => setSearchbarLayout(e.nativeEvent.layout) }
         onIconPress={ () => searchRef.current?.focus() }
         placeholder={ placeholder }
-        onFocus={ () => setShowMenu(true) }
-        onBlur={ () => setShowMenu(false) }
         onChangeText={ handleChangeText }
         style={ { height: 32, padding: 0 } }
         inputStyle={ {

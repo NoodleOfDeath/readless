@@ -1,4 +1,5 @@
 export * from './base';
+export * from './anthropic';
 export * from './aws';
 export * from './db';
 export * from './deepai';
