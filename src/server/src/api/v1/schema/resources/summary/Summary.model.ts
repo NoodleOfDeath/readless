@@ -512,20 +512,28 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
   
   async generateSentiment(method: SentimentMethodName, score?: number) {
     const payload = [this.title, this.shortSummary].join('\n\n');
-    if (method === 'openai') {
-      await SummarySentiment.create({
-        method: 'openai',
-        parentId: this.id,
-        payload,
-        score: score ?? await SentimentService.sentiment('openai', payload),
-      });
-    } else
     if (method === 'afinn') {
       await SummarySentiment.create({
         method: 'afinn',
         parentId: this.id,
         payload,
         score: score ?? (await SentimentService.sentiment('afinn', payload))?.comparative,
+      });
+    } else
+    if (method === 'claude-2.1') {
+      await SummarySentiment.create({
+        method: 'claude-2.1',
+        parentId: this.id,
+        payload,
+        score: score ?? await SentimentService.sentiment('claude-2.1', payload),
+      });
+    } else
+    if (method === 'gpt-3.5') {
+      await SummarySentiment.create({
+        method: 'gpt-3.5',
+        parentId: this.id,
+        payload,
+        score: score ?? await SentimentService.sentiment('gpt-3.5', payload),
       });
     } else
     if (method === 'vader') {
@@ -540,10 +548,14 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
 
   async generateSentiments(...methods: SentimentMethodName[]) {
     if (methods.length === 0) {
-      methods = ['openai', 'afinn', 'vader'];
+      methods = ['afinn', 'claude-2.1', 'gpt-3.5', 'vader'];
     }
     for (const method of methods) {
-      await this.generateSentiment(method);
+      try {
+        await this.generateSentiment(method);
+      } catch (e) {
+        console.error(e);
+      }
     }
     return await SummarySentiment.findAll({ where: { parentId: this.id } });
   }

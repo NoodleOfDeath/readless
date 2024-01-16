@@ -26,6 +26,8 @@ spec:
               memory: '$K8S_MEMORY_LIMITS'
               cpu: '$K8S_CPU_LIMITS'
           env:
+            - name: ANTHROPIC_API_KEY
+              value: '$ANTHROPIC_API_KEY'
             - name: BACKOFF_INTERVAL
               value: '$BACKOFF_INTERVAL'
             - name: BASE_DOMAIN

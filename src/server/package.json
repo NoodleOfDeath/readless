@@ -32,6 +32,7 @@
     "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.12.1",
     "@aws-sdk/client-s3": "^3.282.0",
     "@google-cloud/translate": "^7.2.1",
     "@tensorflow-models/universal-sentence-encoder": "^1.3.3",
