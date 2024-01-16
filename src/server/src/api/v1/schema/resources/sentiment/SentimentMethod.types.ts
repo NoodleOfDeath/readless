@@ -31,13 +31,13 @@ export const SENTIMENT_METHODS: Record<SentimentMethodName, SentimentMethodCreat
     name: 'afinn',
   },
   'claude-2.1': {
-    description: 'Anthropic\'s Claude 2.5 LLM',
-    displayName: 'Anthropic Claude 2.1',
+    description: 'Anthropic\'s Claude 2.1 LLM',
+    displayName: 'Claude 2.1',
     name: 'claude-2.1',
   },
   'gpt-3.5': {
     description: 'OpenAI\'s ChatGPT 3.5 LLM',
-    displayName: 'OpenAI ChatGPT 3.5',
+    displayName: 'GPT 3.5 Turbo-0613',
     name: 'gpt-3.5',
   },
   'vader': {
