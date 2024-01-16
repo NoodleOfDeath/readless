@@ -20,7 +20,7 @@ export type PublicSentimentMethodAttributes = {
   description?: string;
 };
 
-export const SENTIMENT_METHOD_NAMES = ['afinn', 'claude-2.1', 'gpt-3.5', 'openai', 'vader'] as const;
+export const SENTIMENT_METHOD_NAMES = ['afinn', 'claude-2.1', 'gpt-3.5', 'vader'] as const;
 
 export type SentimentMethodName = typeof SENTIMENT_METHOD_NAMES[number];
 
@@ -39,11 +39,6 @@ export const SENTIMENT_METHODS: Record<SentimentMethodName, SentimentMethodCreat
     description: 'OpenAI\'s ChatGPT 3.5 LLM',
     displayName: 'OpenAI ChatGPT 3.5',
     name: 'gpt-3.5',
-  },
-  'openai': {
-    description: 'OpenAI\'s ChatGPT 3.5 LLM',
-    displayName: 'OpenAI',
-    name: 'openai',
   },
   'vader': {
     description: 'VADER (Valence Aware Dictionary and sEntiment Reasoner) is a lexicon and rule-based sentiment analysis tool that is specifically attuned to sentiments expressed in social media.',

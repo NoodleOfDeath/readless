@@ -533,7 +533,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
         method: 'gpt-3.5',
         parentId: this.id,
         payload,
-        score: score ?? await SentimentService.sentiment('openai', payload),
+        score: score ?? await SentimentService.sentiment('gpt-3.5', payload),
       });
     } else
     if (method === 'vader') {
@@ -551,7 +551,11 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       methods = ['afinn', 'claude-2.1', 'gpt-3.5', 'vader'];
     }
     for (const method of methods) {
-      await this.generateSentiment(method);
+      try {
+        await this.generateSentiment(method);
+      } catch (e) {
+        console.error(e);
+      }
     }
     return await SummarySentiment.findAll({ where: { parentId: this.id } });
   }
