@@ -89,7 +89,7 @@ export class Achievement<
     },
     {
       description: 'Read at least 25 articles',
-      displayName: 'Bookworm',
+      displayName: 'Avid Reader',
       findCandidates: async () => {
         const interactions = await User.getInteractionCounts('read', { minCount: 25 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
@@ -99,7 +99,7 @@ export class Achievement<
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 25;
       },
-      name: 'bookworm',
+      name: 'avid-reader',
       points: 50,
     },
     {
