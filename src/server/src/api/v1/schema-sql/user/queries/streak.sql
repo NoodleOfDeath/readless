@@ -1,12 +1,4 @@
-SELECT
-  "rank",
-  "user",
-  "userId",
-  "count",
-  "max",
-  "min",
-  "updatedAt"
-FROM (
+WITH Ranked AS (
 SELECT
   ROW_NUMBER() OVER (ORDER BY COUNT(DISTINCT DATE("date")::timestamp) DESC,
     MAX(DATE("date")::timestamp) DESC,
@@ -36,6 +28,16 @@ FILTER
 HAVING COUNT(DISTINCT DATE("date")::timestamp) - 1 > 0 ORDER BY COUNT(DISTINCT DATE("date")::timestamp) DESC,
 MAX(DATE("date")::timestamp) DESC,
 "userId" DESC
-LIMIT :limit OFFSET :offset) s
+LIMIT :limit OFFSET :offset)
+SELECT
+  "rank",
+  "user",
+  "userId",
+  "count",
+  "max",
+  "min",
+  "updatedAt"
+FROM
+  Ranked
 WHERE (:minCount IS NULL
-  OR "count" >= :minCount)
+  OR "count" >= :minCount);

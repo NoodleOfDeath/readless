@@ -1,4 +1,3 @@
-import { Request as ExpressRequest } from 'express';
 import {
   Get,
   Request,
@@ -10,12 +9,12 @@ import {
 } from 'tsoa';
 
 import { ProfileResponse } from './types';
-import { AuthError, InternalError } from '../../middleware';
 import {
-  Achievements,
-  User,
-  UserStats,
-} from '../../schema';
+  AuthError,
+  Request as ExpressRequest,
+  InternalError,
+} from '../../middleware';
+import { Achievements, UserStats } from '../../schema';
 import { BaseControllerWithPersistentStorageAccess } from '../Controller';
 
 @Route('/v1/profile')
@@ -33,7 +32,7 @@ export class ProfileController extends BaseControllerWithPersistentStorageAccess
   public static async getProfile(
     @Request() req: ExpressRequest
   ): Promise<ProfileResponse> {
-    const user = await User.from({ jwt: req.body.jwt });
+    const user = req.jwt.user;
     await user.syncProfile();
     const userData = user.toJSON();
     return { profile: userData.profile };
@@ -44,7 +43,7 @@ export class ProfileController extends BaseControllerWithPersistentStorageAccess
   public static async getAchievements(
     @Request() req: ExpressRequest
   ): Promise<Achievements> {
-    const user = await User.from({ jwt: req.body.jwt });
+    const user = req.jwt.user;
     return await user.getAchievements();
   }
 
@@ -53,7 +52,7 @@ export class ProfileController extends BaseControllerWithPersistentStorageAccess
   public static async getUserStats(
     @Request() req: ExpressRequest
   ): Promise<UserStats> {
-    const user = await User.from({ jwt: req.body.jwt });
+    const user = req.jwt.user;
     return await user.getStats();
   }
 

@@ -1,53 +1,40 @@
-import { RequestHandler } from 'express';
-
 import { AuthError, internalErrorHandler } from './internal-errors';
-import { JWT } from '../../../services/types';
+import { RequestHandler } from './types';
+import { JWT } from '../controllers/types';
 
 type AuthMiddlewareOptions = {
-  required?: boolean;
   scope?: string[];
 };
 
-export const authMiddleware = (securityName: string, { required = false, scope = [] }: AuthMiddlewareOptions = {}): RequestHandler => async (req, res, next) => {
+export const authMiddleware = ({ scope }: AuthMiddlewareOptions = {}): RequestHandler => async (req, res, next) => {
   try {
-    delete req.body.jwt;
-    delete req.query.jwt;
-    delete req.body.refreshedJwt;
-    delete req.query.refreshedJwt; 
-    if (securityName === 'jwt') {
+    delete req.body.userId;
+    delete req.query.userId;
+    if (scope) {
       const auth = req.get('authorization');
-      if (auth) {
-        const [type, token] = auth.split(' ');
-        if (type === 'Bearer') {
-          try {
-            const jwt = JWT.from(token);
-            if (required && !jwt.canAccess(scope)) {
-              throw new AuthError('INSUFFICIENT_PERMISSIONS');
-            }
-            const { expired, refreshed } = await jwt.validate(false);
-            if (!expired) {
-              req.body.userId = jwt.userId;
-              req.body.jwt = jwt.signed;
-              req.query.userId = String(jwt.userId);
-              req.query.jwt = jwt.signed;
-            }
-            if (refreshed) {
-              req.body.refreshedJwt = refreshed.signed;
-              req.query.refreshedJwt = refreshed.signed;
-            }
-          } catch (e) {
-            if (required) {
-              throw new AuthError('INVALID_CREDENTIALS');
-            }
-          }
-        } else if (required) {
-          throw new AuthError('INVALID_CREDENTIALS');
-        }
-      } else if (required) {
+      if (!auth) {
         throw new AuthError('MISSING_AUTHORIZATION_HEADER');
       }
-      next();
+      const [type, token] = auth.split(' ');
+      if (type === 'Bearer') {
+        try {
+          const jwt = await JWT.from(token);
+          if (!jwt.canAccess(scope)) {
+            throw new AuthError('INSUFFICIENT_PERMISSIONS');
+          }
+          const { expired } = await jwt.validate(false);
+          if (expired) {
+            throw new AuthError('EXPIRED_CREDENTIALS');
+          }
+          req.jwt = jwt;
+          req.body.userId = jwt.userId;
+        } catch (e) {
+          throw new AuthError('BAD_REQUEST');
+        }
+      }
+      throw new AuthError('MISSING_AUTHORIZATION_HEADER');
     }
+    next();
   } catch (e) {
     internalErrorHandler(res, e);
   }

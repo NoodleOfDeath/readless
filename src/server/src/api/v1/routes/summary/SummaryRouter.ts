@@ -86,7 +86,7 @@ router.post(
 router.delete(
   '/:targetId',
   rateLimitMiddleware('1 per 10s'),
-  authMiddleware('jwt', { required: true, scope: ['god:*'] }),
+  authMiddleware({ scope: ['god:*'] }),
   param('targetId').isNumeric(),
   validationMiddleware,
   async (req, res) => {
@@ -103,7 +103,7 @@ router.delete(
 router.patch(
   '/restore/:targetId',
   rateLimitMiddleware('1 per 10s'),
-  authMiddleware('jwt', { required: true, scope: ['god:*'] }),
+  authMiddleware({ scope: ['god:*'] }),
   param('targetId').isNumeric(),
   validationMiddleware,
   async (req, res) => {

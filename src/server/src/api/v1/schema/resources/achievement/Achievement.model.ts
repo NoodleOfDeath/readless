@@ -133,6 +133,66 @@ export class Achievement<
       points: 100,
     },
     {
+      description: 'Read at least 100 articles',
+      displayName: 'Century Scribe',
+      findCandidates: async () => {
+        const interactions = await User.getInteractionCounts('read', { minCount: 100 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('read', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 100;
+      },
+      name: 'century-scribe',
+      points: 100,
+    },
+    {
+      description: 'Bookmark at least 3 articles',
+      displayName: 'Belated Bookworm',
+      findCandidates: async () => {
+        const interactions = await User.getInteractionCounts('bookmark', { minCount: 3 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 3;
+      },
+      name: 'belated-bookworm',
+      points: 25,
+    },
+    {
+      description: 'Bookmark at least 10 articles',
+      displayName: 'Avid Aficionado',
+      findCandidates: async () => {
+        const interactions = await User.getInteractionCounts('bookmark', { minCount: 10 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 10;
+      },
+      name: 'avid-aficionado',
+      points: 50,
+    },
+    {
+      description: 'Bookmark at least 30 articles',
+      displayName: 'Insatiable Inquirer',
+      findCandidates: async () => {
+        const interactions = await User.getInteractionCounts('bookmark', { minCount: 30 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 30;
+      },
+      name: 'insatiable-inquirer',
+      points: 250,
+    },
+    {
       description: 'Share at least 3 articles',
       displayName: 'Advocate',
       findCandidates: async () => {

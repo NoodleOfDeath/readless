@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body, oneOf } from 'express-validator';
 
-import { AccountController, ProfileController } from '../../controllers';
+import { AccountController } from '../../controllers';
 import {
   authMiddleware,
   internalErrorHandler,
@@ -89,6 +89,7 @@ router.post(
 router.post(
   '/alias/register',
   rateLimitMiddleware('5 per 5m'),
+  authMiddleware({ scope: ['standard:write'] }),
   body('otherAlias').isObject(),
   validationMiddleware,
   async (req, res) => {
@@ -106,6 +107,7 @@ router.post(
 
 router.post(
   '/alias/unregister',
+  authMiddleware({ scope: ['standard:write'] }),
   body('otherAlias').isObject(),
   validationMiddleware,
   async (req, res) => {
@@ -173,36 +175,9 @@ router.post(
   }
 );
 
-// legacy v1.17.9
-router.get(
-  '/profile',
-  validationMiddleware,
-  async (req, res) => {
-    try {
-      const response = await ProfileController.getProfile(req);
-      return res.status(200).json(response);
-    } catch (e) {
-      return internalErrorHandler(res, e);
-    }
-  }
-);
-
-// legacy v1.17.9
-router.get(
-  '/stats',
-  validationMiddleware,
-  async (req, res) => {
-    try {
-      const response = await ProfileController.getUserStats(req);
-      return res.status(200).json(response);
-    } catch (e) {
-      return internalErrorHandler(res, e);
-    }
-  }
-);
-
 router.patch(
   '/metadata',
+  authMiddleware({ scope: ['standard:write'] }),
   body('key').isString(),
   body('value').isString(),
   body('type').isString().optional(),
@@ -223,7 +198,7 @@ router.patch(
 router.put(
   '/credential', 
   rateLimitMiddleware('5 per 3m'),
-  authMiddleware('jwt', { required: true, scope: ['account:write'] }),
+  authMiddleware({ scope: ['account:write'] }),
   validationMiddleware,
   async (req, res) => {
     const t = await AccountController.store.transaction();
@@ -241,6 +216,7 @@ router.put(
 router.delete(
   '/',
   rateLimitMiddleware('5 per 3m'),
+  authMiddleware({ scope: ['account:write'] }),
   body('userId').isNumeric().optional(),
   body('password').isString().optional(),
   validationMiddleware,

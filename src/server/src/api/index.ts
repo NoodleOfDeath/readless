@@ -5,7 +5,7 @@ import expressWinston from 'express-winston';
 import winston from 'winston';
 
 import v1router from './v1';
-import { authMiddleware, rateLimitMiddleware } from './v1/middleware';
+import { rateLimitMiddleware } from './v1/middleware';
 import { GoogleMeasurementMiddleware } from './v1/middleware/GoogleMeasurementMiddleware';
 import {
   Category,
@@ -69,8 +69,7 @@ async function main() {
   }));
   
   app.use(GoogleMeasurementMiddleware);
-  app.use(authMiddleware('jwt'));
-
+  
   app.use('/v1', v1router);
   app.use(express.static('/v1/docs'));
   

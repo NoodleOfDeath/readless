@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Request as ExpressRequest } from 'express';
 import {
   Body,
   Delete,
@@ -25,8 +24,11 @@ import {
 import { BaseControllerWithPersistentStorageAccess } from '../';
 import { SupportedLocale } from '../../../../core/locales';
 import { MailService } from '../../../../services';
-import { JwtRequest } from '../../../../services/types';
-import { AuthError, InternalError } from '../../middleware';
+import {
+  AuthError,
+  Request as ExpressRequest,
+  InternalError,
+} from '../../middleware';
 import {
   InteractionType,
   PublicRecapAttributes,
@@ -38,6 +40,7 @@ import {
   SummaryInteraction,
   User,
 } from '../../schema';
+import { JwtRequest } from '../types';
 
 @Route('/v1/summary')
 @Tags('Summaries')
@@ -162,7 +165,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Path() targetId: number,
     @Body() body: JwtRequest
   ): Promise<DestroyResponse> {
-    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
+    const user = req.jwt.user;
     await user.destroySummary(targetId);
     return { success: true };
   }
@@ -174,7 +177,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Path() targetId: number,
     @Body() body: JwtRequest
   ): Promise<DestroyResponse> {
-    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
+    const user = req.jwt.user;
     await user.restoreSummary(targetId);
     return { success: true };
   }
