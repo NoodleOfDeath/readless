@@ -171,6 +171,7 @@ export const roStrings: typeof enStrings = {
   loadMore: 'Incarca mai mult',
   loading: 'Se încarcă',
   localNews: 'Stiri locale',
+  loggingIn: 'Autentificare',
   login: 'Log in',
   longestStreak: 'Cea mai lungă serie',
   manage: 'Administra',

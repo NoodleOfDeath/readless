@@ -171,6 +171,7 @@ export const huStrings: typeof enStrings = {
   loadMore: 'Load More',
   loading: 'Betöltés',
   localNews: 'Helyi hírek',
+  loggingIn: 'Bejelentkezés',
   login: 'Belépés',
   longestStreak: 'Leghosszabb sorozat',
   manage: 'Kezelése',

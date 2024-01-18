@@ -171,6 +171,7 @@ export const csStrings: typeof enStrings = {
   loadMore: 'Načíst další',
   loading: 'načítání',
   localNews: 'Místní zprávy',
+  loggingIn: 'Přihlášení',
   login: 'Přihlásit se',
   longestStreak: 'Nejdelší série',
   manage: 'Spravovat',

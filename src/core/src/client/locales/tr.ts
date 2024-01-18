@@ -171,6 +171,7 @@ export const trStrings: typeof enStrings = {
   loadMore: 'Daha fazla yükle',
   loading: 'Yükleniyor',
   localNews: 'Yerel Haberler',
+  loggingIn: 'Giriş',
   login: 'Giriş yapmak',
   longestStreak: 'En Uzun Seri',
   manage: 'Üstesinden gelmek',

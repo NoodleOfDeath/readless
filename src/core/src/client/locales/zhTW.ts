@@ -171,6 +171,7 @@ export const zhTWStrings: typeof enStrings = {
   loadMore: '裝載更多',
   loading: '加載中',
   localNews: '本地新聞',
+  loggingIn: '在登入',
   login: '登入',
   longestStreak: '最長連續紀錄',
   manage: '管理',

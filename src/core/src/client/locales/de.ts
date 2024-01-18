@@ -171,6 +171,7 @@ export const deStrings: typeof enStrings = {
   loadMore: 'Mehr laden',
   loading: 'Wird geladen',
   localNews: 'Lokalnachrichten',
+  loggingIn: 'Einloggen',
   login: 'Anmeldung',
   longestStreak: 'Längste Strähne',
   manage: 'Verwalten',

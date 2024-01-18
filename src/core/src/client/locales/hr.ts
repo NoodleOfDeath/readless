@@ -171,6 +171,7 @@ export const hrStrings: typeof enStrings = {
   loadMore: 'Učitaj više',
   loading: 'Učitavam',
   localNews: 'Lokalne vijesti',
+  loggingIn: 'Prijavljivanje',
   login: 'Prijaviti se',
   longestStreak: 'Najduži niz',
   manage: 'Upravljati',

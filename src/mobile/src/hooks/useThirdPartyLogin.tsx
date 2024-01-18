@@ -57,8 +57,15 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
     setStoredValue, 
     syncWithRemote,
   } = React.useContext(StorageContext);
+
+  const [isProcessing, setIsProcessing] = React.useState(false);
+
   const signInWithApple = React.useCallback(async () => {
     try {
+      if (isProcessing) {
+        return;
+      }
+      setIsProcessing(true);
       const identityToken = await authWithApple();
       if (!identityToken) {
         throw new Error(strings.failedToSignInWithApple);
@@ -80,11 +87,17 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
       const error = e as Error;
       console.error(error);
       callback?.([strings.failedToSignInWithApple, error.message].join('\n'));
+    } finally {
+      setIsProcessing(false);
     }
-  }, [login, setStoredValue, syncWithRemote, callback]);
+  }, [isProcessing, login, setStoredValue, syncWithRemote, callback]);
   
   const signInWithGoogle = React.useCallback(async () => {
     try {
+      if (isProcessing) {
+        return;
+      }
+      setIsProcessing(true);
       const idToken = await authWithGoogle();
       if (!idToken) {
         throw new Error(strings.failedToSignInWithGoogle);
@@ -107,11 +120,17 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
       const error = e as Error;
       console.error(error);
       callback?.([strings.failedToSignInWithGoogle, error.message].join('\n'));
+    } finally {
+      setIsProcessing(false);
     }
-  }, [login, setStoredValue, syncWithRemote, callback]);
+  }, [isProcessing, login, setStoredValue, syncWithRemote, callback]);
 
   const signInWithoutAccount = React.useCallback(async () => {
     try {
+      if (isProcessing) {
+        return;
+      }
+      setIsProcessing(true);
       const anonymous = CryptoJS.AES.encrypt(JSON.stringify({ timestamp: new Date().toISOString() }), REGISTRATION_PRIVATE_KEY).toString();
       const { data: response, error } = await login({
         anonymous,
@@ -127,8 +146,10 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
     } catch (error) {
       console.error(error);
       callback?.([strings.failedToContinueWithoutAnAccount, error].join(' '));
+    } finally {
+      setIsProcessing(false);
     }
-  }, [login, setStoredValue, syncWithRemote, callback]);
+  }, [isProcessing, login, setStoredValue, syncWithRemote, callback]);
   
   const registerEmail = React.useCallback(async (email: string) => {
     await registerAlias({ otherAlias: { email } });
@@ -234,6 +255,7 @@ export function useThirdPartyLogin(callback?: React.Dispatch<React.SetStateActio
   }, [requestOtp]);
   
   return {
+    isProcessing,
     linkThirdPartyAccount,
     registerEmail,
     requestDeleteAccount,

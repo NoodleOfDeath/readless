@@ -171,6 +171,7 @@ export const fiStrings: typeof enStrings = {
   loadMore: 'Lataa lisää',
   loading: 'Ladataan',
   localNews: 'Paikallisuutiset',
+  loggingIn: 'Kirjautua sisään',
   login: 'Kirjaudu sisään',
   longestStreak: 'Pisin putki',
   manage: 'Hallitse',

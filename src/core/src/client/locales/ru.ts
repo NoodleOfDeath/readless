@@ -171,6 +171,7 @@ export const ruStrings: typeof enStrings = {
   loadMore: 'Загрузи больше',
   loading: 'Загрузка',
   localNews: 'Местные новости',
+  loggingIn: 'Вход в систему',
   login: 'Авторизоваться',
   longestStreak: 'Самая длинная серия',
   manage: 'Управлять',

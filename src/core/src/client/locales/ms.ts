@@ -171,6 +171,7 @@ export const msStrings: typeof enStrings = {
   loadMore: 'Tambah lagi',
   loading: 'Memuatkan',
   localNews: 'Berita Tempatan',
+  loggingIn: 'Log Masuk',
   login: 'Log masuk',
   longestStreak: 'Streak Terpanjang',
   manage: 'Mengurus',

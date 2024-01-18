@@ -171,6 +171,7 @@ export const jaStrings: typeof enStrings = {
   loadMore: 'もっと読み込む',
   loading: '読み込み中',
   localNews: '地元のニュース',
+  loggingIn: 'ログインする',
   login: 'ログイン',
   longestStreak: '最長連続記録',
   manage: '管理',

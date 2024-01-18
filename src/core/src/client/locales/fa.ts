@@ -171,6 +171,7 @@ export const faStrings: typeof enStrings = {
   loadMore: 'بارگذاری بیشتر',
   loading: 'بارگذاری',
   localNews: 'اخبار محلی',
+  loggingIn: 'ورود به سیستم در',
   login: 'وارد شدن',
   longestStreak: 'طولانی ترین رگه',
   manage: 'مدیریت کنید',

@@ -171,6 +171,7 @@ export const elStrings: typeof enStrings = {
   loadMore: 'Φόρτωσε περισσότερα',
   loading: 'Φόρτωση',
   localNews: 'Τοπικά νέα',
+  loggingIn: 'Σύνδεση',
   login: 'Σύνδεση',
   longestStreak: 'Το μεγαλύτερο σερί',
   manage: 'Διαχειρίζονται',

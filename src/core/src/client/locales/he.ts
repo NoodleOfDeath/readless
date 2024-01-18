@@ -171,6 +171,7 @@ export const heStrings: typeof enStrings = {
   loadMore: 'טען עוד',
   loading: 'טוען',
   localNews: 'חדשות מקומיות',
+  loggingIn: 'מתחבר',
   login: 'התחברות',
   longestStreak: 'הרצף הארוך ביותר',
   manage: 'לנהל',

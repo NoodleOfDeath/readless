@@ -171,6 +171,7 @@ export const arStrings: typeof enStrings = {
   loadMore: 'تحميل المزيد',
   loading: 'تحميل',
   localNews: 'اخبار محلية',
+  loggingIn: 'تسجيل الدخول',
   login: 'تسجيل الدخول',
   longestStreak: 'أطول أثر',
   manage: 'يدير',

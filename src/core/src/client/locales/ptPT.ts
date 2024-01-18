@@ -171,6 +171,7 @@ export const ptPTStrings: typeof enStrings = {
   loadMore: 'Carregue mais',
   loading: 'Carregando',
   localNews: 'Notícias locais',
+  loggingIn: 'Fazendo login',
   login: 'Conecte-se',
   longestStreak: 'Sequência mais longa',
   manage: 'Gerenciar',

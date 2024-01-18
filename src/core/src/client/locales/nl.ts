@@ -171,6 +171,7 @@ export const nlStrings: typeof enStrings = {
   loadMore: 'Meer laden',
   loading: 'Bezig met laden',
   localNews: 'Lokaal nieuws',
+  loggingIn: 'Inloggen',
   login: 'Log in',
   longestStreak: 'Langste reeks',
   manage: 'Beheren',

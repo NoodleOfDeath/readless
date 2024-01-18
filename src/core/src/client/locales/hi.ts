@@ -171,6 +171,7 @@ export const hiStrings: typeof enStrings = {
   loadMore: 'और लोड करें',
   loading: 'लोड हो रहा है',
   localNews: 'स्थानीय समाचार',
+  loggingIn: 'प्रवेश किया',
   login: 'लॉग इन करें',
   longestStreak: 'सबसे लंबी लकीर',
   manage: 'प्रबंधित करना',
