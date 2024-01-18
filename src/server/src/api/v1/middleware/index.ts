@@ -1,3 +1,5 @@
+export * from './types';
+
 export * from './AuthMiddleware';
 export * from './internal-errors';
 export * from './PaginationMiddleware';

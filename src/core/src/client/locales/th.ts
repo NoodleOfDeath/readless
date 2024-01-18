@@ -171,6 +171,7 @@ export const thStrings: typeof enStrings = {
   loadMore: 'โหลดเพิ่มเติม',
   loading: 'กำลังโหลด',
   localNews: 'ข่าวท้องถิ่น',
+  loggingIn: 'เข้าสู่ระบบ',
   login: 'เข้าสู่ระบบ',
   longestStreak: 'สตรีคที่ยาวที่สุด',
   manage: 'จัดการ',

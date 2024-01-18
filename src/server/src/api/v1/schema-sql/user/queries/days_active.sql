@@ -21,5 +21,6 @@ ORDER BY
   COUNT(DISTINCT DATE(r."createdAt")::timestamp) DESC,
   MAX(DATE(r."createdAt")::timestamp) DESC,
   r."userId" DESC
-LIMIT :limit;
+LIMIT :limit
+OFFSET :offset;
 

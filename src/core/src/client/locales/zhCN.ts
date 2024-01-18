@@ -171,6 +171,7 @@ export const zhCNStrings: typeof enStrings = {
   loadMore: '装载更多',
   loading: '加载中',
   localNews: '本地新闻',
+  loggingIn: '在登录',
   login: '登录',
   longestStreak: '最长连续纪录',
   manage: '管理',

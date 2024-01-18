@@ -40,6 +40,7 @@ export type JwtResponse = {
 export class JWT implements JsonWebToken {
 
   userId: number; 
+  user: User;
   scope: string[];
   priority: number;
   createdAt: Date;
@@ -78,8 +79,10 @@ export class JWT implements JsonWebToken {
     });
   }
   
-  static from(token: Partial<JsonWebToken> | string) {
-    return new JWT(token);
+  static async from(token: Partial<JsonWebToken> | string) {
+    const jwt = new JWT(token);
+    jwt.user = await User.findOne({ where: { id: jwt.userId } });
+    return jwt;
   }
 
   static async as(role: string, userId: number) {

@@ -171,6 +171,7 @@ export const itStrings: typeof enStrings = {
   loadMore: 'Carica di più',
   loading: 'Caricamento',
   localNews: 'Notizie locali',
+  loggingIn: 'Entrando',
   login: 'Login',
   longestStreak: 'Serie più lunga',
   manage: 'Maneggio',

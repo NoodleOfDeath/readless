@@ -171,6 +171,7 @@ export const nbStrings: typeof enStrings = {
   loadMore: 'Last mer',
   loading: 'Laster',
   localNews: 'Lokale nyheter',
+  loggingIn: 'Logger inn',
   login: 'Logg Inn',
   longestStreak: 'Lengste rekke',
   manage: 'Få til',

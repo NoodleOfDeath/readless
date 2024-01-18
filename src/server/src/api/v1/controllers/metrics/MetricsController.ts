@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Request as ExpressRequest } from 'express';
 import {
   Get,
   Query,
@@ -16,7 +15,11 @@ import {
   MetricsRequest,
   MetricsResponse,
 } from './types';
-import { AuthError, InternalError } from '../../middleware';
+import {
+  AuthError,
+  Request as ExpressRequest,
+  InternalError,
+} from '../../middleware';
 import { User } from '../../schema';
 
 export type StatsRequest = {
@@ -46,12 +49,12 @@ export class MetricsController {
     @Query() after?: Date,
     @Query() before?: Date
   ): Promise<MetricsResponse> {
-    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
+    const user = req.jwt?.user;
     return await User.getMetrics(user);
   }
 
   public static async getMetricsInternal(req: ExpressRequest, query: MetricsRequest): Promise<MetricsResponse> {
-    const user = await User.from({ jwt: req.body.jwt });
+    const user = req.jwt?.user;
     return await User.getMetrics(user, query);
   }
   

@@ -171,6 +171,7 @@ export const koStrings: typeof enStrings = {
   loadMore: '더 불러오기',
   loading: '로드 중',
   localNews: '지역 뉴스',
+  loggingIn: '로그인',
   login: '로그인',
   longestStreak: '최장 연속',
   manage: '관리하다',

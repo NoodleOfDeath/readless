@@ -2,7 +2,7 @@
   "extends": "@tsconfig/react-native/tsconfig.json",
   "compilerOptions": {
     "forceConsistentCasingInFileNames": false,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "lib": [
       "es5",
       "es6",

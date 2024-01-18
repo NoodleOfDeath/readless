@@ -171,6 +171,7 @@ export const viStrings: typeof enStrings = {
   loadMore: 'Tải thêm',
   loading: 'Đang tải',
   localNews: 'Tin địa phương',
+  loggingIn: 'Đăng nhập',
   login: 'Đăng nhập',
   longestStreak: 'Vệt dài nhất',
   manage: 'Quản lý',

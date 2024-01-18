@@ -1,7 +1,6 @@
 import appleSignin from 'apple-signin-auth';
 import bcrypt from 'bcryptjs';
 import CryptoJS from 'crypto-js';
-import { Request as ExpressRequest } from 'express';
 import ms from 'ms';
 import {
   Body,
@@ -46,7 +45,11 @@ import {
   validateEmail,
   validatePassword,
 } from '../../../../utils';
-import { AuthError, InternalError } from '../../middleware';
+import {
+  AuthError,
+  Request as ExpressRequest,
+  InternalError,
+} from '../../middleware';
 import {
   Alias,
   AliasType,
@@ -107,7 +110,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     let verified = false;
     let createAlias = true;
 
-    if (req.body.jwt || body.userId) {
+    if (req.jwt) {
       throw new AuthError('ALREADY_LOGGED_IN');
     }
     if (body.email && !validateEmail(body.email)) {
@@ -271,10 +274,10 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Body() body: LoginRequest
   ): Promise<LoginResponse> {
     console.log('trying login');
-
-    if (req.body.jwt) {
+    
+    if (req.jwt) {
       // User is already logged in. Send back updated profile.
-      const token = new JWT(req.body.jwt);
+      const token = req.jwt;
       if (token.expired) {
         throw new AuthError('EXPIRED_CREDENTIALS');
       }
@@ -282,19 +285,18 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
         where: {
           type: 'jwt',
           userId: token.userId,
-          value: req.body.jwt,
+          value: token.signed,
         },
       });
       if (!credential) {
         throw new AuthError('INVALID_CREDENTIALS');
       }
-      const user = await User.findOne({ where: { id: token.userId } });
-      if (!user) {
+      if (!token.user) {
         throw new AuthError('UNKNOWN_ALIAS');
       }
-      await user.syncProfile(); // get profile
+      await token.user.syncProfile(); // get profile
       return {
-        profile: user?.toJSON().profile ?? {},
+        profile: token.user.toJSON().profile ?? {},
         token: token.wrapped,
         userId: token.userId,
       };
@@ -391,17 +393,16 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Body() body: LogoutRequest
   ): Promise<LogoutResponse> {
     let count = 0;
-    if (req.body.jwt) {
-      const token = new JWT(req.body.jwt);
+    if (req.jwt) {
       count += await Credential.destroy({
         where: {
           type: 'jwt',
-          userId: token.userId,
-          value: req.body.jwt,
+          userId: req.jwt.userId,
+          value: req.jwt.signed,
         },
       });
       if (body.force) {
-        count += await Credential.destroy({ where: { userId: token.userId } });
+        count += await Credential.destroy({ where: { userId: req.jwt.userId } });
       }
     }
     return { count, success: true };
@@ -557,7 +558,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Request() req: ExpressRequest,
     @Body() body: UpdateMetadataRequest
   ): Promise<UpdateMetadataResponse> {
-    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
+    const user = req.jwt.user;
     await user?.setMetadata(body.key, body.value, body.type);
     return { success: true };
   }
@@ -568,7 +569,10 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Request() req: ExpressRequest,
     @Body() body: UpdateCredentialRequest
   ): Promise<UpdateCredentialResponse> {
-    const user = await User.from(body, req.body);
+    const user = req.jwt.user;
+    if (!user) {
+      throw new AuthError('BAD_REQUEST');
+    }
     await user.authenticate(req.body);
     if (body.newPassword) {
       if (!validatePassword(body.newPassword)) {
@@ -592,7 +596,10 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Request() req: ExpressRequest,
     @Body() body: DeleteUserRequest
   ): Promise<DeleteUserResponse> {
-    const user = await User.from(body, req.body);
+    const user = req.jwt.user;
+    if (!user) {
+      throw new AuthError('BAD_REQUEST');
+    }
     await user.authenticate(req.body);
     await user.destroy({ force: true });
     return { success: true };

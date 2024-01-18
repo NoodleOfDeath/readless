@@ -1,9 +1,4 @@
-SELECT
-  "rank",
-  "count",
-  "user",
-  "userId"
-FROM (
+WITH Ranked AS (
   SELECT
     ROW_NUMBER() OVER (ORDER BY COUNT(DISTINCT s."id") DESC,
       s."userId" DESC) "rank",
@@ -16,13 +11,20 @@ FROM (
 WHERE s."userId" IS NOT NULL
 AND (:userId IS NULL
   OR s."userId" = :userId)
-AND (:type IS NULL
+AND ((:type) IS NULL
   OR s."type" IN (:type))
 AND (:interval IS NULL
   OR s."createdAt" > DATE_TRUNC(:interval, NOW()))
 GROUP BY "user",
 s."userId" ORDER BY COUNT(DISTINCT s."id") DESC,
 s."userId" DESC
-LIMIT :limit OFFSET :offset) "s"
+LIMIT :limit OFFSET :offset)
+SELECT
+  "rank",
+  "count",
+  "user",
+  "userId"
+FROM
+  Ranked
 WHERE (:minCount IS NULL
-  OR "count" >= :minCount)
+  OR "count" >= :minCount);

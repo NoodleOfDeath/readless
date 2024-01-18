@@ -1,6 +1,10 @@
 import { ThirdParty } from './Alias.types';
 import { DurationString } from '../../../../utils';
-import { DatedAttributes, UserAchievementAttributes } from '../types';
+import { 
+  DatedAttributes, 
+  QueryOptions,
+  UserAchievementAttributes,
+} from '../types';
 
 export type UserEvent<T> = T & { 
   user?: string; 
@@ -55,12 +59,8 @@ export type Profile = {
   updatedAt?: Date;
 };
 
-export type CalculateStreakOptions = {
-  limit?: number | 'ALL';
-  offset?: number;
-  minCount?: number;
+export type CalculateStreakOptions = QueryOptions & {
   longest?: boolean;
-  userId?: number;
   expiresIn?: DurationString;
 };
 

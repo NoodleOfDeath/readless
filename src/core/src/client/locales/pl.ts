@@ -171,6 +171,7 @@ export const plStrings: typeof enStrings = {
   loadMore: 'Załaduj więcej',
   loading: 'Ładowanie',
   localNews: 'Wiadomości lokalne',
+  loggingIn: 'Logowanie',
   login: 'Zaloguj sie',
   longestStreak: 'Najdłuższa passa',
   manage: 'Zarządzać',

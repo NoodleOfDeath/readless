@@ -1,12 +1,17 @@
 import { Router } from 'express';
 
 import { ProfileController } from '../../controllers';
-import { internalErrorHandler, validationMiddleware } from '../../middleware';
+import { 
+  authMiddleware,
+  internalErrorHandler,
+  validationMiddleware,
+} from '../../middleware';
 
 const router = Router();
 
 router.get(
   '/',
+  authMiddleware({ scope: ['standard:read'] }),
   validationMiddleware,
   async (req, res) => {
     try {
@@ -20,6 +25,7 @@ router.get(
 
 router.get(
   '/achievements',
+  authMiddleware({ scope: ['standard:read'] }),
   validationMiddleware,
   async (req, res) => {
     try {
@@ -33,6 +39,7 @@ router.get(
 
 router.get(
   '/stats',
+  authMiddleware({ scope: ['standard:read'] }),
   validationMiddleware,
   async (req, res) => {
     try {

@@ -171,6 +171,7 @@ export const svStrings: typeof enStrings = {
   loadMore: 'Ladda mer',
   loading: 'Läser in',
   localNews: 'Lokala nyheter',
+  loggingIn: 'Loggar in',
   login: 'Logga in',
   longestStreak: 'Längsta raden',
   manage: 'Hantera',

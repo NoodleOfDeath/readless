@@ -171,6 +171,7 @@ export const caStrings: typeof enStrings = {
   loadMore: 'Carrega més',
   loading: 'Carregant',
   localNews: 'Notícies locals',
+  loggingIn: 'Inicia sesió',
   login: 'Iniciar Sessió',
   longestStreak: 'Ratxa més llarga',
   manage: 'Gestionar',

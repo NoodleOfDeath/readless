@@ -1,6 +1,9 @@
 // record management
 import { SupportedLocale } from '../../../core/locales';
 
+export * from './account/types';
+export * from './metrics/types';
+
 // custom headers
 export enum CustomHeader {
   LOCALE = 'x-locale',

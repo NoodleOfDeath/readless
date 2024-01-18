@@ -18,6 +18,13 @@ export type FindAndCountOptions<
   T extends Hooks<Model<any, any>, any, any> | Model<any, any>,
 > = Omit<SequelizeFindAndCountOptions<Attributes<T>>, 'groups'>;
 
+export type QueryOptions = {
+  limit?: number | 'ALL';
+  offset?: number;
+  minCount?: number;
+  userId?: number;
+};
+
 export type PrepareOptions = {
   translate?: boolean;
 };

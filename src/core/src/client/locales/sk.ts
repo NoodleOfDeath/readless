@@ -171,6 +171,7 @@ export const skStrings: typeof enStrings = {
   loadMore: 'Načítať viac',
   loading: 'Načítava',
   localNews: 'Miestne správy',
+  loggingIn: 'Prihlasovanie',
   login: 'Prihlásiť sa',
   longestStreak: 'Najdlhšia séria',
   manage: 'Spravovať',

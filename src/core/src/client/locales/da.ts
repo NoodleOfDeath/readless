@@ -171,6 +171,7 @@ export const daStrings: typeof enStrings = {
   loadMore: 'Indlæs mere',
   loading: 'Indlæser',
   localNews: 'Lokale nyheder',
+  loggingIn: 'Logger ind',
   login: 'Log på',
   longestStreak: 'Længste stribe',
   manage: 'Styre',

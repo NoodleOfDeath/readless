@@ -171,6 +171,7 @@ export const esStrings: typeof enStrings = {
   loadMore: 'Carga más',
   loading: 'Cargando',
   localNews: 'Noticias locales',
+  loggingIn: 'Iniciando sesión',
   login: 'Acceso',
   longestStreak: 'Racha más larga',
   manage: 'Administrar',

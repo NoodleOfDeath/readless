@@ -1,4 +1,3 @@
-import { Request as ExpressRequest } from 'express';
 import {
   Body,
   Get,
@@ -19,13 +18,16 @@ import {
   InteractionRequest,
 } from '..';
 import { SupportedLocale } from '../../../../core/locales';
-import { AuthError, InternalError } from '../../middleware';
+import {
+  AuthError,
+  Request as ExpressRequest,
+  InternalError,
+} from '../../middleware';
 import { 
   InteractionType,
   PublicPublisherAttributes, 
   Publisher,
   PublisherInteraction,
-  User,
 } from '../../schema';
 
 @Route('/v1/publisher')
@@ -57,7 +59,7 @@ export class PublisherController extends BaseController {
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
   ): Promise<PublicPublisherAttributes> {
-    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
+    const user = req.jwt?.user;
     const {
       content, metadata, remoteAddr, 
     } = body;

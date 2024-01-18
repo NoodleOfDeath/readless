@@ -171,6 +171,7 @@ export const ukStrings: typeof enStrings = {
   loadMore: 'Завантажити ще',
   loading: 'Завантаження',
   localNews: 'Місцеві новини',
+  loggingIn: 'Вхід в систему',
   login: 'Увійти',
   longestStreak: 'Найдовша серія',
   manage: 'Керувати',

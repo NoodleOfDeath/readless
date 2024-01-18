@@ -5,8 +5,11 @@ import { Table } from 'sequelize-typescript';
 
 import { INTERACTION_TYPES } from './../resources/interaction/Interaction.types';
 import { OpenAIService } from '../../../../services';
-import { JWT } from '../../../../services/types';
-import { MetricsRequest, MetricsResponse } from '../../controllers/metrics/types';
+import {
+  JWT,
+  MetricsRequest,
+  MetricsResponse,
+} from '../../controllers/types';
 import { AuthError } from '../../middleware';
 import {
   Achievement,
@@ -26,6 +29,7 @@ import {
   MetadataType,
   Profile,
   QueryFactory,
+  QueryOptions,
   RequestLog,
   Role,
   Streak,
@@ -83,10 +87,6 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       }
       return user;
     }
-  }
-
-  public static async fromJwt(jwt: AliasPayload | string, opts?: Partial<FindAliasOptions>) {
-    return await this.from({ jwt: typeof jwt === 'string' ? jwt : jwt.jwt }, opts);
   }
   
   public async findAlias(type: AliasType) {
@@ -318,10 +318,12 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
 
   public static async getDaysActive({
     limit = 100,
+    offset = 0,
     userId = null,
-  }: CalculateStreakOptions = {}): Promise<InteractionCount[]> {
+  }: QueryOptions = {}): Promise<InteractionCount[]> {
     const replacements = {
       limit: limit === 'ALL' ? 100 : limit,
+      offset,
       userId, 
     };
     const response: InteractionCount[] = (await User.sql.query(QueryFactory.getQuery('days_active'), {
@@ -341,7 +343,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     limit = 100,
     offset = 0, 
     ...req 
-  }: MetricsRequest = {}, user?: User): Promise<InteractionCount[]> {
+  }: QueryOptions = {}, user?: User): Promise<InteractionCount[]> {
     const replacements = {
       ...req,
       interval: null,
@@ -357,9 +359,6 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       type: QueryTypes.SELECT,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     }) as InteractionCount[]);
-    if (user) {
-      return response.map((e) => ({ ...e, rank: response.find((r) => r.userId === user.id)?.rank ?? Number.MAX_SAFE_INTEGER }));
-    }
     return response;
   }
 

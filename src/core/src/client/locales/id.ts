@@ -171,6 +171,7 @@ export const idStrings: typeof enStrings = {
   loadMore: 'Muat lebih banyak',
   loading: 'Memuat',
   localNews: 'Berita Lokal',
+  loggingIn: 'Masuk',
   login: 'Gabung',
   longestStreak: 'Garis Terpanjang',
   manage: 'Mengelola',

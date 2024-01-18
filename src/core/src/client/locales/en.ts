@@ -168,6 +168,7 @@ export const enStrings = {
   loadMore: 'Load More',
   loading: 'Loading',
   localNews: 'Local News',
+  loggingIn: 'Logging In',
   login: 'Log In',
   longestStreak: 'Longest Streak',
   manage: 'Manage',
