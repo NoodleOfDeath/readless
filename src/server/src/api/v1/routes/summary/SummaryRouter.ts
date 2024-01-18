@@ -74,7 +74,6 @@ router.post(
   async (req, res) => {
     try {
       const { targetId, type } = req.params;
-      req.body.remoteAddr = req.ip;
       const interactions = await SummaryController.interactWithSummary(req, targetId, type, req.body);
       return res.json(interactions);
     } catch (e) {

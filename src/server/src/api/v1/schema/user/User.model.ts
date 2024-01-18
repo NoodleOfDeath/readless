@@ -88,10 +88,6 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       return user;
     }
   }
-
-  public static async fromJwt(jwt: AliasPayload | string, opts?: Partial<FindAliasOptions>) {
-    return await this.from({ jwt: typeof jwt === 'string' ? jwt : jwt.jwt }, opts);
-  }
   
   public async findAlias(type: AliasType) {
     if (type === 'userId') {

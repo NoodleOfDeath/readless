@@ -1,4 +1,3 @@
-import { Request as ExpressRequest } from 'express';
 import {
   Body,
   Post,
@@ -10,12 +9,15 @@ import {
   Tags,
 } from 'tsoa';
 
-import { AuthError, InternalError } from '../../middleware';
+import {
+  AuthError,
+  Request as ExpressRequest,
+  InternalError,
+} from '../../middleware';
 import {
   PublicSubscriptionAttributes,
   Subscription,
   SubscriptionCreationAttributes,
-  User,
 } from '../../schema';
 
 @Route('/v1/subscribe')
@@ -33,7 +35,7 @@ export class SubscribeController {
     @Request() req: ExpressRequest,
     @Body() body: SubscriptionCreationAttributes
   ): Promise<PublicSubscriptionAttributes> {
-    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
+    const user = req.jwt?.user;
     const subscription = await Subscription.subscribe({ ...body, userId: user?.id });
     return subscription;
   }

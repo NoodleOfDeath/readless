@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Request as ExpressRequest } from 'express';
 import {
   Body,
   Get,
@@ -14,13 +13,16 @@ import {
 } from 'tsoa';
 
 import { BulkResponse, InteractionRequest } from '../';
-import { AuthError, InternalError } from '../../middleware';
+import {
+  AuthError,
+  Request as ExpressRequest,
+  InternalError,
+} from '../../middleware';
 import {
   Event,
   EventInteraction,
   InteractionType,
   PublicEventAttributes,
-  User,
 } from '../../schema';
 
 @Route('/v1/event')
@@ -50,7 +52,7 @@ export class EventController {
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
   ): Promise<PublicEventAttributes> {
-    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
+    const user = req.jwt?.user;
     const {
       content, metadata, remoteAddr, 
     } = body;

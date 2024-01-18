@@ -10,4 +10,5 @@ export type Request = ExpressRequest & {
   jwt?: JWT;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type RequestHandler = (req: Request, res: Response, next: NextFunction) => Promise<any>;

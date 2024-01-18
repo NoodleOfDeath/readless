@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "preinstall": "cd ../../ && yarn install && cd -",
-    "postinstall": "yarn tsoa",
+    "postinstall": "yarn tsoa && yarn patch",
+    "patch": "npx patch-package && yarn pod:fix",
     "pod:fix": "sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 11.0/IPHONEOS_DEPLOYMENT_TARGET = 13.0/' ios/Pods/Pods.xcodeproj/project.pbxproj",
     "pod": "npx pod-install && yarn pod:fix",
     "android": "react-native run-android",
@@ -87,9 +88,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@babel/preset-env": "^7.23.3",
-    "@babel/preset-react": "^7.23.3",
     "@babel/runtime": "^7.23.2",
     "@react-native-community/eslint-config": "^3.2.0",
     "@tsconfig/react-native": "^2.0.3",

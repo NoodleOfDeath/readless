@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Request as ExpressRequest } from 'express';
 import {
   Body,
   Get,
@@ -20,13 +19,16 @@ import {
   InteractionRequest,
 } from '../';
 import { SupportedLocale } from '../../../../core/locales';
-import { AuthError, InternalError } from '../../middleware';
+import {
+  AuthError,
+  Request as ExpressRequest,
+  InternalError,
+} from '../../middleware';
 import {
   Category,
   CategoryInteraction,
   InteractionType,
   PublicCategoryAttributes,
-  User,
 } from '../../schema';
 
 @Route('/v1/category')
@@ -58,7 +60,7 @@ export class CategoryController extends BaseController {
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
   ): Promise<PublicCategoryAttributes> {
-    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
+    const user = req.jwt?.user;
     const {
       content, metadata, remoteAddr, 
     } = body;

@@ -38,7 +38,6 @@ import {
   SearchSummariesPayload,
   Summary,
   SummaryInteraction,
-  User,
 } from '../../schema';
 import { JwtRequest } from '../types';
 
@@ -128,7 +127,6 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     return await Summary.getTopStories({ interval, ...payload });
   }
   
-  @Security('jwt')
   @Post('/interact/:targetId/:type')
   public static async interactWithSummary(
     @Request() req: ExpressRequest,
@@ -136,12 +134,16 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Path() type: InteractionType,
     @Body() body: InteractionRequest
   ): Promise<PublicSummaryAttributes> {
-    const user = await User.fromJwt(req.body, { ignoreIfNotResolved: true, ...req.body });
-    const {
-      content, metadata, remoteAddr, 
-    } = body;
+    const user = req.jwt?.user;
+    console.log(user);
+    const { content, metadata } = body;
     const interaction = await SummaryInteraction.create({
-      content, metadata, remoteAddr, targetId, type, userId: user?.id,
+      content, 
+      metadata, 
+      remoteAddr: req.ip, 
+      targetId, 
+      type, 
+      userId: user?.id,
     });
     if (!interaction) {
       throw new InternalError('Failed to create interaction');
@@ -165,8 +167,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Path() targetId: number,
     @Body() body: JwtRequest
   ): Promise<DestroyResponse> {
-    const user = req.jwt.user;
-    await user.destroySummary(targetId);
+    const user = req.jwt?.user;
+    await user?.destroySummary(targetId);
     return { success: true };
   }
   
@@ -177,8 +179,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Path() targetId: number,
     @Body() body: JwtRequest
   ): Promise<DestroyResponse> {
-    const user = req.jwt.user;
-    await user.restoreSummary(targetId);
+    const user = req.jwt?.user;
+    await user?.restoreSummary(targetId);
     return { success: true };
   }
   

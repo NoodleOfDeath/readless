@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import { MetricsController } from '../../controllers';
 import {
+  authMiddleware,
   internalErrorHandler,
   rateLimitMiddleware,
   validationMiddleware,
@@ -12,6 +13,7 @@ const router = Router();
 router.get(
   '/',
   rateLimitMiddleware('1 per 2s'),
+  authMiddleware({ scope: ['standard:read'] }),
   validationMiddleware,
   async (req, res) => {
     try {
