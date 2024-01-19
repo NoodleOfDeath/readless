@@ -393,10 +393,10 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     ...options
   }: CalculateStreakOptions = {}): Promise<Streak> {
     let streak: Streak = {
-      end: new Date(new Date().toLocaleDateString()),
+      end: new Date(new Date().toDateString()),
       expiresSoon: false,
-      length: 0,
-      start: new Date(new Date().toLocaleDateString()), 
+      length: 1,
+      start: new Date(new Date().toDateString()), 
       updatedAt: new Date(),
       user: (await this.findAlias('username'))?.value,
       userId: this.id,
