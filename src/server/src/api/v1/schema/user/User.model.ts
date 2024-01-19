@@ -409,7 +409,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     if (!longest) {
       return streaks.find(
         (s) => {
-          return (s.end.getFullYear(), s.end.getDate()) === (streak.end.getFullYear(), streak.end.getDate());
+          return s.end.toDateString() === streak.end.toDateString();
         }
       ) ?? streak;
     }
