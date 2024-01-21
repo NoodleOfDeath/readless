@@ -1,13 +1,9 @@
-import { Request, RequestHandler } from 'express';
 import ms from 'ms';
 
 import { AuthError, internalErrorHandler } from './internal-errors';
+import { Request, RequestHandler } from './types';
 import { DurationString } from '../../../utils';
-import {
-  RateLimit,
-  RequestLog,
-  User,
-} from '../schema';
+import { RateLimit, RequestLog } from '../schema';
 
 export type RateLimitString = `${number}${'/'|'every'|'per'}${DurationString}`;
 
@@ -52,7 +48,7 @@ export const rateLimitMiddleware = (
         res.status(200).send('OK');
         return;
       }
-      const user = await User.from({ jwt: req.body.jwt }, { ignoreIfNotResolved: true });
+      const user = req.jwt?.user;
       await RequestLog.create({
         appVersion,
         locale,
