@@ -94,6 +94,7 @@ async function sendStreakPushNotifications() {
       where: {
         channel: ['push', 'fcm', 'apns'],
         event: 'streak-reminder',
+        lastFired: { [Op.or]: [null, { [Op.gte]: new Date(Date.now() - ms('12h')) }] },
         userId: { [Op.ne]: null },
       },
     });
@@ -113,8 +114,11 @@ async function sendStreakPushNotifications() {
       }
       if (streak.expiresSoon) {
         ids.push(sub);
+        sub.set('lastFired', new Date());
+        await sub.save();
       }
     }
+    console.log(ids.map((i) => i.userId));
     console.log(`notifying ${ids.length} subscribers`);
     const messages: FirebaseMessage[] = [];
     for (const sub of subscriptions) {

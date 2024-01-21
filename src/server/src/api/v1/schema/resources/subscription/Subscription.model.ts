@@ -73,6 +73,9 @@ export class Subscription<
 
   @Column({ type: DataType.DATE })
   declare fireTime?: Date;
+
+  @Column({ type: DataType.DATE })
+  declare lastFired?: Date;
     
   @Column({
     allowNull: false,
@@ -228,7 +231,7 @@ export class Subscription<
       userId?: number[] | number,
     }
   ): Promise<void> {
-    const channel = channel0 === 'push' ? ['firebase', 'apns'] : channel0;
+    const channel = channel0 === 'push' ? ['fcm', 'apns'] : channel0;
     const subscriptions = data.userId ? (
       await Subscription.findAll({
         where: {
