@@ -61,12 +61,12 @@ async function main() {
   
   app.set('trust proxy', 1);
   
+  app.use(authMiddleware());
   app.use(rateLimitMiddleware({
     duration: process.env.API_RATE_LIMIT_DURATION || '1m',
     limit: process.env.API_RATE_LIMIT ? Number.parseInt(process.env.API_RATE_LIMIT) : 200,
     path: '',
   }));
-  app.use(authMiddleware());
 
   app.use('/v1', v1router);
   app.use(express.static('/v1/docs'));
