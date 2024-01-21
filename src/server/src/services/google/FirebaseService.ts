@@ -30,6 +30,7 @@ export class FirebaseService extends BaseService {
     }
     const messaging = this.client.messaging();
     await messaging.sendEach(messages);
+    console.log('notified!');
   }
 
 }

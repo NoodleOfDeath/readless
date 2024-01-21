@@ -222,16 +222,29 @@ export class Subscription<
   public static async notify<T extends SubscriptionChannel>(
     event: string, 
     channel0: T,
-    data: MailServiceOptions & { title?: string, body?: string }
+    data: MailServiceOptions & { 
+      title?: string, 
+      body?: string, 
+      userId?: number[] | number,
+    }
   ): Promise<void> {
     const channel = channel0 === 'push' ? ['firebase', 'apns'] : channel0;
-    const subscriptions = await Subscription.findAll({
+    const subscriptions = data.userId ? (
+      await Subscription.findAll({
+        where: {
+          channel, 
+          event,
+          userId: data.userId,
+          verifiedAt: { [Op.ne] : null }, 
+        },
+      })
+    ) : (await Subscription.findAll({
       where: {
         channel, 
         event, 
         verifiedAt: { [Op.ne] : null }, 
       },
-    });
+    }));
     if (!subscriptions.length) {
       return;
     }

@@ -94,7 +94,6 @@ async function sendStreakPushNotifications() {
       where: {
         channel: ['push', 'fcm', 'apns'],
         event: 'streak-reminder',
-        fireTime: { [Op.lte]: new Date() },
         userId: { [Op.ne]: null },
       },
     });
