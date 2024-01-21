@@ -11,6 +11,7 @@ export type SubscriptionAttributes = DatedAttributes & {
   title?: string;
   body?: string;
   fireTime?: Date;
+  lastFired?: Date;
   locale?: string;
   verificationCode?: string;
   unsubscribeToken?: string;
@@ -27,6 +28,7 @@ export type SubscriptionCreationAttributes = Partial<DatedAttributes> & {
   title?: string;
   body?: string;
   fireTime?: Date;
+  lastFired?: Date;
   locale?: string;
   verificationCode?: string;
   unsubscribeToken?: string;
