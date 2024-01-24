@@ -377,7 +377,8 @@ export class FetchJob implements FetchState {
       await this.fn?.();
       this.lastFetch = new Date();
     } catch (e) {
-      this.fetchError = e;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.fetchError = e as any;
       this.lastFetchFailed = new Date();
     } finally {
       this.isFetching = false;
