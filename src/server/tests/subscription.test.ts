@@ -15,9 +15,10 @@ describe('tests subscriptions', () => {
   
   test('subscription', async () => {
     await DBService.prepare();
-    await Subscription.notify('daily-recap', 'email', {
-      text: 'fuck',
-      to: 'thommy.morgan@gmail.com',
+    await Subscription.notify('streak-reminder', 'push', {
+      body: 'Come check the news and keep your epic streak!',
+      title: 'Keep Up Your Streak!',
+      userId: [435, 525],
     });
     expect(true).toBe(true);
   });

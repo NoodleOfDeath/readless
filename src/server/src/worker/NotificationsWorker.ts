@@ -94,7 +94,7 @@ async function sendStreakPushNotifications() {
       where: {
         channel: ['push', 'fcm', 'apns'],
         event: 'streak-reminder',
-        fireTime: { [Op.lte]: new Date() },
+        lastFired: { [Op.or]: [null, { [Op.gte]: new Date(Date.now() - ms('12h')) }] },
         userId: { [Op.ne]: null },
       },
     });
@@ -102,7 +102,7 @@ async function sendStreakPushNotifications() {
       console.log('no subscriptions to notify');
       return;
     }
-    const ids: Subscription[] = [];
+    const filteredSubs: Subscription[] = [];
     for (const sub of subscriptions) {
       const user = await User.findByPk(sub.userId);
       if (!user) {
@@ -113,12 +113,15 @@ async function sendStreakPushNotifications() {
         continue;
       }
       if (streak.expiresSoon) {
-        ids.push(sub);
+        filteredSubs.push(sub);
+        sub.set('lastFired', new Date());
+        await sub.save();
       }
     }
-    console.log(`notifying ${ids.length} subscribers`);
+    console.log(filteredSubs.map((i) => i.userId));
+    console.log(`notifying ${filteredSubs.length} subscribers`);
     const messages: FirebaseMessage[] = [];
-    for (const sub of subscriptions) {
+    for (const sub of filteredSubs) {
       const title = sub.title || 'Streak Reminder';
       const body = sub.body || 'Your streak is about to expire!';
       messages.push({ notification: { body, title }, token: sub.uuid });
