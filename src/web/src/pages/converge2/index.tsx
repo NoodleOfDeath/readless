@@ -56,8 +56,7 @@ export default function Converge2Page() {
               width="320" 
               height="240"
               controls
-              autoplay
-              preload>
+              autoplay>
               {entry.formats.map((f) => (
                 <source key={ f.type } src={ f.url } type={ f.type } />
               ))}
