@@ -11,6 +11,7 @@ type MediaFormat = {
 
 type MediaEntry = {
   formats: MediaFormat[];
+  url: string;
   title?: string;
 };
 
