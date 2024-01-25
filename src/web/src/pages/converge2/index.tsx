@@ -38,15 +38,15 @@ export default function Converge2Page() {
   return (
     <Layout>
       <StyledContainer>
-      {Object.entries(media).map(([key, entry]) => (
-        <StyledEntry key={ key }>
-          {entry.title && (<StyledEntryTitle>{entry.title}</StyledEntryTitle>)}
-          <StyledVideo width="320" height="240" controls>
-            <source src={ entry.url } type="video/mp4" />
-            Your browser does not support the video tag.
-          </StyledVideo>
-        </StyledEntry>
-      )}
+        {Object.entries(media).map(([key, entry]) => (
+          <StyledEntry key={ key }>
+            {entry.title && (<StyledEntryTitle>{entry.title}</StyledEntryTitle>)}
+            <StyledVideo width="320" height="240" controls>
+              <source src={ entry.url } type="video/mp4" />
+              Your browser does not support the video tag.
+            </StyledVideo>
+          </StyledEntry>
+        ))}
       </StyledContainer>
     </Layout>
   );
