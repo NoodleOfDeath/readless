@@ -1,6 +1,5 @@
-import React from 'react';import ReactMarkdown from 'react-markdown';
-
-import Layout from '~/components/Layout';
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
 import { styled } from '@mui/material';
 
