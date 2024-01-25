@@ -1,8 +1,11 @@
-import React from 'react';
+import React from 'react';import ReactMarkdown from 'react-markdown';
+
+import Layout from '~/components/Layout';
 
 import { styled } from '@mui/material';
 
 import Layout from '~/components/Layout';
+import TEXT from '~/documents/about';
 
 type MediaFormat = {
   url: string;
@@ -67,6 +70,11 @@ export default function Converge2Page() {
             </StyledCaption>
           </StyledEntry>
         ))}
+        <StyledEntry>
+          <ReactMarkdown>
+            {TEXT}
+          </ReactMarkdown>
+        </StyledEntry>
       </StyledContainer>
     </Layout>
   );
