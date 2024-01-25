@@ -9,7 +9,7 @@ type MediaEntry = {
   title?: string;
 };
 
-const media = JSON.parse(process.env.NEXT_PUBLIC_CONVERGE2_MEDIA || '{}') as MediaEntry[];
+const media = JSON.parse(process.env.NEXT_PUBLIC_CONVERGE2_MEDIA || '[]') as MediaEntry[];
 
 const StyledContainer = styled('div')`
   display: flex;
