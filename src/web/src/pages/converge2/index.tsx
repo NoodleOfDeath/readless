@@ -22,25 +22,31 @@ const StyledEntry = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin: auto;
 `;
 
-const StyledEntryTitle = styled('h1')`
-  
+const StyledEntryTitle = styled("h1")`
+  text-align: center;
+  margin: auto;
+`;
+
+const StyledVideo = styled("video")`
+  margin: auto;
 `;
 
 export default function Converge2Page() {
   return (
     <Layout>
       <StyledContainer>
-        {Object.values(media).map((entry, key) => (
-          <StyledEntry key={ key }>
-            {entry.title && (<StyledEntryTitle>{entry.title}</StyledEntryTitle>)}
-            <video width="320" height="240" controls>
-              <source src={ entry.url } type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </StyledEntry>
-        ))}
+      {Object.entries(media).map(([key, entry]) => (
+        <StyledEntry key={ key }>
+          {entry.title && (<StyledEntryTitle>{entry.title}</StyledEntryTitle>)}
+          <StyledVideo width="320" height="240" controls>
+            <source src={ entry.url } type="video/mp4" />
+            Your browser does not support the video tag.
+          </StyledVideo>
+        </StyledEntry>
+      )}
       </StyledContainer>
     </Layout>
   );
