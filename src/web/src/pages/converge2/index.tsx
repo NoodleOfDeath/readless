@@ -25,12 +25,12 @@ const StyledEntry = styled('div')`
   margin: auto;
 `;
 
-const StyledEntryTitle = styled("h1")`
+const StyledEntryTitle = styled('h1')`
   text-align: center;
   margin: auto;
 `;
 
-const StyledVideo = styled("video")`
+const StyledVideo = styled('video')`
   margin: auto;
 `;
 
