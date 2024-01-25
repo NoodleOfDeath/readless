@@ -36,10 +36,6 @@ const StyledEntryTitle = styled('h1')`
   margin: auto;
 `;
 
-const StyledVideo = styled('video')`
-  margin: auto;
-`;
-
 const StyledCaption = styled('p')`
   text-align: center;
   margin: auto;
@@ -52,16 +48,17 @@ export default function Converge2Page() {
         {Object.entries(media).map(([key, entry]) => (
           <StyledEntry key={ key }>
             {entry.title && (<StyledEntryTitle>{entry.title}</StyledEntryTitle>)}
-            <StyledVideo 
+            <video 
               width="320" 
               height="240"
+              style={ { margin: 'auto' } }
               controls
               autoplay>
               {entry.formats.map((f) => (
                 <source key={ f.type } src={ f.url } type={ f.type } />
               ))}
               Your browser does not support the video tag.
-            </StyledVideo>
+            </video>
             <StyledCaption>
               If the video does not load please <a href={ entry.url }>click here</a>
             </StyledCaption>
