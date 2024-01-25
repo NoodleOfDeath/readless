@@ -20,10 +20,16 @@ const StyledEntry = styled("div")`
   padding: 1rem;
   display: flex;
   gap: 1rem;
+  margin: auto;
 `;
 
 const StyledEntryTitle = styled("h1")`
-  
+  text-align: center;
+  margin: auto;
+`;
+
+const StyledVideo = styled("video")`
+  margin: auto;
 `;
 
 export default function Converge2Page() {
@@ -33,10 +39,10 @@ export default function Converge2Page() {
       {Object.entries(media).map(([key, entry]) => (
         <StyledEntry key={ key }>
           {entry.title && (<StyledEntryTitle>{entry.title}</StyledEntryTitle>)}
-          <video width="320" height="240" controls>
+          <StyledVideo width="320" height="240" controls>
             <source src={ entry.url } type="video/mp4" />
             Your browser does not support the video tag.
-          </video>
+          </StyledVideo>
         </StyledEntry>
       )}
       </StyledContainer>
