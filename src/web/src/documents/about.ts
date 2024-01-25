@@ -2,7 +2,7 @@
 const data = `
 # About the Developer
 
-Ny name is Thom and I am a Full Stack Engineer based in Boston, originally from Northern Virginia. My journey hasn’t been typical. At the age of 16, I sustained a spinal cord injury that significantly shaped my life and career. This experience gave me a unique perspective, helping me find creative solutions in both my personal and professional challenge
+My name is Thom and I am a Full Stack Engineer based in Boston, originally from Northern Virginia. My journey hasn’t been typical. At the age of 16, I sustained a spinal cord injury that significantly shaped my life and career. This experience gave me a unique perspective, helping me find creative solutions in both my personal and professional challenge
 
 My foray into programming was as unconventional as it was impactful. My first program was a simple, yet useful, program on a TI-84 calculator written in C that assigned different sounds to each button, helping a visually impaired friend keep up with their studies. This project was my first step in realizing the power of technology to make a positive impact. 
 
