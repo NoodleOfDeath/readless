@@ -4,8 +4,13 @@ import { styled } from '@mui/material';
 
 import Layout from '~/components/Layout';
 
-type MediaEntry = {
+type MediaFormat = {
   url: string;
+  type: string;
+}
+
+type MediaEntry = {
+  formats: MediaFormat[];
   title?: string;
 };
 
@@ -34,6 +39,11 @@ const StyledVideo = styled('video')`
   margin: auto;
 `;
 
+const StyledCaption = styled('p')`
+  text-align: center;
+  margin: auto;
+`;
+
 export default function Converge2Page() {
   return (
     <Layout>
@@ -41,10 +51,20 @@ export default function Converge2Page() {
         {Object.entries(media).map(([key, entry]) => (
           <StyledEntry key={ key }>
             {entry.title && (<StyledEntryTitle>{entry.title}</StyledEntryTitle>)}
-            <StyledVideo width="320" height="240" controls>
-              <source src={ entry.url } type="video/mp4" />
+            <StyledVideo 
+              width="320" 
+              height="240"
+              controls
+              autoplay
+              preload>
+              {entry.formats.map((f) => (
+                <source key={ f.type } src={ f.url } type={ f.type } />
+              ))}
               Your browser does not support the video tag.
             </StyledVideo>
+            <StyledCaption>
+              If the video does not load please <a href={ entry.url }>click here</a>
+            </StyledCaption>
           </StyledEntry>
         ))}
       </StyledContainer>
