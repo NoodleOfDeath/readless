@@ -8,7 +8,11 @@ import {
 
 import { AchievementAttributes, AchievementCreationAttributes } from './Achievement.types';
 import { BaseModel } from '../../base';
-import { RequestLog, User } from '../../models';
+import { 
+  RequestLog, 
+  User,
+  UserMetadata,
+} from '../../models';
 
 @Table({
   modelName: 'achievement',
@@ -133,31 +137,47 @@ export class Achievement<
       points: 100,
     },
     {
-      description: 'Read at least 100 articles',
-      displayName: 'Century Scribe',
+      description: 'Read at least 300 articles',
+      displayName: 'Triple Century Scribe',
       findCandidates: async () => {
         const interactions = await User.getInteractionCounts('read', { minCount: 100 });
-        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+        return await User.findAll({ where : { id: interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
         const interactions = await User.getInteractionCounts('read', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 100;
       },
-      name: 'century-scribe',
-      points: 100,
+      name: 'triple-century-scribe',
+      points: 500,
     },
     {
       description: 'Bookmark at least 3 articles',
       displayName: 'Belated Bookworm',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('bookmark', { minCount: 3 });
-        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+        try {
+          const data = await UserMetadata.findAll({
+            where: { key: 'bookmarkedSummaries' }
+          });
+          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 3)).map((d) => d.userId);
+          return await User.findAll({ where : { id: users } });
+        } catch (e) {
+          console.error(e);
+        }
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
-        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
-        return count / 3;
+        try {
+          const data = await UserMetadata.findAll({
+            where: { 
+              key: 'bookmarkedSummaries',
+              userId: user.id,
+            }
+          });
+          const count = (JSON.parse(data?.value ?? '[]') as number[]).length;
+          return count / 3;
+        } catch (e) {
+          return 0
+        }
       },
       name: 'belated-bookworm',
       points: 25,
@@ -166,13 +186,29 @@ export class Achievement<
       description: 'Bookmark at least 10 articles',
       displayName: 'Avid Aficionado',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('bookmark', { minCount: 10 });
-        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+        try {
+          const data = await UserMetadata.findAll({
+            where: { key: 'bookmarkedSummaries' }
+          });
+          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 10)).map((d) => d.userId);
+          return await User.findAll({ where : { id: users } });
+        } catch (e) {
+          console.error(e);
+        }
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
-        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
-        return count / 10;
+        try {
+          const data = await UserMetadata.findAll({
+            where: { 
+              key: 'bookmarkedSummaries',
+              userId: user.id,
+            }
+          });
+          const count = (JSON.parse(data?.value ?? '[]') as number[]).length;
+          return count / 10;
+        } catch (e) {
+          return 0
+        }
       },
       name: 'avid-aficionado',
       points: 50,
@@ -181,16 +217,63 @@ export class Achievement<
       description: 'Bookmark at least 30 articles',
       displayName: 'Insatiable Inquirer',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('bookmark', { minCount: 30 });
-        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+        try {
+          const data = await UserMetadata.findAll({
+            where: { key: 'bookmarkedSummaries' }
+          });
+          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 30)).map((d) => d.userId);
+          return await User.findAll({ where : { id: users } });
+        } catch (e) {
+          console.error(e);
+        }
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
-        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
-        return count / 30;
+        try {
+          const data = await UserMetadata.findAll({
+            where: { 
+              key: 'bookmarkedSummaries',
+              userId: user.id,
+            }
+          });
+          const count = (JSON.parse(data?.value ?? '[]') as number[]).length;
+          return count / 30;
+        } catch (e) {
+          return 0
+        }
       },
       name: 'insatiable-inquirer',
       points: 250,
+    },
+    {
+      description: 'Bookmark at least 100 articles',
+      displayName: 'Highlight Honcho',
+      findCandidates: async () => {
+        try {
+          const data = await UserMetadata.findAll({
+            where: { key: 'bookmarkedSummaries' }
+          });
+          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 100)).map((d) => d.userId);
+          return await User.findAll({ where : { id: users } });
+        } catch (e) {
+          console.error(e);
+        }
+      },
+      getProgress: async (user) => {
+        try {
+          const data = await UserMetadata.findAll({
+            where: { 
+              key: 'bookmarkedSummaries',
+              userId: user.id,
+            }
+          });
+          const count = (JSON.parse(data?.value ?? '[]') as number[]).length;
+          return count / 100;
+        } catch (e) {
+          return 0
+        }
+      },
+      name: 'highlight-honcho',
+      points: 1000,
     },
     {
       description: 'Share at least 3 articles',
@@ -236,6 +319,21 @@ export class Achievement<
       },
       name: 'pioneering-patron',
       points: 250,
+    },
+    {
+      description: 'Share at least 100 articles',
+      displayName: 'Dissemination Deity',
+      findCandidates: async () => {
+        const interactions = await User.getInteractionCounts('share', { minCount: 100 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('share', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 100;
+      },
+      name: 'dissemination-deity',
+      points: 500,
     },
     {
       description: 'Have at least one streak of 3 days or more',
@@ -309,7 +407,7 @@ export class Achievement<
     },
     {
       description: 'Have at least one streak of 60 days or more',
-      displayName: 'Monthly Master 2x',
+      displayName: 'Double Monthly Master',
       findCandidates: async () => {
         const streaks = await User.getStreaks({ minCount: 60 });
         return await User.findAll({ where : { id : streaks.map((streak) => streak.userId) } });
@@ -319,7 +417,21 @@ export class Achievement<
         return (longestStreak?.length ?? 0) / 60;
       },
       name: 'monthly-master-2x',
-      points: 100,
+      points: 500,
+    },
+    {
+      description: 'Have at least one streak of 90 days or more',
+      displayName: 'Triple Monthly Master',
+      findCandidates: async () => {
+        const streaks = await User.getStreaks({ minCount: 90 });
+        return await User.findAll({ where : { id : streaks.map((streak) => streak.userId) } });
+      },
+      getProgress: async (user) => {
+        const longestStreak = await user.calculateLongestStreak();
+        return (longestStreak?.length ?? 0) / 90;
+      },
+      name: 'triple-monthly-master',
+      points: 2000,
     },
   ];
 
