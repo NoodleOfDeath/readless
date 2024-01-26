@@ -62,7 +62,7 @@ export default function Converge2Page() {
     if (mounted) {
       return;
     }
-    setMounte(true);
+    setMounted(true);
     logSystemEvent({
       level: SystemLogLevel.Info,
       message: 'Someone checked out converge2!',
