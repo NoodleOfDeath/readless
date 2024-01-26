@@ -6,6 +6,7 @@ export type NotifyOptions = {
   email?: string;
   html?: string;
   text?: string;
+  subject?: string;
 }
 
 export type SystemLogAttributes = DatedAttributes & {
