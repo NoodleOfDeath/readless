@@ -56,7 +56,13 @@ export default function Converge2Page() {
   
   const { api: { logSystemEvent } } = React.useContext(StorageContext);
   
+  const [mounted, setMounted] = React.useState(false);
+  
   React.useEffect(() => {
+    if (mounted) {
+      return;
+    }
+    setMounte(true);
     logSystemEvent({
       level: SystemLogLevel.Info,
       message: 'Someone checked out converge2!',
@@ -65,7 +71,7 @@ export default function Converge2Page() {
         subject: 'Converge 2 was viewed',
       },
     });
-  }, [logSystemEvent]);
+  }, [mounted, logSystemEvent]);
   
   return (
     <Layout>
