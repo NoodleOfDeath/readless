@@ -1,28 +1,20 @@
 import React from 'react';
+
+import { styled, useMediaQuery } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 
-import { styled } from '@mui/material';
-
 import Layout from '~/components/Layout';
-import TEXT from '~/documents/about';
+import ABOUT from '~/documents/about';
+import BIO from '~/documents/bio';
 
-type MediaFormat = {
-  url: string;
-  type: string;
-}
-
-type MediaEntry = {
-  formats: MediaFormat[];
-  url: string;
-  title?: string;
+type Props = {
+  direction?: 'column' | 'row';
 };
 
-const media = JSON.parse(process.env.NEXT_PUBLIC_CONVERGE2_MEDIA || '[]') as MediaEntry[];
-
-const StyledContainer = styled('div')`
+const StyledContainer = styled('div')<Props>`
   display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  flex-direction: ${({ direction = 'row' }) => direction };
+  gap: 1rem;
 `;
 
 const StyledEntry = styled('div')`
@@ -30,7 +22,6 @@ const StyledEntry = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin: auto;
 `;
 
 const StyledEntryTitle = styled('h1')`
@@ -40,6 +31,7 @@ const StyledEntryTitle = styled('h1')`
 
 const StyledVideo = styled('video')`
   margin: auto;
+  width: 100%;
 `;
 
 const StyledCaption = styled('p')`
@@ -47,33 +39,54 @@ const StyledCaption = styled('p')`
   margin: auto;
 `;
 
+const StyledMedia = styled('div')<Props>`
+  flex: 1;
+  flex-direction: ${({ direction = 'row' }) => direction };
+`;
+
+const StyledBio = styled('div')`
+  flex: 1;
+`;
+
 export default function Converge2Page() {
+  const direction = useMediaQuery('(max-width: 800px)') ? 'column' : 'row';
   return (
     <Layout>
-      <StyledContainer>
-        {Object.entries(media).map(([key, entry]) => (
-          <StyledEntry key={ key }>
-            {entry.title && (<StyledEntryTitle>{entry.title}</StyledEntryTitle>)}
-            <StyledVideo 
-              width="320" 
-              height="240"
-              controls
-              autoPlay>
-              {entry.formats.map((f) => (
-                <source key={ f.type } src={ f.url } type={ f.type } />
-              ))}
-              Your browser does not support the video tag.
-            </StyledVideo>
-            <StyledCaption>
-              If the video does not load please <a href={ entry.url }>click here</a>
-            </StyledCaption>
+      <StyledContainer direction={ direction }>
+        <StyledMedia style={ { flex: direction === 'column' ? 0 : 1 } }>
+          <StyledEntryTitle>Converge 2 Pitch</StyledEntryTitle>
+          <StyledVideo controls>
+            <source src='https://noodleofdeath.com/downloads/converge.mp4' type='video/mp4' />
+            <source src='https://noodleofdeath.com/downloads/converge.ogg' type='video/ogg' />
+            Your browser does not support the video tag.
+          </StyledVideo>
+          <StyledCaption>
+            If the video does not load please 
+            {' '}
+            <a href='https://noodleofdeath.com/downloads/converge.mp4'>click here</a>
+          </StyledCaption>
+          {direction === 'row' && (
+            <StyledEntry>
+              <ReactMarkdown>
+                {ABOUT}
+              </ReactMarkdown>
+            </StyledEntry>
+          )}
+        </StyledMedia>
+        <StyledBio>
+          <StyledEntry>
+            <ReactMarkdown>
+              {BIO}
+            </ReactMarkdown>
           </StyledEntry>
-        ))}
-        <StyledEntry>
-          <ReactMarkdown>
-            {TEXT}
-          </ReactMarkdown>
-        </StyledEntry>
+          {direction === 'column' && (
+            <StyledEntry>
+              <ReactMarkdown>
+                {ABOUT}
+              </ReactMarkdown>
+            </StyledEntry>
+          )}
+        </StyledBio>
       </StyledContainer>
     </Layout>
   );
