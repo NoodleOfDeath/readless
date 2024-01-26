@@ -22,7 +22,7 @@ async function main() {
   ScribeService.prepare();
   doWork();
   sendDailyPushNotifications();
-  sendStreakPushNotifications();
+  //sendStreakPushNotifications();
   detectAndAssignAchievements();
 }
 
@@ -86,7 +86,7 @@ async function sendDailyPushNotifications() {
   }
 }
 
-async function sendStreakPushNotifications() {
+export async function sendStreakPushNotifications() {
   try {
     console.log('sending streak push notifications!');
     // Worker that processes site maps and generates new summaries
@@ -130,7 +130,7 @@ async function sendStreakPushNotifications() {
   } catch (e) {
     console.error(e);
   } finally {
-    setTimeout(() => sendStreakPushNotifications(), 5_000);
+    setTimeout(() => sendStreakPushNotifications(), 120_000);
   }
 }
 
