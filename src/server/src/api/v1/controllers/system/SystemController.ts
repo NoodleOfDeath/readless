@@ -74,9 +74,13 @@ export class SystemController {
   ): Promise<void> {
     await SystemLog.create(e);
     if (e.notify?.email) {
+      const html = `
+        <p>${e.notify.text ?? e.message}</p>
+        <p>IP: ${req.ip}</p>
+      `;
       new MailService().sendMail({
+        html,
         subject: e.notify.subject ?? e.message,
-        text: e.notify.text ?? e.message,
         to: e.notify.email,
       });
     }
