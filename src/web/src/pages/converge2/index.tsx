@@ -3,7 +3,9 @@ import React from 'react';
 import { styled, useMediaQuery } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 
+import { SystemLogLevel } from '~/api';
 import Layout from '~/components/Layout';
+import { StorageContext } from '~/contexts';
 import ABOUT from '~/documents/about';
 import BIO from '~/documents/bio';
 
@@ -49,7 +51,22 @@ const StyledBio = styled('div')`
 `;
 
 export default function Converge2Page() {
+  
   const direction = useMediaQuery('(max-width: 800px)') ? 'column' : 'row';
+  
+  const { api: { logSystemEvent } } = React.useContext(StorageContext);
+  
+  React.useEffect(() => {
+    logSystemEvent({
+      level: SystemLogLevel.Info,
+      message: 'Someone checked out converge2!',
+      notify: {
+        email: 'thom@noodleofdeath.com',
+        subject: 'Converge 2 was viewed',
+      },
+    });
+  }, [logSystemEvent]);
+  
   return (
     <Layout>
       <StyledContainer direction={ direction }>

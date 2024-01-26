@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { query } from 'express-validator';
+import { body, query } from 'express-validator';
 
 import { SystemController } from '../../controllers';
 import {
@@ -38,5 +38,22 @@ router.get(
     }
   }
 );
+
+router.post(
+  '/log',
+  body('level').isString(),
+  body('message').isString(),
+  body('notify').optional(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const response = await SystemController.logSystemEvent(req, req.body);
+      return res.send(response);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
 
 export default router;

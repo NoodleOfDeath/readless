@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Request as ExpressRequest } from 'express';
 import {
+  Body,
   Get,
+  Post,
   Query,
   Request,
   Response,
@@ -12,11 +13,17 @@ import {
 } from 'tsoa';
 
 import { GetSitemapRequest } from './types';
-import { StaticGeneratorService } from '../../../../services';
-import { AuthError, InternalError } from '../../middleware';
+import { MailService, StaticGeneratorService } from '../../../../services';
+import {
+  AuthError,
+  InternalError,
+  Request as ExpressRequest,
+} from '../../middleware';
 import {
   Cache,
   PublicSystemNotificationAttributes,
+  SystemLog,
+  SystemLogCreationAttributes,
   SystemNotification,
 } from '../../schema';
 import { BulkResponse } from '../types';
@@ -58,6 +65,21 @@ export class SystemController {
       value: sitemap,
     });
     return sitemap;
+  }
+  
+  @Post('/log')
+  public static async logSystemEvent(
+    @Request() req: ExpressRequest,
+    @Body() e: SystemLogCreationAttributes,
+  ): Promise<void> {
+    await SystemLog.create(e);
+    if (e.notify?.email) {
+      new MailService().send({
+        subject: e.notify.subject ?? e.message,
+        text: e.notify.text ?? e.message,
+        to: e.notify.email,
+      });
+    }
   }
   
 }

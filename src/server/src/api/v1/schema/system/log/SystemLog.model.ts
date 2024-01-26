@@ -23,8 +23,6 @@ export class SystemLog<
   extends BaseModel<A, B>
   implements SystemLogAttributes {
 
-  type: SystemLogLevel;
-
   @Column({
     allowNull: false,
     type: DataType.STRING,
