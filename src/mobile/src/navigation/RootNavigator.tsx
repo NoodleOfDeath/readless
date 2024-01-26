@@ -11,10 +11,10 @@ import ms from 'ms';
 import { SheetProvider } from 'react-native-actions-sheet';
 import InAppReview from 'react-native-in-app-review';
 
-import { LeftDrawerNavigator } from './LeftDrawerNavigator';
+import { TabNavigator } from './TabNavigator';
 import { RoutedScreen } from './RoutedScreen';
 import { StackNavigator } from './StackNavigator';
-import { LOGIN_STACK } from './stacks';
+import { HOME_STACK, LOGIN_STACK } from './stacks';
 
 import {
   ActivityIndicator,
@@ -37,6 +37,25 @@ import { useAppState, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
 import { usePlatformTools } from '~/utils';
+
+export function HomeTab() {
+  return (
+    <RoutedScreen navigationID='HomeTabNav' safeArea={ false }>
+      <StackNavigator
+        id='HomeTabNav'
+        initialRouteName='home'
+        screens={ HOME_STACK } />
+    </RoutedScreen>
+  );
+}
+
+const ROOT_TABS = [
+  {
+    component: HomeTab,
+    tabBarIcon: 'home',
+    title: strings.home,
+  },
+];
 
 export function RootNavigator() {
   
@@ -205,7 +224,12 @@ export function RootNavigator() {
       <SheetProvider>
         {(userData?.valid || userData?.unlinked) ? (
           <React.Fragment>
-            <LeftDrawerNavigator />
+            <TabNavigator 
+              screens={ ROOT_TABS }
+              screenOptions={ { 
+                headerShown: false,
+              } }
+              />
             <MediaPlayer visible={ Boolean(currentTrack) } />
           </React.Fragment>
         ) : (
