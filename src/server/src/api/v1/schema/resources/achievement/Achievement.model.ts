@@ -159,7 +159,7 @@ export class Achievement<
           const data = await UserMetadata.findAll({
             where: { key: 'bookmarkedSummaries' }
           });
-          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 3)).map((d) => d.userId);
+          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 3).map((d) => d.userId);
           return await User.findAll({ where : { id: users } });
         } catch (e) {
           console.error(e);
@@ -190,7 +190,7 @@ export class Achievement<
           const data = await UserMetadata.findAll({
             where: { key: 'bookmarkedSummaries' }
           });
-          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 10)).map((d) => d.userId);
+          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 10).map((d) => d.userId);
           return await User.findAll({ where : { id: users } });
         } catch (e) {
           console.error(e);
@@ -221,7 +221,7 @@ export class Achievement<
           const data = await UserMetadata.findAll({
             where: { key: 'bookmarkedSummaries' }
           });
-          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 30)).map((d) => d.userId);
+          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 30).map((d) => d.userId);
           return await User.findAll({ where : { id: users } });
         } catch (e) {
           console.error(e);
@@ -252,7 +252,7 @@ export class Achievement<
           const data = await UserMetadata.findAll({
             where: { key: 'bookmarkedSummaries' }
           });
-          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 100)).map((d) => d.userId);
+          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 100).map((d) => d.userId);
           return await User.findAll({ where : { id: users } });
         } catch (e) {
           console.error(e);
