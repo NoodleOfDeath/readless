@@ -88,6 +88,7 @@ jobs:
       S3_KEY: ${{ secrets.S3_KEY }}
       S3_SECRET: ${{ secrets.S3_SECRET }}
       SSL: ${{ vars.SSL }}
+      TRUSTED_PROXIES: ${{ secrets.TRUSTED_PROXIES }}
     steps:
       - name: Print Job Description
         run: |

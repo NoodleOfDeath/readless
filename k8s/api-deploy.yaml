@@ -90,6 +90,8 @@ spec:
               value: '$S3_SECRET'
             - name: SSL
               value: '$SSL'
+            - name: TRUSTED_PROXIES
+              value: '$TRUSTED_PROXIES'
           livenessProbe:
             httpGet:
               path: /v1/healthz
