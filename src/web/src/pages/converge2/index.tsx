@@ -78,7 +78,7 @@ export default function Converge2Page() {
       <StyledContainer direction={ direction }>
         <StyledMedia style={ { flex: direction === 'column' ? 0 : 1 } }>
           <StyledEntryTitle>Converge 2 Pitch</StyledEntryTitle>
-          <StyledVideo controls>
+          <StyledVideo controls autoPlay>
             <source src='https://noodleofdeath.com/downloads/converge.mp4' type='video/mp4' />
             <source src='https://noodleofdeath.com/downloads/converge.ogg' type='video/ogg' />
             Your browser does not support the video tag.
