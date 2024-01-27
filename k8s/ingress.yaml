@@ -5,6 +5,8 @@ metadata:
   namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers 'x-forwarded-for: $http_x_forwarded_for';
 spec:
   tls:
     - hosts:
@@ -65,6 +67,8 @@ metadata:
   namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers 'x-forwarded-for: $http_x_forwarded_for';
 spec:
   tls:
     - hosts:
@@ -85,47 +89,12 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: readless-applink-prod
-  namespace: ingress-nginx
-  annotations:
-    kubernetes.io/ingress.class: nginx
-spec:
-  tls:
-    - hosts:
-        - applink.readless.ai
-      secretName: tls-applink.readless.ai
-    - hosts:
-        - open.readless.ai
-      secretName: tls-open.readless.ai
-  rules:
-    - host: applink.readless.ai
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: readless-applink-prod
-                port:
-                  number: 80
-    - host: open.readless.ai
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: readless-applink-prod
-                port:
-                  number: 80
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
   name: readless-web-dev
   namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers 'x-forwarded-for: $http_x_forwarded_for';
     nginx.ingress.kubernetes.io/auth-type: basic
     # name of the secret that contains the user/password definitions
     nginx.ingress.kubernetes.io/auth-secret: dev-auth
@@ -155,6 +124,8 @@ metadata:
   namespace: ingress-nginx
   annotations:
     kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers 'x-forwarded-for: $http_x_forwarded_for';
 spec:
   tls:
     - hosts:
@@ -169,43 +140,6 @@ spec:
             backend:
               service:
                 name: readless-api-dev
-                port:
-                  number: 80
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: readless-applink-dev
-  namespace: ingress-nginx
-  annotations:
-    kubernetes.io/ingress.class: nginx
-spec:
-  tls:
-    - hosts:
-        - applink.dev.readless.ai
-      secretName: tls-applink.dev.readless.ai
-    - hosts:
-        - open.dev.readless.ai
-      secretName: tls-open.dev.readless.ai
-  rules:
-    - host: applink.dev.readless.ai
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: readless-applink-dev
-                port:
-                  number: 80
-    - host: open.dev.readless.ai
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: readless-applink-dev
                 port:
                   number: 80
 ---
