@@ -76,7 +76,7 @@ export class SystemController {
     if (e.notify?.email) {
       const html = `
         <p>${e.notify.text ?? e.message}</p>
-        <p>IP: ${req.ip} ${req.ips}</p>
+        <p>REQ: ${JSON.stringify(req.headers, null, 2)}</p>
       `;
       new MailService().sendMail({
         html,
