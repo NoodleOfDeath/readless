@@ -5,7 +5,7 @@ import expressWinston from 'express-winston';
 import winston from 'winston';
 
 import v1router from './v1';
-import { authMiddleware, rateLimitMiddleware } from './v1/middleware';
+import { preprocessHeadersMiddleware, rateLimitMiddleware } from './v1/middleware';
 import {
   Category,
   Locale,
@@ -61,7 +61,7 @@ async function main() {
   
   app.set('trust proxy', true);
   
-  app.use(authMiddleware());
+  app.use(preprocessHeadersMiddleware);
   app.use(rateLimitMiddleware({
     duration: process.env.API_RATE_LIMIT_DURATION || '1m',
     limit: process.env.API_RATE_LIMIT ? Number.parseInt(process.env.API_RATE_LIMIT) : 200,
