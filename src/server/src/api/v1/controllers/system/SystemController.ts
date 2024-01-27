@@ -72,11 +72,12 @@ export class SystemController {
     @Request() req: ExpressRequest,
     @Body() e: SystemLogCreationAttributes,
   ): Promise<void> {
+    const ip = req.get('x-forwarded-for') || req.ip
     await SystemLog.create(e);
     if (e.notify?.email) {
       const html = `
         <p>${e.notify.text ?? e.message}</p>
-        <p>IP: ${req.ip}</p>
+        <p>IP: ${ip}</p>
       `;
       new MailService().sendMail({
         html,

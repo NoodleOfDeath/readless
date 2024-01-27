@@ -44,6 +44,7 @@ export const rateLimitMiddleware = (
       const platform = req.get('x-platform');
       const uuid = req.get('x-uuid');
       const userAgent = req.get('user-agent');
+      const ip = req.get('x-forwarded-for') || req.ip;
       if (/kube-probe/i.test(userAgent)) {
         res.status(200).send('OK');
         return;
@@ -54,11 +55,11 @@ export const rateLimitMiddleware = (
         locale,
         path,
         platform,
-        remoteAddr: [uuid, req.ip].filter(Boolean).join('-'),
+        remoteAddr: [uuid, ip].filter(Boolean).join('-'),
         userAgent,
         userId: user?.id,
       });
-      const key = path ? [req.ip, path].join(':') : req.ip;
+      const key = path ? [ip, path].join(':') : ip;
       const limit = await RateLimit.findOne({ where: { key } });
       if (limit) {
         if (await limit.isSaturated()) {
