@@ -59,7 +59,7 @@ async function main() {
   
   app.use(bodyParser.json({ limit: process.env.REQ_SIZE_LIMIT }));
   
-  app.set('trust proxy', 'loopback', ...(JSON.parse(process.env.TRUSTED_PROXIES || '[]') as string[]));
+  app.set('trust proxy', true);
   
   app.use(authMiddleware());
   app.use(rateLimitMiddleware({
