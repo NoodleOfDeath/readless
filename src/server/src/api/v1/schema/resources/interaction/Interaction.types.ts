@@ -19,7 +19,7 @@ export const INTERACTION_TYPES = [
   'vote',
 ];
 
-export type InteractionType = INTERACTION_TYPES[number];
+export type InteractionType = typeof INTERACTION_TYPES[number];
   
 export type InteractionAttributes = DatedAttributes & {
   /** user that made this interaction **/
