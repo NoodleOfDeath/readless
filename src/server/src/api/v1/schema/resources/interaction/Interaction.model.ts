@@ -31,11 +31,17 @@ export abstract class Interaction<
     type: DataType.STRING,
   })
   declare type: InteractionType;
+  
+  @Column({
+    defaultValue: false,
+    type: DataType.BOOLEAN,
+  })
+  declare revert: boolean;
 
   @Column({ type: DataType.TEXT })
   declare content?: string;
     
   @Column({ type: DataType.JSON })
   declare metadata?: Record<string, unknown>;
-
+  
 }

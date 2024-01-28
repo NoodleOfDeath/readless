@@ -12,11 +12,7 @@ import {
   Tags,
 } from 'tsoa';
  
-import {
-  BaseController,
-  BulkResponse,
-  InteractionRequest,
-} from '..';
+import { BaseController, BulkResponse } from '..';
 import { SupportedLocale } from '../../../../core/locales';
 import {
   AuthError,
@@ -24,6 +20,7 @@ import {
   InternalError,
 } from '../../middleware';
 import { 
+  InteractionCreationAttributes,
   InteractionType,
   PublicPublisherAttributes, 
   Publisher,
@@ -57,14 +54,15 @@ export class PublisherController extends BaseController {
     @Request() req: ExpressRequest,
     @Path() targetId: number,
     @Path() type: InteractionType,
-    @Body() body: InteractionRequest
+    @Body() body: InteractionCreationAttributes,
   ): Promise<PublicPublisherAttributes> {
     const user = req.jwt?.user;
-    const {
-      content, metadata, remoteAddr, 
-    } = body;
     const interaction = await PublisherInteraction.create({
-      content, metadata, remoteAddr, targetId, type, userId: user?.id,
+      ...body,
+      remoteAddr: req.ip,
+      targetId,
+      type, 
+      userId: user?.id,
     });
     if (!interaction) {
       throw new InternalError('Failed to create interaction');

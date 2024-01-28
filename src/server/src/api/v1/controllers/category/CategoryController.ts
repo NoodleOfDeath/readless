@@ -13,11 +13,7 @@ import {
   Tags,
 } from 'tsoa';
   
-import {
-  BaseController,
-  BulkResponse,
-  InteractionRequest,
-} from '../';
+import { BaseController, BulkResponse } from '../';
 import { SupportedLocale } from '../../../../core/locales';
 import {
   AuthError,
@@ -27,6 +23,7 @@ import {
 import {
   Category,
   CategoryInteraction,
+  InteractionCreationAttributes,
   InteractionType,
   PublicCategoryAttributes,
 } from '../../schema';
@@ -58,14 +55,15 @@ export class CategoryController extends BaseController {
     @Request() req: ExpressRequest,
     @Path() targetId: number,
     @Path() type: InteractionType,
-    @Body() body: InteractionRequest
+    @Body() body: InteractionCreationAttributes,
   ): Promise<PublicCategoryAttributes> {
     const user = req.jwt?.user;
-    const {
-      content, metadata, remoteAddr, 
-    } = body;
     const interaction = await CategoryInteraction.create({
-      content, metadata, remoteAddr, targetId, type, userId: user?.id,
+      ...body, 
+      remoteAddr: req.ip,
+      targetId,
+      type,
+      userId: user?.id,
     });
     if (!interaction) {
       throw new InternalError('Failed to create interaction');

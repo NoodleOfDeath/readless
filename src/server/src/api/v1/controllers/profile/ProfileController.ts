@@ -33,7 +33,7 @@ export class ProfileController extends BaseControllerWithPersistentStorageAccess
     @Request() req: ExpressRequest
   ): Promise<ProfileResponse> {
     const user = req.jwt.user;
-    await user.syncProfile();
+    await user.syncProfile(req);
     const userData = user.toJSON();
     return { profile: userData.profile };
   }

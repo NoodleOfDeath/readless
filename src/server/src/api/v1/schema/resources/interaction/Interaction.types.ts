@@ -1,29 +1,23 @@
 import { DatedAttributes } from '../../types';
 
-export const INTERACTION_TYPES = {
-  bookmark: 'bookmark',
-  comment: 'comment',
-  copy: 'copy',
-  downvote: 'downvote',
-  favorite: 'favorite',
-  feedback: 'feedback',
-  follow: 'follow',
-  hide: 'hide',
-  listen: 'listen',
-  read: 'read',
-  search: 'search',
-  share: 'share',
-  translate: 'translate',
-  unfavorite: 'unfavorite',
-  unfollow: 'unfollow',
-  unhide: 'unhide',
-  untranslate: 'untranslate',
-  upvote: 'upvote',
-  view: 'view',
-  vote: 'vote',
-} as const;
-
-export type InteractionType = typeof INTERACTION_TYPES[keyof typeof INTERACTION_TYPES];
+export type InteractionType =
+  | 'bookmark'
+  | 'comment'
+  | 'copy'
+  | 'downvote'
+  | 'favorite'
+  | 'feedback'
+  | 'follow'
+  | 'hide'
+  | 'listen'
+  | 'read'
+  | 'search'
+  | 'share'
+  | 'translate'
+  | 'upvote'
+  | 'view'
+  | 'vote'
+};
 
 export type InteractionAttributes = DatedAttributes & {
   /** user that made this interaction **/
@@ -34,6 +28,8 @@ export type InteractionAttributes = DatedAttributes & {
   targetId: number;
   /** type of this interaction */
   type: InteractionType;
+  /** true if the interaction was a reversion */
+  revert: boolean;
   /** value associated with the interaction */
   content?: string;
   metadata?: Record<string, unknown>;
@@ -44,6 +40,7 @@ export type InteractionCreationAttributes = {
   remoteAddr?: string;
   targetId: number;
   type: InteractionType;
+  revert?: boolean;
   content?: string;
   metadata?: Record<string, unknown>;
 };

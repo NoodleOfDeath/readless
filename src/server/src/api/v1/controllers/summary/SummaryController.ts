@@ -19,7 +19,6 @@ import {
   BulkMetadataResponse,
   BulkResponse,
   DestroyResponse,
-  InteractionRequest,
 } from '../';
 import { BaseControllerWithPersistentStorageAccess } from '../';
 import { SupportedLocale } from '../../../../core/locales';
@@ -30,6 +29,7 @@ import {
   InternalError,
 } from '../../middleware';
 import {
+  InteractionCreationAttributes,
   InteractionType,
   PublicRecapAttributes,
   PublicSummaryAttributes,
@@ -132,14 +132,11 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Request() req: ExpressRequest,
     @Path() targetId: number,
     @Path() type: InteractionType,
-    @Body() body: InteractionRequest
+    @Body() body: InteractionCreationAttributes
   ): Promise<PublicSummaryAttributes> {
     const user = req.jwt?.user;
-    console.log(user);
-    const { content, metadata } = body;
     const interaction = await SummaryInteraction.create({
-      content, 
-      metadata, 
+      ...body,
       remoteAddr: req.ip, 
       targetId, 
       type, 
@@ -152,7 +149,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       await new MailService().sendMail({
         from: 'hello@readless.ai',
         subject: 'Feedback',
-        text: [content, JSON.stringify(metadata)].join('\n\n'),
+        text: [body.content, JSON.stringify(body.metadata)].join('\n\n'),
         to: 'feedback@readless.ai',
       });
     }

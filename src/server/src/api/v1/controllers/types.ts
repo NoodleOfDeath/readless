@@ -50,30 +50,3 @@ export type LocalizeRequest = JobRequest & {
 export type TtsRequest = JobRequest & {
   voice?: string;
 };
-
-// interactions
-
-export type InteractionRequest = {
-  userId?: number;
-  remoteAddr?: string;
-  content?: string;
-  metadata?: Record<string, unknown>;
-};
-
-export type InteractionUserVote = 'down' | 'up';
-
-// uh this type exists? forcing rebuild
-export type InteractionResponse = {
-  bookmark: number;
-  userBookmarked?: boolean;
-  favorite: number;
-  userFavorited?: boolean;
-  comment: number;
-  downvote: number;
-  listen: number;
-  read: number;
-  share: number;
-  upvote: number;
-  uservote?: InteractionUserVote;
-  view: number;
-};

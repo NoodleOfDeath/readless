@@ -294,7 +294,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
       if (!token.user) {
         throw new AuthError('UNKNOWN_ALIAS');
       }
-      await token.user.syncProfile(); // get profile
+      await token.user.syncProfile(req); // get profile
       return {
         profile: token.user.toJSON().profile ?? {},
         token: token.wrapped,
@@ -314,7 +314,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
       if (!user) {
         throw new AuthError('UNKNOWN_ALIAS');
       }
-      await user.syncProfile(); // get profile
+      await user.syncProfile(req); // get profile
       if (token) {
         // account is anonymous, return JWT
         return {
@@ -376,7 +376,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
       }
     }
     // user is authenticated, generate JWT else {
-    await user.syncProfile(); // get profile
+    await user.syncProfile(req); // get profile
     const userData = user.toJSON();
     const token = await JWT.as(body.requestedRole ?? 'standard', userData.id);
     await user.createCredential('jwt', token);
@@ -414,7 +414,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     @Body() body: RegisterAliasRequest
   ): Promise<RegistrationResponse> {
     const user = await User.from(body, req.body);
-    await user.syncProfile();
+    await user.syncProfile(req);
     if (user.toJSON().profile?.linkedThirdPartyAccounts?.includes(body.otherAlias.thirdParty.name)) {
       throw new AuthError('DUPLICATE_USER');
     }

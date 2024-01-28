@@ -19,6 +19,7 @@ import {
   AliasPayload,
   AliasType,
   CalculateStreakOptions,
+  CategoryInteraction,
   Credential,
   CredentialCreationAttributes,
   CredentialType,
@@ -28,6 +29,7 @@ import {
   InteractionType,
   MetadataType,
   Profile,
+  PublisherInteraction,
   QueryFactory,
   QueryOptions,
   RequestLog,
@@ -450,7 +452,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     };
   }
   
-  public async syncProfile(): Promise<Profile> {
+  public async syncProfile(req?: ExpressRequest): Promise<Profile> {
     const profile: Profile = {};
     const aliases = await this.findAliases('email');
     const metadata = await UserMetadata.findAll({ where: { userId: this.id } });
@@ -461,6 +463,89 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     profile.username = (await this.findAlias('username'))?.value,
     profile.linkedThirdPartyAccounts = (await this.findAliases('thirdParty/apple', 'thirdParty/google')).map((a) => a.type.split('/')[1] as ThirdParty);
     profile.preferences = Object.fromEntries(metadata.filter((meta) => meta.type === 'pref').map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value]));
+    if ((req?.version ?? '') >= '1.17.11') {
+      profile.preferences.bookmarkedSummaries = Object.fromEntries((await SummaryInteraction.findAll({
+        group: ['id'],
+        order: [['createdAt', 'desc']],
+        where: {
+          revert: false,
+          type: 'bookmark',
+          userId: this.id,
+        },
+      })).map((i) => [i.id, true]));
+      profile.preferences.readSummaries = Object.fromEntries((await SummaryInteraction.findAll({
+        group: ['id'],
+        order: [['createdAt', 'desc']],
+        where: {
+          revert: false,
+          type: 'read',
+          userId: this.id,
+        },
+      })).map((i) => [i.id, true]));
+      profile.preferences.removedSummaries = Object.fromEntries((await SummaryInteraction.findAll({
+        group: ['id'],
+        order: [['createdAt', 'desc']],
+        where: {
+          revert: false,
+          type: 'hide',
+          userId: this.id,
+        },
+      })).map((i) => [i.id, true]));
+      profile.preferences.followedPublishers = Object.fromEntries((await PublisherInteraction.findAll({
+        group: ['id'],
+        order: [['createdAt', 'desc']],
+        where: {
+          revert: false,
+          type: 'follow',
+          userId: this.id,
+        },
+      })).map((i) => [i.id, true]));
+      profile.preferences.favoritedPublishers = Object.fromEntries((await PublisherInteraction.findAll({
+        group: ['id'],
+        order: [['createdAt', 'desc']],
+        where: {
+          revert: false,
+          type: 'favorite',
+          userId: this.id,
+        },
+      })).map((i) => [i.id, true]));
+      profile.preferences.excludedPublishers = Object.fromEntries((await PublisherInteraction.findAll({
+        group: ['id'],
+        order: [['createdAt', 'desc']],
+        where: {
+          revert: false,
+          type: 'hide',
+          userId: this.id,
+        },
+      })).map((i) => [i.id, true]));
+      profile.preferences.followedCategories = Object.fromEntries((await CategoryInteraction.findAll({
+        group: ['id'],
+        order: [['createdAt', 'desc']],
+        where: {
+          revert: false,
+          type: 'follow',
+          userId: this.id,
+        },
+      })).map((i) => [i.id, true]));
+      profile.preferences.favoritedCategories = Object.fromEntries((await CategoryInteraction.findAll({
+        group: ['id'],
+        order: [['createdAt', 'desc']],
+        where: {
+          revert: false,
+          type: 'favortie',
+          userId: this.id,
+        },
+      })).map((i) => [i.id, true]));
+      profile.preferences.excludedCategories = Object.fromEntries((await CategoryInteraction.findAll({
+        group: ['id'],
+        order: [['createdAt', 'desc']],
+        where: {
+          revert: false,
+          type: 'hide',
+          userId: this.id,
+        },
+      })).map((i) => [i.id, true]));
+    }
     profile.createdAt = this.createdAt;
     const stats = await this.getStats();
     profile.updatedAt = new Date(Math.max(updatedAt.valueOf(), stats.updatedAt.valueOf()));

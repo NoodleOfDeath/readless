@@ -6,7 +6,6 @@ export const preprocessHeadersMiddleware: RequestHandler = async (req, res, next
   try {
     delete req.body.userId;
     delete req.query.userId;
-    req.ip = req.get('x-forwarded-from') || req.ip;
     const auth = req.get('authorization') || '';
     const [type, token] = auth.split(' ');
     if (type === 'Bearer') {
@@ -14,6 +13,8 @@ export const preprocessHeadersMiddleware: RequestHandler = async (req, res, next
       req.jwt = jwt;
       req.body.userId = jwt.userId;
     }
+    const version = req.get('x-version');
+    req.version = version;
     next();
   } catch (e) {
     internalErrorHandler(res, e);
