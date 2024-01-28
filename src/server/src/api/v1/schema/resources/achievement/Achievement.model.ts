@@ -156,9 +156,7 @@ export class Achievement<
       displayName: 'Belated Bookworm',
       findCandidates: async () => {
         try {
-          const data = await UserMetadata.findAll({
-            where: { key: 'bookmarkedSummaries' }
-          });
+          const data = await UserMetadata.findAll({ where: { key: 'bookmarkedSummaries' } });
           const users = data.filter((d) => Object.values(d.value).length >= 3).map((d) => d.userId);
           return await User.findAll({ where : { id: users } });
         } catch (e) {
@@ -171,12 +169,12 @@ export class Achievement<
             where: { 
               key: 'bookmarkedSummaries',
               userId: user.id,
-            }
+            },
           });
           const count = (Object.values(data?.value ?? [])).length;
           return count / 3;
         } catch (e) {
-          return 0
+          return 0;
         }
       },
       name: 'belated-bookworm',
@@ -187,9 +185,7 @@ export class Achievement<
       displayName: 'Avid Aficionado',
       findCandidates: async () => {
         try {
-          const data = await UserMetadata.findAll({
-            where: { key: 'bookmarkedSummaries' }
-          });
+          const data = await UserMetadata.findAll({ where: { key: 'bookmarkedSummaries' } });
           const users = data.filter((d) => Object.values(d.value).length >= 10).map((d) => d.userId);
           return await User.findAll({ where : { id: users } });
         } catch (e) {
@@ -202,12 +198,12 @@ export class Achievement<
             where: { 
               key: 'bookmarkedSummaries',
               userId: user.id,
-            }
+            },
           });
           const count = (Object.values(data?.value ?? [])).length;
           return count / 10;
         } catch (e) {
-          return 0
+          return 0;
         }
       },
       name: 'avid-aficionado',
@@ -218,9 +214,7 @@ export class Achievement<
       displayName: 'Insatiable Inquirer',
       findCandidates: async () => {
         try {
-          const data = await UserMetadata.findAll({
-            where: { key: 'bookmarkedSummaries' }
-          });
+          const data = await UserMetadata.findAll({ where: { key: 'bookmarkedSummaries' } });
           const users = data.filter((d) => Object.values(d.value).length >= 30).map((d) => d.userId);
           return await User.findAll({ where : { id: users } });
         } catch (e) {
@@ -233,12 +227,12 @@ export class Achievement<
             where: { 
               key: 'bookmarkedSummaries',
               userId: user.id,
-            }
+            },
           });
           const count = Object.values(data?.value ?? []).length;
           return count / 30;
         } catch (e) {
-          return 0
+          return 0;
         }
       },
       name: 'insatiable-inquirer',
@@ -249,9 +243,7 @@ export class Achievement<
       displayName: 'Highlight Honcho',
       findCandidates: async () => {
         try {
-          const data = await UserMetadata.findAll({
-            where: { key: 'bookmarkedSummaries' }
-          });
+          const data = await UserMetadata.findAll({ where: { key: 'bookmarkedSummaries' } });
           const users = data.filter((d) => Object.values(d.value).length >= 100).map((d) => d.userId);
           return await User.findAll({ where : { id: users } });
         } catch (e) {
@@ -264,12 +256,12 @@ export class Achievement<
             where: { 
               key: 'bookmarkedSummaries',
               userId: user.id,
-            }
+            },
           });
           const count = Object.values(data?.value ?? []).length;
           return count / 100;
         } catch (e) {
-          return 0
+          return 0;
         }
       },
       name: 'highlight-honcho',

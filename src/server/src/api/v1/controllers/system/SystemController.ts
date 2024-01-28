@@ -16,8 +16,8 @@ import { GetSitemapRequest } from './types';
 import { MailService, StaticGeneratorService } from '../../../../services';
 import {
   AuthError,
-  InternalError,
   Request as ExpressRequest,
+  InternalError,
 } from '../../middleware';
 import {
   Cache,
@@ -70,7 +70,7 @@ export class SystemController {
   @Post('/log')
   public static async logSystemEvent(
     @Request() req: ExpressRequest,
-    @Body() e: SystemLogCreationAttributes,
+    @Body() e: SystemLogCreationAttributes
   ): Promise<void> {
     await SystemLog.create(e);
     if (e.notify?.email) {

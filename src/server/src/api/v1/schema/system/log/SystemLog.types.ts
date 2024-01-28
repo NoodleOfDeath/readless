@@ -7,7 +7,7 @@ export type NotifyOptions = {
   html?: string;
   text?: string;
   subject?: string;
-}
+};
 
 export type SystemLogAttributes = DatedAttributes & {
   level: SystemLogLevel;
