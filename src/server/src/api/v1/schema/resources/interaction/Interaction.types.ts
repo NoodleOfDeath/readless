@@ -1,6 +1,6 @@
 import { DatedAttributes } from '../../types';
 
-export type INTERACTION_TYPES = [
+export const INTERACTION_TYPES = [
   'bookmark',
   'comment',
   'copy',
