@@ -132,7 +132,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Request() req: ExpressRequest,
     @Path() targetId: number,
     @Path() type: InteractionType,
-    @Body() body: InteractionCreationAttributes
+    @Body() body: Partial<InteractionCreationAttributes>
   ): Promise<PublicSummaryAttributes> {
     const user = req.jwt?.user;
     const interaction = await SummaryInteraction.create({
@@ -154,6 +154,28 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       });
     }
     const resource = await Summary.scope('public').findByPk(targetId);
+    return resource;
+  }
+
+  @Post('/recap/interact/:targetId/:type')
+  public static async interactWithRecap(
+    @Request() req: ExpressRequest,
+    @Path() targetId: number,
+    @Path() type: InteractionType,
+    @Body() body: Partial<InteractionCreationAttributes>
+  ): Promise<PublicRecapAttributes> {
+    const user = req.jwt?.user;
+    const interaction = await SummaryInteraction.create({
+      ...body,
+      remoteAddr: req.ip, 
+      targetId, 
+      type, 
+      userId: user?.id,
+    });
+    if (!interaction) {
+      throw new InternalError('Failed to create interaction');
+    }
+    const resource = await Recap.scope('public').findByPk(targetId);
     return resource;
   }
   

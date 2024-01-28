@@ -17,7 +17,7 @@ export const INTERACTION_TYPES = [
   'upvote',
   'view',
   'vote',
-];
+] as const;
 
 export type InteractionType = typeof INTERACTION_TYPES[number];
   

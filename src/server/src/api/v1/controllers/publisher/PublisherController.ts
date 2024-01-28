@@ -49,25 +49,26 @@ export class PublisherController extends BaseController {
     return publishers;
   }
   
-  @Post('/interact/:targetId/:type')
+  @Post('/interact/:target/:type')
   public static async interactWithPublisher(
     @Request() req: ExpressRequest,
-    @Path() targetId: number,
+    @Path() target: string,
     @Path() type: InteractionType,
-    @Body() body: InteractionCreationAttributes,
+    @Body() body: Partial<InteractionCreationAttributes>
   ): Promise<PublicPublisherAttributes> {
     const user = req.jwt?.user;
+    const publisher = await Publisher.findOne({ where: { name: target } });
     const interaction = await PublisherInteraction.create({
       ...body,
       remoteAddr: req.ip,
-      targetId,
+      targetId: publisher?.id,
       type, 
       userId: user?.id,
     });
     if (!interaction) {
       throw new InternalError('Failed to create interaction');
     }
-    const resource = await Publisher.scope('public').findByPk(targetId);
+    const resource = await Publisher.scope('public').findByPk(publisher?.id);
     return resource;
   }
 

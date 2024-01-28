@@ -50,25 +50,26 @@ export class CategoryController extends BaseController {
     return categories;
   }
   
-  @Post('/interact/:targetId/:type')
+  @Post('/interact/:target/:type')
   public static async interactWithCategory(
     @Request() req: ExpressRequest,
-    @Path() targetId: number,
+    @Path() target: string,
     @Path() type: InteractionType,
-    @Body() body: InteractionCreationAttributes,
+    @Body() body: Partial<InteractionCreationAttributes>
   ): Promise<PublicCategoryAttributes> {
     const user = req.jwt?.user;
+    const category = await Category.findOne({ where: { name: target } });
     const interaction = await CategoryInteraction.create({
       ...body, 
       remoteAddr: req.ip,
-      targetId,
+      targetId: category?.id,
       type,
       userId: user?.id,
     });
     if (!interaction) {
       throw new InternalError('Failed to create interaction');
     }
-    const resource = await Category.scope('public').findByPk(targetId);
+    const resource = await Category.scope('public').findByPk(category?.id);
     return resource;
   }
   

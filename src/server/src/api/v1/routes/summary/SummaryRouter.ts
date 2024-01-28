@@ -135,4 +135,22 @@ router.get(
   }
 );
 
+router.post(
+  '/recap/interact/:targetId/:type',
+  rateLimitMiddleware('30 per 1m'),
+  param('targetId').isNumeric(),
+  param('type').isString(),
+  body('value').isString().optional(),
+  validationMiddleware,
+  async (req, res) => {
+    try {
+      const { targetId, type } = req.params;
+      const interactions = await SummaryController.interactWithRecap(req, targetId, type, req.body);
+      return res.json(interactions);
+    } catch (e) {
+      internalErrorHandler(res, e);
+    }
+  }
+);
+
 export default router;

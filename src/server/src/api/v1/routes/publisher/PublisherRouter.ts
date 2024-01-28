@@ -29,17 +29,16 @@ router.get(
 );
 
 router.post(
-  '/interact/:targetId/:type',
+  '/interact/:target/:type',
   rateLimitMiddleware('30 per 1m'),
-  param('targetId').isNumeric(),
+  param('target').isString(),
   param('type').isString(),
   body('value').isString().optional(),
   validationMiddleware,
   async (req, res) => {
     try {
-      const { targetId, type } = req.params;
-      req.body.remoteAddr = req.ip;
-      const interactions = await PublisherController.interactWithPublisher(req, targetId, type, req.body);
+      const { target, type } = req.params;
+      const interactions = await PublisherController.interactWithPublisher(req, target, type, req.body);
       return res.json(interactions);
     } catch (e) {
       internalErrorHandler(res, e);
