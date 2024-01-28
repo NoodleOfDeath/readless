@@ -167,13 +167,13 @@ export class Achievement<
       },
       getProgress: async (user) => {
         try {
-          const data = await UserMetadata.findAll({
+          const data = await UserMetadata.findOne({
             where: { 
               key: 'bookmarkedSummaries',
               userId: user.id,
             }
           });
-          const count = (JSON.parse(data?[0]?.value ?? '[]') as number[]).length;
+          const count = (JSON.parse(data?.value ?? '[]') as number[]).length;
           return count / 3;
         } catch (e) {
           return 0
@@ -198,13 +198,13 @@ export class Achievement<
       },
       getProgress: async (user) => {
         try {
-          const data = await UserMetadata.findAll({
+          const data = await UserMetadata.findOne({
             where: { 
               key: 'bookmarkedSummaries',
               userId: user.id,
             }
           });
-          const count = (JSON.parse(data?[0]?.value ?? '[]') as number[]).length;
+          const count = (JSON.parse(data?.value ?? '[]') as number[]).length;
           return count / 10;
         } catch (e) {
           return 0
@@ -229,13 +229,13 @@ export class Achievement<
       },
       getProgress: async (user) => {
         try {
-          const data = await UserMetadata.findAll({
+          const data = await UserMetadata.findOne({
             where: { 
               key: 'bookmarkedSummaries',
               userId: user.id,
             }
           });
-          const count = (JSON.parse(data?[0]?.value ?? '[]') as number[]).length;
+          const count = (JSON.parse(data?.value ?? '[]') as number[]).length;
           return count / 30;
         } catch (e) {
           return 0
@@ -260,13 +260,13 @@ export class Achievement<
       },
       getProgress: async (user) => {
         try {
-          const data = await UserMetadata.findAll({
+          const data = await UserMetadata.findOne({
             where: { 
               key: 'bookmarkedSummaries',
               userId: user.id,
             }
           });
-          const count = (JSON.parse(data?[0]?.value ?? '[]') as number[]).length;
+          const count = (JSON.parse(data?.value ?? '[]') as number[]).length;
           return count / 100;
         } catch (e) {
           return 0
