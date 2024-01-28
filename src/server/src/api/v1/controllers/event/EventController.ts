@@ -12,7 +12,7 @@ import {
   Tags,
 } from 'tsoa';
 
-import { BulkResponse, InteractionRequest } from '../';
+import { BulkResponse } from '../';
 import {
   AuthError,
   Request as ExpressRequest,
@@ -21,6 +21,7 @@ import {
 import {
   Event,
   EventInteraction,
+  InteractionCreationAttributes,
   InteractionType,
   PublicEventAttributes,
 } from '../../schema';
@@ -50,14 +51,15 @@ export class EventController {
     @Request() req: ExpressRequest,
     @Path() targetId: number,
     @Path() type: InteractionType,
-    @Body() body: InteractionRequest
+    @Body() body: InteractionCreationAttributes
   ): Promise<PublicEventAttributes> {
     const user = req.jwt?.user;
-    const {
-      content, metadata, remoteAddr, 
-    } = body;
     const interaction = await EventInteraction.create({
-      content, metadata, remoteAddr, targetId, type, userId: user?.id,
+      ...body, 
+      remoteAddr: req.ip,
+      targetId,
+      type,
+      userId: user?.id,
     });
     if (!interaction) {
       throw new InternalError('Failed to create interaction');
