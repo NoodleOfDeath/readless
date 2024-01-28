@@ -372,7 +372,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return {
       daysActive,
       interactionCounts: {
-        ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, []])) as { [key in InteractionType]: [] },
+        ...Object.fromEntries(INTERACTION_TYPES.map((type) => [type, []])) as { [key in InteractionType]: [] },
         read: readCounts,
         share: shareCounts,
       },  
@@ -380,7 +380,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       userRankings: { 
         daysActive: daysActive.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
         interactionCounts: {
-          ...Object.fromEntries(Object.keys(INTERACTION_TYPES).map((type) => [type, 0])) as { [key in InteractionType]: number },
+          ...Object.fromEntries(INTERACTION_TYPES.map((type) => [type, 0])) as { [key in InteractionType]: number },
           read: readCounts.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
           share: shareCounts.find((s) => s.userId === user?.id)?.rank ?? Number.MAX_SAFE_INTEGER,
         },

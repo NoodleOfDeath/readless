@@ -1,23 +1,26 @@
 import { DatedAttributes } from '../../types';
 
-export type InteractionType =
-  | 'bookmark'
-  | 'comment'
-  | 'copy'
-  | 'downvote'
-  | 'favorite'
-  | 'feedback'
-  | 'follow'
-  | 'hide'
-  | 'listen'
-  | 'read'
-  | 'search'
-  | 'share'
-  | 'translate'
-  | 'upvote'
-  | 'view'
-  | 'vote';
+export type INTERACTION_TYPES =
+  'bookmark',
+  'comment',
+  'copy',
+  'downvote',
+  'favorite',
+  'feedback',
+  'follow',
+  'hide',
+  'listen',
+  'read',
+  'search',
+  'share',
+  'translate',
+  'upvote',
+  'view',
+  'vote',
+];
 
+export type InteractionType = INTERACTION_TYPES[number];
+  
 export type InteractionAttributes = DatedAttributes & {
   /** user that made this interaction **/
   userId?: number;
