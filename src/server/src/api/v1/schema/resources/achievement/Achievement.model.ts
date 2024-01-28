@@ -159,7 +159,7 @@ export class Achievement<
           const data = await UserMetadata.findAll({
             where: { key: 'bookmarkedSummaries' }
           });
-          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 3).map((d) => d.userId);
+          const users = data.filter((d) => (JSON.parse(d.value) as number[]).length >= 3).map((d) => d.userId);
           return await User.findAll({ where : { id: users } });
         } catch (e) {
           console.error(e);
@@ -173,7 +173,7 @@ export class Achievement<
               userId: user.id,
             }
           });
-          const count = (JSON.parse(data?.value ?? '[]') as number[]).length;
+          const count = (JSON.parse(data?[0]?.value ?? '[]') as number[]).length;
           return count / 3;
         } catch (e) {
           return 0
@@ -190,7 +190,7 @@ export class Achievement<
           const data = await UserMetadata.findAll({
             where: { key: 'bookmarkedSummaries' }
           });
-          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 10).map((d) => d.userId);
+          const users = data.filter((d) => (JSON.parse(d.value) as number[]).length >= 10).map((d) => d.userId);
           return await User.findAll({ where : { id: users } });
         } catch (e) {
           console.error(e);
@@ -204,7 +204,7 @@ export class Achievement<
               userId: user.id,
             }
           });
-          const count = (JSON.parse(data?.value ?? '[]') as number[]).length;
+          const count = (JSON.parse(data?[0]?.value ?? '[]') as number[]).length;
           return count / 10;
         } catch (e) {
           return 0
@@ -221,7 +221,7 @@ export class Achievement<
           const data = await UserMetadata.findAll({
             where: { key: 'bookmarkedSummaries' }
           });
-          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 30).map((d) => d.userId);
+          const users = data.filter((d) => (JSON.parse(d.value) as number[]).length >= 30).map((d) => d.userId);
           return await User.findAll({ where : { id: users } });
         } catch (e) {
           console.error(e);
@@ -235,7 +235,7 @@ export class Achievement<
               userId: user.id,
             }
           });
-          const count = (JSON.parse(data?.value ?? '[]') as number[]).length;
+          const count = (JSON.parse(data?[0]?.value ?? '[]') as number[]).length;
           return count / 30;
         } catch (e) {
           return 0
@@ -252,7 +252,7 @@ export class Achievement<
           const data = await UserMetadata.findAll({
             where: { key: 'bookmarkedSummaries' }
           });
-          const users = data.filter((d) => (JSON.parse(d) as number[]).length >= 100).map((d) => d.userId);
+          const users = data.filter((d) => (JSON.parse(d.value) as number[]).length >= 100).map((d) => d.userId);
           return await User.findAll({ where : { id: users } });
         } catch (e) {
           console.error(e);
@@ -266,7 +266,7 @@ export class Achievement<
               userId: user.id,
             }
           });
-          const count = (JSON.parse(data?.value ?? '[]') as number[]).length;
+          const count = (JSON.parse(data?[0]?.value ?? '[]') as number[]).length;
           return count / 100;
         } catch (e) {
           return 0
