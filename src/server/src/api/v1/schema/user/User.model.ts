@@ -10,7 +10,7 @@ import {
   MetricsRequest,
   MetricsResponse,
 } from '../../controllers/types';
-import { AuthError } from '../../middleware';
+import { AuthError, Request as ExpressRequest } from '../../middleware';
 import {
   Achievement,
   Achievements,
