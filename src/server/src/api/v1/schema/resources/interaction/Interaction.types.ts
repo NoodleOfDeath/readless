@@ -1,6 +1,6 @@
 import { DatedAttributes } from '../../types';
 
-export type INTERACTION_TYPES =
+export type INTERACTION_TYPES = [
   'bookmark',
   'comment',
   'copy',
@@ -17,7 +17,7 @@ export type INTERACTION_TYPES =
   'upvote',
   'view',
   'vote',
-];
+] as const;
 
 export type InteractionType = INTERACTION_TYPES[number];
   
