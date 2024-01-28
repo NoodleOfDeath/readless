@@ -1,6 +1,5 @@
 import { AuthError, internalErrorHandler } from './internal-errors';
 import { RequestHandler } from './types';
-import { JWT } from '../controllers/types';
 
 type AuthMiddlewareOptions = {
   scope?: string[];
