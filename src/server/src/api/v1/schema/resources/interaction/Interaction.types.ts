@@ -16,8 +16,7 @@ export type InteractionType =
   | 'translate'
   | 'upvote'
   | 'view'
-  | 'vote'
-};
+  | 'vote';
 
 export type InteractionAttributes = DatedAttributes & {
   /** user that made this interaction **/
