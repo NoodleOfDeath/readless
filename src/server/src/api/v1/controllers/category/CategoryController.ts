@@ -68,7 +68,7 @@ export class CategoryController extends BaseController {
           targetId: category.id,
           type, 
           userId: user.id,
-        }
+        },
       });
     }
     const interaction = await CategoryInteraction.create({

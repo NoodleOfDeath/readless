@@ -67,7 +67,7 @@ export class PublisherController extends BaseController {
           targetId: publisher.id,
           type, 
           userId: user.id,
-        }
+        },
       });
     }
     const interaction = await PublisherInteraction.create({

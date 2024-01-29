@@ -140,7 +140,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
           targetId,
           type, 
           userId: user.id,
-        }
+        },
       });
     }
     const interaction = await SummaryInteraction.create({
