@@ -19,6 +19,7 @@ import {
   AliasPayload,
   AliasType,
   CalculateStreakOptions,
+  Category,
   CategoryInteraction,
   Credential,
   CredentialCreationAttributes,
@@ -29,6 +30,7 @@ import {
   InteractionType,
   MetadataType,
   Profile,
+  Publisher,
   PublisherInteraction,
   QueryFactory,
   QueryOptions,
@@ -353,7 +355,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       minCount,
       offset,
       type,
-      userId: null,
+      userId: user?.id ?? null,
     };
     const response = (await User.sql.query(QueryFactory.getQuery('summary_interaction_count'), {
       nest: true,
@@ -472,7 +474,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
           type: 'bookmark',
           userId: this.id,
         },
-      })).map((i) => [i.id, true]));
+      })).map((i) => [i.id, { createdAt: i.createdAt, item: true }]));
       profile.preferences.readSummaries = Object.fromEntries((await SummaryInteraction.findAll({
         group: ['id'],
         order: [['createdAt', 'desc']],
@@ -481,7 +483,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
           type: 'read',
           userId: this.id,
         },
-      })).map((i) => [i.id, true]));
+      })).map((i) => [i.id, { createdAt: i.createdAt, item: true }]));
       profile.preferences.removedSummaries = Object.fromEntries((await SummaryInteraction.findAll({
         group: ['id'],
         order: [['createdAt', 'desc']],
@@ -491,60 +493,66 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
           userId: this.id,
         },
       })).map((i) => [i.id, true]));
-      profile.preferences.followedPublishers = Object.fromEntries((await PublisherInteraction.findAll({
+      profile.preferences.followedPublishers = Object.fromEntries(((await PublisherInteraction.findAll({
         group: ['id'],
+        include: [Publisher.scope('public')],
         order: [['createdAt', 'desc']],
         where: {
           revert: false,
           type: 'follow',
           userId: this.id,
         },
-      })).map((i) => [i.id, true]));
-      profile.preferences.favoritedPublishers = Object.fromEntries((await PublisherInteraction.findAll({
+      })) as (PublisherInteraction & { publisher: Publisher })[]).map((i) => [i.publisher.name, true]));
+      profile.preferences.favoritedPublishers = Object.fromEntries(((await PublisherInteraction.findAll({
         group: ['id'],
+        include: [Publisher.scope('public')],
         order: [['createdAt', 'desc']],
         where: {
           revert: false,
           type: 'favorite',
           userId: this.id,
         },
-      })).map((i) => [i.id, true]));
-      profile.preferences.excludedPublishers = Object.fromEntries((await PublisherInteraction.findAll({
+      })) as (PublisherInteraction & { publisher: Publisher })[]).map((i) => [i.publisher.name, true]));
+      profile.preferences.excludedPublishers = Object.fromEntries(((await PublisherInteraction.findAll({
         group: ['id'],
+        include: [Publisher.scope('public')],
         order: [['createdAt', 'desc']],
         where: {
           revert: false,
           type: 'hide',
           userId: this.id,
         },
-      })).map((i) => [i.id, true]));
-      profile.preferences.followedCategories = Object.fromEntries((await CategoryInteraction.findAll({
+      })) as (PublisherInteraction & { publisher: Publisher })[]).map((i) => [i.publisher.name, true]));
+      profile.preferences.followedCategories = Object.fromEntries(((await CategoryInteraction.findAll({
         group: ['id'],
+        include: [Category.scope('public')],
         order: [['createdAt', 'desc']],
         where: {
           revert: false,
           type: 'follow',
           userId: this.id,
         },
-      })).map((i) => [i.id, true]));
-      profile.preferences.favoritedCategories = Object.fromEntries((await CategoryInteraction.findAll({
+      })) as (CategoryInteraction & { category: Category })[]).map((i) => [i.category.name, true]));
+      profile.preferences.favoritedCategories = Object.fromEntries(((await CategoryInteraction.findAll({
         group: ['id'],
+        include: [Category.scope('public')],
         order: [['createdAt', 'desc']],
         where: {
           revert: false,
           type: 'favortie',
           userId: this.id,
         },
-      })).map((i) => [i.id, true]));
-      profile.preferences.excludedCategories = Object.fromEntries((await CategoryInteraction.findAll({
+      })) as (CategoryInteraction & { category: Category })[]).map((i) => [i.category.name, true]));
+      profile.preferences.excludedCategories = Object.fromEntries(((await CategoryInteraction.findAll({
         group: ['id'],
+        include: [Category.scope('public')],
         order: [['createdAt', 'desc']],
         where: {
           revert: false,
           type: 'hide',
           userId: this.id,
         },
-      })).map((i) => [i.id, true]));
+      })) as (CategoryInteraction & { category: Category })[]).map((i) => [i.category.name, true]));
     }
     profile.createdAt = this.createdAt;
     const stats = await this.getStats();
