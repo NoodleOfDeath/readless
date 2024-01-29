@@ -17,10 +17,10 @@ import ms from 'ms';
 import { SheetProvider } from 'react-native-actions-sheet';
 import InAppReview from 'react-native-in-app-review';
 
+import { BottomTabNavigator } from './BottomTabNavigator';
 import { RoutedScreen } from './RoutedScreen';
 import { StackNavigator } from './StackNavigator';
 import { SettingsTabBarIcon } from './TabBarIcons';
-import { TabbedNavigator } from './TabbedNavigator';
 import {
   HOME_STACK,
   LOGIN_STACK,
@@ -264,7 +264,7 @@ export function RootNavigator() {
       <SheetProvider>
         {(userData?.valid || userData?.unlinked) ? (
           <React.Fragment>
-            <TabbedNavigator 
+            <BottomTabNavigator 
               id="rootTabNav"
               screens={ ROOT_TABS }
               screenOptions={ { headerShown: false } } />

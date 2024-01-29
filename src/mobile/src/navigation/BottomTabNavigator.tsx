@@ -15,7 +15,7 @@ import { NavigationID, RoutingParams } from '~/screens';
 
 const Tab = createBottomTabNavigator();
 
-export type TabbedNavigatorProps = 
+export type BottomTabNavigatorProps = 
 Omit<DefaultNavigatorOptions<
   RoutingParams,
   NavigationState,
@@ -32,14 +32,14 @@ Omit<DefaultNavigatorOptions<
   >[];
 };
 
-export function TabbedNavigator(
+export function BottomTabNavigator(
   { 
     id,
     initialRouteName = 'home',
     screenListeners,
     screenOptions,
     screens,
-  }: TabbedNavigatorProps
+  }: BottomTabNavigatorProps
 ) {
   return (
     <Tab.Navigator 
