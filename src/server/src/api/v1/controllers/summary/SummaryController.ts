@@ -134,6 +134,15 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Body() body: Partial<InteractionCreationAttributes>
   ): Promise<PublicSummaryAttributes> {
     const user = req.jwt?.user;
+    if (body.revert && user) {
+      await SummaryInteraction.destroy({
+        where: {
+          targetId,
+          type, 
+          userId: user.id,
+        }
+      });
+    }
     const interaction = await SummaryInteraction.create({
       ...body,
       remoteAddr: req.ip, 

@@ -59,12 +59,24 @@ export class CategoryController extends BaseController {
   ): Promise<PublicCategoryAttributes> {
     const user = req.jwt?.user;
     const category = await Category.findOne({ where: { name: target } });
+    if (!user || !category) {
+      return undefined;
+    }
+    if (body.revert) {
+      await CategoryInteraction.destroy({
+        where: {
+          targetId: category.id,
+          type, 
+          userId: user.id,
+        }
+      });
+    }
     const interaction = await CategoryInteraction.create({
       ...body, 
       remoteAddr: req.ip,
-      targetId: category?.id,
+      targetId: category.id,
       type,
-      userId: user?.id,
+      userId: user.id,
     });
     if (!interaction) {
       throw new InternalError('Failed to create interaction');

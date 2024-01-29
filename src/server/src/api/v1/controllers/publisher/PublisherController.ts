@@ -58,12 +58,24 @@ export class PublisherController extends BaseController {
   ): Promise<PublicPublisherAttributes> {
     const user = req.jwt?.user;
     const publisher = await Publisher.findOne({ where: { name: target } });
+    if (!user || !publisher) {
+      return undefined;
+    }
+    if (body.revert) {
+      await PublisherInteraction.destroy({
+        where: {
+          targetId: publisher.id,
+          type, 
+          userId: user.id,
+        }
+      });
+    }
     const interaction = await PublisherInteraction.create({
       ...body,
       remoteAddr: req.ip,
-      targetId: publisher?.id,
+      targetId: publisher.id,
       type, 
-      userId: user?.id,
+      userId: user.id,
     });
     if (!interaction) {
       throw new InternalError('Failed to create interaction');
