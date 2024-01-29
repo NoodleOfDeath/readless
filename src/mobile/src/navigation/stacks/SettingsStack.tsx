@@ -7,6 +7,7 @@ import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
 import { strings } from '~/locales';
 import {
+  AccountScreen,
   CategoryPickerScreen,
   ColorSchemePickerScreen,
   DisplayPreferencesScreen,
@@ -37,6 +38,16 @@ export const SETTINGS_STACK: RouteConfig<
       headerLeft: () => null,
       headerRight: () => null, 
       headerTitle: strings.settings,
+    },
+  },
+  {
+    component: AccountScreen, 
+    name: 'account',
+    options: {
+      headerBackTitle: '',
+      headerLeft: () => null,
+      headerRight: () => null, 
+      headerTitle: strings.account,
     },
   },
   {
@@ -138,3 +149,5 @@ export const SETTINGS_STACK: RouteConfig<
     },
   },
 ];
+
+export const SETTINGS_STACK_KEYS = SETTINGS_STACK.map(({ name }) => name);

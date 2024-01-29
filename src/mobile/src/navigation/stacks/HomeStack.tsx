@@ -9,7 +9,7 @@ import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
 import { BASE_STACK } from './BaseStack';
 
-import { RightToggles } from '~/navigation';
+import { LeftTabBarIcons, RightTabBarIcons } from '~/navigation';
 import { HomeScreen, RoutingParams } from '~/screens';
 
 export const HOME_STACK: RouteConfig<
@@ -25,7 +25,8 @@ export const HOME_STACK: RouteConfig<
     name: 'home',
     options: { 
       headerBackTitle: '',
-      headerRight: () => <RightToggles />,
+      headerLeft: () => <LeftTabBarIcons />,
+      headerRight: () => <RightTabBarIcons />,
       headerTitle: '',
     },
   },

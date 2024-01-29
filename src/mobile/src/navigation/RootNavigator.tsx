@@ -19,9 +19,9 @@ import InAppReview from 'react-native-in-app-review';
 
 import { RoutedScreen } from './RoutedScreen';
 import { StackNavigator } from './StackNavigator';
+import { SettingsTabBarIcon } from './TabBarIcons';
 import { TabbedNavigator } from './TabbedNavigator';
 import {
-  ACCOUNT_STACK,
   HOME_STACK,
   LOGIN_STACK,
   SETTINGS_STACK,
@@ -67,7 +67,7 @@ export function SettingsTab() {
       <StackNavigator
         id='SettingsTabNav'
         initialRouteName='settings'
-        screens={ [...SETTINGS_STACK, ...ACCOUNT_STACK] } />
+        screens={ SETTINGS_STACK } />
     </RoutedScreen>
   );
 }
@@ -83,7 +83,7 @@ EventMapBase
     component: HomeTab,
     name: 'homeTab',
     options: {
-      tabBarIcon: () => <Icon name='home' />,
+      tabBarIcon: () => <Icon name='home' size={ 24 } />,
       tabBarLabel: strings.home,
     },
   },
@@ -91,7 +91,7 @@ EventMapBase
     component: SettingsTab,
     name: 'settingsTab',
     options: {
-      tabBarIcon: () => <Icon name='cog' />,
+      tabBarIcon: () => <SettingsTabBarIcon />,
       tabBarLabel: strings.settings,
     },
   },
