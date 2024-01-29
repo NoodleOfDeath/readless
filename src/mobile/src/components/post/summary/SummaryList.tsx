@@ -77,7 +77,7 @@ export function SummaryList({
 }: SummaryListProps) {
 
   // hooks
-  const { navigation } = useNavigation();
+  const { navigate, navigation } = useNavigation();
   const theme = useTheme();
 
   // contexts
@@ -213,14 +213,14 @@ export function SummaryList({
       } else if (onFormatChange) {
         onFormatChange(summary, format ?? preferredReadingFormat ?? ReadingFormat.Bullets);
       } else {
-        navigation?.push('summary', {
+        navigate('summary', {
           initialFormat: format ?? preferredReadingFormat ?? ReadingFormat.Bullets,
           keywords: parseKeywords(filter),
           summary,
         });
       }
     },
-    [interactWithSummary, isTablet, onFormatChange, preferredReadingFormat, navigation, filter]
+    [interactWithSummary, isTablet, onFormatChange, preferredReadingFormat, navigate, filter]
   );
   
   useFocusEffect(React.useCallback(() => {

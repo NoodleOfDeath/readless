@@ -212,7 +212,7 @@ export type StorageState<E extends StorageEventName> =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any;
 
-export const SYNCABLE_SETTINGS: (keyof Storage)[] = [
+export const SYNCABLE_PREFERENCES: (keyof Storage)[] = [
   'colorScheme',
   'compactSummaries',
   'showShortSummary',
@@ -224,6 +224,12 @@ export const SYNCABLE_SETTINGS: (keyof Storage)[] = [
   'lineHeightMultiplier',
   'pushNotifications',
   'pushNotificationsEnabled',
+  'viewedFeatures',
+  'searchHistory',
+  'readNotifications',
+];
+
+export const SYNCABLE_METRICS: (keyof Storage)[] = [
   'bookmarkedSummaries',
   'readSummaries',
   'removedSummaries',
@@ -233,57 +239,20 @@ export const SYNCABLE_SETTINGS: (keyof Storage)[] = [
   'followedCategories',
   'favoritedCategories',
   'excludedCategories',
-  'viewedFeatures',
-  'searchHistory',
-  'readNotifications',
 ];
 
-export type SyncableSetting = typeof SYNCABLE_SETTINGS[number];
+export const ALL_SYNCABLE: (keyof Storage)[] = [
+  ...SYNCABLE_PREFERENCES,
+  ...SYNCABLE_METRICS,
+];
+
+export type SyncableSetting = typeof SYNCABLE_PREFERENCES[number];
 
 export const SYNCABLE_IO_IN_DEFAULT = <K extends SyncableSetting>(value?: object) => value as Storage[K];
 export const SYNCABLE_IO_OUT_DEFAULT = <K extends SyncableSetting>(value?: Storage[K]) => JSON.stringify(value);
 
-export const SYNCABLE_IO_IN_BOOLEAN_MAP = <K extends SyncableSetting>(value?: object): Storage[K] => {
-  if (value) {
-    if (Array.isArray(value)) {
-      return value.reduce((acc, key) => ({ ...acc, [key]: true }), {}) as Storage[K];
-    }
-  }
-  return {} as Storage[K];
-};
-
-export const SYNCABLE_IO_OUT_DATED_MAP = <K extends SyncableSetting>(value?: Storage[K]) => {
-  if (value) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const remap = Object.fromEntries(Object.keys(value || {}).map((key) => [key, (value as any)[key].createdAt ?? new Date()]));
-    return JSON.stringify(remap);
-  }
-  return '{}';
-};
-
-export const SYNCABLE_IO_IN: { [K in SyncableSetting]?: ((value?: object) => Storage[K]) } = {
-  excludedCategories: SYNCABLE_IO_IN_BOOLEAN_MAP<'excludedCategories'>,
-  excludedPublishers: SYNCABLE_IO_IN_BOOLEAN_MAP<'excludedPublishers'>,
-  favoritedCategories: SYNCABLE_IO_IN_BOOLEAN_MAP<'favoritedCategories'>,
-  favoritedPublishers: SYNCABLE_IO_IN_BOOLEAN_MAP<'favoritedPublishers'>,
-  followedCategories: SYNCABLE_IO_IN_BOOLEAN_MAP<'followedCategories'>,
-  followedPublishers: SYNCABLE_IO_IN_BOOLEAN_MAP<'followedPublishers'>,
-  removedSummaries: SYNCABLE_IO_IN_BOOLEAN_MAP<'removedSummaries'>,
-};
-
-export const SYNCABLE_IO_OUT: { [K in SyncableSetting]?: ((value?: Storage[K]) => string) } = {
-  bookmarkedSummaries: SYNCABLE_IO_OUT_DATED_MAP,
-  excludedCategories: (value) => JSON.stringify(Object.keys(value || {})),
-  excludedPublishers: (value) => JSON.stringify(Object.keys(value || {})),
-  favoritedCategories: (value) => JSON.stringify(Object.keys(value || {})),
-  favoritedPublishers: (value) => JSON.stringify(Object.keys(value || {})),
-  followedCategories: (value) => JSON.stringify(Object.keys(value || {})),
-  followedPublishers: (value) => JSON.stringify(Object.keys(value || {})),
-  removedSummaries: (value) => JSON.stringify(Object.keys(value || {})),
-};
-
-export const SyncableIoIn = <K extends SyncableSetting>(key?: K) => key ? SYNCABLE_IO_IN[key] || SYNCABLE_IO_IN_DEFAULT : SYNCABLE_IO_IN_DEFAULT;
-export const SyncableIoOut = <K extends SyncableSetting>(key?: K) => key ? SYNCABLE_IO_OUT[key] || SYNCABLE_IO_OUT_DEFAULT : SYNCABLE_IO_OUT_DEFAULT;
+export const SyncableIoIn = SYNCABLE_IO_IN_DEFAULT;
+export const SyncableIoOut = SYNCABLE_IO_OUT_DEFAULT;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Methods = {

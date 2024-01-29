@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutRectangle, TextInput } from 'react-native';
+import { TextInput } from 'react-native';
 
 import { Searchbar } from 'react-native-paper';
 
@@ -16,6 +16,7 @@ type TextInputHandles = Pick<
 type SearchViewControllerProps = ChildlessViewProps & {
   initialValue?: string;
   placeholder?: string;
+  autoFocus?: boolean;
   onChangeText?: (value: string) => void;
   onClear?: () => void;
   onSubmit?: (value: string) => void;
@@ -24,6 +25,7 @@ type SearchViewControllerProps = ChildlessViewProps & {
 export function SearchViewController({
   initialValue = '',
   placeholder = strings.search,
+  autoFocus,
   onChangeText,
   onClear,
   onSubmit,
@@ -60,7 +62,7 @@ export function SearchViewController({
       { ...props }>
       <Searchbar
         ref={ searchRef }
-        autoFocus
+        autoFocus={ autoFocus }
         accessible
         accessibilityLabel={ strings.search }
         onIconPress={ () => searchRef.current?.focus() }

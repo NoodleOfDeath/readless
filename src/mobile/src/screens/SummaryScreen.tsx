@@ -16,14 +16,14 @@ import {
   View,
 } from '~/components';
 import {  StorageContext, ToastContext } from '~/contexts';
+import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 import { RoutedScreen } from '~/navigation';
 import { ScreenComponent } from '~/screens';
 
-export function SummaryScreen({
-  route,
-  navigation,
-}: ScreenComponent<'summary'>) {
+export function SummaryScreen({ route }: ScreenComponent<'summary'>) {
+
+  const { navigate, navigation } = useNavigation();
 
   const {
     preferredReadingFormat, 
@@ -83,12 +83,12 @@ export function SummaryScreen({
         return;
       }
       interactWithSummary(newSummary.id, InteractionType.Read, { metadata: { format: newFormat } });
-      navigation?.push('summary', {
+      navigate('summary', {
         initialFormat: newFormat ?? preferredReadingFormat ?? ReadingFormat.Bullets,
         summary: newSummary.id,
       });
     },
-    [summary, interactWithSummary, navigation, preferredReadingFormat]
+    [summary, interactWithSummary, navigate, preferredReadingFormat]
   );
   
   useFocusEffect(React.useCallback(() => {
@@ -109,7 +109,7 @@ export function SummaryScreen({
   }, [summary, format, navigation]));
 
   return (
-    <RoutedScreen navigationID='newsStackNav'>
+    <RoutedScreen>
       {loading ? (
         <View flexGrow={ 1 } itemsCenter justifyCenter>
           <ActivityIndicator size="large" />

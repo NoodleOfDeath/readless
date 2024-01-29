@@ -20,7 +20,7 @@ import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 import { SearchViewController } from '~/navigation';
 
-export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
+export function SearchScreen({ route }: ScreenComponent<'search'>) {
 
   const { 
     searchHistory,
@@ -34,6 +34,8 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
     search,
     openPublisher,
     openCategory,
+    navigate,
+    navigation,
   } = useNavigation();
 
   const [searchText, setSearchText] = React.useState(route?.params?.prefilter);
@@ -123,7 +125,7 @@ export function SearchScreen({ route, navigation }: ScreenComponent<'search'>) {
                 rightIcon="chevron-right"
                 onPress={ () => {
                   viewFeature('categories');
-                  navigation?.push('categoryPicker');
+                  navigate('categoryPicker');
                 } }>
                 {strings.categories}
               </Button>

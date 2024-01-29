@@ -1,25 +1,25 @@
 import React from 'react';
 
+import { 
+  BottomTabNavigationOptions,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import {
   DefaultNavigatorOptions,
   EventMapBase,
   NavigationState,
   RouteConfig,
 } from '@react-navigation/native';
-import { 
-  NativeBottomTabNavigationOptions,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
 
 import { NavigationID, RoutingParams } from '~/screens';
 
 const Tab = createBottomTabNavigator();
 
-export type TabNavigatorProps = 
+export type TabbedNavigatorProps = 
 Omit<DefaultNavigatorOptions<
   RoutingParams,
   NavigationState,
-  NativeBottomTabNavigationOptions,
+  BottomTabNavigationOptions,
   EventMapBase
 >, 'children'> & {
   id: NavigationID;
@@ -27,19 +27,19 @@ Omit<DefaultNavigatorOptions<
     RoutingParams,
     keyof RoutingParams,
     NavigationState,
-    NativeTabNavigationOptions,
+    BottomTabNavigationOptions,
     EventMapBase
   >[];
 };
 
-export function TabNavigator(
+export function TabbedNavigator(
   { 
     id,
-    initialRouteName = 'default',
+    initialRouteName = 'home',
     screenListeners,
     screenOptions,
     screens,
-  }: TabNavigatorProps
+  }: TabbedNavigatorProps
 ) {
   return (
     <Tab.Navigator 

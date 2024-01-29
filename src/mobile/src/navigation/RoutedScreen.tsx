@@ -6,31 +6,28 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Screen, ScreenProps } from '~/components';
 import { StorageContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
-import { NavigationID } from '~/screens';
 
-export type RoutedScreenProps = ScreenProps & {
-  navigationID: NavigationID;
-};
+export type RoutedScreenProps = ScreenProps;
 
-export function RoutedScreen({ navigationID, ...props }: RoutedScreenProps) {
+export function RoutedScreen({ ...props }: RoutedScreenProps) {
 
-  const { navigation, router } = useNavigation();
+  const { router } = useNavigation();
   const { loadedInitialUrl, setLoadedInitialUrl } = React.useContext(StorageContext); 
   
   useFocusEffect(React.useCallback(() => {
     const subscriber = Linking.addEventListener('url', ({ url }) => {
-      router({ stackNav: navigation?.getParent(navigationID), url });
+      router({ url });
     });
     if (!loadedInitialUrl) {
       Linking.getInitialURL().then((url) => {
         if (url) {
           setLoadedInitialUrl(true);
-          router({ stackNav: navigation?.getParent(navigationID), url });
+          router({ url });
         }
       });
     }
     return () => subscriber.remove();
-  }, [router, loadedInitialUrl, setLoadedInitialUrl, navigation, navigationID]));
+  }, [router, loadedInitialUrl, setLoadedInitialUrl]));
   
   return (
     <Screen { ...props } />

@@ -14,15 +14,16 @@ import {
   View,
 } from '~/components';
 import { StorageContext } from '~/contexts';
-import { useTheme } from '~/hooks';
+import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 const Tab = createMaterialTopTabNavigator();
 
-export function InProgressAchievementsScreen({ navigation }: ScreenComponent<'achievements'>) {
+export function InProgressAchievementsScreen(_navigationprops: ScreenComponent<'achievements'>) {
 
   const theme = useTheme();
   const { api: { getAchievements } } = React.useContext(StorageContext);
+  const { navigate } = useNavigation();
 
   return (
     <Screen>
@@ -55,12 +56,12 @@ export function InProgressAchievementsScreen({ navigation }: ScreenComponent<'ac
                   progressOpacity={ 0.5 }
                   gap={ 12 }
                   width={ 80 }>
-                  {item.achievement.points}
+                  {(item.achievement.points ?? 0) > 1000 ? `${((item.achievement.points ?? 0) / 1000).toFixed(1)}k` : item.achievement.points}
                 </Button>
               ) }
               detail={ item.achievement.description }
               onPress={ () => {
-                navigation?.push('achievement', item); 
+                navigate('achievement', item); 
               } } />
           ) }
           estimatedItemSize={ 50 } />
@@ -69,10 +70,11 @@ export function InProgressAchievementsScreen({ navigation }: ScreenComponent<'ac
   );
 }
 
-export function CompletedAchievementsScreen({ navigation }: ScreenComponent<'achievements'>) {
+export function CompletedAchievementsScreen(_props: ScreenComponent<'achievements'>) {
 
   const theme = useTheme();
   const { api: { getAchievements } } = React.useContext(StorageContext);
+  const { navigate } = useNavigation();
 
   return (
     <Screen>
@@ -106,7 +108,7 @@ export function CompletedAchievementsScreen({ navigation }: ScreenComponent<'ach
               ) }
               detail={ item.achievement.description }
               onPress={ () => {
-                navigation?.push('achievement', item); 
+                navigate('achievement', item); 
               } } />
           ) }
           ItemSeparatorComponent={ ({ index }) => <Divider key={ `divider-${index}` } /> }

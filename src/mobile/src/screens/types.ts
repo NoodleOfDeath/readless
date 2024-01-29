@@ -4,7 +4,6 @@ import { LinkingOptions, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import {
-  InteractionType,
   MetricsResponse,
   PublicCategoryAttributes,
   PublicPublisherAttributes,
@@ -16,6 +15,11 @@ import {
 } from '~/api';
 
 export type NavigationID = `${string}DrawerNav` | `${string}StackNav` | `${string}TabNav`;
+
+export type TabRoutingParams = {
+  homeTab: undefined;
+  settingsTab: undefined;
+};
 
 export type LoginRoutingParams = {
   login: undefined;
@@ -101,7 +105,7 @@ export type ProfileRoutingParams = {
   leaderboards: undefined;
 };
 
-export type RoutingParams = GamesRoutingParams & LoginRoutingParams & NewsRoutingParams & ProfileRoutingParams & SettingsRoutingParams;
+export type RoutingParams = GamesRoutingParams & LoginRoutingParams & NewsRoutingParams & ProfileRoutingParams & SettingsRoutingParams & TabRoutingParams;
 
 export const NAVIGATION_LINKING_OPTIONS: LinkingOptions<RoutingParams> = {
   config: {

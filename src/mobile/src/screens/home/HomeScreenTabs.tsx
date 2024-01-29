@@ -10,6 +10,7 @@ import {
   View,
 } from '~/components';
 import { StorageContext } from '~/contexts';
+import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 import {  MetricCounter, ScreenComponent } from '~/screens';
 
@@ -30,11 +31,9 @@ export function OldNewsTab({
   );
 }
 
-export function YourNewsTab({ 
-  route: _route,
-  navigation,
-}: ScreenComponent<'yourNews'>) {
+export function YourNewsTab({ route: _route }: ScreenComponent<'yourNews'>) {
   const { api: { getSummaries }, followFilter } = React.useContext(StorageContext);
+  const { navigate } = useNavigation();
   const [filter, setFilter] = React.useState(followFilter);
   useFocusEffect(React.useCallback(() => {
     setFilter(followFilter);
@@ -51,12 +50,12 @@ export function YourNewsTab({
           metrics={ [{
             disclosureIndicator: true,
             leftIcon: 'trophy',
-            onPress: () => navigation?.navigate('achievements'),
+            onPress: () => navigate('achievements'),
             reputation: true,
           }, {
             disclosureIndicator: true,
             leftIcon: 'flash',
-            onPress: () => navigation?.navigate('leaderboards'),
+            onPress: () => navigate('leaderboards'),
             streak: true,
           }] }
           m={ 12 }
@@ -65,11 +64,9 @@ export function YourNewsTab({
   );
 }
 
-export function TopStoriesTab({ 
-  route: _route,
-  navigation,
-}: ScreenComponent<'topStories'>) {
+export function TopStoriesTab({ route: _route }: ScreenComponent<'topStories'>) {
   const { api: { getTopStories }, followFilter } = React.useContext(StorageContext);
+  const { navigate } = useNavigation();
   return ( 
     <SummaryList
       fancy
@@ -82,12 +79,12 @@ export function TopStoriesTab({
           metrics={ [{
             disclosureIndicator: true,
             leftIcon: 'trophy',
-            onPress: () => navigation?.navigate('achievements'),
+            onPress: () => navigate('achievements'),
             reputation: true,
           }, {
             disclosureIndicator: true,
             leftIcon: 'flash',
-            onPress: () => navigation?.navigate('leaderboards'),
+            onPress: () => navigate('leaderboards'),
             streak: true,
           }] }
           m={ 12 }

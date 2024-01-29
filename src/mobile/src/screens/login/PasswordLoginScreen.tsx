@@ -10,13 +10,12 @@ import {
   View,
 } from '~/components';
 import { StorageContext, UserData } from '~/core';
+import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 
-export function PasswordLoginScreen({
-  route: _route,
-  navigation, 
-}: ScreenComponent<'passwordLogin'>) {
+export function PasswordLoginScreen({ route: _route }: ScreenComponent<'passwordLogin'>) {
 
+  const { navigate, navigation } = useNavigation();
   const { 
     api: { login }, 
     setStoredValue, 
@@ -30,6 +29,10 @@ export function PasswordLoginScreen({
 
   const handleLogin = React.useCallback(async () => {
     try {
+      if (loading) {
+        return;
+      }
+      setLoading(true);
       const { data: response, error } = await login({
         email,
         password,
@@ -43,8 +46,10 @@ export function PasswordLoginScreen({
       syncWithRemote(userData);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
-  }, [email, login, password, setStoredValue, syncWithRemote]);
+  }, [email, loading, login, password, setStoredValue, syncWithRemote]);
 
   React.useEffect(() => setMessage(''), [email, password]);
   
@@ -73,7 +78,7 @@ export function PasswordLoginScreen({
       {loading && <ActivityIndicator animating />}
       {message && <Text textCenter>{ message }</Text>}
       <Button
-        onPress={ () => navigation?.push('forgotPassword', { email }) }
+        onPress={ () => navigate('forgotPassword', { email }) }
         textCenter>
         {strings.forgotPassword}
       </Button>

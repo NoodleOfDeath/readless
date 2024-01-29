@@ -86,3 +86,5 @@ export const LOGIN_STACK: RouteConfig<
   },
   
 ];
+
+export const LOGIN_STACK_KEYS = LOGIN_STACK.map(({ name }) => name);

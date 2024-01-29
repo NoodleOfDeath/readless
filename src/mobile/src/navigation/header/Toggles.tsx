@@ -3,11 +3,11 @@ import React from 'react';
 
 import { Button, View } from '~/components';
 import { StorageContext } from '~/contexts';
-import { DrawerNavigation, useNavigation } from '~/hooks';
+import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 
 export const SearchToggle = () => {
-  const { navigation } = useNavigation();
+  const { navigate } = useNavigation();
   return (
     <Button
       accessible
@@ -15,13 +15,13 @@ export const SearchToggle = () => {
       leftIcon="magnify"
       iconSize={ 24 }
       onPress={ () => {
-        navigation?.navigate('search', {}); 
+        navigate('search', {}); 
       } } />
   );
 };
 
 export const NotificationsToggle = () => {
-  const { navigation } = useNavigation();
+  const { navigate } = useNavigation();
   const { unreadNotificationCount } = React.useContext(StorageContext);
   return (
     <Button
@@ -30,18 +30,18 @@ export const NotificationsToggle = () => {
       leftIcon="bell"
       badge={ unreadNotificationCount ?? undefined }
       iconSize={ 24 }
-      onPress={ () => navigation?.navigate('notifications') } />
+      onPress={ () => navigate('notifications') } />
   );
 };
 
-export const DrawerToggle = () => {
+export const SettingsToggle = () => {
   const { unreadBookmarkCount, hasViewedFeature } = React.useContext(StorageContext);
-  const { navigation } = useNavigation();
+  const { navigate } = useNavigation();
   return (
     <Button
       accessible
       accessibilityLabel={ strings.menu }
-      leftIcon="menu"
+      leftIcon="cog"
       iconSize={ 24 }
       indicator={
         (unreadBookmarkCount > 0 && !hasViewedFeature('bookmarks')) ||
@@ -51,7 +51,7 @@ export const DrawerToggle = () => {
         !hasViewedFeature('notifications') || 
         !hasViewedFeature('app-review')
       } 
-      onPress={ () => (navigation?.getParent('LeftDrawerNav') as DrawerNavigation)?.toggleDrawer() } />
+      onPress={ () => navigate('settings') } />
   );
 };
 export const RightToggles = () => {

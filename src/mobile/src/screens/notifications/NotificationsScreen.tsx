@@ -11,11 +11,13 @@ import {
   View,
 } from '~/components';
 import { StorageContext } from '~/contexts';
+import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
 import { timeAgo } from '~/utils';
 
-export function NotificationsScreen({ navigation }: ScreenComponent<'notifications'>) {
+export function NotificationsScreen(_props: ScreenComponent<'notifications'>) {
 
+  const { navigate } = useNavigation();
   const {
     api: { getSystemNotifications },
     notifications,
@@ -55,10 +57,11 @@ export function NotificationsScreen({ navigation }: ScreenComponent<'notificatio
                 detail={ `${timeAgo(new Date(notification.createdAt ?? ''))} - ${notification.text}` }
                 onPress={ () => {
                   readNotification(notification);
-                  navigation?.push('notification', { notification }); 
+                  navigate('notification', { notification });
                 } } />
             ) }
             ItemSeparatorComponent={ ({ index }) => <Divider key={ `divider-${index}` } /> }
+            extraData={ unreadNotificationCount }
             estimatedItemSize={ 50 } />
         </View>
       </View>

@@ -6,20 +6,32 @@ import {
 } from 'react-native';
 
 import { APP_STORE_LINK, PLAY_STORE_LINK } from '@env';
-import { NavigationContainer } from '@react-navigation/native';
+import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
+import {
+  EventMapBase,
+  NavigationContainer,
+  NavigationState,
+  RouteConfig,
+} from '@react-navigation/native';
 import ms from 'ms';
 import { SheetProvider } from 'react-native-actions-sheet';
 import InAppReview from 'react-native-in-app-review';
 
-import { TabNavigator } from './TabNavigator';
 import { RoutedScreen } from './RoutedScreen';
 import { StackNavigator } from './StackNavigator';
-import { HOME_STACK, LOGIN_STACK } from './stacks';
+import { TabbedNavigator } from './TabbedNavigator';
+import {
+  ACCOUNT_STACK,
+  HOME_STACK,
+  LOGIN_STACK,
+  SETTINGS_STACK,
+} from './stacks';
 
 import {
   ActivityIndicator,
   Button,
   Dialog,
+  Icon,
   MediaPlayer,
   Screen,
   Text,
@@ -35,12 +47,12 @@ import {
 } from '~/contexts';
 import { useAppState, useTheme } from '~/hooks';
 import { strings } from '~/locales';
-import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
+import { NAVIGATION_LINKING_OPTIONS, RoutingParams } from '~/screens';
 import { usePlatformTools } from '~/utils';
 
 export function HomeTab() {
   return (
-    <RoutedScreen navigationID='HomeTabNav' safeArea={ false }>
+    <RoutedScreen safeArea={ false }>
       <StackNavigator
         id='HomeTabNav'
         initialRouteName='home'
@@ -49,11 +61,39 @@ export function HomeTab() {
   );
 }
 
-const ROOT_TABS = [
+export function SettingsTab() {
+  return (
+    <RoutedScreen safeArea={ false }>
+      <StackNavigator
+        id='SettingsTabNav'
+        initialRouteName='settings'
+        screens={ [...SETTINGS_STACK, ...ACCOUNT_STACK] } />
+    </RoutedScreen>
+  );
+}
+
+const ROOT_TABS: RouteConfig<
+RoutingParams,
+keyof RoutingParams,
+NavigationState,
+BottomTabNavigationOptions,
+EventMapBase
+>[] = [
   {
     component: HomeTab,
-    tabBarIcon: 'home',
-    title: strings.home,
+    name: 'homeTab',
+    options: {
+      tabBarIcon: () => <Icon name='home' />,
+      tabBarLabel: strings.home,
+    },
+  },
+  {
+    component: SettingsTab,
+    name: 'settingsTab',
+    options: {
+      tabBarIcon: () => <Icon name='cog' />,
+      tabBarLabel: strings.settings,
+    },
   },
 ];
 
@@ -224,16 +264,14 @@ export function RootNavigator() {
       <SheetProvider>
         {(userData?.valid || userData?.unlinked) ? (
           <React.Fragment>
-            <TabNavigator 
+            <TabbedNavigator 
+              id="rootTabNav"
               screens={ ROOT_TABS }
-              screenOptions={ { 
-                headerShown: false,
-              } }
-              />
+              screenOptions={ { headerShown: false } } />
             <MediaPlayer visible={ Boolean(currentTrack) } />
           </React.Fragment>
         ) : (
-          <RoutedScreen safeArea={ false } navigationID='loginStackNav'>
+          <RoutedScreen safeArea={ false }>
             <StackNavigator
               id="loginStackNav" 
               screens={ LOGIN_STACK }

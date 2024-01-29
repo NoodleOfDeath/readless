@@ -20,7 +20,7 @@ export function SummaryListScreen({
   }, [route, navigation]));
 
   return (
-    <RoutedScreen navigationID='newsStackNav'>
+    <RoutedScreen>
       <SummaryList
         landscapeEnabled
         enableTts

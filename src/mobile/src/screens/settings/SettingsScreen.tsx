@@ -16,18 +16,16 @@ import {
   View,
 } from '~/components';
 import { StorageContext } from '~/contexts';
-import { useInAppBrowser } from '~/hooks';
+import { useInAppBrowser, useNavigation } from '~/hooks';
 import { TikTokIcon } from '~/icons';
 import { strings } from '~/locales';
 import { usePlatformTools } from '~/utils';
 
-export function SettingsScreen({
-  route: _route,
-  navigation,
-}: ScreenComponent<'settings'>) {
+export function SettingsScreen({ route: _route }: ScreenComponent<'settings'>) {
 
   const { openURL } = useInAppBrowser();
   const { getUserAgent } = usePlatformTools();
+  const { navigate } = useNavigation();
 
   const {
     api: { logout },
@@ -77,7 +75,7 @@ export function SettingsScreen({
               cellStyle="RightDetail"
               accessory="DisclosureIndicator"
               title={ strings.account }
-              onPress={ () => navigation?.push('account') } />
+              onPress={ () => navigate('account') } />
             <TableViewCell
               cellIcon={ <Button leftIcon="logout" /> }
               title={ strings.signOut }
@@ -97,7 +95,7 @@ export function SettingsScreen({
               title={ strings.displayPreferences }
               onPress={ () => {
                 viewFeature('display-preferences');
-                navigation?.push('displayPreferences');
+                navigate('displayPreferences');
               } } />
             <TableViewCell 
               cellIcon={ <Button leftIcon="pen" indicator={ !hasViewedFeature('publishers') } /> }
@@ -107,7 +105,7 @@ export function SettingsScreen({
               detail={ `${Object.keys(followedPublishers ?? {}).length ?? 0} ${strings.following}` }
               onPress={ () =>{
                 viewFeature('publishers');
-                navigation?.push('publisherPicker'); 
+                navigate('publisherPicker'); 
               } } />
             <TableViewCell 
               cellIcon={ <Button leftIcon="bucket" indicator={ !hasViewedFeature('categories') } /> }
@@ -116,7 +114,7 @@ export function SettingsScreen({
               detail={ `${Object.keys(followedCategories ?? {}).length ?? 0} ${strings.following}` }
               onPress={ () => {
                 viewFeature('categories');
-                navigation?.push('categoryPicker'); 
+                navigate('categoryPicker'); 
               } } />
             {__DEV__ && (
               <TableViewCell
@@ -127,7 +125,7 @@ export function SettingsScreen({
                 accessory="DisclosureIndicator"
                 title={ strings.manage }
                 onPress={ () => {
-                  navigation?.push('generalSettings');
+                  navigate('generalSettings');
                 } } />
             )}
           </TableViewSection>
@@ -144,7 +142,7 @@ export function SettingsScreen({
               accessory="DisclosureIndicator"
               onPress={ () => {
                 viewFeature('notifications');
-                navigation?.push('notificationSettings');
+                navigate('notificationSettings');
               } } />
           </TableViewSection> 
           <TableViewSection

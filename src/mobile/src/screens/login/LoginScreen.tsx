@@ -10,7 +10,11 @@ import {
   Text,
   View,
 } from '~/components';
-import { useInAppBrowser, useThirdPartyLogin } from '~/hooks';
+import {
+  useInAppBrowser,
+  useNavigation,
+  useThirdPartyLogin,
+} from '~/hooks';
 import { strings } from '~/locales';
 import { ScreenComponent } from '~/screens';
 
@@ -45,13 +49,11 @@ export function BySigningUpBlock() {
   );
 }
 
-export function LoginScreen({
-  route: _route,
-  navigation, 
-}: ScreenComponent<'login'>) {
+export function LoginScreen({ route: _route }: ScreenComponent<'login'>) {
 
   const [message, setMessage] = React.useState<string>();
 
+  const { navigate } = useNavigation();
   const { 
     signInWithApple,
     signInWithGoogle,
@@ -109,7 +111,7 @@ export function LoginScreen({
                 contained
                 leftIcon="account"
                 gap={ 12 }
-                onPress={ () => navigation?.push('passwordLogin', {}) }>
+                onPress={ () => navigate('passwordLogin', {}) }>
                 {strings.continueWithEmail}
               </Button>
               <Button
