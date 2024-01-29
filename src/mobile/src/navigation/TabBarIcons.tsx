@@ -77,7 +77,7 @@ export const SettingsTabBarIcon = () => {
 
 export const LeftTabBarIcons = () => {
   return (
-    <View flexRow gap={ 12 }>
+    <View flexRow gap={ 12 } ml={ 12 }>
       <BookmarksTabBarIcon />
     </View>
   );
@@ -85,7 +85,7 @@ export const LeftTabBarIcons = () => {
 
 export const RightTabBarIcons = () => {
   return (
-    <View flexRow gap={ 12 }>
+    <View flexRow gap={ 12 } mr={ 12 }>
       <SearchTabBarIcon />
       <NotificationsTabBarIcon />
     </View>

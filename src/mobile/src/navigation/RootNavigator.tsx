@@ -21,8 +21,9 @@ import { BottomTabNavigator } from './BottomTabNavigator';
 import { RoutedScreen } from './RoutedScreen';
 import { StackNavigator } from './StackNavigator';
 import { SettingsTabBarIcon } from './TabBarIcons';
+import { LeftTabBarIcons, RightTabBarIcons } from './TabBarIcons';
 import {
-  HOME_STACK,
+  BASE_STACK,
   LOGIN_STACK,
   SETTINGS_STACK,
 } from './stacks';
@@ -47,32 +48,15 @@ import {
 } from '~/contexts';
 import { useAppState, useTheme } from '~/hooks';
 import { strings } from '~/locales';
-import { NAVIGATION_LINKING_OPTIONS, RoutingParams } from '~/screens';
+import { 
+  HomeScreen,
+  NAVIGATION_LINKING_OPTIONS, 
+  RoutingParams,
+  SettingsScreen,
+} from '~/screens';
 import { usePlatformTools } from '~/utils';
 
-export function HomeTab() {
-  return (
-    <RoutedScreen safeArea={ false }>
-      <StackNavigator
-        id='HomeTabNav'
-        initialRouteName='home'
-        screens={ HOME_STACK } />
-    </RoutedScreen>
-  );
-}
-
-export function SettingsTab() {
-  return (
-    <RoutedScreen safeArea={ false }>
-      <StackNavigator
-        id='SettingsTabNav'
-        initialRouteName='settings'
-        screens={ SETTINGS_STACK } />
-    </RoutedScreen>
-  );
-}
-
-const ROOT_TABS: RouteConfig<
+const TAB_SCREENS: RouteConfig<
 RoutingParams,
 keyof RoutingParams,
 NavigationState,
@@ -80,21 +64,51 @@ BottomTabNavigationOptions,
 EventMapBase
 >[] = [
   {
-    component: HomeTab,
-    name: 'homeTab',
+    component: HomeScreen,
+    name: 'home',
     options: {
+      headerLeft: () => <LeftTabBarIcons />,
+      headerRight: () => <RightTabBarIcons />,
+      headerShown: true,
+      headerTitle: '',
       tabBarIcon: () => <Icon name='home' size={ 24 } />,
       tabBarLabel: strings.home,
     },
   },
   {
-    component: SettingsTab,
-    name: 'settingsTab',
+    component: SettingsScreen,
+    name: 'settings',
     options: {
+      headerShown: true,
+      headerTitle: strings.settings,
       tabBarIcon: () => <SettingsTabBarIcon />,
       tabBarLabel: strings.settings,
     },
   },
+];
+
+export function BottomTabs() {
+  return (
+    <RoutedScreen safeArea={ false }>
+      <BottomTabNavigator
+        id='BottomTabNav'
+        initialRouteName='home'
+        screens={ TAB_SCREENS } />
+    </RoutedScreen>
+  );
+}
+
+const STACK = [
+  {
+    component: BottomTabs,
+    name: 'bottomTabs',
+    options: {
+      headerShown: false,
+      headerTitle: '',
+    },
+  },
+  ...BASE_STACK,
+  ...SETTINGS_STACK,
 ];
 
 export function RootNavigator() {
@@ -125,7 +139,7 @@ export function RootNavigator() {
   
   const [lastSync, setLastSync] = React.useState(0);
   const [showedReview, setShowedReview] = React.useState(false);
-
+  
   React.useEffect(() => {
     if (!isTablet) {
       lockRotation(OrientationType.PORTRAIT);
@@ -263,13 +277,13 @@ export function RootNavigator() {
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <SheetProvider>
         {(userData?.valid || userData?.unlinked) ? (
-          <React.Fragment>
-            <BottomTabNavigator 
+          <RoutedScreen safeArea={ false }>
+            <StackNavigator 
               id="rootTabNav"
-              screens={ ROOT_TABS }
-              screenOptions={ { headerShown: false } } />
+              screens={ STACK }
+              screenOptions={ { headerShown: true } } />
             <MediaPlayer visible={ Boolean(currentTrack) } />
-          </React.Fragment>
+          </RoutedScreen>
         ) : (
           <RoutedScreen safeArea={ false }>
             <StackNavigator
