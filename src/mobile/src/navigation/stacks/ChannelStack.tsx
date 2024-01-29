@@ -7,12 +7,12 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
+import { RightTabBarIcons } from '../header';
+
 import { strings } from '~/locales';
-import { RightTabBarIcons } from '~/navigation';
 import {
   AchievementScreen,
   AchievementsScreen,
-  BookmarksScreen,
   CategoryScreen,
   LeaderboardsScreen,
   NotificationScreen,
@@ -27,23 +27,13 @@ import {
   TestScreen,
 } from '~/screens';
 
-export const BASE_STACK: RouteConfig<
+export const CHANNEL_STACK: RouteConfig<
   RoutingParams,
   keyof RoutingParams,
   NavigationState,
   NativeStackNavigationOptions,
   EventMapBase
 >[] = [
-  {
-    component: BookmarksScreen, 
-    name: 'bookmarks', 
-    options: {
-      headerBackTitle: '',
-      headerLeft: () => null,
-      headerRight: () => null,
-      headerTitle: strings.bookmarks, 
-    }, 
-  }, 
   {
     component: SearchScreen, 
     name: 'search',

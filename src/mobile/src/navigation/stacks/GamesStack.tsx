@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 
-import { SearchToggle } from '~/navigation';
+import { SearchTabBarIcon } from '~/navigation';
 import { RoutingParams } from '~/screens';
 import { GamesSelectionScreen } from '~/screens/games';
 import { PlayGameScreen } from '~/screens/games/PlayGameScreen';
@@ -24,7 +24,7 @@ export const GAMES_STACK: RouteConfig<
     name: 'default',
     options: {
       headerBackTitle: '',
-      headerRight: () => <SearchToggle />, 
+      headerRight: () => <SearchTabBarIcon />, 
     },
   },
   {
@@ -32,7 +32,7 @@ export const GAMES_STACK: RouteConfig<
     name: 'play',
     options: {
       headerBackTitle: '',
-      headerRight: () => <SearchToggle />, 
+      headerRight: () => <SearchTabBarIcon />, 
     },
   },
 ];

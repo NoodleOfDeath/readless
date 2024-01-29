@@ -56,7 +56,7 @@ export function InProgressAchievementsScreen(_navigationprops: ScreenComponent<'
                   progressOpacity={ 0.5 }
                   gap={ 12 }
                   width={ 80 }>
-                  {(item.achievement.points ?? 0) > 1000 ? `${((item.achievement.points ?? 0) / 1000).toFixed(1)}k` : item.achievement.points}
+                  {(item.achievement.points ?? 0) >= 1000 ? `${((item.achievement.points ?? 0) / 1000).toFixed(0)}k` : item.achievement.points}
                 </Button>
               ) }
               detail={ item.achievement.description }

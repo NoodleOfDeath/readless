@@ -14,7 +14,11 @@ import {
   ReadingFormat,
 } from '~/api';
 import { StorageContext } from '~/contexts';
-import { HOME_STACK_KEYS, LOGIN_STACK_KEYS } from '~/navigation';
+import {
+  HOME_STACK_KEYS,
+  LOGIN_STACK_KEYS,
+  SETTINGS_STACK_KEYS,
+} from '~/navigation';
 import { NavigationID, RoutingParams } from '~/screens';
 import { readingFormat, usePlatformTools } from '~/utils';
 
@@ -38,11 +42,21 @@ export function useNavigation() {
   const navigate = React.useCallback(<R extends keyof RoutingParams>(route: R, params?: RoutingParams[R]) => {
     emitStorageEvent('navigate', route);
     if (LOGIN_STACK_KEYS.includes(route)) {
-      navigation.navigate('login');
+      if (!navigation.getState().routes.some(({ name }) => name === 'login')) {
+        navigation.navigate('login');
+      }
       return navigation.dispatch(StackActions.push(route, params));
     } else
     if (HOME_STACK_KEYS.includes(route)) {
-      navigation.navigate('home');
+      if (!navigation.getState().routes.some(({ name }) => name === 'home')) {
+        navigation.navigate('home');
+      }
+      return navigation.dispatch(StackActions.push(route, params));
+    } else
+    if (SETTINGS_STACK_KEYS.includes(route)) {
+      if (!navigation.getState().routes.some(({ name }) => name === 'settings')) {
+        navigation.navigate('settings');
+      }
       return navigation.dispatch(StackActions.push(route, params));
     }
   }, [emitStorageEvent, navigation]);

@@ -75,6 +75,7 @@ export function SettingsScreen({ route: _route }: ScreenComponent<'settings'>) {
               cellStyle="RightDetail"
               accessory="DisclosureIndicator"
               title={ strings.account }
+              detail={ userData?.profile?.email ?? userData?.profile?.username }
               onPress={ () => navigate('account') } />
             <TableViewCell
               cellIcon={ <Button leftIcon="logout" /> }
