@@ -277,10 +277,13 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     setNotifications(data.rows);
   }, [api, syncState.notifications.isFetching]);
 
-  const syncBookmarks = React.useCallback(async (ids: number[]) => {
+  const syncBookmarks = React.useCallback(async (bookmarks: Record<number, Date>) => {
     if (syncState.bookmarks.isFetching) {
       return;
     }
+    bookmarks = Object.fromEntries(Object.entries(bookmarks).map(([k, v]) => [k, new Date(v)]));
+    console.log(bookmarks);
+    const ids = Object.keys(bookmarks).map((id) => Number(id));
     console.log('syncing bookmarks');
     let offset = 0;
     let summaries: PublicSummaryGroup[] = [];
@@ -290,16 +293,16 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
         console.error(error);
         return;
       }
-      const { rows, next } = data;
-      if (!rows || !next) {
+      const { rows } = data;
+      if (!rows) {
         break;
       }
       summaries = summaries.concat(rows);
-      offset = next;
+      offset += Math.min(rows.length, 10);
     }
     await setStoredValue(
       'bookmarkedSummaries', 
-      Object.fromEntries(summaries.map((s) => [s.id, new DatedEvent(s)])), 
+      Object.fromEntries(summaries.map((s) => [s.id, new DatedEvent(s, { createdAt: bookmarks[s.id] })])), 
       false
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -353,7 +356,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
             state.bookmarks.prepare();
             return state;
           });
-          const job = new FetchJob(async () => syncBookmarks(Object.keys(remoteValue ?? {}).map((v) => parseInt(v))));
+          const job = new FetchJob(async () => syncBookmarks(remoteValue ?? {}));
           job.dispatch()
             .then(() => {
               setSyncState((prev) => {
