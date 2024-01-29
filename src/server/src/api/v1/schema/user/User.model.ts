@@ -492,10 +492,11 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
           ['targetId', 'desc'],
         ],
         where: {
+          revert: false,
           type: 'read',
           userId: this.id,
         },
-      })).filter((i) => i.revert === false).map((i) => [i.targetId, i.createdAt]));
+      })).map((i) => [i.targetId, i.createdAt]));
       profile.preferences.removedSummaries = Object.fromEntries((await SummaryInteraction.findAll({
         attributes: ['targetId', [fn('max', col('summary_interaction.createdAt')), 'createdAt']],
         group: ['targetId'],
