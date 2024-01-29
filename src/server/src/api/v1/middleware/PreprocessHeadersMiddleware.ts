@@ -1,6 +1,6 @@
 import { internalErrorHandler } from './internal-errors';
 import { RequestHandler } from './types';
-import { JWT } from '../controllers/types';
+import { CustomHeader, JWT } from '../controllers/types';
 
 export const preprocessHeadersMiddleware: RequestHandler = async (req, res, next) => {
   try {
@@ -13,7 +13,7 @@ export const preprocessHeadersMiddleware: RequestHandler = async (req, res, next
       req.jwt = jwt;
       req.body.userId = jwt.userId;
     }
-    const version = req.get('x-version');
+    const version = req.get(CustomHeader.VERSION);
     req.version = version;
     next();
   } catch (e) {

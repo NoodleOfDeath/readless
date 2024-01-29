@@ -10,7 +10,7 @@ export enum CustomHeader {
   PLATFORM = 'x-platform',
   USER_ID = 'x-user-id',
   UUID = 'x-uuid',
-  VERSION = 'x-version',
+  VERSION = 'x-app-version',
 }
 
 // bulk response models

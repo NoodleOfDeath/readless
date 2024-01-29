@@ -8,11 +8,7 @@ import {
 
 import { AchievementAttributes, AchievementCreationAttributes } from './Achievement.types';
 import { BaseModel } from '../../base';
-import { 
-  RequestLog, 
-  User,
-  UserMetadata,
-} from '../../models';
+import { RequestLog, User } from '../../models';
 
 @Table({
   modelName: 'achievement',
@@ -155,27 +151,13 @@ export class Achievement<
       description: 'Bookmark at least 3 articles',
       displayName: 'Belated Bookworm',
       findCandidates: async () => {
-        try {
-          const data = await UserMetadata.findAll({ where: { key: 'bookmarkedSummaries' } });
-          const users = data.filter((d) => Object.values(d.value).length >= 3).map((d) => d.userId);
-          return await User.findAll({ where : { id: users } });
-        } catch (e) {
-          console.error(e);
-        }
+        const interactions = await User.getInteractionCounts('bookmark', { minCount: 3 });
+        return await User.findAll({ where : { id: interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        try {
-          const data = await UserMetadata.findOne({
-            where: { 
-              key: 'bookmarkedSummaries',
-              userId: user.id,
-            },
-          });
-          const count = (Object.values(data?.value ?? [])).length;
-          return count / 3;
-        } catch (e) {
-          return 0;
-        }
+        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 3;
       },
       name: 'belated-bookworm',
       points: 25,
@@ -184,27 +166,13 @@ export class Achievement<
       description: 'Bookmark at least 10 articles',
       displayName: 'Avid Aficionado',
       findCandidates: async () => {
-        try {
-          const data = await UserMetadata.findAll({ where: { key: 'bookmarkedSummaries' } });
-          const users = data.filter((d) => Object.values(d.value).length >= 10).map((d) => d.userId);
-          return await User.findAll({ where : { id: users } });
-        } catch (e) {
-          console.error(e);
-        }
+        const interactions = await User.getInteractionCounts('bookmark', { minCount: 10 });
+        return await User.findAll({ where : { id: interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        try {
-          const data = await UserMetadata.findOne({
-            where: { 
-              key: 'bookmarkedSummaries',
-              userId: user.id,
-            },
-          });
-          const count = (Object.values(data?.value ?? [])).length;
-          return count / 10;
-        } catch (e) {
-          return 0;
-        }
+        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 10;
       },
       name: 'avid-aficionado',
       points: 50,
@@ -213,27 +181,13 @@ export class Achievement<
       description: 'Bookmark at least 30 articles',
       displayName: 'Insatiable Inquirer',
       findCandidates: async () => {
-        try {
-          const data = await UserMetadata.findAll({ where: { key: 'bookmarkedSummaries' } });
-          const users = data.filter((d) => Object.values(d.value).length >= 30).map((d) => d.userId);
-          return await User.findAll({ where : { id: users } });
-        } catch (e) {
-          console.error(e);
-        }
+        const interactions = await User.getInteractionCounts('bookmark', { minCount: 30 });
+        return await User.findAll({ where : { id: interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        try {
-          const data = await UserMetadata.findOne({
-            where: { 
-              key: 'bookmarkedSummaries',
-              userId: user.id,
-            },
-          });
-          const count = Object.values(data?.value ?? []).length;
-          return count / 30;
-        } catch (e) {
-          return 0;
-        }
+        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 30;
       },
       name: 'insatiable-inquirer',
       points: 250,
@@ -242,27 +196,13 @@ export class Achievement<
       description: 'Bookmark at least 100 articles',
       displayName: 'Highlight Honcho',
       findCandidates: async () => {
-        try {
-          const data = await UserMetadata.findAll({ where: { key: 'bookmarkedSummaries' } });
-          const users = data.filter((d) => Object.values(d.value).length >= 100).map((d) => d.userId);
-          return await User.findAll({ where : { id: users } });
-        } catch (e) {
-          console.error(e);
-        }
+        const interactions = await User.getInteractionCounts('bookmark', { minCount: 100 });
+        return await User.findAll({ where : { id: interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        try {
-          const data = await UserMetadata.findOne({
-            where: { 
-              key: 'bookmarkedSummaries',
-              userId: user.id,
-            },
-          });
-          const count = Object.values(data?.value ?? []).length;
-          return count / 100;
-        } catch (e) {
-          return 0;
-        }
+        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 100;
       },
       name: 'highlight-honcho',
       points: 1000,

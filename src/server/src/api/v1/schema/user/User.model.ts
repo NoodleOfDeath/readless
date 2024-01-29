@@ -1,6 +1,11 @@
 import bcrypt from 'bcryptjs';
 import ms from 'ms';
-import { Op, QueryTypes } from 'sequelize';
+import {
+  Op,
+  QueryTypes,
+  col,
+  fn,
+} from 'sequelize';
 import { Table } from 'sequelize-typescript';
 
 import { INTERACTION_TYPES } from './../resources/interaction/Interaction.types';
@@ -467,92 +472,109 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     profile.preferences = Object.fromEntries(metadata.filter((meta) => meta.type === 'pref').map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value]));
     if ((req?.version ?? '') >= '1.17.11') {
       profile.preferences.bookmarkedSummaries = Object.fromEntries((await SummaryInteraction.findAll({
-        group: ['id'],
-        order: [['createdAt', 'desc']],
+        attributes: ['targetId', [fn('max', col('summary_interaction.createdAt')), 'createdAt']],
+        group: ['targetId'],
+        order: [
+          [fn('max', col('summary_interaction.createdAt')), 'desc'],
+          ['targetId', 'desc'],
+        ],
         where: {
           revert: false,
           type: 'bookmark',
           userId: this.id,
         },
-      })).map((i) => [i.id, { createdAt: i.createdAt, item: true }]));
+      })).map((i) => [i.targetId, i.createdAt]));
       profile.preferences.readSummaries = Object.fromEntries((await SummaryInteraction.findAll({
-        group: ['id'],
-        order: [['createdAt', 'desc']],
+        attributes: ['targetId', [fn('max', col('summary_interaction.createdAt')), 'createdAt']],
+        group: ['targetId'],
+        order: [
+          [fn('max', col('summary_interaction.createdAt')), 'desc'],
+          ['targetId', 'desc'],
+        ],
         where: {
-          revert: false,
           type: 'read',
           userId: this.id,
         },
-      })).map((i) => [i.id, { createdAt: i.createdAt, item: true }]));
+      })).filter((i) => i.revert === false).map((i) => [i.targetId, i.createdAt]));
       profile.preferences.removedSummaries = Object.fromEntries((await SummaryInteraction.findAll({
-        group: ['id'],
-        order: [['createdAt', 'desc']],
+        attributes: ['targetId', [fn('max', col('summary_interaction.createdAt')), 'createdAt']],
+        group: ['targetId'],
+        order: [
+          [fn('max', col('summary_interaction.createdAt')), 'desc'],
+          ['targetId', 'desc'],
+        ],
         where: {
           revert: false,
           type: 'hide',
           userId: this.id,
         },
-      })).map((i) => [i.id, true]));
-      profile.preferences.followedPublishers = Object.fromEntries(((await PublisherInteraction.findAll({
-        group: ['id'],
+      })).map((i) => [i.targetId, { createdAt: i.createdAt, item: true }]));
+      profile.preferences.followedPublishers = ((await PublisherInteraction.findAll({
+        attributes: ['targetId', [fn('max', col('publisher_interaction.createdAt')), 'createdAt']],
+        group: ['targetId', col('publisher.name'), col('publisher.displayName'), col('publisher.imageUrl'), col('publisher.description')],
         include: [Publisher.scope('public')],
-        order: [['createdAt', 'desc']],
+        order: [[fn('max', col('publisher_interaction.createdAt')), 'desc'], ['targetId', 'desc']],
         where: {
           revert: false,
           type: 'follow',
           userId: this.id,
         },
-      })) as (PublisherInteraction & { publisher: Publisher })[]).map((i) => [i.publisher.name, true]));
-      profile.preferences.favoritedPublishers = Object.fromEntries(((await PublisherInteraction.findAll({
-        group: ['id'],
+      })) as (PublisherInteraction & { publisher: Publisher })[]).map((i) => i.publisher.name);
+      profile.preferences.favoritedPublishers = ((await PublisherInteraction.findAll({
+        attributes: ['targetId', [fn('max', col('publisher_interaction.createdAt')), 'createdAt']],
+        group: ['targetId', col('publisher.name'), col('publisher.displayName'), col('publisher.imageUrl'), col('publisher.description')],
         include: [Publisher.scope('public')],
-        order: [['createdAt', 'desc']],
+        order: [[fn('max', col('publisher_interaction.createdAt')), 'desc'], ['targetId', 'desc']],
         where: {
           revert: false,
           type: 'favorite',
           userId: this.id,
         },
-      })) as (PublisherInteraction & { publisher: Publisher })[]).map((i) => [i.publisher.name, true]));
-      profile.preferences.excludedPublishers = Object.fromEntries(((await PublisherInteraction.findAll({
-        group: ['id'],
+      })) as (PublisherInteraction & { publisher: Publisher })[]).map((i) => i.publisher.name);
+      profile.preferences.excludedPublishers = ((await PublisherInteraction.findAll({
+        attributes: ['targetId', [fn('max', col('publisher_interaction.createdAt')), 'createdAt']],
+        group: ['targetId', col('publisher.name'), col('publisher.displayName'), col('publisher.imageUrl'), col('publisher.description')],
         include: [Publisher.scope('public')],
-        order: [['createdAt', 'desc']],
+        order: [[fn('max', col('publisher_interaction.createdAt')), 'desc'], ['targetId', 'desc']],
         where: {
           revert: false,
           type: 'hide',
           userId: this.id,
         },
-      })) as (PublisherInteraction & { publisher: Publisher })[]).map((i) => [i.publisher.name, true]));
-      profile.preferences.followedCategories = Object.fromEntries(((await CategoryInteraction.findAll({
-        group: ['id'],
+      })) as (PublisherInteraction & { publisher: Publisher })[]).map((i) => i.publisher.name);
+      profile.preferences.followedCategories = ((await CategoryInteraction.findAll({
+        attributes: ['targetId', [fn('max', col('category_interaction.createdAt')), 'createdAt']],
+        group: ['targetId', col('category.name'), col('category.displayName'), col('category.icon')],
         include: [Category.scope('public')],
-        order: [['createdAt', 'desc']],
+        order: [[fn('max', col('category_interaction.createdAt')), 'desc'], ['targetId', 'desc']],
         where: {
           revert: false,
           type: 'follow',
           userId: this.id,
         },
-      })) as (CategoryInteraction & { category: Category })[]).map((i) => [i.category.name, true]));
-      profile.preferences.favoritedCategories = Object.fromEntries(((await CategoryInteraction.findAll({
-        group: ['id'],
+      })) as (CategoryInteraction & { category: Category })[]).map((i) => i.category.name);
+      profile.preferences.favoritedCategories = ((await CategoryInteraction.findAll({
+        attributes: ['targetId', [fn('max', col('category_interaction.createdAt')), 'createdAt']],
+        group: ['targetId', col('category.name'), col('category.displayName'), col('category.icon')],
         include: [Category.scope('public')],
-        order: [['createdAt', 'desc']],
+        order: [[fn('max', col('category_interaction.createdAt')), 'desc'], ['targetId', 'desc']],
         where: {
           revert: false,
-          type: 'favortie',
+          type: 'favorite',
           userId: this.id,
         },
-      })) as (CategoryInteraction & { category: Category })[]).map((i) => [i.category.name, true]));
-      profile.preferences.excludedCategories = Object.fromEntries(((await CategoryInteraction.findAll({
-        group: ['id'],
+      })) as (CategoryInteraction & { category: Category })[]).map((i) => i.category.name);
+      profile.preferences.excludedCategories = ((await CategoryInteraction.findAll({
+        attributes: ['targetId', [fn('max', col('category_interaction.createdAt')), 'createdAt']],
+        group: ['targetId', col('category.name'), col('category.displayName'), col('category.icon')],
         include: [Category.scope('public')],
-        order: [['createdAt', 'desc']],
+        order: [[fn('max', col('category_interaction.createdAt')), 'desc'], ['targetId', 'desc']],
         where: {
           revert: false,
           type: 'hide',
           userId: this.id,
         },
-      })) as (CategoryInteraction & { category: Category })[]).map((i) => [i.category.name, true]));
+      })) as (CategoryInteraction & { category: Category })[]).map((i) => i.category.name);
     }
     profile.createdAt = this.createdAt;
     const stats = await this.getStats();

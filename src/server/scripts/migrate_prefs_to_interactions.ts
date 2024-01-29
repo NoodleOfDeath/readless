@@ -91,7 +91,7 @@ async function migrateSummaries(
   const rows = await UserMetadata.findAll({ where: { key } });
   for (const row of rows) {
     const userId = row.userId;
-    const summaries = typeof row.value === 'string' ? (JSON.parse(row.value) as string[]).map((k) => parseInt(k)) : Array.isArray(row.value) ? Object.values(row.value) as number[] : Object.keys(row.value).map(k => parseInt(k, 10));
+    const summaries = typeof row.value === 'string' ? (Object.values(JSON.parse(row.value)) as string[]).map((k) => parseInt(k)) : Array.isArray(row.value) ? Object.values(row.value) as number[] : Object.keys(row.value).map(k => parseInt(k, 10));
     for (const s of summaries) {
       const interaction = await SummaryInteraction.findOne({
         where: {
@@ -131,8 +131,6 @@ async function main() {
   console.log('migrated excludedCategories');
   await migrateSummaries('bookmarkedSummaries', 'bookmark');
   console.log('migrated bookmarkedSummaries');
-  await migrateSummaries('readSummaries', 'read');
-  console.log('migrated readSummaries');
   await migrateSummaries('removedSummaries', 'hide');
   console.log('migrated removedSummaries');
 }

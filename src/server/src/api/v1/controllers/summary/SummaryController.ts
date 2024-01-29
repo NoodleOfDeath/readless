@@ -105,7 +105,6 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     @Query() offset = pageSize * page,
     @Query() forceCache = false
   ): Promise<BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>> {
-    const version = JSON.stringify(req?.headers?.['x-app-version']);
     return await Summary.getTopStories({
       end,
       excludeIds,
@@ -119,7 +118,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       page,
       pageSize,
       start,
-      version,
+      version: req.version,
     });
   }
   

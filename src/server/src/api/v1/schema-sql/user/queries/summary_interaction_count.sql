@@ -15,10 +15,12 @@ AND ((:type) IS NULL
   OR s."type" IN (:type))
 AND (:interval IS NULL
   OR s."createdAt" > DATE_TRUNC(:interval, NOW()))
+AND revert = FALSE
 GROUP BY "user",
 s."userId" ORDER BY COUNT(DISTINCT s."id") DESC,
 s."userId" DESC
-LIMIT :limit OFFSET :offset)
+LIMIT :limit OFFSET :offset
+)
 SELECT
   "rank",
   "count",
@@ -28,3 +30,4 @@ FROM
   Ranked
 WHERE (:minCount IS NULL
   OR "count" >= :minCount);
+

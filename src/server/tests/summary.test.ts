@@ -1,15 +1,20 @@
 import 'dotenv/config';
+import '@tensorflow/tfjs-backend-cpu';
 import {
   describe,
   expect,
   jest,
   test,
 } from '@jest/globals';
-import '@tensorflow/tfjs-backend-cpu';
+import { col, fn } from 'sequelize';
 
-import { Publisher, Summary } from '../src/api/v1/schema';
+import {
+  Publisher,
+  Summary,
+  SummaryInteraction,
+} from '../src/api/v1/schema';
+import { compareSimilarity } from '../src/core/server';
 import { DBService, ScribeService } from '../src/services';
-import { compareSimilarity } from '../src/utils';
 
 jest.setTimeout(180_000);
 
@@ -71,6 +76,25 @@ describe('summary unit tests', () => {
       url: 'https://www.espn.com/mlb/insider/insider/story/_/id/39210708/mlb-free-agency-trade-braves-red-sox-chris-sale-2023-24',
     });
     expect(summary).toBeDefined();
+  });
+
+  test('interactions', async () => {
+    await DBService.prepare();
+    const interactions = Object.fromEntries((await SummaryInteraction.findAll({
+      attributes: ['targetId', [fn('max', col('summary_interaction.createdAt')), 'createdAt']],
+      group: ['targetId'],
+      order: [
+        [fn('max', col('summary_interaction.createdAt')), 'desc'],
+        ['targetId', 'desc'],
+      ],
+      where: {
+        revert: false,
+        type: 'bookmark',
+        userId: 435,
+      },
+    })).map((i) => [i.targetId, { createdAt: i.createdAt, item: true }]));
+    expect(interactions).toBeDefined();
+    console.log(interactions);
   });
 
 });
