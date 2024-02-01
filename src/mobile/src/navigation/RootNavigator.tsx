@@ -13,9 +13,11 @@ import {
   NavigationState,
   RouteConfig,
 } from '@react-navigation/native';
+import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import ms from 'ms';
 import { SheetProvider } from 'react-native-actions-sheet';
 import InAppReview from 'react-native-in-app-review';
+import { useSelector } from 'react-redux';
 
 import { BottomTabNavigator } from './BottomTabNavigator';
 import { RoutedScreen } from './RoutedScreen';
@@ -46,6 +48,7 @@ import {
   StorageContext,
   ToastContext,
 } from '~/contexts';
+import { StoreState } from '~/core/store/types';
 import { useAppState, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import { 
@@ -98,7 +101,13 @@ export function BottomTabs() {
   );
 }
 
-const STACK = [
+const STACK: RouteConfig<
+RoutingParams,
+keyof RoutingParams,
+NavigationState,
+NativeStackNavigationOptions,
+EventMapBase
+>[] = [
   {
     component: BottomTabs,
     name: 'bottomTabs',
@@ -113,8 +122,11 @@ const STACK = [
 
 export function RootNavigator() {
   
+  const store = useSelector<StoreState>((state) => state);
   const { emitStorageEvent, needsUpdate } = usePlatformTools();
   const theme = useTheme();
+
+  React.useEffect(() => console.log(store), [store]);
   
   const {
     isTablet,
@@ -277,20 +289,18 @@ export function RootNavigator() {
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <SheetProvider>
         {(userData?.valid || userData?.unlinked) ? (
-          <RoutedScreen safeArea={ false }>
+          <React.Fragment>
             <StackNavigator 
               id="rootTabNav"
               screens={ STACK }
               screenOptions={ { headerShown: true } } />
             <MediaPlayer visible={ Boolean(currentTrack) } />
-          </RoutedScreen>
+          </React.Fragment>
         ) : (
-          <RoutedScreen safeArea={ false }>
-            <StackNavigator
-              id="loginStackNav" 
-              screens={ LOGIN_STACK }
-              screenOptions={ { headerShown: false } } />
-          </RoutedScreen>
+          <StackNavigator
+            id="loginStackNav" 
+            screens={ LOGIN_STACK }
+            screenOptions={ { headerShown: false } } />
         )}
       </SheetProvider>
     </NavigationContainer>

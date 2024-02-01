@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { UserData } from './UserData';
 import {
   ALL_SYNCABLE,
   DEFAULT_STORAGE_CONTEXT,
@@ -19,6 +18,7 @@ import {
   SyncableIoOut,
   ViewableFeature,
 } from './types';
+import { UserData } from '../../store/reducers/user/UserData';
 
 import {
   API,
@@ -282,7 +282,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       return;
     }
     bookmarks = Object.fromEntries(Object.entries(bookmarks).map(([k, v]) => [k, new Date(v)]));
-    console.log(bookmarks);
     const ids = Object.keys(bookmarks).map((id) => Number(id));
     console.log('syncing bookmarks');
     let offset = 0;

@@ -17,8 +17,7 @@ import {
 export type NavigationID = `${string}DrawerNav` | `${string}StackNav` | `${string}TabNav`;
 
 export type TabRoutingParams = {
-  homeTab: undefined;
-  settingsTab: undefined;
+  bottomTabs: undefined;
 };
 
 export type LoginRoutingParams = {

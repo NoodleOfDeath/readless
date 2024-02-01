@@ -1,6 +1,6 @@
 import ms from 'ms';
 
-import { UserData } from './UserData';
+import { UserData } from '../../store/reducers/user/UserData';
 
 import {
   API,
