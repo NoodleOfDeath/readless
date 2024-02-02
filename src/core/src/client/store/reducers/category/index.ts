@@ -4,23 +4,31 @@ import { StoreState } from '../../types';
 
 export type CategorySliceState = Pick<StoreState, 'excludedCategories' | 'favoritedCategories' | 'followedCategories'>;
 
-const categorySlice = createSlice({
-  initialState: null as CategorySliceState | null,
+const initialState: CategorySliceState = {
+  excludedCategories: {},
+  favoritedCategories: {},
+  followedCategories: {},
+};
+
+export { initialState as categoryInitialState };
+
+export const categorySlice = createSlice({
+  initialState,
   name: 'category',
   reducers: { 
-    setExcludedCategories: (state, action: PayloadAction<CategorySliceState>) => {
+    setExcludedCategories: (state, action: PayloadAction<StoreState['excludedCategories']>) => {
       if (state) {
-        state.excludedCategories = action.payload.excludedCategories;
+        state.excludedCategories = action.payload;
       }
     },
-    setFavoritedCategories: (state, action: PayloadAction<CategorySliceState>) => {
+    setFavoritedCategories: (state, action: PayloadAction<StoreState['favoritedCategories']>) => {
       if (state) {
-        state.favoritedCategories = action.payload.favoritedCategories;
+        state.favoritedCategories = action.payload;
       }
     },
-    setFollowedCategories: (state, action: PayloadAction<CategorySliceState>) => {
+    setFollowedCategories: (state, action: PayloadAction<StoreState['followedCategories']>) => {
       if (state) {
-        state.followedCategories = action.payload.followedCategories;
+        state.followedCategories = action.payload;
       }
     },
   },
@@ -31,5 +39,3 @@ export const {
   setFavoritedCategories,
   setFollowedCategories,
 } = categorySlice.actions;
-
-export default categorySlice.reducer;

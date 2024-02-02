@@ -1,10 +1,15 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
-import categorySlice from './reducers/category';
-import preferenceSlice from './reducers/preference';
-import publisherSlice from './reducers/publisher';
-import summarySlice from './reducers/summary';
-import userSlice from './reducers/user';
+import {
+  categoryInitialState,
+  categorySlice,
+  preferenceInitialState,
+  preferenceSlice,
+  publisherInitialState,
+  publisherSlice,
+  summaryInitialState,
+  summarySlice,
+} from './reducers';
 
 // test kernels with HSM
 // consolidate the shadows
@@ -16,13 +21,17 @@ import userSlice from './reducers/user';
 // 
 
 const store = configureStore({ 
-  preloadedState: {},
+  preloadedState: { 
+    category: categoryInitialState,
+    preference: preferenceInitialState,
+    publisher: publisherInitialState,
+    summary: summaryInitialState,
+  },
   reducer: combineReducers({
-    category: categorySlice,
-    preference: preferenceSlice,
-    publisher: publisherSlice,
-    summary: summarySlice,
-    user: userSlice,
+    category: categorySlice.reducer,
+    preference: preferenceSlice.reducer,
+    publisher: publisherSlice.reducer,
+    summary: summarySlice.reducer,
   }),
 });
 

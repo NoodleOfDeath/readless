@@ -17,7 +17,7 @@ import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import ms from 'ms';
 import { SheetProvider } from 'react-native-actions-sheet';
 import InAppReview from 'react-native-in-app-review';
-import { useSelector } from 'react-redux';
+import { useStore } from 'react-redux';
 
 import { BottomTabNavigator } from './BottomTabNavigator';
 import { RoutedScreen } from './RoutedScreen';
@@ -48,7 +48,7 @@ import {
   StorageContext,
   ToastContext,
 } from '~/contexts';
-import { StoreState } from '~/core/store/types';
+import { Store, setColorScheme } from '~/core';
 import { useAppState, useTheme } from '~/hooks';
 import { strings } from '~/locales';
 import { 
@@ -122,12 +122,10 @@ EventMapBase
 
 export function RootNavigator() {
   
-  const store = useSelector<StoreState>((state) => state);
   const { emitStorageEvent, needsUpdate } = usePlatformTools();
   const theme = useTheme();
+  const { getState, dispatch } = useStore<Store>();
 
-  React.useEffect(() => console.log(store), [store]);
-  
   const {
     isTablet,
     lockRotation,
@@ -136,7 +134,7 @@ export function RootNavigator() {
   const storage = React.useContext(StorageContext);
   const {
     ready, 
-    syncState,
+    syncState, 
     lastRequestForReview = 0,
     readSummaries,
     pushNotificationsEnabled,

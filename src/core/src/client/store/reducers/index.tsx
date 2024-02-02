@@ -1,5 +1,4 @@
-import userReducer from './user';
-
-const rootReducer = { user: userReducer };
-
-export default rootReducer;
+export * from './category';
+export * from './preference';
+export * from './publisher';
+export * from './summary';

@@ -6,10 +6,18 @@ import { PublicSummaryAttributes } from '~/api';
 
 export type SummarySliceState = Pick<StoreState, 'bookmarkedSummaries' | 'readSummaries' | 'removedSummaries' | 'saveBookmarksOffline' | 'summaryTranslations'>;
 
-export type UserActionType = 'SET_USER';
+const initialState: SummarySliceState = {
+  bookmarkedSummaries: {},
+  readSummaries: {},
+  removedSummaries: {},
+  saveBookmarksOffline: false,
+  summaryTranslations: {},
+};
 
-const summarySlice = createSlice({
-  initialState: null as SummarySliceState | null,
+export { initialState as summaryInitialState };
+
+export const summarySlice = createSlice({
+  initialState,
   name: 'summary',
   reducers: { 
     bookmarkSummary: (state, action: PayloadAction<PublicSummaryAttributes>) => {
@@ -17,41 +25,38 @@ const summarySlice = createSlice({
         state.bookmarkedSummaries[action.payload.id] = new DatedEvent(action.payload);
       }
     },
-    setBookmarkedSummaries: (state, action: PayloadAction<SummarySliceState>) => {
+    setBookmarkedSummaries: (state, action: PayloadAction<StoreState['bookmarkedSummaries']>) => {
       if (state) {
-        state.bookmarkedSummaries = action.payload.bookmarkedSummaries;
+        state.bookmarkedSummaries = action.payload;
       }
     },
-    setReadSummaries: (state, action: PayloadAction<SummarySliceState>) => {
+    setReadSummaries: (state, action: PayloadAction<StoreState['readSummaries']>) => {
       if (state) {
-        state.readSummaries = action.payload.readSummaries;
+        state.readSummaries = action.payload;
       }
     },
-    setRemovedSummaries: (state, action: PayloadAction<SummarySliceState>) => {
+    setRemovedSummaries: (state, action: PayloadAction<StoreState['removedSummaries']>) => {
       if (state) {
-        state.removedSummaries = action.payload.removedSummaries;
+        state.removedSummaries = action.payload;
       }
     },
-    setSaveBookmarksOffline: (state, action: PayloadAction<SummarySliceState>) => {
+    setSaveBookmarksOffline: (state, action: PayloadAction<StoreState['saveBookmarksOffline']>) => {
       if (state) {
-        state.saveBookmarksOffline = action.payload.saveBookmarksOffline;
+        state.saveBookmarksOffline = action.payload;
       }
     },
-    setSummaryTranslations: (state, action: PayloadAction<SummarySliceState>) => {
+    setSummaryTranslations: (state, action: PayloadAction<StoreState['summaryTranslations']>) => {
       if (state) {
-        state.summaryTranslations = action.payload.summaryTranslations;
+        state.summaryTranslations = action.payload;
       }
     },
   },
 });
 
 export const { 
-  bookmarkSummary,
   setBookmarkedSummaries,
   setReadSummaries,
   setRemovedSummaries,
   setSaveBookmarksOffline,
   setSummaryTranslations,
 } = summarySlice.actions;
-
-export default summarySlice.reducer;

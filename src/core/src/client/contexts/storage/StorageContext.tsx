@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { UserData } from './UserData';
 import {
   ALL_SYNCABLE,
   DEFAULT_STORAGE_CONTEXT,
@@ -18,7 +19,6 @@ import {
   SyncableIoOut,
   ViewableFeature,
 } from './types';
-import { UserData } from '../../store/reducers/user/UserData';
 
 import {
   API,

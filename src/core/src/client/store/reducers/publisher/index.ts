@@ -4,23 +4,31 @@ import { StoreState } from '../../types';
 
 export type PublisherSliceState = Pick<StoreState, 'excludedPublishers' | 'favoritedPublishers' | 'followedPublishers'>;
 
-const publisherSlice = createSlice({
-  initialState: null as PublisherSliceState | null,
+const initialState: PublisherSliceState = {
+  excludedPublishers: {},
+  favoritedPublishers: {},
+  followedPublishers: {},
+};
+
+export { initialState as publisherInitialState };
+
+export const publisherSlice = createSlice({
+  initialState,
   name: 'publisher',
   reducers: { 
-    setExcludedPublishers: (state, action: PayloadAction<PublisherSliceState>) => {
+    setExcludedPublishers: (state, action: PayloadAction<StoreState['excludedPublishers']>) => {
       if (state) {
-        state.excludedPublishers = action.payload.excludedPublishers;
+        state.excludedPublishers = action.payload;
       }
     },
-    setFavoritedPublishers: (state, action: PayloadAction<PublisherSliceState>) => {
+    setFavoritedPublishers: (state, action: PayloadAction<StoreState['favoritedPublishers']>) => {
       if (state) {
-        state.favoritedPublishers = action.payload.favoritedPublishers;
+        state.favoritedPublishers = action.payload;
       }
     },
-    setFollowedPublishers: (state, action: PayloadAction<PublisherSliceState>) => {
+    setFollowedPublishers: (state, action: PayloadAction<StoreState['followedPublishers']>) => {
       if (state) {
-        state.followedPublishers = action.payload.followedPublishers;
+        state.followedPublishers = action.payload;
       }
     },
   },
@@ -31,5 +39,3 @@ export const {
   setFavoritedPublishers,
   setFollowedPublishers,
 } = publisherSlice.actions;
-
-export default publisherSlice.reducer;
