@@ -212,6 +212,7 @@ export const zhTWStrings: typeof enStrings = {
   password: '密碼',
   passwordsDoNotMatch: '密碼不匹配',
   personalInformation: '個人資訊',
+  play: '玩',
   pleaseEnterValidEmail: '請輸入有效電子郵件',
   pleaseUpdateToContinue: '請更新以繼續',
   points: '積分',

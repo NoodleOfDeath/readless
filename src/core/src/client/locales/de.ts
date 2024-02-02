@@ -212,6 +212,7 @@ export const deStrings: typeof enStrings = {
   password: 'Passwort',
   passwordsDoNotMatch: 'Passwörter stimmen nicht überein',
   personalInformation: 'Persönliche Angaben',
+  play: 'Spielen',
   pleaseEnterValidEmail: 'Bitte geben Sie eine gültige Email-Adresse ein',
   pleaseUpdateToContinue: 'Bitte aktualisieren Sie, um fortzufahren',
   points: 'Punkte',

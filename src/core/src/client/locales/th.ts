@@ -212,6 +212,7 @@ export const thStrings: typeof enStrings = {
   password: 'รหัสผ่าน',
   passwordsDoNotMatch: 'รหัสผ่านไม่ตรงกัน',
   personalInformation: 'ข้อมูลส่วนบุคคล',
+  play: 'เล่น',
   pleaseEnterValidEmail: 'กรุณาใส่อีเมลที่ถูกต้อง',
   pleaseUpdateToContinue: 'โปรดอัปเดตเพื่อดำเนินการต่อ',
   points: 'คะแนน',

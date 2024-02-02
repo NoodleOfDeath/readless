@@ -6,125 +6,37 @@ import {
 } from 'react-native';
 
 import { APP_STORE_LINK, PLAY_STORE_LINK } from '@env';
-import { BottomTabNavigationOptions } from '@react-navigation/bottom-tabs';
-import {
-  EventMapBase,
-  NavigationContainer,
-  NavigationState,
-  RouteConfig,
-} from '@react-navigation/native';
-import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
 import ms from 'ms';
 import { SheetProvider } from 'react-native-actions-sheet';
 import InAppReview from 'react-native-in-app-review';
-import { useStore } from 'react-redux';
 
-import { BottomTabNavigator } from './BottomTabNavigator';
-import { RoutedScreen } from './RoutedScreen';
-import { StackNavigator } from './StackNavigator';
-import { SettingsTabBarIcon } from './TabBarIcons';
-import { LeftTabBarIcons, RightTabBarIcons } from './TabBarIcons';
-import {
-  BASE_STACK,
-  LOGIN_STACK,
-  SETTINGS_STACK,
-} from './stacks';
+import { StackContainer } from './StackContainer';
 
 import {
   ActivityIndicator,
   Button,
   Dialog,
-  Icon,
-  MediaPlayer,
   Screen,
   Text,
   View,
 } from '~/components';
 import {
   LayoutContext,
-  MediaContext,
   NotificationContext,
   OrientationType,
   StorageContext,
   ToastContext,
 } from '~/contexts';
-import { Store, setColorScheme } from '~/core';
 import { useAppState, useTheme } from '~/hooks';
 import { strings } from '~/locales';
-import { 
-  HomeScreen,
-  NAVIGATION_LINKING_OPTIONS, 
-  RoutingParams,
-  SettingsScreen,
-} from '~/screens';
+import { NAVIGATION_LINKING_OPTIONS } from '~/screens';
 import { usePlatformTools } from '~/utils';
 
-const TAB_SCREENS: RouteConfig<
-RoutingParams,
-keyof RoutingParams,
-NavigationState,
-BottomTabNavigationOptions,
-EventMapBase
->[] = [
-  {
-    component: HomeScreen,
-    name: 'home',
-    options: {
-      headerLeft: () => <LeftTabBarIcons />,
-      headerRight: () => <RightTabBarIcons />,
-      headerShown: true,
-      headerTitle: '',
-      tabBarIcon: () => <Icon name='home' size={ 24 } />,
-      tabBarLabel: strings.home,
-    },
-  },
-  {
-    component: SettingsScreen,
-    name: 'settings',
-    options: {
-      headerShown: true,
-      headerTitle: strings.settings,
-      tabBarIcon: () => <SettingsTabBarIcon />,
-      tabBarLabel: strings.settings,
-    },
-  },
-];
-
-export function BottomTabs() {
-  return (
-    <RoutedScreen safeArea={ false }>
-      <BottomTabNavigator
-        id='BottomTabNav'
-        initialRouteName='home'
-        screens={ TAB_SCREENS } />
-    </RoutedScreen>
-  );
-}
-
-const STACK: RouteConfig<
-RoutingParams,
-keyof RoutingParams,
-NavigationState,
-NativeStackNavigationOptions,
-EventMapBase
->[] = [
-  {
-    component: BottomTabs,
-    name: 'bottomTabs',
-    options: {
-      headerShown: false,
-      headerTitle: '',
-    },
-  },
-  ...BASE_STACK,
-  ...SETTINGS_STACK,
-];
-
-export function RootNavigator() {
+export function AppContainer() {
   
   const { emitStorageEvent, needsUpdate } = usePlatformTools();
   const theme = useTheme();
-  const { getState, dispatch } = useStore<Store>();
 
   const {
     isTablet,
@@ -145,7 +57,6 @@ export function RootNavigator() {
   } = storage;
   const { showToast } = React.useContext(ToastContext);
   const { isRegisteredForRemoteNotifications, registerRemoteNotifications } = React.useContext(NotificationContext);
-  const { currentTrack } = React.useContext(MediaContext);
   
   const [lastSync, setLastSync] = React.useState(0);
   const [showedReview, setShowedReview] = React.useState(false);
@@ -270,7 +181,10 @@ export function RootNavigator() {
             contained
             key="ok"
             onPress={ () => {
-              Linking.openURL(Platform.select({ android: PLAY_STORE_LINK, ios: APP_STORE_LINK }) ?? '');
+              Linking.openURL(Platform.select({
+                android: PLAY_STORE_LINK, 
+                ios: APP_STORE_LINK, 
+              }) ?? '');
             } }>
             {strings.update}
 
@@ -286,20 +200,7 @@ export function RootNavigator() {
       theme= { theme.navContainerTheme }
       linking={ NAVIGATION_LINKING_OPTIONS }>
       <SheetProvider>
-        {(userData?.valid || userData?.unlinked) ? (
-          <React.Fragment>
-            <StackNavigator 
-              id="rootTabNav"
-              screens={ STACK }
-              screenOptions={ { headerShown: true } } />
-            <MediaPlayer visible={ Boolean(currentTrack) } />
-          </React.Fragment>
-        ) : (
-          <StackNavigator
-            id="loginStackNav" 
-            screens={ LOGIN_STACK }
-            screenOptions={ { headerShown: false } } />
-        )}
+        <StackContainer />
       </SheetProvider>
     </NavigationContainer>
   );

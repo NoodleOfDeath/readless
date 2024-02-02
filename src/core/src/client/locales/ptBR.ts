@@ -212,6 +212,7 @@ export const ptBRStrings: typeof enStrings = {
   password: 'Senha',
   passwordsDoNotMatch: 'As senhas não coincidem',
   personalInformation: 'Informações pessoais',
+  play: 'Jogar',
   pleaseEnterValidEmail: 'por favor digite um email válido',
   pleaseUpdateToContinue: 'Atualize para continuar',
   points: 'Pontos',

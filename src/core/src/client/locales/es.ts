@@ -212,6 +212,7 @@ export const esStrings: typeof enStrings = {
   password: 'Contraseña',
   passwordsDoNotMatch: 'Las contraseñas no coinciden',
   personalInformation: 'Informacion personal',
+  play: 'Jugar',
   pleaseEnterValidEmail: 'Por favor introduzca una dirección de correo electrónico válida',
   pleaseUpdateToContinue: 'Por favor actualiza para continuar',
   points: 'Puntos',

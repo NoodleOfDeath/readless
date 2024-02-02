@@ -11,6 +11,7 @@ import {
 import {
   ActivityIndicator,
   FlatList,
+  Screen,
   Summary,
   Text,
   View,
@@ -18,7 +19,6 @@ import {
 import {  StorageContext, ToastContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
-import { RoutedScreen } from '~/navigation';
 import { ScreenComponent } from '~/screens';
 
 export function SummaryScreen({ route }: ScreenComponent<'summary'>) {
@@ -109,7 +109,7 @@ export function SummaryScreen({ route }: ScreenComponent<'summary'>) {
   }, [summary, format, navigation]));
 
   return (
-    <RoutedScreen>
+    <Screen>
       {loading ? (
         <View flexGrow={ 1 } itemsCenter justifyCenter>
           <ActivityIndicator size="large" />
@@ -150,6 +150,6 @@ export function SummaryScreen({ route }: ScreenComponent<'summary'>) {
           ListFooterComponentStyle={ { paddingBottom: 64 } }
           estimatedItemSize={ 114 } />
       ))}
-    </RoutedScreen>
+    </Screen>
   );
 }

@@ -2,8 +2,6 @@ import React from 'react';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import { ScreenComponent } from '../types';
-
 import {
   Button,
   Divider,
@@ -16,6 +14,7 @@ import {
 import { StorageContext } from '~/contexts';
 import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
+import { ScreenComponent } from '~/screens/types';
 
 const Tab = createMaterialTopTabNavigator();
 

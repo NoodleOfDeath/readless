@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { DrawerNavigationProp } from '@react-navigation/drawer';
-import { useNavigation as useRNNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp, useDrawerStatus } from '@react-navigation/drawer';
+import { DrawerActions, useNavigation as useRNNavigation } from '@react-navigation/native';
 import { StackActions } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -27,6 +27,7 @@ export function useNavigation() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const navigation = useRNNavigation<Navigation>();
   const { openURL } = useInAppBrowser();
+  const drawerStatus = useDrawerStatus();
   
   const { 
     api: { interactWithSummary },
@@ -36,8 +37,11 @@ export function useNavigation() {
 
   const navigate = React.useCallback(<R extends keyof RoutingParams>(route: R, params?: RoutingParams[R]) => {
     emitStorageEvent('navigate', route);
+    if (drawerStatus === 'open') {
+      navigation.dispatch(DrawerActions.closeDrawer());
+    }
     return navigation.dispatch(StackActions.push(route, params));
-  }, [emitStorageEvent, navigation]);
+  }, [drawerStatus, emitStorageEvent, navigation]);
   
   const beginSearch = React.useCallback((params: RoutingParams['search']) => {
     navigate('search', params);

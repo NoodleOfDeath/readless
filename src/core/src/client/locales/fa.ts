@@ -212,6 +212,7 @@ export const faStrings: typeof enStrings = {
   password: 'کلمه عبور',
   passwordsDoNotMatch: 'رمزهای ورود مطابقت ندارند',
   personalInformation: 'اطلاعات شخصی',
+  play: 'بازی',
   pleaseEnterValidEmail: 'لطفا یک ایمیل معتبر وارد کنید',
   pleaseUpdateToContinue: 'لطفا برای ادامه به روز رسانی کنید',
   points: 'نکته ها',

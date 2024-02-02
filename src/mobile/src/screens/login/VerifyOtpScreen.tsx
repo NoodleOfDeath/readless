@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { ScreenComponent } from '../types';
-
 import { 
   ActivityIndicator,
   Button,
@@ -11,6 +9,7 @@ import {
 } from '~/components';
 import { StorageContext, UserData } from '~/contexts';
 import { strings } from '~/locales';
+import { ScreenComponent } from '~/screens/types';
 
 export function VerifyOtpScreen({
   route,

@@ -212,6 +212,7 @@ export const hiStrings: typeof enStrings = {
   password: 'पासवर्ड',
   passwordsDoNotMatch: 'सांकेतिक शब्द मेल नहीं खाते',
   personalInformation: 'व्यक्तिगत जानकारी',
+  play: 'खेल',
   pleaseEnterValidEmail: 'कृपया एक मान्य ईमेल दर्ज करें',
   pleaseUpdateToContinue: 'जारी रखने के लिए कृपया अपडेट करें',
   points: 'अंक',

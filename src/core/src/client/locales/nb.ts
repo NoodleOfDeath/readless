@@ -212,6 +212,7 @@ export const nbStrings: typeof enStrings = {
   password: 'Passord',
   passwordsDoNotMatch: 'passordene er ikke like',
   personalInformation: 'Personlig informasjon',
+  play: 'Spille',
   pleaseEnterValidEmail: 'Vennligst skriv inn en gyldig e-postadresse',
   pleaseUpdateToContinue: 'Oppdater for å fortsette',
   points: 'Poeng',

@@ -212,6 +212,7 @@ export const caStrings: typeof enStrings = {
   password: 'Contrasenya',
   passwordsDoNotMatch: 'Les contrasenyes no coincideixen',
   personalInformation: 'Informació personal',
+  play: 'Jugar',
   pleaseEnterValidEmail: 'Introduïu un correu electrònic vàlid',
   pleaseUpdateToContinue: 'Actualitzeu per continuar',
   points: 'Punts',

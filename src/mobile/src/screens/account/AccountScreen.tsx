@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { ScreenComponent } from '../types';
-
 import { ThirdParty } from '~/api';
 import { 
   Button,
@@ -17,6 +15,7 @@ import {
 import { StorageContext, ToastContext } from '~/contexts';
 import { useThirdPartyLogin } from '~/hooks';
 import { strings } from '~/locales';
+import { ScreenComponent } from '~/screens/types';
 
 export function AccountScreen({
   route: _route,

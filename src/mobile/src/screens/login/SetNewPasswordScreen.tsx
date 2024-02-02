@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { ScreenComponent } from '../types';
-
 import {
   Button,
   Text,
@@ -10,6 +8,7 @@ import {
 } from '~/components';
 import { StorageContext } from '~/core';
 import { strings } from '~/locales';
+import { ScreenComponent } from '~/screens/types';
 
 export function SetNewPasswordScreen({
   route: _route,

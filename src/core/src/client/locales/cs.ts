@@ -212,6 +212,7 @@ export const csStrings: typeof enStrings = {
   password: 'Heslo',
   passwordsDoNotMatch: 'Hesla se neshodují',
   personalInformation: 'Osobní informace',
+  play: 'Hrát si',
   pleaseEnterValidEmail: 'prosím zadejte platný email',
   pleaseUpdateToContinue: 'Chcete-li pokračovat, aktualizujte',
   points: 'Body',

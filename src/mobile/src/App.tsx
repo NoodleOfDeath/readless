@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { registerSheet } from 'react-native-actions-sheet';
-import { Provider } from 'react-redux';
 
 import { FeedbackDialog, ShareDialog } from './components';
 import { PaperContextProvider } from './contexts/paper';
@@ -13,8 +12,7 @@ import {
   StorageContextProvider,
   ToastContextProvider,
 } from '~/contexts';
-import store from '~/core/store';
-import { RootNavigator } from '~/navigation';
+import { AppContainer } from '~/navigation';
 
 // summary specific
 registerSheet('share', ShareDialog);
@@ -24,17 +22,15 @@ export default function App() {
   return (
     <LayoutContextProvider>
       <StorageContextProvider>
-        <Provider store={ store }>
-          <PaperContextProvider>
-            <ToastContextProvider>
-              <NotificationContextProvider>
-                <MediaContextProvider>
-                  <RootNavigator />
-                </MediaContextProvider>
-              </NotificationContextProvider>
-            </ToastContextProvider>
-          </PaperContextProvider>
-        </Provider>
+        <PaperContextProvider>
+          <ToastContextProvider>
+            <NotificationContextProvider>
+              <MediaContextProvider>
+                <AppContainer />
+              </MediaContextProvider>
+            </NotificationContextProvider>
+          </ToastContextProvider>
+        </PaperContextProvider>
       </StorageContextProvider>
     </LayoutContextProvider>
   );

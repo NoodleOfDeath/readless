@@ -212,6 +212,7 @@ export const roStrings: typeof enStrings = {
   password: 'Parola',
   passwordsDoNotMatch: 'parolele nu se potrivesc',
   personalInformation: 'Informații personale',
+  play: 'Joaca',
   pleaseEnterValidEmail: 'te rog introdu un email valid',
   pleaseUpdateToContinue: 'Actualizați pentru a continua',
   points: 'Puncte',

@@ -212,6 +212,7 @@ export const idStrings: typeof enStrings = {
   password: 'Kata sandi',
   passwordsDoNotMatch: 'Sandi tidak cocok',
   personalInformation: 'Informasi pribadi',
+  play: 'Bermain',
   pleaseEnterValidEmail: 'tolong masukkan email yang benar',
   pleaseUpdateToContinue: 'Harap perbarui untuk melanjutkan',
   points: 'Poin',

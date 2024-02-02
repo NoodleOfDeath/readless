@@ -212,6 +212,7 @@ export const ukStrings: typeof enStrings = {
   password: 'Пароль',
   passwordsDoNotMatch: 'Паролі не збігаються',
   personalInformation: 'Персональна інформація',
+  play: 'грати',
   pleaseEnterValidEmail: 'Введіть дійсну адресу електронної пошти',
   pleaseUpdateToContinue: 'Оновіть, щоб продовжити',
   points: 'Очки',

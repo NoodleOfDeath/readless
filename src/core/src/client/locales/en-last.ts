@@ -210,6 +210,7 @@ export const enStrings = {
   password: 'Password',
   passwordsDoNotMatch: 'Passwords do not match',
   personalInformation: 'Personal Information',
+  play: 'Play',
   pleaseEnterValidEmail: 'Please enter a valid email',
   pleaseUpdateToContinue: 'Please update to continue',
   points: 'Points',

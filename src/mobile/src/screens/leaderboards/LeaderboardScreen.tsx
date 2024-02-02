@@ -3,7 +3,6 @@ import React from 'react';
 import pluralize from 'pluralize';
 
 import { MetricButtonProps, MetricCounter } from './MetricCounter';
-import { ScreenComponent } from '../types';
 
 import {
   InteractionCount,
@@ -25,6 +24,7 @@ import {
 import { StorageContext } from '~/core';
 import { useInAppBrowser, useTheme } from '~/hooks';
 import { strings } from '~/locales';
+import { ScreenComponent } from '~/screens/types';
 
 export function LeaderboardScreen({ route }: ScreenComponent<'leaderboard'>) {
 

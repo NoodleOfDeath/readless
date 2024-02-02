@@ -212,6 +212,7 @@ export const plStrings: typeof enStrings = {
   password: 'Hasło',
   passwordsDoNotMatch: 'Hasła nie pasują do siebie',
   personalInformation: 'Informacje osobiste',
+  play: 'Grać',
   pleaseEnterValidEmail: 'Proszę podać poprawny adres e-mail',
   pleaseUpdateToContinue: 'Zaktualizuj, aby kontynuować',
   points: 'Zwrotnica',

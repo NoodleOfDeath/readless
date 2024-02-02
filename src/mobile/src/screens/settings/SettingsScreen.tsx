@@ -3,8 +3,6 @@ import { Alert, Platform } from 'react-native';
 
 import { APP_STORE_LINK, PLAY_STORE_LINK } from '@env';
 
-import { ScreenComponent } from '../types';
-
 import {
   Button,
   ContextMenu,
@@ -19,6 +17,7 @@ import { StorageContext } from '~/contexts';
 import { useInAppBrowser, useNavigation } from '~/hooks';
 import { TikTokIcon } from '~/icons';
 import { strings } from '~/locales';
+import { ScreenComponent } from '~/screens/types';
 import { usePlatformTools } from '~/utils';
 
 export function SettingsScreen({ route: _route }: ScreenComponent<'settings'>) {
@@ -222,7 +221,11 @@ export function SettingsScreen({ route: _route }: ScreenComponent<'settings'>) {
               detail={ strings.howAreWeDoing }
               onPress={ () => {
                 viewFeature('app-review');
-                openURL(Platform.select({ android: PLAY_STORE_LINK, ios: APP_STORE_LINK }) ?? ''); 
+                // TODO: send notification that user wrote review?
+                openURL(Platform.select({ 
+                  android: PLAY_STORE_LINK,
+                  ios: APP_STORE_LINK, 
+                }) ?? ''); 
               } } />
           </TableViewSection>
           <TableViewSection

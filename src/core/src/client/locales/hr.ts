@@ -212,6 +212,7 @@ export const hrStrings: typeof enStrings = {
   password: 'Lozinka',
   passwordsDoNotMatch: 'Lozinke se ne podudaraju',
   personalInformation: 'Osobne informacije',
+  play: 'igra',
   pleaseEnterValidEmail: 'Unesite valjanu e-poštu',
   pleaseUpdateToContinue: 'Ažurirajte za nastavak',
   points: 'Bodovi',

@@ -212,6 +212,7 @@ export const huStrings: typeof enStrings = {
   password: 'Jelszó',
   passwordsDoNotMatch: 'A jelszavak nem egyeznek',
   personalInformation: 'Személyes adat',
+  play: 'Játék',
   pleaseEnterValidEmail: 'Kérlek létező email címet adj meg',
   pleaseUpdateToContinue: 'Kérjük, frissítse a folytatáshoz',
   points: 'Pontok',

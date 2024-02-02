@@ -212,6 +212,7 @@ export const elStrings: typeof enStrings = {
   password: 'Κωδικός πρόσβασης',
   passwordsDoNotMatch: 'Οι κωδικοί πρόσβασης δεν ταιριάζουν',
   personalInformation: 'Προσωπικές πληροφορίες',
+  play: 'Παίζω',
   pleaseEnterValidEmail: 'Παρακαλώ εισάγετε μια έγκυρη διεύθυνση email',
   pleaseUpdateToContinue: 'Ενημερώστε για να συνεχίσετε',
   points: 'Πόντοι',

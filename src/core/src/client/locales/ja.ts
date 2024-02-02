@@ -212,6 +212,7 @@ export const jaStrings: typeof enStrings = {
   password: 'パスワード',
   passwordsDoNotMatch: 'パスワードが一致していません',
   personalInformation: '個人情報',
+  play: '遊ぶ',
   pleaseEnterValidEmail: '正しいメールアドレスを入力してください',
   pleaseUpdateToContinue: '続行するには更新してください',
   points: 'ポイント',

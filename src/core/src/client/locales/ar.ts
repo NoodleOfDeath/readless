@@ -212,6 +212,7 @@ export const arStrings: typeof enStrings = {
   password: 'كلمة المرور',
   passwordsDoNotMatch: 'كلمة المرور غير مطابقة',
   personalInformation: 'معلومات شخصية',
+  play: 'يلعب',
   pleaseEnterValidEmail: 'يرجى إدخال البريد الإلكتروني الصحيح',
   pleaseUpdateToContinue: 'يرجى التحديث للمتابعة',
   points: 'نقاط',

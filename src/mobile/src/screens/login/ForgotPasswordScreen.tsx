@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { ScreenComponent } from '../types';
-
 import { 
   ActivityIndicator,
   Button,
@@ -12,6 +10,7 @@ import {
 } from '~/components';
 import { StorageContext } from '~/contexts';
 import { strings } from '~/locales';
+import { ScreenComponent } from '~/screens/types';
 
 export function ForgotPasswordScreen({ route }: ScreenComponent<'forgotPassword'>) {
   

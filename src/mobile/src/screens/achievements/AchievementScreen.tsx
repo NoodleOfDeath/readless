@@ -2,8 +2,6 @@ import React from 'react';
 
 import { format as formatDate } from 'date-fns';
 
-import { ScreenComponent } from '../types';
-
 import {
   Divider,
   HighlightedText,
@@ -12,6 +10,7 @@ import {
   View,
 } from '~/components';
 import { getFnsLocale } from '~/locales';
+import { ScreenComponent } from '~/screens/types';
 
 export function AchievementScreen({ route }: ScreenComponent<'achievement'>) {
   const achievement = React.useMemo(() => route?.params?.achievement, [route?.params?.achievement]);

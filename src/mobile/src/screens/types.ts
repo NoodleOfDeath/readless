@@ -17,7 +17,8 @@ import {
 export type NavigationID = `${string}DrawerNav` | `${string}StackNav` | `${string}TabNav`;
 
 export type TabRoutingParams = {
-  bottomTabs: undefined;
+  root: undefined;
+  home: undefined;
 };
 
 export type LoginRoutingParams = {
@@ -87,7 +88,8 @@ export type NewsRoutingParams = {
 };
 
 export type GamesRoutingParams = {
-  play: {
+  selectGame: undefined;
+  playGame: {
     name: string;
   }
 };

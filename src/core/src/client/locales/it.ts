@@ -212,6 +212,7 @@ export const itStrings: typeof enStrings = {
   password: 'Parola d\'ordine',
   passwordsDoNotMatch: 'le passwords non corrispondono',
   personalInformation: 'Informazione personale',
+  play: 'Giocare',
   pleaseEnterValidEmail: 'Inserisci una email valida',
   pleaseUpdateToContinue: 'Si prega di aggiornare per continuare',
   points: 'Punti',

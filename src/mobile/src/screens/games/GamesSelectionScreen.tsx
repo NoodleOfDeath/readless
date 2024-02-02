@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { ScreenComponent } from '../types';
-
 import {
   Button,
   ChildlessViewProps,
@@ -9,6 +7,7 @@ import {
   Text,
   View,
 } from '~/components';
+import { ScreenComponent } from '~/screens/types';
 
 export type GameProps = {
   name: string;
@@ -29,7 +28,7 @@ export const GAMES = [
   { name: 'wordle' },
 ];
 
-export function GamesSelectionScreen({ navigation }: ScreenComponent<'games'>) {
+export function GamesSelectionScreen({ navigation }: ScreenComponent<'selectGame'>) {
   return (
     <Screen>
       <View flex={ 1 } p={ 12 }>
@@ -37,7 +36,7 @@ export function GamesSelectionScreen({ navigation }: ScreenComponent<'games'>) {
           <GameTile 
             key={ game.name }
             { ...game }
-            onPress={ () => navigation?.navigate('play', { name: game.name }) } />
+            onPress={ () => navigation?.navigate('playGame', { name: game.name }) } />
         ))}
       </View>
     </Screen>

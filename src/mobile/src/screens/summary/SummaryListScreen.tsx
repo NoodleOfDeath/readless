@@ -2,10 +2,9 @@ import React from 'react';
 
 import { useFocusEffect } from '@react-navigation/native';
 
-import { SummaryList } from '~/components';
+import { Screen, SummaryList } from '~/components';
 import { StorageContext } from '~/core';
 import { strings } from '~/locales';
-import { RoutedScreen } from '~/navigation';
 import { ScreenComponent } from '~/screens';
 
 export function SummaryListScreen({ 
@@ -20,13 +19,13 @@ export function SummaryListScreen({
   }, [route, navigation]));
 
   return (
-    <RoutedScreen>
+    <Screen>
       <SummaryList
         landscapeEnabled
         enableTts
         fetch={ getSummaries }
         filter={ route?.params?.prefilter }
         specificIds={ route?.params?.specificIds } />
-    </RoutedScreen>
+    </Screen>
   );
 }

@@ -212,6 +212,7 @@ export const heStrings: typeof enStrings = {
   password: 'סיסמה',
   passwordsDoNotMatch: 'סיסמאות לא תואמות',
   personalInformation: 'מידע אישי',
+  play: 'לְשַׂחֵק',
   pleaseEnterValidEmail: 'נא להזין אימייל חוקי',
   pleaseUpdateToContinue: 'אנא עדכן כדי להמשיך',
   points: 'נקודות',

@@ -212,6 +212,7 @@ export const nlStrings: typeof enStrings = {
   password: 'Wachtwoord',
   passwordsDoNotMatch: 'Wachtwoorden komen niet overeen',
   personalInformation: 'Persoonlijke informatie',
+  play: 'Toneelstuk',
   pleaseEnterValidEmail: 'Gelieve een geldig e-mailadres in te vullen',
   pleaseUpdateToContinue: 'Update alstublieft om door te gaan',
   points: 'Punten',

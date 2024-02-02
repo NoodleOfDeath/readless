@@ -212,6 +212,7 @@ export const ruStrings: typeof enStrings = {
   password: 'Пароль',
   passwordsDoNotMatch: 'Пароли не совпадают',
   personalInformation: 'Персональная информация',
+  play: 'Играть',
   pleaseEnterValidEmail: 'Введите, пожалуйста, действительный адрес электронной почты',
   pleaseUpdateToContinue: 'Пожалуйста, обновите, чтобы продолжить',
   points: 'Точки',

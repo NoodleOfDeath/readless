@@ -1,5 +1,5 @@
 import React from 'react';
-import { InteractionManager, SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native';
 
 import {
   DrawerContentComponentProps,
@@ -9,9 +9,7 @@ import {
 import { useFocusEffect } from '@react-navigation/native';
 import { Avatar } from 'react-native-paper';
 
-import { RoutedScreen } from './RoutedScreen';
-import { StackNavigator } from './StackNavigator';
-import { HOME_STACK } from './stacks';
+import { LoginStack, MainStack } from './stacks';
 
 import { PublicCategoryAttributes, PublicPublisherAttributes } from '~/api';
 import {
@@ -23,17 +21,6 @@ import {
 import { StorageContext } from '~/contexts';
 import { useNavigation, useTheme } from '~/hooks';
 import { strings } from '~/locales';
-
-export function HomeDrawer() {
-  return (
-    <RoutedScreen navigationID='LeftDrawerNav' safeArea={ false }>
-      <StackNavigator
-        id='LeftDrawerNav'
-        initialRouteName='home'
-        screens={ HOME_STACK } />
-    </RoutedScreen>
-  );
-}
 
 export function LeftDrawerContent(props: DrawerContentComponentProps) {
   
@@ -73,25 +60,20 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
   const [sortedCategories, setSortedCategories] = React.useState<PublicCategoryAttributes[]>([]);
 
   useFocusEffect(React.useCallback(() => {
-    const interaction = InteractionManager.runAfterInteractions(() => {
       
-      const topPublishers = Object.keys({ ...favoritedPublishers }).sort().map((p) => publishers?.[p]).filter(Boolean) as PublicPublisherAttributes[];
+    const topPublishers = Object.keys({ ...favoritedPublishers }).sort().map((p) => publishers?.[p]).filter(Boolean) as PublicPublisherAttributes[];
       
-      const topCategories = Object.keys({ ...favoritedCategories }).sort().map((c) => categories?.[c]).filter(Boolean) as PublicCategoryAttributes[];
+    const topCategories = Object.keys({ ...favoritedCategories }).sort().map((c) => categories?.[c]).filter(Boolean) as PublicCategoryAttributes[];
     
-      setTopPublishers(topPublishers);
-      setTopCategories(topCategories);
+    setTopPublishers(topPublishers);
+    setTopCategories(topCategories);
     
-      const sortedPublishers = Object.keys({ ...followedPublishers }).sort().map((p) => publishers?.[p]).filter(Boolean) as PublicPublisherAttributes[];
-      setSortedPublishers(sortedPublishers);
+    const sortedPublishers = Object.keys({ ...followedPublishers }).sort().map((p) => publishers?.[p]).filter(Boolean) as PublicPublisherAttributes[];
+    setSortedPublishers(sortedPublishers);
     
-      const sortedCategories = Object.keys({ ...followedCategories }).sort().map((c) => categories?.[c]).filter(Boolean) as PublicCategoryAttributes[];
-      setSortedCategories(sortedCategories);
+    const sortedCategories = Object.keys({ ...followedCategories }).sort().map((c) => categories?.[c]).filter(Boolean) as PublicCategoryAttributes[];
+    setSortedCategories(sortedCategories);
       
-    });
-    return () => {
-      interaction.cancel();
-    };
   }, [publishers, categories, favoritedPublishers, favoritedCategories, followedPublishers, followedCategories]));
 
   const name = React.useMemo(() => userData?.profile?.email || userData?.profile?.username, [userData]);
@@ -212,18 +194,20 @@ export function LeftDrawerContent(props: DrawerContentComponentProps) {
 const LeftDrawer = createDrawerNavigator();
 
 export function LeftDrawerNavigator() {
+  const { userData } = React.useContext(StorageContext);
   return (
     <LeftDrawer.Navigator 
-      id="LeftDrawer"
+      id="LeftDrawerNav"
       initialRouteName={ 'home' }
       screenOptions={ ({ route: _route }) => ({
         headerShown: false,
-        swipeEnabled: false,
+        unmountOnBlur: true,
       }) }
       drawerContent={ (props) => <LeftDrawerContent { ...props } /> }>
-      <LeftDrawer.Screen 
-        name={ strings.home } 
-        component={ HomeDrawer } />
+      <LeftDrawer.Screen
+        name="home"
+        component={ (userData?.valid || userData?.unlinked) ? MainStack : LoginStack }
+        options={ { title: strings.home } } />
     </LeftDrawer.Navigator>
   );
 }

@@ -5,7 +5,6 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { useFocusEffect } from '@react-navigation/native';
 
 import { LeaderboardScreen } from './LeaderboardScreen';
-import { ScreenComponent } from '../types';
 
 import { InteractionType, MetricsResponse } from '~/api';
 import {
@@ -18,6 +17,7 @@ import { ToastContext } from '~/contexts';
 import { StorageContext, UserData } from '~/core';
 import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
+import { ScreenComponent } from '~/screens/types';
 
 const Tab = createMaterialTopTabNavigator();
 

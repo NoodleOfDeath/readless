@@ -212,6 +212,7 @@ export const daStrings: typeof enStrings = {
   password: 'Adgangskode',
   passwordsDoNotMatch: 'Kodeordene er ikke ens',
   personalInformation: 'Personlig information',
+  play: 'Spil',
   pleaseEnterValidEmail: 'Indtast venligst en gyldig e-mail',
   pleaseUpdateToContinue: 'Opdater venligst for at fortsætte',
   points: 'Points',

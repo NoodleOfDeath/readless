@@ -212,6 +212,7 @@ export const viStrings: typeof enStrings = {
   password: 'Mật khẩu',
   passwordsDoNotMatch: 'Mật khẩu không phù hợp',
   personalInformation: 'Thông tin cá nhân',
+  play: 'Chơi',
   pleaseEnterValidEmail: 'Vui lòng nhập email hợp lệ',
   pleaseUpdateToContinue: 'Vui lòng cập nhật để tiếp tục',
   points: 'Điểm',

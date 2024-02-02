@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { BySigningUpBlock } from './LoginScreen';
-import { ScreenComponent } from '../types';
 
 import {
   Button,
@@ -11,6 +10,7 @@ import {
 } from '~/components';
 import { StorageContext } from '~/core';
 import { strings } from '~/locales';
+import { ScreenComponent } from '~/screens/types';
 import { validateEmail, validatePassword } from '~/utils';
 
 export function RegisterScreen({

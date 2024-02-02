@@ -600,7 +600,7 @@ export class AccountController extends BaseControllerWithPersistentStorageAccess
     if (!user) {
       throw new AuthError('BAD_REQUEST');
     }
-    await user.authenticate(req.body);
+    await user.authenticate(body);
     await user.destroy({ force: true });
     return { success: true };
   }

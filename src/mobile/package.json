@@ -93,6 +93,7 @@
     "@babel/preset-env": "^7.23.3",
     "@babel/runtime": "^7.23.2",
     "@react-native-community/eslint-config": "^3.2.0",
+    "@react-native/typescript-config": "^0.74.0",
     "@tsconfig/react-native": "^2.0.3",
     "@types/highlight-words-core": "^1.2.3",
     "@types/jest": "^29.5.8",

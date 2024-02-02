@@ -212,6 +212,7 @@ export const skStrings: typeof enStrings = {
   password: 'heslo',
   passwordsDoNotMatch: 'Heslá sa nezhodujú',
   personalInformation: 'Osobné informácie',
+  play: 'hrať',
   pleaseEnterValidEmail: 'Prosím zadajte platný e-mail',
   pleaseUpdateToContinue: 'Ak chcete pokračovať, aktualizujte',
   points: 'Body',

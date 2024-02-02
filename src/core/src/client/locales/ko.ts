@@ -212,6 +212,7 @@ export const koStrings: typeof enStrings = {
   password: '비밀번호',
   passwordsDoNotMatch: '비밀번호가 일치하지 않습니다',
   personalInformation: '개인 정보',
+  play: '놀다',
   pleaseEnterValidEmail: '유효한 이메일을 입력해주세요',
   pleaseUpdateToContinue: '계속하려면 업데이트하세요.',
   points: '포인트들',

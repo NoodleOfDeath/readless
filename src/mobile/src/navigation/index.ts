@@ -2,6 +2,5 @@ export * from './header';
 export * from './stacks';
 
 export * from './TabBarIcons';
-export * from './RoutedScreen';
-export * from './RootNavigator';
-export * from './StackNavigator';
+export * from './AppContainer';
+export * from './StackContainer';

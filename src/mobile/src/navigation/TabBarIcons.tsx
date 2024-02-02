@@ -1,6 +1,8 @@
 
 import React from 'react';
 
+import { DrawerActions } from '@react-navigation/native';
+
 import { Button, View } from '~/components';
 import { StorageContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
@@ -57,6 +59,27 @@ export const NotificationsTabBarIcon = () => {
   );
 };
 
+export const ToggleDrawerTabBarIcon = () => {
+  const { navigation } = useNavigation();
+  const { unreadBookmarkCount, hasViewedFeature } = React.useContext(StorageContext);
+  return (
+    <Button
+      accessible
+      accessibilityLabel={ strings.menu }
+      leftIcon="menu"
+      iconSize={ 24 }
+      indicator={
+        (unreadBookmarkCount > 0 && !hasViewedFeature('bookmarks')) ||
+        !hasViewedFeature('publishers') || 
+        !hasViewedFeature('categories') || 
+        !hasViewedFeature('display-preferences') ||
+        !hasViewedFeature('notifications') || 
+        !hasViewedFeature('app-review')
+      }
+      onPress={ () => navigation.dispatch(DrawerActions.toggleDrawer()) } />
+  );
+};
+
 export const SettingsTabBarIcon = () => {
   const { hasViewedFeature } = React.useContext(StorageContext);
   return (
@@ -78,7 +101,7 @@ export const SettingsTabBarIcon = () => {
 export const LeftTabBarIcons = () => {
   return (
     <View flexRow gap={ 12 } ml={ 12 }>
-      <BookmarksTabBarIcon />
+      <ToggleDrawerTabBarIcon />
     </View>
   );
 };

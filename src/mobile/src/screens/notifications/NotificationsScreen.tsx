@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { ScreenComponent } from '../types';
-
 import {
   Button,
   Divider,
@@ -13,6 +11,7 @@ import {
 import { StorageContext } from '~/contexts';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
+import { ScreenComponent } from '~/screens/types';
 import { timeAgo } from '~/utils';
 
 export function NotificationsScreen(_props: ScreenComponent<'notifications'>) {

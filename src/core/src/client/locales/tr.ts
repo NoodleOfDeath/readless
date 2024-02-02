@@ -212,6 +212,7 @@ export const trStrings: typeof enStrings = {
   password: 'Şifre',
   passwordsDoNotMatch: 'Parolalar uyuşmuyor',
   personalInformation: 'Kişisel bilgi',
+  play: 'Oynamak',
   pleaseEnterValidEmail: 'lütfen geçerli eposta adresini giriniz',
   pleaseUpdateToContinue: 'Devam etmek için lütfen güncelleyin',
   points: 'Puanlar',

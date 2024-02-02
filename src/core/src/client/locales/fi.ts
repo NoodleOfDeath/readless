@@ -212,6 +212,7 @@ export const fiStrings: typeof enStrings = {
   password: 'Salasana',
   passwordsDoNotMatch: 'Salasanat eivät täsmää',
   personalInformation: 'Henkilökohtaisia tietoja',
+  play: 'pelata',
   pleaseEnterValidEmail: 'Anna kelvollinen sähköpostiosoite',
   pleaseUpdateToContinue: 'Päivitä jatkaaksesi',
   points: 'Pisteet',

@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { ScreenComponent } from '../types';
-
 import {
   ActivityIndicator,
   Button,
@@ -12,6 +10,7 @@ import {
 import { StorageContext, UserData } from '~/core';
 import { useNavigation } from '~/hooks';
 import { strings } from '~/locales';
+import { ScreenComponent } from '~/screens/types';
 
 export function PasswordLoginScreen({ route: _route }: ScreenComponent<'passwordLogin'>) {
 

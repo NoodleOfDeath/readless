@@ -212,6 +212,7 @@ export const msStrings: typeof enStrings = {
   password: 'Kata laluan',
   passwordsDoNotMatch: 'Kata laluan tidak sepadan',
   personalInformation: 'Maklumat peribadi',
+  play: 'Main',
   pleaseEnterValidEmail: 'Sila masukkan e-mel yang sah',
   pleaseUpdateToContinue: 'Sila kemas kini untuk meneruskan',
   points: 'mata',

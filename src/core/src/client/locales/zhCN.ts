@@ -212,6 +212,7 @@ export const zhCNStrings: typeof enStrings = {
   password: '密码',
   passwordsDoNotMatch: '密码不匹配',
   personalInformation: '个人信息',
+  play: '玩',
   pleaseEnterValidEmail: '请输入有效电子邮件',
   pleaseUpdateToContinue: '请更新以继续',
   points: '积分',

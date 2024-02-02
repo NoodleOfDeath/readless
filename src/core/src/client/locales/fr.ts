@@ -212,6 +212,7 @@ export const frStrings: typeof enStrings = {
   password: 'Mot de passe',
   passwordsDoNotMatch: 'Les mots de passe ne correspondent pas',
   personalInformation: 'Informations personnelles',
+  play: 'Jouer',
   pleaseEnterValidEmail: 'Veuillez entrer un email valide',
   pleaseUpdateToContinue: 'Veuillez mettre à jour pour continuer',
   points: 'Points',

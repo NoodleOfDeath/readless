@@ -212,6 +212,7 @@ export const svStrings: typeof enStrings = {
   password: 'Lösenord',
   passwordsDoNotMatch: 'Lösenorden matchar inte',
   personalInformation: 'Personlig information',
+  play: 'Spela',
   pleaseEnterValidEmail: 'Ange en giltig e-postadress',
   pleaseUpdateToContinue: 'Uppdatera för att fortsätta',
   points: 'Poäng',
