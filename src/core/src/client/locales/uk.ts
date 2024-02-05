@@ -321,6 +321,7 @@ export const ukStrings: typeof enStrings = {
   turnOffFilters: 'Вимкніть фільтри',
   twitter: 'Twitter',
   unbookmark: 'Видалити закладку',
+  unbookmarked: 'Знято з закладок',
   unexclude: 'Показати',
   unfavorite: 'Вилучити з обраного',
   unfollow: 'Відписатися',

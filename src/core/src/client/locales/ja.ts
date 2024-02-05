@@ -321,6 +321,7 @@ export const jaStrings: typeof enStrings = {
   turnOffFilters: 'フィルターをオフにする',
   twitter: 'ツイッター',
   unbookmark: 'ブックマークを削除',
+  unbookmarked: 'ブックマークされていない',
   unexclude: '再表示',
   unfavorite: '気に入らない',
   unfollow: 'フォローを解除する',

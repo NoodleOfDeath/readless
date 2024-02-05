@@ -321,6 +321,7 @@ export const ptBRStrings: typeof enStrings = {
   turnOffFilters: 'Desative os filtros',
   twitter: 'Twitter',
   unbookmark: 'Remover marcador',
+  unbookmarked: 'Desmarcado',
   unexclude: 'Mostrar',
   unfavorite: 'Não favorito',
   unfollow: 'Deixar de seguir',

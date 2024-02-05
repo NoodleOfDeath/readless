@@ -125,7 +125,6 @@ export function Recap({
   const coverCard = React.useMemo(() => (
     <View 
       { ...props }
-      p={ 12 }
       gap={ 3 }
       borderRadius={ 12 }
       opacity={ isRead ? 0.5 : 1.0 }
@@ -157,7 +156,7 @@ export function Recap({
 
   return expanded ? (
     <React.Fragment>
-      <View p={ 12 }>
+      <View>
         <Text>{strings.headlines}</Text>
       </View>
       <SummaryList
@@ -166,7 +165,6 @@ export function Recap({
         specificIds={ ids } />
       <ScrollView flex={ 1 }>
         <View
-          p={ 12 }
           gap={ 6 }
           style={ theme.components.card }>
           <Text h6 bold selectable>{translations.title}</Text>

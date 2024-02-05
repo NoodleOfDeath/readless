@@ -30,13 +30,12 @@ const makeTheme = (darkMode: boolean) => {
       textDark: '#000',
       textDisabled: darkMode ? '#888' : '#aaa',
       textHighlightBackground: 'yellow',
-      textSecondary: darkMode ? '#ccc' : '#888',
+      textSecondary: darkMode ? '#ccc' : '#444',
     },
     // containers
     components: 
       StyleSheet.create({
-        card: { backgroundColor: darkMode ? '#242424' : '#fff' },
-        cardBig: { backgroundColor: darkMode ? '#242424' : '#fff' },
+        card: { backgroundColor: darkMode ? '#030303' : '#f4f4f4' },
         chip: {
           alignItems: 'center',
           justifyContent: 'center',
@@ -60,7 +59,7 @@ const makeTheme = (darkMode: boolean) => {
           borderRadius: 500,
           color: '#fff',
         },
-        divider: { backgroundColor: darkMode ? '#666' : '#ccc' },
+        divider: { backgroundColor: darkMode ? '#666' : '#aaa' },
         input: { 
           backgroundColor: darkMode ? '#111' : '#ddd',
           borderRadius: 500,
@@ -78,7 +77,7 @@ const makeTheme = (darkMode: boolean) => {
       ...(darkMode ? DarkTheme : DefaultTheme),
       colors: {
         ...(darkMode ? DarkTheme.colors : DefaultTheme),
-        background: darkMode ? '#030303' : '#e4e4e4',
+        background: darkMode ? '#030303' : '#f4f4f4',
         border: darkMode ? '#757575' : '#bdbdbd',
         card: darkMode ? '#1e1e1e' : '#fff',
         notification: '#c00000',

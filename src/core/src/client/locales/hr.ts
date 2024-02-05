@@ -321,6 +321,7 @@ export const hrStrings: typeof enStrings = {
   turnOffFilters: 'Isključite filtere',
   twitter: 'Cvrkut',
   unbookmark: 'Ukloni oznaku',
+  unbookmarked: 'Neoznačeno',
   unexclude: 'Otkrij',
   unfavorite: 'Neomiljeno',
   unfollow: 'Prestani pratiti',

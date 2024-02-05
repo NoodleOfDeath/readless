@@ -321,6 +321,7 @@ export const koStrings: typeof enStrings = {
   turnOffFilters: '필터 끄기',
   twitter: '트위터',
   unbookmark: '북마크 제거',
+  unbookmarked: '북마크 해제됨',
   unexclude: '숨기기 해제',
   unfavorite: '즐겨찾기 안함',
   unfollow: '언팔로우',

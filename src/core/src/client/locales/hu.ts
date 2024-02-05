@@ -321,6 +321,7 @@ export const huStrings: typeof enStrings = {
   turnOffFilters: 'Kapcsolja ki a szűrőket',
   twitter: 'Twitter',
   unbookmark: 'Könyvjelző eltávolítása',
+  unbookmarked: 'Nincs könyvjelző',
   unexclude: 'Felfed',
   unfavorite: 'Nem kedvenc',
   unfollow: 'Követés megszüntetése',

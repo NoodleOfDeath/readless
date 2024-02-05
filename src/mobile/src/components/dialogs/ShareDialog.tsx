@@ -81,7 +81,7 @@ export function ShareDialog({
     const genericActions: ShareDialogAction[] = 
       [
         {
-          icon: 'export-variant',
+          icon: 'share',
           label: strings.share,
           onPress: () => shareStandard(summary, { format }), 
         },

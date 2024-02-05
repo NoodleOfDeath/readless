@@ -321,6 +321,7 @@ export const svStrings: typeof enStrings = {
   turnOffFilters: 'Stäng av filter',
   twitter: 'Twitter',
   unbookmark: 'Ta bort bokmärke',
+  unbookmarked: 'Obokmärkt',
   unexclude: 'Visa upp',
   unfavorite: 'Avfavorit',
   unfollow: 'Sluta följa',

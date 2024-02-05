@@ -321,6 +321,7 @@ export const nbStrings: typeof enStrings = {
   turnOffFilters: 'Slå av filtre',
   twitter: 'Twitter',
   unbookmark: 'Fjern bokmerke',
+  unbookmarked: 'Opphevet bokmerke',
   unexclude: 'Vis frem',
   unfavorite: 'Ikke favoritt',
   unfollow: 'Slutt å følge',

@@ -321,6 +321,7 @@ export const deStrings: typeof enStrings = {
   turnOffFilters: 'Filter ausschalten',
   twitter: 'Twitter',
   unbookmark: 'Lesezeichen entfernen',
+  unbookmarked: 'Ohne Lesezeichen',
   unexclude: 'Einblenden',
   unfavorite: 'Unfavorit',
   unfollow: 'Nicht mehr folgen',

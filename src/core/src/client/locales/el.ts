@@ -321,6 +321,7 @@ export const elStrings: typeof enStrings = {
   turnOffFilters: 'Απενεργοποιήστε τα φίλτρα',
   twitter: 'Κελάδημα',
   unbookmark: 'Κατάργηση σελιδοδείκτη',
+  unbookmarked: 'Χωρίς σελιδοδείκτη',
   unexclude: 'Απόκρυψη',
   unfavorite: 'Μη αγαπημένος',
   unfollow: 'Κατάργηση παρακολούθησης',

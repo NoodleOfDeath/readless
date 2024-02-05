@@ -321,6 +321,7 @@ export const skStrings: typeof enStrings = {
   turnOffFilters: 'Vypnite filtre',
   twitter: 'Twitter',
   unbookmark: 'Odstrániť záložku',
+  unbookmarked: 'Zrušená záložka',
   unexclude: 'Odkryť',
   unfavorite: 'Neobľúbené',
   unfollow: 'Prestať sledovať',

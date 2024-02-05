@@ -321,6 +321,7 @@ export const ruStrings: typeof enStrings = {
   turnOffFilters: 'Отключить фильтры',
   twitter: 'Твиттер',
   unbookmark: 'Удалить закладку',
+  unbookmarked: 'Из закладок',
   unexclude: 'Показать',
   unfavorite: 'Удалить из избранного',
   unfollow: 'Отписаться',

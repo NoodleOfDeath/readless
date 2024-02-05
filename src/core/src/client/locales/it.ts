@@ -321,6 +321,7 @@ export const itStrings: typeof enStrings = {
   turnOffFilters: 'Disattiva i filtri',
   twitter: 'Cinguettio',
   unbookmark: 'Rimuovi segnalibro',
+  unbookmarked: 'Eliminato dai segnalibri',
   unexclude: 'Scopri',
   unfavorite: 'Sfavorito',
   unfollow: 'Smetti di seguire',

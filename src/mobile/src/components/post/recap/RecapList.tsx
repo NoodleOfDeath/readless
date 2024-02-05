@@ -3,7 +3,11 @@ import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { RecapAttributes } from '~/api';
-import { FlatList, Recap } from '~/components';
+import {
+  Divider,
+  FlatList,
+  Recap,
+} from '~/components';
 import { StorageContext } from '~/contexts';
 
 export type RecapListProps = {
@@ -54,13 +58,12 @@ export function RecapList({ header }: RecapListProps = {}) {
       renderItem={ ({ item }) => (
         <Recap
           key={ item.id }
-          recap={ item }
-          mx={ 12 }
-          mb={ 12 } />
+          recap={ item } />
       ) }
       ListHeaderComponentStyle={ { paddingTop: 12 } }
       ListHeaderComponent={ <React.Fragment>{header}</React.Fragment> }
       ListFooterComponentStyle={ { paddingBottom: 12 } }
-      estimatedItemSize={ 126 } />
+      ItemSeparatorComponent={ () => <Divider my={ 6 } /> }
+      estimatedItemSize={ 102 } />
   );
 }

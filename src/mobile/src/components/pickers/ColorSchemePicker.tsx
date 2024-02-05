@@ -8,6 +8,7 @@ import {
   TablePicker,
 } from '~/components';
 import { StorageContext } from '~/contexts';
+import { useTheme } from '~/hooks';
 import { strings } from '~/locales';
 
 type ColorSchemePickerProps = Omit<SegmentedButtonsProps, 'options'> & {
@@ -21,8 +22,9 @@ export function ColorSchemePicker({
   ...props
 }: ColorSchemePickerProps) {
   
+  const theme = useTheme();
   const { colorScheme, setStoredValue } = React.useContext(StorageContext);
-  
+
   if (variant === 'table') {
     return (
       <TablePicker
@@ -31,11 +33,14 @@ export function ColorSchemePicker({
           { label: strings.system, value: 'system' },
           { label: strings.dark, value: 'dark' },
         ] }
+        baseCellProps={ { style: theme.components.card } }
         initialValue={ colorScheme ?? 'system' }
         onValueChange={ (colorScheme) => {
           setStoredValue('colorScheme', colorScheme); 
         } }>
-        <ScrollView my={ 12 } scrollEnabled={ false }>
+        <ScrollView
+          my={ 12 } 
+          scrollEnabled={ false }>
           <Summary
             sample
             disableInteractions 

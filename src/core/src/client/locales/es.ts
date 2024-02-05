@@ -321,6 +321,7 @@ export const esStrings: typeof enStrings = {
   turnOffFilters: 'desactivar filtros',
   twitter: 'Gorjeo',
   unbookmark: 'Quitar marcador',
+  unbookmarked: 'Sin marcar',
   unexclude: 'Mostrar',
   unfavorite: 'No favorito',
   unfollow: 'Dejar de seguir',

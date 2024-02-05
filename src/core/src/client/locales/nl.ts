@@ -321,6 +321,7 @@ export const nlStrings: typeof enStrings = {
   turnOffFilters: 'Schakel filters uit',
   twitter: 'Twitteren',
   unbookmark: 'Bladwijzer verwijderen',
+  unbookmarked: 'Geen bladwijzer meer',
   unexclude: 'zichtbaar maken',
   unfavorite: 'Niet favoriet',
   unfollow: 'Ontvolgen',

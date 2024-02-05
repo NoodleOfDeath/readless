@@ -28,6 +28,7 @@ export type TablePickerProps<
 > = Omit<PickerProps<T, Multi, Value, OptionValue>, 'render'> & TableViewProps & {
   children?: React.ReactNode;
   sectionProps?: Partial<TableViewSectionProps> | ((state: Omit<SelectOptionState<T, Pick<TableIndex, 'section'>>, 'option' | 'selected'>) => Partial<TableViewSectionProps>);
+  baseCellProps?: Partial<TableViewCellProps>;
   cellProps?: Partial<TableViewCellProps> | ((state: SelectOptionState<T, TableIndex>) => Partial<TableViewCellProps>);
   searchable?: boolean;
 };
@@ -40,6 +41,7 @@ export function TablePicker<
 >({
   children,
   sectionProps: sectionProps0,
+  baseCellProps,
   cellProps: cellProps0,
   searchable,
   ...props
@@ -112,6 +114,7 @@ export function TablePicker<
                 {children && (
                   <TableViewSection { ...sectionProps(value, 0) }>
                     <TableViewCell
+                      { ...baseCellProps }
                       cellContentView={ children } />
                   </TableViewSection>
                 )}

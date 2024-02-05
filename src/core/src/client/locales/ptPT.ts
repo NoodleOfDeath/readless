@@ -321,6 +321,7 @@ export const ptPTStrings: typeof enStrings = {
   turnOffFilters: 'Desative os filtros',
   twitter: 'Twitter',
   unbookmark: 'Remover marcador',
+  unbookmarked: 'Desmarcado',
   unexclude: 'mostrar',
   unfavorite: 'Não favorito',
   unfollow: 'Deixar de seguir',

@@ -321,6 +321,7 @@ export const frStrings: typeof enStrings = {
   turnOffFilters: 'Désactiver les filtres',
   twitter: 'Twitter',
   unbookmark: 'Supprimer le signet',
+  unbookmarked: 'Sans signet',
   unexclude: 'Afficher',
   unfavorite: 'Supprimer des favoris',
   unfollow: 'Ne plus suivre',

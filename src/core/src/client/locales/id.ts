@@ -321,6 +321,7 @@ export const idStrings: typeof enStrings = {
   turnOffFilters: 'Matikan filter',
   twitter: 'Twitter',
   unbookmark: 'Hapus Penanda',
+  unbookmarked: 'Tidak ditandai',
   unexclude: 'Perlihatkan',
   unfavorite: 'Tidak favorit',
   unfollow: 'Berhenti mengikuti',

@@ -321,6 +321,7 @@ export const trStrings: typeof enStrings = {
   turnOffFilters: 'filtreleri kapat',
   twitter: 'twitter',
   unbookmark: 'Yer imini kaldır',
+  unbookmarked: 'Favorilerden kaldırıldı',
   unexclude: 'göster',
   unfavorite: 'Favorilerden kaldır',
   unfollow: 'takibi bırak',

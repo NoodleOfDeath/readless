@@ -321,6 +321,7 @@ export const csStrings: typeof enStrings = {
   turnOffFilters: 'Vypněte filtry',
   twitter: 'Cvrlikání',
   unbookmark: 'Odebrat záložku',
+  unbookmarked: 'Odznačeno',
   unexclude: 'Odkrýt',
   unfavorite: 'Neoblíbené',
   unfollow: 'Přestat sledovat',

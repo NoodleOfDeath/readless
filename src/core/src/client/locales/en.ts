@@ -318,6 +318,7 @@ export const enStrings = {
   turnOffFilters: 'Turn off filters',
   twitter: 'Twitter',
   unbookmark: 'Remove Bookmark',
+  unbookmarked: 'Unbookmarked',
   unexclude: 'Unhide',
   unfavorite: 'Unfavorite',
   unfollow: 'Unfollow',

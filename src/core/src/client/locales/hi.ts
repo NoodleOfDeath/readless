@@ -321,6 +321,7 @@ export const hiStrings: typeof enStrings = {
   turnOffFilters: 'फ़िल्टर बंद करें',
   twitter: 'ट्विटर',
   unbookmark: 'बुकमार्क हटाएँ',
+  unbookmarked: 'बुकमार्क नहीं किया गया',
   unexclude: 'Unhide',
   unfavorite: 'नापसंद करें',
   unfollow: 'करें',

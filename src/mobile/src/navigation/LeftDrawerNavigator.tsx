@@ -201,6 +201,7 @@ export function LeftDrawerNavigator() {
       initialRouteName={ 'home' }
       screenOptions={ ({ route: _route }) => ({
         headerShown: false,
+        swipeEnabled: false,
         unmountOnBlur: true,
       }) }
       drawerContent={ (props) => <LeftDrawerContent { ...props } /> }>

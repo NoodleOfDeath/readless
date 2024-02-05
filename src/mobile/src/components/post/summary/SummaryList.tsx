@@ -266,8 +266,6 @@ export function SummaryList({
   const renderSummary: ListRenderItem<PublicSummaryGroup> = React.useCallback(({ item, index }) => {
     return (
       <Summary
-        mx={ 12 }
-        mb={ 12 }
         key={ item.id }
         big={ big || (index % 4 === 0 && fancy) }
         summary={ item }
@@ -361,6 +359,7 @@ export function SummaryList({
                 )}
               </View>
             ) }
+            ItemSeparatorComponent={ () => <Divider my={ 6 } /> }
             onScroll={ handleMasterScroll } />
         </View>
         {landscapeEnabled && isTablet && (
@@ -370,14 +369,13 @@ export function SummaryList({
               data={ detailSummarySiblings }
               renderItem={ ({ item }) => (
                 <Summary
-                  mx={ 12 }
                   key={ item.id }
                   summary={ item } 
                   hideArticleCount
                   keywords={ parseKeywords(filter) }
                   onFormatChange={ (format) => handleFormatChange(item, format) } />
               ) }
-              ItemSeparatorComponent={ () => <View my={ 6 } /> }
+              ItemSeparatorComponent={ () => <Divider my={ 6 } /> }
               ListHeaderComponent={ detailComponent }
               ListFooterComponentStyle={ { paddingBottom: 64 } } />
           </View>

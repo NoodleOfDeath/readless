@@ -321,6 +321,7 @@ export const heStrings: typeof enStrings = {
   turnOffFilters: 'כבה מסננים',
   twitter: 'טוויטר',
   unbookmark: 'הסר סימניה',
+  unbookmarked: 'לא מסומן',
   unexclude: 'הצג',
   unfavorite: 'לא מועדף',
   unfollow: 'בטל את המעקב',

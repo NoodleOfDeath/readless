@@ -27,7 +27,6 @@ export function View({
   
   const style = useStyles({ ...props, elevated });
   const theme = useTheme();
-  const [layout, setLayout] = React.useState<{ width: number, height: number }>({ height: 0, width: 0 });
   
   const overlay = React.useMemo(() => {
     if (inactive) {
@@ -52,7 +51,6 @@ export function View({
       return (
         <View
           absolute
-          left={ `-${progress * 100 * 4}%` }
           top={ 0 }
           transform={ [ { scaleX: progress }] }
           zIndex={ 0 }

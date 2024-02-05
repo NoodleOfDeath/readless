@@ -321,6 +321,7 @@ export const viStrings: typeof enStrings = {
   turnOffFilters: 'Tắt bộ lọc',
   twitter: 'Twitter',
   unbookmark: 'Xóa dấu trang',
+  unbookmarked: 'Đã hủy đánh dấu',
   unexclude: 'Bỏ ẩn',
   unfavorite: 'Không yêu thích',
   unfollow: 'Hủy theo dõi',

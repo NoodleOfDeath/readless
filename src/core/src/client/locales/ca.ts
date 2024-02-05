@@ -321,6 +321,7 @@ export const caStrings: typeof enStrings = {
   turnOffFilters: 'Apagueu els filtres',
   twitter: 'Twitter',
   unbookmark: 'Elimina el marcador',
+  unbookmarked: 'Sense marcar',
   unexclude: 'Mostra',
   unfavorite: 'Desfavorit',
   unfollow: 'Deixa de seguir',

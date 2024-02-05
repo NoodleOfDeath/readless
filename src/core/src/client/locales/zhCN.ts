@@ -321,6 +321,7 @@ export const zhCNStrings: typeof enStrings = {
   turnOffFilters: '关闭过滤器',
   twitter: '推特',
   unbookmark: '删除书签',
+  unbookmarked: '取消书签',
   unexclude: '取消隐藏',
   unfavorite: '不喜欢',
   unfollow: '取消关注',

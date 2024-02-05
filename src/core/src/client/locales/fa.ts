@@ -321,6 +321,7 @@ export const faStrings: typeof enStrings = {
   turnOffFilters: 'فیلترها را خاموش کنید',
   twitter: 'توییتر',
   unbookmark: 'حذف نشانک',
+  unbookmarked: 'بدون نشانک',
   unexclude: 'پنهان کردن',
   unfavorite: 'نامطلوب',
   unfollow: 'لغو دنبال کردن',

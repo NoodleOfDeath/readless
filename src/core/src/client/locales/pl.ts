@@ -321,6 +321,7 @@ export const plStrings: typeof enStrings = {
   turnOffFilters: 'Wyłącz filtry',
   twitter: 'Świergot',
   unbookmark: 'Usuń zakładkę',
+  unbookmarked: 'Niezaznaczone',
   unexclude: 'Odkryj',
   unfavorite: 'Nieulubiony',
   unfollow: 'Przestań obserwować',

@@ -283,7 +283,12 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
     page = 0,
     offset = pageSize * page,
     cacheLifespan = process.env.CACHE_lifespan || '3m',
+    version,
   }: SearchSummariesPayload = {}, queryKey: QueryKey = 'search'): Promise<BulkMetadataResponse<PublicSummaryGroup, { sentiment: number }>> {
+
+    if (version >= '1.17.13') {
+      queryKey = `${queryKey}_v2` as QueryKey;
+    }
     
     const { 
       categories, 

@@ -321,6 +321,7 @@ export const msStrings: typeof enStrings = {
   turnOffFilters: 'Matikan penapis',
   twitter: 'Twitter',
   unbookmark: 'Alih keluar Penanda Halaman',
+  unbookmarked: 'dinyahbukukan',
   unexclude: 'Nyahsembunyikan',
   unfavorite: 'Tidak digemari',
   unfollow: 'nyahikut',

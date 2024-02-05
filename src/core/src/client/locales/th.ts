@@ -321,6 +321,7 @@ export const thStrings: typeof enStrings = {
   turnOffFilters: 'ปิดตัวกรอง',
   twitter: 'ทวิตเตอร์',
   unbookmark: 'ลบบุ๊กมาร์ก',
+  unbookmarked: 'ยกเลิกการบุ๊กมาร์ก',
   unexclude: 'ยกเลิกการซ่อน',
   unfavorite: 'ไม่เป็นที่ชื่นชอบ',
   unfollow: 'เลิกติดตาม',

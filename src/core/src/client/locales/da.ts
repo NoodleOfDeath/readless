@@ -321,6 +321,7 @@ export const daStrings: typeof enStrings = {
   turnOffFilters: 'Sluk for filtre',
   twitter: 'Twitter',
   unbookmark: 'Fjern bogmærke',
+  unbookmarked: 'Ikke bogmærket',
   unexclude: 'Vis frem',
   unfavorite: 'Ikke foretrukken',
   unfollow: 'Slut med at følge',

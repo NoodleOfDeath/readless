@@ -321,6 +321,7 @@ export const roStrings: typeof enStrings = {
   turnOffFilters: 'Opriți filtrele',
   twitter: 'Stare de nervozitate',
   unbookmark: 'Eliminați marcajul',
+  unbookmarked: 'Nemarcat',
   unexclude: 'Afișează',
   unfavorite: 'Nefavorit',
   unfollow: 'Anulați urmărirea',

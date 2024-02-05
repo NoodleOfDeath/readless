@@ -321,6 +321,7 @@ export const arStrings: typeof enStrings = {
   turnOffFilters: 'قم بإيقاف تشغيل الفلاتر',
   twitter: 'تويتر',
   unbookmark: 'إزالة المرجعية',
+  unbookmarked: 'غير مرجعية',
   unexclude: 'إظهار',
   unfavorite: 'غير مفضلة',
   unfollow: 'الغاء المتابعة',

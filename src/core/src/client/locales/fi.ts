@@ -321,6 +321,7 @@ export const fiStrings: typeof enStrings = {
   turnOffFilters: 'Sammuta suodattimet',
   twitter: 'Viserrys',
   unbookmark: 'Poista kirjanmerkki',
+  unbookmarked: 'Poistettu kirjanmerkeistä',
   unexclude: 'Näytä',
   unfavorite: 'Inhokki',
   unfollow: 'Lopeta seuraaminen',
