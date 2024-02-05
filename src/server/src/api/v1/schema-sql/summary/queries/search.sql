@@ -34,8 +34,8 @@ FROM (
         ss.sentiment
       FROM
         summaries s
-      LEFT OUTER JOIN categories cat ON s."categoryId" = cat.id
-    LEFT OUTER JOIN publishers pub ON s."publisherId" = pub.id
+      LEFT OUTER JOIN publishers pub ON s."publisherId" = pub.id
+    LEFT OUTER JOIN categories cat ON s."categoryId" = cat.id
     LEFT OUTER JOIN summary_translations st ON st."parentId" = s.id
       AND (st.locale = :locale)
     LEFT OUTER JOIN summary_sentiment_view ss ON ss."parentId" = s.id
