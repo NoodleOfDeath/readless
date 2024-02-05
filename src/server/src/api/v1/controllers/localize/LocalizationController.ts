@@ -54,7 +54,7 @@ export class LocalizationController {
       if (translations.count >= 4) {
         return translations;
       } else {
-        const attributes = ['title', 'shortSummary', 'summary', 'bullets'] as (keyof PublicSummaryAttributes)[];
+        const attributes = ['title', 'shortSummary', 'bullets'] as (keyof PublicSummaryAttributes)[];
         for (const attribute of attributes) {
           const property = summary[attribute];
           const translatedString = await GoogleService.translateText(Array.isArray(property) ? property.join('\n') : property, body.locale);
