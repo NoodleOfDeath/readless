@@ -151,7 +151,6 @@ export function Summary({
   sample,
   showcase = sample,
   summary: summary0,
-  tickInterval = '5m',
   selected,
   initialFormat,
   halfBig,
@@ -218,8 +217,6 @@ export function Summary({
   } = React.useContext(StorageContext);
 
   const summary = React.useMemo(() => summary0 ?? (sample ? DEFAULT_PROPS.summary : EMPTY_SUMMARY), [summary0, sample]);
-
-  const [lastTick, setLastTick] = React.useState(new Date());
   
   const [isRead, setIsRead] = React.useState(!forceUnread &&summary.id in { ...readSummaries } && !disableInteractions);
   const [isBookmarked, setIsBookmarked] = React.useState(summary.id in { ...bookmarkedSummaries });
@@ -253,8 +250,8 @@ export function Summary({
     if (dateFormat) {
       return formatDate(date, dateFormat, { locale: getFnsLocale() });
     }
-    return timeAgo(date, { defaultValue: strings.justNow, from: lastTick });
-  }, [lastTick, dateFormat]);
+    return timeAgo(date, { defaultValue: strings.justNow, from: Date.now() });
+  }, [dateFormat]);
   
   const content = React.useMemo(() => {
     if (!format && !bulletsAsShortSummary && !summaryAsShortSummary) {
@@ -303,9 +300,6 @@ export function Summary({
 
   // update time ago every `tickIntervalMs` milliseconds
   useFocusEffect(React.useCallback(() => {
-    const interval = setInterval(() => {
-      setLastTick(new Date());
-    }, ms(tickInterval));
     if (summaryTranslations?.[summary.id]) {
       setTranslations(summaryTranslations[summary.id]);
       translateToggleRef.current?.setTranslations(summaryTranslations[summary.id]);
@@ -323,8 +317,7 @@ export function Summary({
     if (!hideCard && format === ReadingFormat.FullArticle) {
       openURL(summary.url);
     }
-    return () => clearInterval(interval);
-  }, [tickInterval, summaryTranslations, summary.id, summary.publisher.name, summary.category.name, summary.url, forceUnread, readSummaries, bookmarkedSummaries, compactSummaries, showShortSummary, forceShortSummary0, forceExpanded, followedPublishers, excludedPublishers, followedCategories, hideCard, format, openURL]));
+  }, [summaryTranslations, summary.id, summary.publisher.name, summary.category.name, summary.url, forceUnread, readSummaries, bookmarkedSummaries, compactSummaries, showShortSummary, forceShortSummary0, forceExpanded, followedPublishers, excludedPublishers, followedCategories, hideCard, format, openURL]));
 
   const handleFormatChange = React.useCallback((newFormat?: ReadingFormat) => {
     if (disableNavigation) {
@@ -550,7 +543,8 @@ export function Summary({
     return (
       <View
         px={ 12 }
-        py={ big ? 6 : undefined }
+        pt={ big || showcase ? 12 : undefined }
+        pb={ big || showcase ? 6 : undefined }
         gap={ 3 }
         flexGrow={ 1 }
         zIndex={ 2 }
@@ -583,13 +577,14 @@ export function Summary({
         </View>
       </View>
     );
-  }, [forceExpanded, isCompact, initialFormat, hideHeader, big, theme.colors.headerBackground, theme.colors.textSecondary, halfBig, publisherChip, timestamp, sentimentMeter, moreButton]);
+  }, [forceExpanded, isCompact, initialFormat, hideHeader, big, showcase, theme.colors.headerBackground, theme.colors.textSecondary, halfBig, publisherChip, timestamp, sentimentMeter, moreButton]);
 
   const footer = React.useMemo(() => {
     return (
       <View
         flexRow
         flexWrap={ halfBig ? 'wrap' : undefined }
+        pb={ showcase ? 12 : undefined }
         gap={ 6 }
         itemsCenter>
         {!footerOnly && !forceExpanded && isCompact && (
@@ -629,52 +624,56 @@ export function Summary({
           </React.Fragment>
         )}
         <View row />
-        <Button
-          color={ theme.colors.textSecondary }
-          leftIcon="book-open-variant"
-          haptic
-          gap={ 3 }
-          onPress={ async () => {
-            if (disableInteractions) {
-              return;
-            }
-            emitStorageEvent('open-article-summary-2', summary);
-            openURL(summary.url);
-          } } />
-        <Button
-          haptic
-          color={ theme.colors.textSecondary }
-          leftIcon={ 'share' }
-          accessibilityLabel={ strings.share }
-          onPress={ async () => {
-            if (disableInteractions) {
-              return;
-            }
-            emitStorageEvent('intent-to-share-summary-2', summary);
-            await SheetManager.show('share', {
-              payload: {
-                format: initialFormat,
-                interactWithSummary,
-                summary,
-              },
-            });
-          } } />
-        <Button
-          haptic
-          color={ theme.colors.textSecondary }
-          leftIcon={ isBookmarked ? 'bookmark' : 'bookmark-outline' }
-          accessibilityLabel={ strings.bookmark }
-          onPress={ () => {
-            if (disableInteractions) {
-              return;
-            }
-            bookmarkSummary(summary); 
-            showToast(isBookmarked ? strings.unbookmarked : strings.bookmarked);
-          } } />
+        {!showcase && (
+          <React.Fragment>
+            <Button
+              color={ theme.colors.textSecondary }
+              leftIcon="book-open-variant"
+              haptic
+              gap={ 3 }
+              onPress={ async () => {
+                if (disableInteractions) {
+                  return;
+                }
+                emitStorageEvent('open-article-summary-2', summary);
+                openURL(summary.url);
+              } } />
+            <Button
+              haptic
+              color={ theme.colors.textSecondary }
+              leftIcon={ 'share' }
+              accessibilityLabel={ strings.share }
+              onPress={ async () => {
+                if (disableInteractions) {
+                  return;
+                }
+                emitStorageEvent('intent-to-share-summary-2', summary);
+                await SheetManager.show('share', {
+                  payload: {
+                    format: initialFormat,
+                    interactWithSummary,
+                    summary,
+                  },
+                });
+              } } />
+            <Button
+              haptic
+              color={ theme.colors.textSecondary }
+              leftIcon={ isBookmarked ? 'bookmark' : 'bookmark-outline' }
+              accessibilityLabel={ strings.bookmark }
+              onPress={ () => {
+                if (disableInteractions) {
+                  return;
+                }
+                bookmarkSummary(summary); 
+                showToast(isBookmarked ? strings.unbookmarked : strings.bookmarked);
+              } } />
+          </React.Fragment>
+        )}
         {footerOnly && moreButton}
       </View>
     );
-  }, [halfBig, footerOnly, forceExpanded, isCompact, publisherChip, theme.colors.textSecondary, summary, hideArticleCount, isBookmarked, moreButton, disableInteractions, openCategory, emitStorageEvent, openURL, initialFormat, interactWithSummary, bookmarkSummary, showToast]);
+  }, [halfBig, footerOnly, forceExpanded, isCompact, publisherChip, theme.colors.textSecondary, summary, hideArticleCount, showcase, isBookmarked, moreButton, disableInteractions, openCategory, emitStorageEvent, openURL, initialFormat, interactWithSummary, bookmarkSummary, showToast]);
   
   const articleImage = React.useMemo(() => {
     if (summary.media?.imageArticle) {
@@ -692,11 +691,14 @@ export function Summary({
       <View
         onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Bullets) }
         flexGrow={ 1 }
+        overflow='hidden'
         maxWidth={ big ? Math.min(screenWidth, 480) : 64 }
         maxHeight={ big ? Math.min(screenHeight / 3, 300) : 64 }
         m={ big && !initialFormat ? undefined : 6 }>
         <View
           aspectRatio={ big ? 3/1.75 : 1 }
+          brTopLeft={ showcase ? 12 : undefined }
+          brTopRight={ showcase ? 12 : undefined }
           overflow="hidden"
           zIndex={ 20 }>
           <Image
@@ -756,6 +758,19 @@ export function Summary({
         } } />
     );
   }, [showcase, summary, translations, localize, storeTranslations]);
+  
+  const cardBody = React.useCallback((format?: ReadingFormat) => footerOnly ? null : (
+    content && (
+      <View
+        flexColumn
+        gap={ 6 }
+        flexGrow={ 1 }
+        progressOpacity={ 12 }
+        p={ 12 }>
+        {renderContent(format)}
+      </View>
+    )
+  ), [footerOnly, content, renderContent]);
 
   const coverContent = React.useMemo(() => footerOnly ? null : (
     <View
@@ -767,14 +782,13 @@ export function Summary({
           flexGrow={ 1 }
           gap={ 6 }>
           <View
-            flex={ 1 } 
-            flexGrow={ 1 }
-            px={ 12 }
+            p={ 12 }
             onPress={ () => handleFormatChange(preferredReadingFormat ?? ReadingFormat.Bullets) }>
             <View flex={ 1 }>
               {title}
             </View>
-            {translateToggle}
+            {!showcase && translateToggle}
+            {showcase && cardBody(preferredReadingFormat ?? ReadingFormat.Bullets)}
           </View>
         </View>
         {!(big) && image}
@@ -785,35 +799,15 @@ export function Summary({
         </View>
       )}
     </View>
-  ), [footerOnly, initialFormat, title, translateToggle, big, image, hideFooter, footer, handleFormatChange, preferredReadingFormat]);
-  
-  const cardBody = React.useMemo(() => footerOnly ? null : (
-    <View gap={ 12 }>
-      <ReadingFormatPicker
-        elevated={ false }
-        format={ format } 
-        pressOnly={ !hideCard }
-        onChange={ handleFormatChange } />
-      {content && (
-        <View
-          flexColumn
-          flexGrow={ 1 }
-          gap={ 6 }
-          pb={ 12 }
-          px={ 12 }>
-          <View gap={ showcase ? 6 : 12 } p={ 12 }>
-            {translateToggle}
-            {renderContent(format)}
-          </View>
-        </View>
-      )}
-    </View>
-  ), [footerOnly, format, hideCard, handleFormatChange, content, showcase, translateToggle, renderContent]);
+  ), [footerOnly, initialFormat, title, showcase, translateToggle, cardBody, preferredReadingFormat, big, image, hideFooter, footer, handleFormatChange]);
 
   const card = React.useMemo(() => footerOnly ? null : (
     <View
       flexGrow={ 1 }
       style={ { ...theme.components.card, ...style } }
+      brTopLeft={ showcase ? 12 : undefined }
+      brTopRight={ showcase ? 12 : undefined }
+      overflow='hidden'
       opacity={ isRead ? 0.75 : 1 }>
       <View flexRow flexGrow={ 1 }>
         {selected && (
@@ -834,11 +828,11 @@ export function Summary({
         </View>
       </View>
     </View>
-  ), [footerOnly, theme.components.card, style, isRead, selected, big, image, header, coverContent]);
+  ), [footerOnly, theme.components.card, style, showcase, isRead, selected, big, image, header, coverContent]);
 
   const fullCard = React.useMemo(() => footerOnly ? null : (
     <View
-      style={ { ...theme.components.card, ...style } }>   
+      style={ { ...theme.components.card, ...style } }>
       <View
         gap={ 12 }>
         <View flex={ 1 } flexRow={ supportsMasterDetail }>
@@ -855,10 +849,15 @@ export function Summary({
             {!hideCard && coverContent}
           </View>
         </View>
-        {cardBody}
+        <View>
+          <ReadingFormatPicker
+            format={ format }
+            onChange={ handleFormatChange } />
+          {cardBody(format ?? preferredReadingFormat)}
+        </View>
       </View>
     </View>
-  ), [footerOnly, theme.components.card, style, supportsMasterDetail, hideCard, image, hideHeader, header, coverContent, cardBody]);
+  ), [footerOnly, theme.components.card, style, supportsMasterDetail, hideCard, image, hideHeader, header, coverContent, format, handleFormatChange, cardBody, preferredReadingFormat]);
   
   const contextMenuPreview = React.useMemo(() => isTablet ? undefined : (
     <Summary 

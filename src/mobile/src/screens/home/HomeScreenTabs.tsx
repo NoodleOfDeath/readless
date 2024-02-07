@@ -32,7 +32,7 @@ export function OldNewsTab({
 }
 
 export function YourNewsTab({ route: _route }: ScreenComponent<'yourNews'>) {
-  const { api: { getSummaries }, followFilter } = React.useContext(StorageContext);
+  const { api: { getTopStories }, followFilter } = React.useContext(StorageContext);
   const { navigate } = useNavigation();
   const [filter, setFilter] = React.useState(followFilter);
   useFocusEffect(React.useCallback(() => {
@@ -43,7 +43,7 @@ export function YourNewsTab({ route: _route }: ScreenComponent<'yourNews'>) {
       fancy
       enableTts
       landscapeEnabled
-      fetch={ getSummaries }
+      fetch={ getTopStories }
       filter={ filter }
       headerComponent={ (
         <MetricCounter
@@ -90,18 +90,5 @@ export function TopStoriesTab({ route: _route }: ScreenComponent<'topStories'>) 
           m={ 12 }
           mt={ 0 } />
       ) : undefined } />
-  );
-}
-
-export function LiveFeedTab({ 
-  route: _route,
-  navigation: _navigation,
-}: ScreenComponent<'liveFeed'>) {
-  const { api: { getSummaries } } = React.useContext(StorageContext);
-  return ( 
-    <SummaryList 
-      enableTts
-      landscapeEnabled
-      fetch={ getSummaries } />
   );
 }

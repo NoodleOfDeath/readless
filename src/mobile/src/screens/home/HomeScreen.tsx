@@ -66,11 +66,6 @@ export function HomeScreen({
         component: TopStoriesTab,
         name: 'topStories',
         options: { title: strings.topStories },
-      },
-      {
-        component: LiveFeedTab,
-        name: 'liveFeed',
-        options: { title: strings.liveFeed },
       }
     );
     return tabs;

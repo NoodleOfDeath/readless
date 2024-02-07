@@ -25,7 +25,6 @@ export function DisplayPreferencesScreen() {
   const { navigate } = useNavigation();
   
   const {
-    compactSummaries,
     colorScheme, 
     fontFamily, 
     preferredShortPressFormat,
@@ -106,9 +105,12 @@ export function DisplayPreferencesScreen() {
               cellIcon="view-headline"
               cellAccessoryView={ <PrefSwitch prefKey='compactSummaries' /> } />
             <TableViewCell
-              title={ compactSummaries ? strings.shortSummariesInsteadOfTitles : strings.shortSummariesUnderTitles }
-              cellIcon="text-short"
-              cellAccessoryView={ <PrefSwitch prefKey='showShortSummary' /> } />
+              cellStyle="RightDetail"
+              title={ strings.preferredReadingFormat }
+              detail={ preferredReadingFormat === ReadingFormat.Summary ? strings.summary : preferredReadingFormat === ReadingFormat.FullArticle ? strings.fullArticle : strings.bullets }
+              accessory="DisclosureIndicator"
+              cellIcon="gesture-tap"
+              onPress={ () => navigate('readingFormatPicker') } />
             {Platform.OS === 'ios' && (
               <TableViewCell
                 title={ strings.preferredShortPressFormat }
@@ -118,13 +120,6 @@ export function DisplayPreferencesScreen() {
                 cellIcon="gesture-tap-hold"
                 onPress={ () => navigate('shortPressFormatPicker') } />
             )}
-            <TableViewCell
-              cellStyle="RightDetail"
-              title={ strings.preferredReadingFormat }
-              detail={ preferredReadingFormat === ReadingFormat.Summary ? strings.summary : preferredReadingFormat === ReadingFormat.FullArticle ? strings.fullArticle : strings.bullets }
-              accessory="DisclosureIndicator"
-              cellIcon="gesture-tap"
-              onPress={ () => navigate('readingFormatPicker') } />
           </TableViewSection>
           {/*<TableViewSection
 grouped

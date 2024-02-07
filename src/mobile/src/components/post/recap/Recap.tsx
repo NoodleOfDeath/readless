@@ -126,6 +126,7 @@ export function Recap({
     <View 
       { ...props }
       gap={ 3 }
+      px={ 12 }
       borderRadius={ 12 }
       opacity={ isRead ? 0.5 : 1.0 }
       style={ theme.components.card }
@@ -156,9 +157,6 @@ export function Recap({
 
   return expanded ? (
     <React.Fragment>
-      <View>
-        <Text>{strings.headlines}</Text>
-      </View>
       <SummaryList
         flex={ 1 }
         fetch={ getSummaries }
@@ -166,6 +164,7 @@ export function Recap({
       <ScrollView flex={ 1 }>
         <View
           gap={ 6 }
+          p={ 12 }
           style={ theme.components.card }>
           <Text h6 bold selectable>{translations.title}</Text>
           {translateToggle}

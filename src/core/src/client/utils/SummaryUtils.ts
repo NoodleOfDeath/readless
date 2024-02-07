@@ -37,7 +37,7 @@ export const readingFormat = (str = ''): ReadingFormat => {
 };
 
 export const fixedSentiment = (sentiment?: number) => {
-  return sentiment ? `${sentiment > 0 ? '+' : ''}${sentiment.toFixed(2)}` : '0.00';
+  return (sentiment != null && !Number.isNaN(sentiment)) ? `${sentiment > 0 ? '+' : ''}${sentiment.toFixed(2)}` : '0.00';
 };
 
 export const averageOfSentiments = (sentiments: PublicSummarySentimentAttributes[] | Record<string, PublicSummarySentimentAttributes>) => {

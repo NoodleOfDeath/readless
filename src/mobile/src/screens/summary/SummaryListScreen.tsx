@@ -12,7 +12,7 @@ export function SummaryListScreen({
   navigation,
 }: ScreenComponent<'summaryList'>) {
   
-  const { api: { getSummaries } } = React.useContext(StorageContext);
+  const { api: { getTopStories } } = React.useContext(StorageContext);
 
   useFocusEffect(React.useCallback(() => {
     navigation?.setOptions({ headerTitle: route?.params?.prefilter || strings.home });
@@ -23,7 +23,7 @@ export function SummaryListScreen({
       <SummaryList
         landscapeEnabled
         enableTts
-        fetch={ getSummaries }
+        fetch={ getTopStories }
         filter={ route?.params?.prefilter }
         specificIds={ route?.params?.specificIds } />
     </Screen>
