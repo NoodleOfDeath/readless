@@ -32,7 +32,7 @@ export function OldNewsTab({
 }
 
 export function YourNewsTab({ route: _route }: ScreenComponent<'yourNews'>) {
-  const { api: { getTopStories }, followFilter } = React.useContext(StorageContext);
+  const { followFilter } = React.useContext(StorageContext);
   const { navigate } = useNavigation();
   const [filter, setFilter] = React.useState(followFilter);
   useFocusEffect(React.useCallback(() => {
@@ -43,23 +43,25 @@ export function YourNewsTab({ route: _route }: ScreenComponent<'yourNews'>) {
       fancy
       enableTts
       landscapeEnabled
-      fetch={ getTopStories }
       filter={ filter }
       headerComponent={ (
         <MetricCounter
           metrics={ [{
+            color: 'white',
             disclosureIndicator: true,
             leftIcon: 'trophy',
             onPress: () => navigate('achievements'),
             reputation: true,
           }, {
+            color: 'white',
             disclosureIndicator: true,
             leftIcon: 'flash',
             onPress: () => navigate('leaderboards'),
             streak: true,
           }] }
-          m={ 12 }
-          mt={ 0 } />
+          mx={ 12 }
+          mt={ 0 } 
+          mb={ 6 } />
       ) } />
   );
 }
@@ -72,23 +74,26 @@ export function TopStoriesTab({ route: _route }: ScreenComponent<'topStories'>) 
       fancy
       enableTts
       landscapeEnabled
-      fetch={ getTopStories }
       interval='1d'
+      fetch={ getTopStories }
       headerComponent={ !followFilter ? (
         <MetricCounter
           metrics={ [{
+            color: 'white',
             disclosureIndicator: true,
             leftIcon: 'trophy',
             onPress: () => navigate('achievements'),
             reputation: true,
           }, {
+            color: 'white',
             disclosureIndicator: true,
             leftIcon: 'flash',
             onPress: () => navigate('leaderboards'),
             streak: true,
           }] }
-          m={ 12 }
-          mt={ 0 } />
+          mx={ 12 }
+          mt={ 0 } 
+          mb={ 6 } />
       ) : undefined } />
   );
 }

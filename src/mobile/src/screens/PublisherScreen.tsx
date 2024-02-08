@@ -25,7 +25,6 @@ export function PublisherScreen({
     publishers,
     publisherIsFavorited,
     favoritePublisher,
-    api: { getTopStories },
   } = React.useContext(StorageContext);
 
   const publisher0 = React.useMemo(() => route?.params?.publisher, [route]);
@@ -80,7 +79,6 @@ export function PublisherScreen({
   return (
     <Screen>
       <SummaryList
-        fetch={ getTopStories }
         filter={ prefilter }
         headerComponent={ (
           <View

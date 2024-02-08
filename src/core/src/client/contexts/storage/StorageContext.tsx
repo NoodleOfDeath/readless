@@ -530,7 +530,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     state.showShortSummary = await getStoredValue('showShortSummary');
     state.preferredReadingFormat = await getStoredValue('preferredReadingFormat');
     state.preferredShortPressFormat = await getStoredValue('preferredShortPressFormat');
-    state.sentimentEnabled = await getStoredValue('sentimentEnabled');
+    state.sentimentEnabled = await getStoredValue('sentimentEnabled') ?? true;
     state.triggerWords = await getStoredValue('triggerWords');
     
     setStorage(state);

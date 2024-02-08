@@ -72,7 +72,7 @@ export function MetricButton({
       contained
       avatar
       flexGrow={ 1 } 
-      gap={ 12 }
+      gap={ 6 }
       iconSize={ 24 }
       { ...props }>
       { text }
@@ -93,8 +93,8 @@ export function MetricCounter({
     <View
       beveled
       flexRow
-      p={ 12 }
-      gap={ 12 }
+      p={ 6 }
+      gap={ 6 }
       bg={ theme.colors.headerBackground }
       { ...props }>
       {metrics?.map((m, i) => (

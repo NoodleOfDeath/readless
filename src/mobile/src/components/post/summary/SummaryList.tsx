@@ -1,7 +1,6 @@
 import React from 'react';
 import { 
   DeviceEventEmitter,
-  InteractionManager,
   LayoutRectangle,
   NativeScrollEvent, 
   NativeSyntheticEvent,
@@ -25,6 +24,8 @@ import {
   Divider,
   FlatList,
   FlatListProps,
+  MeterDial,
+  Popover,
   Summary,
   Text,
   View,
@@ -41,10 +42,11 @@ import {
 } from '~/hooks';
 import { getLocale, strings } from '~/locales';
 import { SearchViewController } from '~/navigation';
-import { parseKeywords } from '~/utils';
+import { fixedSentiment, parseKeywords } from '~/utils';
 
 export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
   summaries?: PublicSummaryGroup[];
+  sortBy?: 'date' | 'relevance';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fetch?: typeof API.getSummaries | typeof API.getTopStories;
   fetchOnLoad?: boolean;
@@ -62,6 +64,7 @@ export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
 
 export function SummaryList({ 
   summaries: summaries0 = [],
+  sortBy: sortBy0 = 'relevance',
   fetch,
   fetchOnLoad = true,
   onFormatChange,
@@ -84,9 +87,14 @@ export function SummaryList({
   const { isTablet, screenWidth } = React.useContext(LayoutContext);
   const { queueStream } = React.useContext(MediaContext);
   const { 
-    api: { interactWithSummary },
+    api: { 
+      interactWithSummary,
+      getSummaries,
+      getTopStories,
+    },
     preferredReadingFormat,
     removedSummaries,
+    sentimentEnabled,
     excludeFilter,
   } = React.useContext(StorageContext);
   
@@ -97,6 +105,8 @@ export function SummaryList({
   const [lastFetchFailed, setLastFetchFailed] = React.useState(false);
   const [pageSize] = React.useState(10);
   const [cursor, setCursor] = React.useState(0);
+  const [prevSortBy, setPrevSortBy] = React.useState(sortBy0);
+  const [sortBy, setSortBy] = React.useState(sortBy0);
   
   const excludeIds = React.useMemo(() => {
     if (!removedSummaries || Object.keys(removedSummaries).length === 0) {
@@ -109,6 +119,7 @@ export function SummaryList({
   const [layout, setLayout] = React.useState<LayoutRectangle>();
   const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>(summaries0);
   const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
+  const [averageSentiment, setAverageSentiment] = React.useState<number>(0);
   const [totalResultCount, setTotalResultCount] = React.useState(0);
   const [lastActive, setLastActive] = React.useState(Date.now());
 
@@ -118,13 +129,23 @@ export function SummaryList({
 
   const flatListRef = React.useRef<FlashList<PublicSummaryGroup>>(null);
 
+  const fetchFn = React.useMemo(() => fetch ?? (sortBy === 'relevance' ? getTopStories : getSummaries), [fetch, sortBy]);
+  
   // callbacks
+  
+  const resetState = () => {
+    setSummaries([]);
+    setCursor(0);
+    setTotalResultCount(0);
+    setLoaded(false);
+    setLastFetchFailed(true);
+  };
 
   const load = React.useCallback(async (reset = false, overrideFilter = filter) => {
     if (loading) {
       return;
     }
-    if (!fetch || (!loaded && !fetchOnLoad)) {
+    if (!loaded && !fetchOnLoad) {
       return;
     }
     setLoaded(false);
@@ -135,7 +156,7 @@ export function SummaryList({
       setDetailSummary(undefined);
     }
     try {
-      const { data, error } = await fetch({
+      const { data, error } = await fetchFn({
         excludeIds: !specificIds && Boolean(excludeIds),
         filter: [excludeFilter, overrideFilter].filter(Boolean).join(' '),
         ids: specificIds ?? excludeIds,
@@ -152,6 +173,7 @@ export function SummaryList({
       }
       setCursor((prev) => data.next ?? (prev + data.rows.length));
       setTotalResultCount(data.count);
+      setAverageSentiment(data.metadata?.sentiment);
       setDetailSummary((prev) => {
         if (!prev && data.count > 0) {
           return (prev = data.rows[0]);
@@ -170,16 +192,12 @@ export function SummaryList({
       setLastFetchFailed(false);
     } catch (e) {
       console.error(e);
-      setSummaries([]);
-      setCursor(0);
-      setTotalResultCount(0);
-      setLoaded(false);
-      setLastFetchFailed(true);
+      resetState();
     } finally {
       setLoaded(true);
       setLoading(false);
     }
-  }, [filter, loading, fetch, loaded, fetchOnLoad, specificIds, excludeIds, excludeFilter, interval, cursor, pageSize, removedSummaries]);
+  }, [filter, loading, fetchFn, loaded, fetchOnLoad, specificIds, excludeIds, excludeFilter, interval, cursor, pageSize, removedSummaries]);
 
   const loadMore = React.useCallback(async () => {
     if (loading || lastFetchFailed || totalResultCount <= summaries.length) {
@@ -233,24 +251,29 @@ export function SummaryList({
     const excludeCategorySub = DeviceEventEmitter.addListener('exclude-category', (data) => {
       setSummaries((prev) => prev.filter((s) => s.category.name !== data.name));
     });
-    const interaction = InteractionManager.runAfterInteractions(() => {
-      if (!loading && !lastFetchFailed && ((!loaded && summaries.length === 0) || filter !== filter0)) {
-        setFilter(filter0);
-        navigation?.setOptions({
-          headerTitle: () => {
-            return <SearchViewController initialValue={ filter0 } />;
-          },
-        });
-        load(true, filter0);
-      }
-    });
+    if (!loading && !lastFetchFailed && ((!loaded && summaries.length === 0) || filter !== filter0)) {
+      setFilter(filter0);
+      navigation?.setOptions({
+        headerTitle: () => {
+          return <SearchViewController initialValue={ filter0 } />;
+        },
+      });
+      load(true, filter0);
+    }
     return () => {
       hideSummarySub.remove();
       excludePublisherSub.remove();
       excludeCategorySub.remove();
-      interaction.cancel();
     };
   }, [loading, navigation, filter, filter0, lastFetchFailed, loaded, load, summaries.length]));
+  
+  React.useEffect(() => {
+    if (prevSortBy === sortBy) {
+      return;
+    }
+    resetState();
+    load(true);
+  }, [prevSortBy, sortBy]);
   
   useAppState({ 
     onBackground: () => {
@@ -274,6 +297,32 @@ export function SummaryList({
         onFormatChange={ (format) => handleFormatChange(item, format) } />
     );
   }, [big, fancy, landscapeEnabled, isTablet, detailSummary?.id, filter, handleFormatChange]);
+  
+  // sentiment meter object
+  const sentimentMeter = React.useMemo(() => {
+    if (!averageSentiment) {
+      return null;
+    }
+    return (
+      <Popover
+        anchor={ (
+          <View flexRow itemsCenter gap={ 6 }>
+            <Text
+              subscript
+              adjustsFontSizeToFit>
+              { fixedSentiment(averageSentiment) }
+            </Text>
+            <MeterDial 
+              value={ averageSentiment }
+              width={ 40 } />
+          </View>
+        ) }>
+        <View p={ 12 }>
+          <Text>{ `${totalResultCount} ${strings.results}` }</Text>
+        </View>
+      </Popover>
+    );
+  }, [averageSentiment, totalResultCount]);
 
   const detailComponent = React.useMemo(() => (landscapeEnabled && isTablet && detailSummary) ? (
     <React.Fragment>
@@ -283,7 +332,7 @@ export function SummaryList({
         initialFormat={ preferredReadingFormat ?? ReadingFormat.Bullets }
         keywords={ parseKeywords(filter) }
         onFormatChange={ (format) => handleFormatChange(detailSummary, format) } />
-      <Divider my={ 6 } />
+      <Divider my={ 3 } />
       {detailSummarySiblings.length > 0 && (
         <Text system h6 m={ 12 }>
           {`${strings.relatedNews} (${detailSummarySiblings.length})`}
@@ -306,7 +355,43 @@ export function SummaryList({
             extraData={ detailSummary }
             renderItem={ renderSummary }
             estimatedItemSize={ big ? 362 : 126 }
-            ListHeaderComponent={ <React.Fragment>{headerComponent}</React.Fragment> }
+            ListHeaderComponent={ (
+              <React.Fragment>
+                {headerComponent}
+                {((sentimentEnabled && averageSentiment != null && !Number.isNaN(averageSentiment)) || !fetch) && (
+                  <View
+                    beveled
+                    flexRow
+                    itemsCenter
+                    justifyCenter
+                    p={ 6 }
+                    gap={ 6 }
+                    bg={ theme.colors.headerBackground }
+                    mx={ 12 }
+                    mt={ 0 }
+                    mb={ 6 }>
+                    {sentimentEnabled && averageSentiment != null && !Number.isNaN(averageSentiment) && sentimentMeter}
+                    {!fetch && (
+                      <Button 
+                        contained 
+                        gap={ 6 }
+                        onPress={ () => {
+                          setSortBy((prev) => {
+                            const state = prev === 'relevance' ? 'date' : 'relevance';
+                            setPrevSortBy(prev);
+                            return state;
+                          });
+                        } }>
+                        <Text>{ `${strings.sortBy}:` }</Text>
+                        <Text capitalize>
+                          {sortBy === 'relevance' ? strings.relevance : strings.date }
+                        </Text>
+                      </Button>
+                    )}
+                  </View>
+                )}
+              </React.Fragment>
+            ) }
             ListHeaderComponentStyle={ { paddingTop: 12 } }
             ListFooterComponent={ () => (
               <View mb={ 12 }>
@@ -359,7 +444,7 @@ export function SummaryList({
                 )}
               </View>
             ) }
-            ItemSeparatorComponent={ () => <Divider my={ 6 } /> }
+            ItemSeparatorComponent={ () => <Divider my={ 3 } /> }
             onScroll={ handleMasterScroll } />
         </View>
         {landscapeEnabled && isTablet && (
@@ -375,7 +460,7 @@ export function SummaryList({
                   keywords={ parseKeywords(filter) }
                   onFormatChange={ (format) => handleFormatChange(item, format) } />
               ) }
-              ItemSeparatorComponent={ () => <Divider my={ 6 } /> }
+              ItemSeparatorComponent={ () => <Divider my={ 3 } /> }
               ListHeaderComponent={ detailComponent }
               ListFooterComponentStyle={ { paddingBottom: 64 } } />
           </View>

@@ -25,7 +25,6 @@ export function CategoryScreen({
     followCategory,
     categoryIsFavorited,
     favoriteCategory,
-    api: { getTopStories },
   } = React.useContext(StorageContext);
 
   const category0 = React.useMemo(() => route?.params?.category, [route]);
@@ -80,7 +79,6 @@ export function CategoryScreen({
   return (
     <Screen>
       <SummaryList
-        fetch={ getTopStories }
         filter={ prefilter }
         headerComponent={ (
           <View
