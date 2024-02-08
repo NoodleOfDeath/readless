@@ -64,5 +64,5 @@ export type PublicSummaryGroup = Omit<PublicSummaryAttributes, 'bullets' | 'sent
   summary?: string;
   bullets?: string[];
   sentiments?: PublicSummarySentimentAttributes[];
-  siblings?: PublicSummaryGroup[];
+  siblings?: number[];
 };

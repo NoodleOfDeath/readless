@@ -82,6 +82,7 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
       start,
       ...params,
       locale: locale ?? params.locale,
+      version: req.version,
     });
   }
   
