@@ -38,7 +38,7 @@ export function Stepper({
         keyboardType="numeric"
         onChangeText={ (text) => {
           const value = Number(text);
-          if (!Number.isNaN(value)) {
+          if (!isNaN(value)) {
             onValueChange?.(value - offset);
           } else {
             onValueChange?.(undefined);

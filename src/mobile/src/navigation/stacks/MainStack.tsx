@@ -5,7 +5,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { BottomTabNavigator } from '../BottomTabNavigator';
 
 import { strings } from '~/locales';
-import { RightTabBarIcons } from '~/navigation';
 import {
   AccountScreen,
   AchievementScreen,
@@ -31,7 +30,6 @@ import {
   SettingsScreen,
   ShortPressFormatPickerScreen,
   StatsScreen,
-  SummaryListScreen,
   SummaryScreen,
   TestScreen,
 } from '~/screens';
@@ -113,15 +111,6 @@ export function MainStack() {
         } } />
 
       {/* summary screens */}
-      <Stack.Screen
-        name={ 'summaryList' }
-        component={ SummaryListScreen }
-        options={ {
-          headerBackTitle: '',
-          headerLeft: () => null,
-          headerRight: () => <RightTabBarIcons />,
-          headerTitle: '',
-        } } />
       <Stack.Screen
         name={ 'summary' }
         component={ SummaryScreen }

@@ -86,8 +86,8 @@ export class SummaryController extends BaseControllerWithPersistentStorageAccess
     });
   }
   
-  public static async getSummariesInternal(payload: SearchSummariesPayload) {
-    return await Summary.getSummaries(payload); 
+  public static async getSummariesInternal(payload: SearchSummariesPayload, req?: ExpressRequest) {
+    return await Summary.getSummaries({ ...payload, ...req?.body }); 
   }
 
   @Get('/top')

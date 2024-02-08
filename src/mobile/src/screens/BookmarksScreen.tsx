@@ -15,18 +15,19 @@ import { strings } from '~/locales';
 export function BookmarksScreen() {
   
   const { 
+    api: { getSummaries },
     bookmarkedSummaries,
     bookmarkCount,
     readSummaries,
     setStoredValue,
   } = React.useContext(StorageContext);
 
-  const [bookmarks, setBookmarks] = React.useState(Object.values({ ...bookmarkedSummaries }).map((b) => b.item).sort((a, b) => new Date(b.createdAt ?? Date.now()).valueOf() - new Date(a.createdAt ?? Date.now()).valueOf()));
+  const [bookmarks, setBookmarks] = React.useState((Object.entries({ ...bookmarkedSummaries }).sort((a, b) => new Date(b[1].createdAt ?? Date.now()).valueOf() - new Date(a[1].createdAt ?? Date.now()).valueOf())).map(([id]) => parseInt(id)));
   
   useFocusEffect(React.useCallback(() => {
-    setBookmarks(Object.values({ ...bookmarkedSummaries }).map((b) => b.item));
+    setBookmarks((Object.entries({ ...bookmarkedSummaries }).sort((a, b) => new Date(b[1].createdAt ?? Date.now()).valueOf() - new Date(a[1].createdAt ?? Date.now()).valueOf())).map(([id]) => parseInt(id)));
   }, [bookmarkedSummaries]));
-  
+
   return (
     <Screen>
       <View gap={ 12 } flex={ 1 }>
@@ -34,6 +35,7 @@ export function BookmarksScreen() {
           <Text textCenter p={ 12 }>{strings.youHaveNoBookmarks}</Text>
         ) : (
           <SummaryList
+            fetch={ getSummaries }
             headerComponent={ (
               <View flex={ 1 } m={ 16 } gap={ 6 }>
                 <Button
@@ -53,7 +55,7 @@ export function BookmarksScreen() {
                 </Button>
               </View>
             ) }
-            summaries={ bookmarks } />
+            specificIds={ bookmarks } />
         )}
       </View>
     </Screen>

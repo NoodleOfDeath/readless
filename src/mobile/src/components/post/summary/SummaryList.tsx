@@ -46,6 +46,7 @@ import { fixedSentiment, parseKeywords } from '~/utils';
 
 export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
   summaries?: PublicSummaryGroup[];
+  sortable?: boolean;
   sortBy?: 'date' | 'relevance';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fetch?: typeof API.getSummaries | typeof API.getTopStories;
@@ -55,6 +56,7 @@ export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
   interval?: string;
   specificIds?: number[];
   landscapeEnabled?: boolean;
+  landscapeView?: boolean;
   big?: boolean;
   fancy?: boolean;
   headerComponent?: React.ReactNode;
@@ -64,7 +66,8 @@ export type SummaryListProps = Partial<FlatListProps<PublicSummaryGroup[]>> & {
 
 export function SummaryList({ 
   summaries: summaries0 = [],
-  sortBy: sortBy0 = 'relevance',
+  sortBy: sortBy0,
+  sortable = Boolean(sortBy0),
   fetch,
   fetchOnLoad = true,
   onFormatChange,
@@ -72,6 +75,7 @@ export function SummaryList({
   interval,
   specificIds,
   landscapeEnabled,
+  landscapeView,
   big,
   fancy,
   headerComponent,
@@ -119,41 +123,32 @@ export function SummaryList({
   const [layout, setLayout] = React.useState<LayoutRectangle>();
   const [summaries, setSummaries] = React.useState<PublicSummaryGroup[]>(summaries0);
   const [detailSummary, setDetailSummary] = React.useState<PublicSummaryGroup>();
-  const [averageSentiment, setAverageSentiment] = React.useState<number>(0);
+  const [averageSentiment, setAverageSentiment] = React.useState<number>();
   const [totalResultCount, setTotalResultCount] = React.useState(0);
   const [lastActive, setLastActive] = React.useState(Date.now());
 
-  const detailSummarySiblings = React.useMemo(() => {
-    return [...(detailSummary?.siblings ?? [])].sort((a, b) => new Date(b.originalDate ?? '').valueOf() - new Date(a.originalDate ?? '').valueOf());
-  }, [detailSummary?.siblings]);
-
   const flatListRef = React.useRef<FlashList<PublicSummaryGroup>>(null);
 
-  const fetchFn = React.useMemo(() => fetch ?? (sortBy === 'relevance' ? getTopStories : getSummaries), [fetch, sortBy]);
+  const fetchFn = React.useMemo(() => fetch ?? (sortBy === 'date' ? getSummaries : getTopStories), [fetch, getSummaries, getTopStories, sortBy]);
   
   // callbacks
   
-  const resetState = () => {
+  const resetState = (failed = false) => {
     setSummaries([]);
     setCursor(0);
     setTotalResultCount(0);
     setLoaded(false);
-    setLastFetchFailed(true);
+    setLastFetchFailed(failed);
   };
 
   const load = React.useCallback(async (reset = false, overrideFilter = filter) => {
-    if (loading) {
-      return;
-    }
-    if (!loaded && !fetchOnLoad) {
+    if (loading || (!loaded && !fetchOnLoad)) {
       return;
     }
     setLoaded(false);
     setLoading(true);
     if (reset) {
-      setSummaries([]);
-      setCursor(0);
-      setDetailSummary(undefined);
+      resetState();
     }
     try {
       const { data, error } = await fetchFn({
@@ -192,7 +187,7 @@ export function SummaryList({
       setLastFetchFailed(false);
     } catch (e) {
       console.error(e);
-      resetState();
+      resetState(true);
     } finally {
       setLoaded(true);
       setLoading(false);
@@ -268,12 +263,13 @@ export function SummaryList({
   }, [loading, navigation, filter, filter0, lastFetchFailed, loaded, load, summaries.length]));
   
   React.useEffect(() => {
-    if (prevSortBy === sortBy) {
+    if (!sortable || prevSortBy === sortBy) {
       return;
     }
     resetState();
     load(true);
-  }, [prevSortBy, sortBy]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortable, prevSortBy, sortBy]);
   
   useAppState({ 
     onBackground: () => {
@@ -300,7 +296,7 @@ export function SummaryList({
   
   // sentiment meter object
   const sentimentMeter = React.useMemo(() => {
-    if (!averageSentiment) {
+    if (!sentimentEnabled || averageSentiment == null || isNaN(averageSentiment)) {
       return null;
     }
     return (
@@ -322,10 +318,10 @@ export function SummaryList({
         </View>
       </Popover>
     );
-  }, [averageSentiment, totalResultCount]);
+  }, [averageSentiment, sentimentEnabled, totalResultCount]);
 
-  const detailComponent = React.useMemo(() => (landscapeEnabled && isTablet && detailSummary) ? (
-    <React.Fragment>
+  const detailComponent = React.useMemo(() => (landscapeEnabled && isTablet && landscapeView && detailSummary) ? (
+    <View flex={ 1 } flexGrow={ 1 } mr={ 12 }>
       <Summary
         summary={ detailSummary }
         key={ detailSummary.id }
@@ -333,13 +329,13 @@ export function SummaryList({
         keywords={ parseKeywords(filter) }
         onFormatChange={ (format) => handleFormatChange(detailSummary, format) } />
       <Divider my={ 3 } />
-      {detailSummarySiblings.length > 0 && (
+      {(detailSummary?.siblings?.length ?? 0) > 0 && (
         <Text system h6 m={ 12 }>
-          {`${strings.relatedNews} (${detailSummarySiblings.length})`}
+          {`${strings.relatedNews} (${detailSummary?.siblings?.length})`}
         </Text>
       )}
-    </React.Fragment>
-  ) : null, [landscapeEnabled, isTablet, detailSummary, preferredReadingFormat, filter, detailSummarySiblings.length, handleFormatChange ]);
+    </View>
+  ) : null, [landscapeEnabled, isTablet, landscapeView, detailSummary, preferredReadingFormat, filter, handleFormatChange]);
 
   return (
     <View { ...props } col onLayout={ ({ nativeEvent: { layout } }) => setLayout(layout) }>
@@ -358,7 +354,7 @@ export function SummaryList({
             ListHeaderComponent={ (
               <React.Fragment>
                 {headerComponent}
-                {((sentimentEnabled && averageSentiment != null && !Number.isNaN(averageSentiment)) || !fetch) && (
+                {((sentimentEnabled && averageSentiment != null && !isNaN(averageSentiment)) || !fetch || sortable) && (
                   <View
                     beveled
                     flexRow
@@ -370,8 +366,8 @@ export function SummaryList({
                     mx={ 12 }
                     mt={ 0 }
                     mb={ 6 }>
-                    {sentimentEnabled && averageSentiment != null && !Number.isNaN(averageSentiment) && sentimentMeter}
-                    {!fetch && (
+                    {sentimentMeter}
+                    {(!fetch || sortable) && (
                       <Button 
                         contained 
                         gap={ 6 }
@@ -447,24 +443,7 @@ export function SummaryList({
             ItemSeparatorComponent={ () => <Divider my={ 3 } /> }
             onScroll={ handleMasterScroll } />
         </View>
-        {landscapeEnabled && isTablet && (
-          <View flex={ 1 } flexGrow={ 1 } mr={ 12 }>
-            <FlatList
-              ref={ flatListRef }
-              data={ detailSummarySiblings }
-              renderItem={ ({ item }) => (
-                <Summary
-                  key={ item.id }
-                  summary={ item } 
-                  hideArticleCount
-                  keywords={ parseKeywords(filter) }
-                  onFormatChange={ (format) => handleFormatChange(item, format) } />
-              ) }
-              ItemSeparatorComponent={ () => <Divider my={ 3 } /> }
-              ListHeaderComponent={ detailComponent }
-              ListFooterComponentStyle={ { paddingBottom: 64 } } />
-          </View>
-        )}
+        {detailComponent}
       </View>
       {enableTts && Platform.OS === 'android' && (
         <Button

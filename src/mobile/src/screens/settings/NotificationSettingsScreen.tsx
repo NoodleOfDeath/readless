@@ -84,7 +84,7 @@ export function NotificationSettingsScreen() {
       setSettings(pushNotifications ?? {});
       setLoaded(true);
       const dailyFireTime = new Date(pushNotifications?.[SubscriptionEvent.DailyReminder]?.fireTime ?? new Date().getTime());
-      if (Number.isNaN(dailyFireTime.getTime())) {
+      if (isNaN(dailyFireTime.getTime())) {
         setDailyFireTime(new Date(new Date().getTime()));
       } else {
         setDailyFireTime(dailyFireTime);

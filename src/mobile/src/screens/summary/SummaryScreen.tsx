@@ -1,5 +1,4 @@
 import React from 'react';
-import { RefreshControl } from 'react-native';
 
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -10,9 +9,10 @@ import {
 } from '~/api';
 import {
   ActivityIndicator,
-  FlatList,
   Screen,
+  ScrollView,
   Summary,
+  SummaryList,
   Text,
   View,
 } from '~/components';
@@ -27,7 +27,11 @@ export function SummaryScreen({ route }: ScreenComponent<'summary'>) {
 
   const {
     preferredReadingFormat, 
-    api: { interactWithSummary, getSummary },
+    api: {
+      interactWithSummary, 
+      getSummary,
+      getSummaries, 
+    },
   } = React.useContext(StorageContext);
   const { showToast } = React.useContext(ToastContext);
 
@@ -36,6 +40,8 @@ export function SummaryScreen({ route }: ScreenComponent<'summary'>) {
   const [summary, setSummary] = React.useState<PublicSummaryGroup>();
   const [format, setFormat] = React.useState<ReadingFormat | undefined>(route?.params?.initialFormat ?? ReadingFormat.Bullets);
   const keywords = React.useMemo(() => route?.params?.keywords ?? [], [route]);
+
+  const siblings = React.useMemo(() => (summary?.siblings ?? [])?.map((s) => typeof s === 'number' ? s : (s as PublicSummaryGroup).id), [summary]);
   
   const load = React.useCallback(async (id?: number) => {
     if (!id) {
@@ -72,10 +78,6 @@ export function SummaryScreen({ route }: ScreenComponent<'summary'>) {
     }
   }, [load, summary, route?.params?.summary]);
   
-  const siblings = React.useMemo(() => {
-    return [...(summary?.siblings ?? [])].sort((a, b) => new Date(b.originalDate ?? '').valueOf() - new Date(a.originalDate ?? '').valueOf());
-  }, [summary?.siblings]);
-  
   const handleFormatChange = React.useCallback(
     (newSummary: PublicSummaryGroup, newFormat?: ReadingFormat) => {
       if (summary?.id === newSummary.id) {
@@ -108,48 +110,53 @@ export function SummaryScreen({ route }: ScreenComponent<'summary'>) {
     });
   }, [summary, format, navigation]));
 
-  return (
-    <Screen>
-      {loading ? (
+  const summaryCard = React.useMemo(() => {
+    return summary && ( 
+      <Summary
+        refreshing={ loading }
+        onRefresh={ () => load(summaryId) }
+        summary={ summary }
+        initialFormat={ format }
+        keywords={ keywords }
+        onFormatChange={ (format) => handleFormatChange(summary, format) } />
+    );
+  }, [format, handleFormatChange, keywords, loading, load, summary, summaryId]);
+
+  if (loading) {
+    return (
+      <Screen flex={ 1 }>
         <View flexGrow={ 1 } itemsCenter justifyCenter>
           <ActivityIndicator size="large" />
         </View>
-      ) : (summary && (
-        <FlatList
-          refreshControl={ (
-            <RefreshControl 
-              refreshing={ loading }
-              onRefresh={ () => load(summaryId) } />
-          ) }
-          data={ siblings }
-          renderItem={ ({ item }) => (
-            <Summary
-              mx={ 12 }
-              key={ item.id }
-              summary={ item } 
-              hideArticleCount
-              onFormatChange={ (format) => handleFormatChange(item, format) } />
-          ) }
-          ItemSeparatorComponent={ () => <View mx={ 12 } my={ 6 } /> }
-          ListHeaderComponent={ (
-            <React.Fragment>
-              <Summary
-                refreshing={ loading }
-                onRefresh={ () => load(summaryId) }
-                summary={ summary }
-                initialFormat={ format }
-                keywords={ keywords }
-                onFormatChange={ (format) => handleFormatChange(summary, format) } />
-              {siblings.length > 0 && (
-                <Text system h6 m={ 12 }>
-                  {`${strings.relatedNews} (${siblings.length})`}
-                </Text>
-              )}
-            </React.Fragment>
-          ) }
-          ListFooterComponentStyle={ { paddingBottom: 64 } }
-          estimatedItemSize={ 114 } />
-      ))}
+      </Screen>
+    );
+  }
+
+  if (siblings.length === 0) {
+    return (
+      <Screen flex={ 1 }>
+        <ScrollView flexGrow={ 1 }>
+          {summaryCard}
+        </ScrollView>
+      </Screen>
+    );
+  }
+
+  return (
+    <Screen flex={ 1 }>
+      <SummaryList
+        fetch={ getSummaries }
+        specificIds={ siblings }
+        headerComponent={ (
+          <View flex={ 1 } gap={ 6 }>
+            {summaryCard}
+            {siblings.length > 0 && (
+              <Text p={ 12 } system h6 m={ 12 }>
+                {`${strings.relatedNews} (${ siblings.length })`}
+              </Text>
+            )}
+          </View>
+        ) } />
     </Screen>
   );
 }

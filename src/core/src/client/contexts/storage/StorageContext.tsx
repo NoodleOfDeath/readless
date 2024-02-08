@@ -276,36 +276,6 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     }
     setNotifications(data.rows);
   }, [api, syncState.notifications.isFetching]);
-
-  const syncBookmarks = React.useCallback(async (bookmarks: Record<number, Date>) => {
-    if (syncState.bookmarks.isFetching) {
-      return;
-    }
-    bookmarks = Object.fromEntries(Object.entries(bookmarks).map(([k, v]) => [k, new Date(v)]));
-    const ids = Object.keys(bookmarks).map((id) => Number(id));
-    console.log('syncing bookmarks');
-    let offset = 0;
-    let summaries: PublicSummaryGroup[] = [];
-    while (offset < ids.length) {
-      const { data, error } = await api.getSummaries({ ids, offset });
-      if (error) {
-        console.error(error);
-        return;
-      }
-      const { rows } = data;
-      if (!rows) {
-        break;
-      }
-      summaries = summaries.concat(rows);
-      offset += Math.min(rows.length, 10);
-    }
-    await setStoredValue(
-      'bookmarkedSummaries', 
-      Object.fromEntries(summaries.map((s) => [s.id, new DatedEvent(s, { createdAt: bookmarks[s.id] })])), 
-      false
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api]);
   
   const syncProfile = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
     if (syncState.profile.isFetching) {
@@ -348,47 +318,22 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
     console.log('syncing prefs');
     for (const key of ALL_SYNCABLE) {
       const remoteValue = preferences[key];
-      if (opts?.syncBookmarks && key === 'bookmarkedSummaries') {
-        try {
-          setSyncState((prev) => {
-            const state = prev.clone;
-            state.bookmarks.prepare();
-            return state;
-          });
-          const job = new FetchJob(async () => syncBookmarks(remoteValue ?? {}));
-          job.dispatch()
-            .then(() => {
-              setSyncState((prev) => {
-                const state = prev.clone;
-                state.bookmarks.success();
-                return state;
-              });
-            })
-            .catch((e) => {
-              setSyncState((prev) => {
-                const state = prev.clone;
-                state.bookmarks.fail(e);
-                return state;
-              });
-            });
-        } catch (e) {
-          console.error(e);
-          handleBadRequest(e);
-        }
-      } else {
-        if (remoteValue) {
-          if (SYNCABLE_METRICS.includes(key)) {
-            if (Array.isArray(remoteValue)) {
-              const value = Object.fromEntries(Object.values(remoteValue).map((v) => [v, true]));
-              await setStoredValue(key, value, false);
-            } else {
-              const value = Object.fromEntries(Object.entries(remoteValue).map(([k, v]) => [k, new DatedEvent(v, v)]));
-              await setStoredValue(key, value, false);
-            }
+      if (key === 'bookmarkedSummaries') {
+        const bookmarks = Object.fromEntries(Object.entries(remoteValue).map(([k, v]) => [k, new DatedEvent(null, { createdAt: new Date(v as string) })]));
+        setStoredValue('bookmarkedSummaries', bookmarks, false);
+      }
+      if (remoteValue) {
+        if (SYNCABLE_METRICS.includes(key)) {
+          if (Array.isArray(remoteValue)) {
+            const value = Object.fromEntries(Object.values(remoteValue).map((v) => [v, true]));
+            await setStoredValue(key, value, false);
           } else {
-            const value = SyncableIoIn(remoteValue);
+            const value = Object.fromEntries(Object.entries(remoteValue).map(([k, v]) => [k, new DatedEvent(v, v)]));
             await setStoredValue(key, value, false);
           }
+        } else {
+          const value = SyncableIoIn(remoteValue);
+          await setStoredValue(key, value, false);
         }
       }
     }
@@ -402,7 +347,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
       };
       return new UserData(state);
     }, false);
-  }, [syncState.profile.isFetching, storage.lastRemoteSync, storage.lastLocalSync, storage.userData?.valid, storage.userData?.unlinked, setStoredValue, api, forcePushLocalStateToRemote, syncBookmarks, handleBadRequest]);
+  }, [syncState.profile.isFetching, storage.lastRemoteSync, storage.lastLocalSync, storage.userData?.valid, storage.userData?.unlinked, setStoredValue, api, forcePushLocalStateToRemote]);
 
   const syncWithRemote = React.useCallback(async (prefs?: ProfileResponse, opts?: SyncOptions) => {
     if (!syncState.hasLoadedLocalState || syncState.isFetching) {
@@ -543,7 +488,7 @@ export function StorageContextProvider({ children }: React.PropsWithChildren) {
 
   React.useEffect(() => {
     if (!syncState.isFetching && !syncState.lastFetch && syncState.hasLoadedLocalState) {
-      syncWithRemote(undefined, { syncBookmarks: true });
+      syncWithRemote(undefined);
       setSyncState((prev) => {
         const state = prev.clone;
         state.isFetching = true;

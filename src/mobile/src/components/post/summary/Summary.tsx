@@ -794,7 +794,7 @@ export function Summary({
       </View>
       {!big && !hideFooter && footer}
     </View>
-  ), [footerOnly, initialFormat, title, showcase, translateToggle, renderContent, preferredReadingFormat, big, image, hideFooter, footer, handleFormatChange]);
+  ), [footerOnly, title, showcase, translateToggle, renderContent, preferredReadingFormat, big, image, hideFooter, footer, handleFormatChange]);
 
   // small card form
   const card = React.useMemo(() => footerOnly ? null : (
@@ -820,7 +820,7 @@ export function Summary({
         </View>
       </View>
     </View>
-  ), [footerOnly, theme.components.card, style, showcase, isRead, selected, big, image, header, hideFooter, footer, coverContent]);
+  ), [footerOnly, theme.components.card, style, showcase, isRead, selected, big, image, header, coverContent]);
 
   // large card form
   const fullCard = React.useMemo(() => footerOnly ? null : (

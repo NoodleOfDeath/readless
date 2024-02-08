@@ -23,7 +23,7 @@ export type ButtonProps = TextProps & ViewProps & {
   avatar?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-  iconProps?: IconProps;
+  iconProps?: Partial<IconProps>;
   vertical?: boolean;
   iconSize?: number;
   selected?: boolean;
@@ -82,19 +82,19 @@ export function Button({
         return (
           <Avatar.Icon
             accessible={ false }
-            { ...iconProps }
             icon={ leftIcon } 
             size={ iconSize ?? textStyle.fontSize } 
-            color={ buttonStyle.color ?? textStyle.color } />
+            color={ buttonStyle.color ?? textStyle.color }
+            { ...iconProps } />
         );
       }
       return (
         <Icon 
           accessible={ false }
-          { ...iconProps }
           name={ leftIcon } 
           size={ iconSize ?? textStyle.fontSize } 
-          color={ buttonStyle.color ?? textStyle.color } />
+          color={ buttonStyle.color ?? textStyle.color }
+          { ...iconProps } />
       );
     }
     return leftIcon;

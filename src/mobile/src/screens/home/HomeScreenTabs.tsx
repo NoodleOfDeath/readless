@@ -47,14 +47,14 @@ export function YourNewsTab({ route: _route }: ScreenComponent<'yourNews'>) {
       headerComponent={ (
         <MetricCounter
           metrics={ [{
-            color: 'white',
             disclosureIndicator: true,
+            iconProps: { color: 'white' },
             leftIcon: 'trophy',
             onPress: () => navigate('achievements'),
             reputation: true,
           }, {
-            color: 'white',
             disclosureIndicator: true,
+            iconProps: { color: 'white' },
             leftIcon: 'flash',
             onPress: () => navigate('leaderboards'),
             streak: true,

@@ -24,6 +24,7 @@ export const BottomTabNavigator = () => {
           tabBarAccessibilityLabel: strings.home,
           tabBarIcon: () => <Icon name='home' size={ 24 } />,
           tabBarLabel: strings.home,
+          tabBarShowLabel: false,
         } } />
       {__DEV__ && (
         <BottomTab.Screen

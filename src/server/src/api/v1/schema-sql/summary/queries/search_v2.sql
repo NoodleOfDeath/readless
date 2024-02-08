@@ -19,7 +19,7 @@ FROM (
     ss.sentiments::jsonb sentiments,
     sm.media::jsonb media,
     st.translations::jsonb translations,
-    COALESCE(JSON_AGG(sr."childId") FILTER (WHERE sr."childId" IS NOT NULL), '[]'::json) siblings,
+    COALESCE(JSON_AGG(DISTINCT sr."childId") FILTER (WHERE sr."childId" IS NOT NULL), '[]'::json) siblings,
     "averageSentiment",
     "totalCount"
   FROM (
