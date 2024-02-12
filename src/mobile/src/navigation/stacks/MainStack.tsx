@@ -30,6 +30,7 @@ import {
   SettingsScreen,
   ShortPressFormatPickerScreen,
   StatsScreen,
+  SummaryListScreen,
   SummaryScreen,
   TestScreen,
 } from '~/screens';
@@ -111,6 +112,15 @@ export function MainStack() {
         } } />
 
       {/* summary screens */}
+      <Stack.Screen
+        name={ 'summaryList' }
+        component={ SummaryListScreen }
+        options={ {
+          headerBackTitle: '',
+          headerLeft: () => null,
+          headerRight: () => null,
+          headerTitle: '',
+        } } />
       <Stack.Screen
         name={ 'summary' }
         component={ SummaryScreen }
