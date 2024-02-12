@@ -32,10 +32,10 @@ WITH RankedSummaries AS (
       WHERE
         sib.id = sr."childId"
         AND sib."deletedAt" IS NULL)
-      AND ((:publishers) IS NULL
+      AND (((:publishers) IS NULL
         OR (pub.name IN (:publishers)))
-      AND ((:categories) IS NULL
-        OR (cat.name IN (:categories)))
+        OR ((:categories) IS NULL
+        OR (cat.name IN (:categories))))
       AND ((:excludedPublishers) IS NULL
         OR (pub.name NOT IN (:excludedPublishers)))
       AND ((:excludedCategories) IS NULL
