@@ -1,0 +1,48 @@
+name: Mobile CI
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+concurrency:
+  group: ${{ github.ref }}-mobile
+  cancel-in-progress: true
+
+env:
+  IMAGE: ${{ github.event.repository.name }}-mobile-${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+
+jobs:
+  build-release-mobile:
+    runs-on: macos-latest
+    if: ${{ contains(github.event.head_commit.message, '~mobile') }}
+    environment: ${{ fromJSON('{"main":"prod"}')[github.ref_name] || github.ref_name }}
+    env:
+      API_ENDPOINT: ${{ vars.API_ENDPOINT }}
+      APP_ID: ${{ vars.APP_ID }}
+      APP_STORE_LINK: ${{ vars.APP_STORE_LINK }}
+      GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
+      PACKAGE_NAME: ${{ vars.PACKAGE_NAME }}
+      PLAY_STORE_LINK: ${{ vars.PLAY_STORE_LINK }}
+      REGISTRATION_PRIVATE_KEY: ${{ secrets.REGISTRATION_PRIVATE_KEY }}
+    steps:
+      - name: Print Job Description
+        run: |
+          echo building \"$IMAGE\" from branch \"${{ github.ref_name }}\"
+      - name: install fastlane
+        run: |
+          brew install fastlane
+      - name: Git Checkout
+        uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.GIT_SSH_KEY }}
+          submodules: recursive
+      - name: Build iOS Release
+        if: ${{ contains(github.event.head_commit.message, '-ios') || contains(github.event.head_commit.message, '~release') }}
+        run: |
+          cd $GITHUB_WORKSPACE/src/mobile yarn release:ios
+      - name: Build Android Release
+        if: ${{ contains(github.event.head_commit.message, '-android') || contains(github.event.head_commit.message, '~release') }}
+        run: |
+          cd $GITHUB_WORKSPACE/src/mobile yarn release:android

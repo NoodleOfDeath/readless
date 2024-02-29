@@ -1,0 +1,20 @@
+diff --git a/node_modules/@react-navigation/drawer/src/utils/useDrawerStatus.tsx b/node_modules/@react-navigation/drawer/src/utils/useDrawerStatus.tsx
+index afb2738..05b035a 100644
+--- a/node_modules/@react-navigation/drawer/src/utils/useDrawerStatus.tsx
++++ b/node_modules/@react-navigation/drawer/src/utils/useDrawerStatus.tsx
+@@ -7,14 +7,7 @@ import DrawerStatusContext from './DrawerStatusContext';
+  * Hook to detect if the drawer's status in a parent navigator.
+  * Returns 'open' if the drawer is open, 'closed' if the drawer is closed.
+  */
+-export default function useDrawerStatus(): DrawerStatus {
++export default function useDrawerStatus(): DrawerStatus | undefined {
+   const drawerStatus = React.useContext(DrawerStatusContext);
+-
+-  if (drawerStatus === undefined) {
+-    throw new Error(
+-      "Couldn't find a drawer. Is your component inside a drawer navigator?"
+-    );
+-  }
+-
+   return drawerStatus;
+ }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="360dp"
+    android:minHeight="110dp"
+    android:updatePeriodMillis="1800000"
+    android:previewImage="@drawable/example_appwidget_preview"
+    android:initialLayout="@layout/read_less_app_widget"
+    android:description="@string/app_widget_description"
+    android:configure="ai.readless.ReadLess.ReadLessAppWidgetConfigureActivity"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen"
+    android:previewLayout="@layout/read_less_app_widget"
+    android:targetCellHeight="2"
+    android:targetCellWidth="5"
+    android:initialKeyguardLayout="@layout/read_less_app_widget"
+/>

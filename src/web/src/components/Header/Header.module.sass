@@ -1,0 +1,50 @@
+@import ~/styles/helpers
+
+.header
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    z-index: 30
+    padding: 24px 0
+    transition: padding .2s, background .2s
+    &:after
+        content: ""
+        position: absolute
+        left: 40px
+        right: 40px
+        bottom: 0
+        height: 2px
+        background: $n3
+        transition: all .2s
+        +m
+            left: 24px
+            right: 24px
+    &.visible
+        background: $n1
+        +d
+            padding: 16px 0
+        +m
+            padding: 12px 0
+        &:after
+            left: 0
+            right: 0
+
+.container
+    display: flex
+    align-items: center
+    max-width: 100%
+    padding: 0 40px
+    +m
+        padding: 0 24px
+
+.button
+    margin-right: 40px
+    +x
+        margin-right: 32px
+    +m
+        margin-right: 24px
+
+.logo
+    margin-right: auto
+

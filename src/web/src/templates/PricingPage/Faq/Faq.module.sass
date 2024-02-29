@@ -1,0 +1,27 @@
+@import ~/styles/helpers
+
+.container
+    max-width: 976px
+
+.head
+    margin-bottom: 64px
+    text-align: center
+
+.title
+    margin-bottom: 8px
+
+.info
+    color: $n4
+
+.item
+    &:not(:last-child)
+        position: relative
+        &:after
+            content: ""
+            position: absolute
+            left: 24px
+            right: 24px
+            bottom: 0
+            height: 1px
+            background: #F5F5F6
+

@@ -1,0 +1,157 @@
+@import ~/styles/helpers
+
+.subscription
+    +x
+        margin-bottom: 96px
+    +t
+        margin-bottom: 64px
+    +m
+        margin-bottom: 40px
+
+.container
+    +d
+        padding: 0 64px
+    +t
+        padding: 0 24px
+    +m
+        padding: 0 16px
+
+.wrapper
+    position: relative
+    padding: 192px 64px
+    border-radius: 24px
+    background: $blue
+    text-align: center
+    +x
+        padding: 142px 56px
+    +d
+        padding: 152px 40px
+    +m
+        padding: 118px 20px
+
+.circles
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    overflow: hidden
+    &:before,
+    &:after
+        content: ""
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate(-50%,-50%)
+        border: 1px solid #F7FAFB
+        border-radius: 50%
+    &:before
+        width: 888px
+        height: 888px
+        opacity: .2
+        +m
+            width: 532px
+            height: 532px
+    &:after
+        width: 660px
+        height: 660px
+        opacity: .15
+        +m
+            width: 278px
+            height: 278px
+
+.head
+    position: relative
+    z-index: 3
+    margin-bottom: 40px
+    color: $n1
+
+.title
+    margin-bottom: 12px
+    +x
+        font-size: 64px
+        line-height: 72px
+    +d
+        font-size: 48px
+        line-height: 56px
+    +m
+        margin-bottom: 8px
+        font-size: 40px
+        line-height: 48px
+
+.info
+    +m
+        max-width: 300px
+        margin: 0 auto
+        font-size: 20px
+        line-height: 32px
+
+.form
+    position: relative
+    z-index: 3
+    max-width: 360px
+    margin: 0 auto
+
+.fieldset
+    margin-bottom: 24px
+
+.field
+    &:not(:last-child)
+        margin-bottom: 12px
+
+.circle
+    position: absolute
+    border-radius: 50%
+    z-index: 2
+    +m
+        display: none
+    &:nth-child(1)
+        top: 230px
+        left: calc(50% - 556px)
+        width: 80px
+        +x
+            left: calc(50% - 466px)
+        +d
+            left: -30px
+        span
+            background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #D9DFE9 43.61%, #FFFFFF 100%)
+    &:nth-child(2)
+        left: calc(50% - 407px)
+        bottom: 242px
+        width: 40px
+        +x
+            left: calc(50% - 350px)
+            bottom: 190px
+        span
+            background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #136FFF 43.61%, #47BDFF 100%) 
+    &:nth-child(3)
+        right: calc(50% - 460px)
+        bottom: 271px
+        width: 33px
+        +x
+            right: calc(50% - 345px)
+            bottom: 165px
+        +d
+            right: 58px
+        span
+            background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #27A867 43.61%, #33E68C 100%)
+    &:nth-child(4)
+        top: 192px
+        right: calc(50% - 545px)
+        width: 49px
+        +x
+            right: calc(50% - 460px)
+        +d
+            right: -25px
+        span
+            background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #FFAF13 43.61%, #FBFF47 100%)
+    span
+        display: block
+        width: 100%
+        border-radius: 50%
+        &:before
+            content: ""
+            display: block
+            padding-bottom: 100%  
+
+    

@@ -1,0 +1,47 @@
+#!/bin/bash
+
+THIS=$(basename $0)
+
+usage() {
+  echo
+  echo "shorthand for 'docker logs <container>' but better"
+  echo
+  echo "usage: $THIS [-h|--help] <pattern>"
+  echo "  -h|--help          show this help"
+  echo "  <pattern>          pattern to match in container name"
+  exit 1
+}
+
+ARGS=()
+PATTERN=
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  -h | --help)
+    usage
+    ;;
+  *)
+    ARGS+=("$1")
+    ;;
+  esac
+  shift
+done
+
+PATTERN="${ARGS[0]}"
+
+if [[ -z "$PATTERN" ]]; then
+  usage
+fi
+
+PS=($(dkrps --name-only $PATTERN))
+
+if [[ "${#PS[@]}" -eq 0 ]]; then
+  echo "no containers found matching '$PATTERN'"
+  exit 1
+elif [[ "${#PS[@]}" -gt 1 ]]; then
+  echo "multiple containers found matching '$PATTERN'"
+  echo "please be more specific"
+  exit 2
+else
+  docker logs $(dkrps --name-only $PATTERN) -f
+fi

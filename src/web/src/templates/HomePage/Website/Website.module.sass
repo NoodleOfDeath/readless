@@ -1,0 +1,61 @@
+@import ~/styles/helpers
+
+.website
+  position: relative
+
+.container
+  display: flex
+  align-items: center
+  +d
+    display: block
+
+.wrap
+  margin-right: auto
+
+.title
+  margin-bottom: 1rem
+  +m
+    margin-bottom: 1rem
+
+.info
+  margin-bottom: 68px
+  color: $n4
+  +x
+    font-size: 20px
+    +d
+      margin-bottom: 32px
+    +m
+      font-size: 18px
+      line-height: 28px
+
+.form
+  +d
+    max-width: 340px
+    +m
+      max-width: 100%
+
+.preview,
+.previewDesktop,
+.previewMobile
+  text-align: center
+  font-size: 0
+
+.preview
+  +x
+    max-width: 580px
+    +d
+      max-width: 100%
+    +d
+      display: none
+
+.previewDesktop
+  display: none
+  +d
+    display: block
+    +m
+      display: none
+
+.previewMobile
+  display: none
+  +m
+    display: block

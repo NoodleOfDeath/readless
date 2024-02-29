@@ -1,0 +1,20 @@
+FROM --platform=linux/amd64 node:19.3.0 AS base
+
+# install libvips
+RUN apt-get update && apt-get install -y libvips
+
+WORKDIR /home/node
+COPY src/core ./core
+WORKDIR /home/node/app
+COPY src/server/package.json ./
+COPY src/server/yarn.lock ./
+COPY src/server/src ./src
+RUN yarn install --non-interactive --immutable
+
+FROM base AS dev
+COPY src/server/tsconfig.json ./
+COPY src/server/tsconfig.build.json ./
+COPY src/server/serve-api.ts ./
+COPY src/server/nodemon.api.json ./
+RUN yarn cp:core
+CMD yarn dev:api

@@ -1,0 +1,90 @@
+@import ~/styles/helpers
+
+.mistake
+    position: relative
+    background: #F2F3F6
+
+.container
+    display: flex
+    align-items: center
+    min-height: 100vh
+    padding-top: 130px
+    padding-bottom: 120px
+    +m
+        display: block
+        padding: 120px 24px 385px
+
+.wrap
+    position: relative
+    z-index: 3
+    max-width: 386px
+    +m
+        max-width: 100%
+        text-align: center
+
+.title
+    margin-bottom: 24px
+    +t
+        font-size: 48px
+        line-height: 56px
+    +m
+        max-width: 270px
+        margin: 0 auto 24px
+
+.info
+    margin-bottom: 40px
+    color: $n4
+    +m
+        margin-block: 24px
+        font-size: 18px
+        line-height: 28px
+
+.btns
+    display: flex
+    margin-bottom: 90px
+    +m
+        justify-content: center
+        margin-bottom: 40px
+
+.button
+    &:not(:last-child)
+        margin-right: 12px
+
+.note
+    margin-bottom: 16px
+    +caption
+    color: $n4
+
+.socials
+    display: flex
+    +m
+        justify-content: center
+
+.social
+    opacity: .5
+    transition: opacity .2s
+    svg
+        fill: $n4
+    &:hover
+        opacity: 1
+    &:not(:last-child)
+        margin-right: 20px
+
+.preview
+    position: absolute
+    top: 50%
+    right: calc(50% - 873px)
+    transform: translateY(-47.8%)
+    +x
+        right: calc(50% - 673px)
+        width: 790px
+    +d
+        right: calc(50% - 710px)
+    +t
+        right: calc(50% - 730px)
+    +m
+        top: auto
+        right: 50%
+        bottom: 0
+        width: 490px
+        transform: translate(55%,0)

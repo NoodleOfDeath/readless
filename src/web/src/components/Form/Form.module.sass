@@ -1,0 +1,23 @@
+@import ~/styles/helpers
+
+.form
+    position: relative
+
+.input
+    padding-right: 60px
+
+.button
+    position: absolute
+    top: 50%
+    right: 6px
+    width: 44px
+    height: 44px
+    transform: translateY(-50%)
+    background: $blue
+    border-radius: 6px
+    font-size: 0
+    transition: background .2s
+    svg
+        fill: $n1
+    &:hover
+        background: darken($blue, 5)

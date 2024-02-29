@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $IMAGE
+  namespace: $K8S_NAMESPACE
+spec:
+  replicas: $K8S_REPLICA_COUNT_SCHEDULER
+  selector:
+    matchLabels:
+      app: $IMAGE
+  template:
+    metadata:
+      labels:
+        app: $IMAGE
+    spec:
+      containers:
+        - name: $IMAGE
+          image: $REGISTRY/$IMAGE
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: '$K8S_MEMORY_REQUESTS'
+              cpu: '$K8S_CPU_REQUESTS'
+            limits:
+              memory: '$K8S_MEMORY_LIMITS'
+              cpu: '$K8S_CPU_LIMITS'
+          env:
+            - name: API_ENDPOINT
+              value: '$API_ENDPOINT'
+            - name: CACHE_LIFESPAN
+              value: '$CACHE_LIFESPAN'
+            - name: CHROMIUM_EXECUTABLE_PATH
+              value: '$CHROMIUM_EXECUTABLE_PATH'
+            - name: ENABLED_FEATURES
+              value: '$ENABLED_FEATURES'
+            - name: OLD_NEWS_THRESHOLD
+              value: '$OLD_NEWS_THRESHOLD'
+            - name: OPENAI_API_KEY
+              value: '$OPENAI_API_KEY'
+            - name: PG_CONNECTION_STRING
+              value: '$PG_CONNECTION_STRING'
+            - name: PUBLISHER_MAX_ATTEMPT_LIMIT
+              value: '$PUBLISHER_MAX_ATTEMPT_LIMIT'
+            - name: SPIDER_FETCH_INTERVAL
+              value: '$SPIDER_FETCH_INTERVAL'
+            - name: TOPIC_RECALCULATE_RATE
+              value: '$TOPIC_RECALCULATE_RATE'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $IMAGE
+  namespace: $K8S_NAMESPACE
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+  selector:
+    app: $IMAGE
+---
+

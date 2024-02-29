@@ -1,0 +1,64 @@
+@import ~/styles/helpers
+
+.main
+    padding-top: 232px
+    +x
+        padding-top: 208px
+    +d
+        margin-bottom: 64px
+        padding-top: 160px
+
+.title
+    margin-bottom: 96px
+    +x
+        margin-bottom: 80px
+    +d
+        margin-bottom: 64px
+        font-size: 72px
+        line-height: 75px
+    +m
+        font-size: 48px
+        line-height: 56px
+
+.row
+    display: flex
+    +d
+        display: block
+
+.subtitle
+    flex-shrink: 0
+    width: 452px
+    padding-right: 48px
+    +d
+        width: 100%
+        margin-bottom: 24px
+        padding-right: 0
+        font-size: 36px
+        line-height: 44px
+    +m
+        font-size: 24px
+        line-height: 32px
+
+.info
+    margin-bottom: 52px
+    color: $n6
+    +d
+        margin-bottom: 48px
+    +m
+        font-size: 18px
+        line-height: 28px
+
+.content
+    margin-bottom: -32px
+    column-count: 2
+    column-gap: 64px
+    +body
+    color: $n4
+    +m
+        margin-bottom: -24px
+        column-count: 1
+        column-gap: 0
+    p
+        margin-bottom: 32px
+        +m
+            margin-bottom: 24px

@@ -1,0 +1,42 @@
+@import ~/styles/helpers
+
+.play
+    display: inline-flex
+    align-items: center
+    +base
+    color: $n7
+    transition: color .2s
+    &:hover
+        svg
+            transform: scale(1.15)
+
+.icon
+    display: flex
+    justify-content: center
+    align-items: center
+    flex-shrink: 0
+    width: 64px
+    height: 64px
+    margin-right: 24px
+    border-radius: 50%
+    background: $blue
+    +x
+        width: 48px
+        height: 48px
+    svg
+        fill: $n1
+        transition: transform .2s
+
+.video
+    position: relative
+    overflow: hidden
+    &:before
+        content: ""
+        display: block
+        padding-bottom: 56.25%
+    iframe
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%

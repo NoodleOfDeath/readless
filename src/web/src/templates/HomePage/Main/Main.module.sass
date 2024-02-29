@@ -1,0 +1,118 @@
+@import ~/styles/helpers
+
+.main
+  position: relative
+  margin: 01
+  padding: 10rem 0 3rem
+  background: $n2
+  +x
+    margin-bottom: 14rem
+    padding-top: 4rem
+    +m
+      margin-bottom: 0
+      padding: 0rem 0 0rem
+
+.wrap
+  position: relative
+  z-index: 2
+  max-width: 320px
+  margin-bottom: 284px
+  +x
+    max-width: 216px
+    margin-bottom: 136px
+    +d
+      max-width: 100%
+      margin-bottom: 142px
+    +m
+      margin: 0 auto
+
+.title
+  margin-bottom: 1rem
+
+.info
+  margin-bottom: 40px
+  color: $n4
+  +x
+    margin-bottom: 24px
+    font-size: 22px
+    line-height: 32px
+    letter-spacing: -0.01em
+    +d
+      font-size: 20px
+      line-height: 28px
+    +m
+      font-size: 18px
+      line-height: 26px
+
+.btns
+  display: flex
+  flex-direction: row
+  flex: 1
+  gap: 0.5rem
+  +m
+    justify-content: center
+
+.button
+  &:nth-child(2)
+    margin-left: 16px
+    +m
+      display: none
+      
+.image
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  align-items: center
+  justify-content: center
+  gap: 0.5rem
+
+.fixed
+  display: none
+  +m
+    display: block
+    z-index: 20
+    background: $n2
+    position: fixed
+    bottom: 0px
+    left: 0px
+    height: 40px
+    width: 100%
+    cursor: pointer
+
+.preview
+  position: absolute
+  top: 55%
+  right: calc(50% - 1150px)
+  transform: translateY(-46.5%)
+  font-size: 0
+  section
+    position: relative
+    width: 60%
+    padding: 0 36px
+    transform: translateX(-25%)
+  +x
+    right: calc(50% - 660px)
+    width: 660px
+    margin: 80px -80px 20px -65px
+    section
+      width: 90%
+      margin: 0 auto
+      transform: translateX(-35%)
+      z-index: 1
+    +d
+      right: calc(50% - 588px)
+      section
+        transform: translateX(-30%)
+        z-index: 1
+    +t
+    +m
+      margin: 10px -80px 20px -65px
+      position: relative
+      right: auto
+      width: auto
+      transform: translateY(0)
+      section
+        transform: translateX(0%)
+        z-index: 1
+
+      

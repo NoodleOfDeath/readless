@@ -1,0 +1,19 @@
+{
+  "verbose": true,
+  "ignore": [],
+  "watch": [
+    ".env",
+    ".eslintrc",
+    "config-overrides.js",
+    "next.config.js",
+    "nodemon.json",
+    "package.json",
+    "public/*",
+    "src/*",
+    "node_modules/*"
+  ],
+  "ext": "css,html,js,json,jsx,less,md,ts,tsx",
+  "execMap": {
+    "ts": "node --inspect=0.0.0.0:9229 --nolazy"
+  }
+}

@@ -1,0 +1,72 @@
+@import ~/styles/helpers
+
+.reviews
+  +d
+    margin-bottom: 96px
+  +m
+    margin-bottom: 64px
+
+.head
+  margin-bottom: 55px
+  text-align: center
+
+.title
+  margin-bottom: 2rem
+
+.info
+  color: $n4
+
+.list
+  display: flex
+  flex-wrap: wrap
+  margin: -22px -11px 0
+  +m
+    display: block
+    margin: 0
+
+.item
+  flex: 0 0 calc(33.333% - 22px)
+  width: calc(33.333% - 22px)
+  margin: 22px 11px 0
+  padding: 48px 40px 40px
+  border-radius: 16px
+  background: $n1
+  +d
+    padding: 48px 32px 40px
+  +t
+    flex: 0 0 calc(50% - 22px)
+    width: calc(50% - 22px)
+    padding: 40px 32px
+  +m
+    width: 100%
+    margin: 16px 0 0
+    padding: 48px 40px 40px
+
+.avatar
+  position: relative
+  width: 64px
+  height: 64px
+  margin-bottom: 20px
+  border-radius: 50%
+  overflow: hidden
+
+.content
+  display: -webkit-box
+  min-height: 112px
+  margin-bottom: 56px
+  -webkit-line-clamp: 4
+  -webkit-box-orient: vertical
+  overflow: hidden
+  +body
+  color: $n4
+  +t
+    margin-bottom: 32px
+  +m
+    margin-bottom: 38px
+
+.author
+  font-weight: 600
+
+.position
+  +base
+  color: $n4
