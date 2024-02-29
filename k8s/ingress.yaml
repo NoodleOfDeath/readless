@@ -1,0 +1,400 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: readless-web
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - www.readless.ai
+      secretName: tls-www.readless.ai
+  rules:
+    - host: www.readless.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: readless-web-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: readless-web-redirect
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      set $FLAGS "";
+      if ($request_uri = '/.well-known/assetlinks.json') {
+        set $FLAGS "W";
+      }
+      if ($FLAGS !~ "W") {
+        rewrite ^ https://www.readless.ai$request_uri permanent;
+      }
+spec:
+  tls:
+    - hosts:
+        - readless.ai
+      secretName: tls-readless.ai
+  rules:
+    - host: readless.ai
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: readless-web-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: readless-api
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - api.readless.ai
+      secretName: tls-api.readless.ai
+  rules:
+    - host: api.readless.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: readless-api-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: readless-web-dev
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/auth-type: basic
+    # name of the secret that contains the user/password definitions
+    nginx.ingress.kubernetes.io/auth-secret: dev-auth
+    # message to display with an appropriate context why the authentication is required
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+spec:
+  tls:
+    - hosts:
+        - dev.readless.ai
+      secretName: tls-dev.readless.ai
+  rules:
+    - host: dev.readless.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: readless-web-dev
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: readless-api-dev
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - api.dev.readless.ai
+      secretName: tls-api.dev.readless.ai
+  rules:
+    - host: api.dev.readless.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: readless-api-dev
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: motm-web
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - www.mergingoftheminds.com
+      secretName: tls-www.mergingoftheminds.com
+  rules:
+    - host: www.mergingoftheminds.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: readless-web-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: motm-web-redirect
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      set $FLAGS "";
+      if ($request_uri = '/.well-known/assetlinks.json') {
+        set $FLAGS "W";
+      }
+      if ($FLAGS !~ "W") {
+        rewrite ^ https://www.mergingoftheminds.com$request_uri permanent;
+      }
+spec:
+  tls:
+    - hosts:
+        - mergingoftheminds.com
+      secretName: tls-mergingoftheminds.com
+  rules:
+    - host: mergingoftheminds.com
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: readless-web-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rollingcodes-web
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - www.rollingcodes.ai
+      secretName: tls-www.rollingcodes.ai
+  rules:
+    - host: www.rollingcodes.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: rollingcodes-web-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rollingcodes-web-redirect
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      set $FLAGS "";
+      if ($request_uri = '/.well-known/assetlinks.json') {
+        set $FLAGS "W";
+      }
+      if ($FLAGS !~ "W") {
+        rewrite ^ https://www.rollingcodes.ai$request_uri permanent;
+      }
+spec:
+  tls:
+    - hosts:
+        - rollingcodes.ai
+      secretName: tls-rollingcodes.ai
+  rules:
+    - host: rollingcodes.ai
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: rollingcodes-web-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rollingcodes-web-dev
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - dev.rollingcodes.ai
+      secretName: tls-dev.rollingcodes.ai
+  rules:
+    - host: dev.rollingcodes.ai
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: rollingcodes-web-dev
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: drunkmode-web
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - www.drunkmode.app
+      secretName: tls-www.drunkmode.app
+  rules:
+    - host: www.drunkmode.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: drunkmode-web-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: drunkmode-web-redirect
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      set $FLAGS "";
+      if ($request_uri = '/.well-known/assetlinks.json') {
+        set $FLAGS "W";
+      }
+      if ($FLAGS !~ "W") {
+        rewrite ^ https://www.drunkmode.app$request_uri permanent;
+      }
+spec:
+  tls:
+    - hosts:
+        - drunkmode.app
+      secretName: tls-drunkmode.app
+  rules:
+    - host: drunkmode.app
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: drunkmode-web-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: drunkmode-api
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - api.drunkmode.app
+      secretName: tls-api.drunkmode.app
+  rules:
+    - host: api.drunkmode.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: drunkmode-api-prod
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: drunkmode-web-dev
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - dev.drunkmode.app
+      secretName: tls-dev.drunkmode.app
+  rules:
+    - host: dev.drunkmode.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: drunkmode-web-dev
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: drunkmode-api-dev
+  namespace: ingress-nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  tls:
+    - hosts:
+        - api.dev.drunkmode.app
+      secretName: tls-api.dev.drunkmode.app
+  rules:
+    - host: api.dev.drunkmode.app
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: drunkmode-api-dev
+                port:
+                  number: 80

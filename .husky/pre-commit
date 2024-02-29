@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+prechangecount=$(git diff --name-status | wc -l)
+yarn format
+postchangecount=$(git diff --name-status | wc -l)
+if [ $postchangecount -gt $prechangecount ]; then
+  echo "Autofomatted $postchangecount files"
+  git diff --name-status
+  exit 0
+fi

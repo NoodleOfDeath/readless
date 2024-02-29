@@ -1,0 +1,64 @@
+FROM --platform=linux/amd64 node:19.3.0 AS base
+
+# install required clintools
+RUN npm i -g tsoa@^5.1.1
+
+# copy dependency projects
+WORKDIR /home/node
+COPY src/server ./server
+COPY src/core ./core
+WORKDIR /home/node/server
+RUN yarn cp:core
+
+# copy project resources
+WORKDIR /home/node/app
+COPY src/web/src ./src
+COPY src/web/public ./public
+COPY src/web/tsconfig.json ./
+COPY src/web/next-env.d.ts ./
+COPY src/web/next.config.js ./
+
+# run linting installation
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install --non-interactive --immutable
+COPY src/web/package.json ./
+COPY src/web/yarn.lock ./
+
+# run yarn installation
+FROM base AS install
+RUN yarn cp:core
+RUN yarn tsoa
+RUN yarn install --non-interactive --immutable
+
+FROM install AS build
+ARG NEXT_PUBLIC_API_ENDPOINT
+ENV NEXT_PUBLIC_API_ENDPOINT=${NEXT_PUBLIC_API_ENDPOINT}
+ARG NEXT_PUBLIC_APPLE_APP_ID
+ENV NEXT_PUBLIC_APPLE_APP_ID=${NEXT_PUBLIC_APPLE_APP_ID}
+ARG NEXT_PUBLIC_BASE_URL
+ENV NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
+ARG NEXT_PUBLIC_FACEBOOK_ID
+ENV NEXT_PUBLIC_FACEBOOK_ID=${NEXT_PUBLIC_FACEBOOK_ID}
+ARG NEXT_PUBLIC_GENERATE_SOURCEMAP
+ENV NEXT_PUBLIC_GENERATE_SOURCEMAP=${NEXT_PUBLIC_GENERATE_SOURCEMAP}
+ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
+ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+ARG NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID
+ENV NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID=${NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID}
+ARG NEXT_PUBLIC_SUPPORT_EMAIL
+ENV NEXT_PUBLIC_SUPPORT_EMAIL=${NEXT_PUBLIC_SUPPORT_EMAIL}
+RUN echo > .env
+RUN echo NEXT_PUBLIC_API_ENDPOINT=\"${NEXT_PUBLIC_API_ENDPOINT}\" >> .env
+RUN echo NEXT_PUBLIC_APPLE_APP_ID=\"${NEXT_PUBLIC_APPLE_APP_ID}\" >> .env
+RUN echo NEXT_PUBLIC_BASE_URL=\"${NEXT_PUBLIC_BASE_URL}\" >> .env
+RUN echo NEXT_PUBLIC_FACEBOOK_ID=\"${NEXT_PUBLIC_FACEBOOK_ID}\" >> .env
+RUN echo NEXT_PUBLIC_GENERATE_SOURCEMAP=\"${NEXT_PUBLIC_GENERATE_SOURCEMAP}\" >> .env
+RUN echo NEXT_PUBLIC_GOOGLE_CLIENT_ID=\"${NEXT_PUBLIC_GOOGLE_CLIENT_ID}\" >> .env
+RUN echo NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID=\"${NEXT_PUBLIC_GOOGLE_MEASUREMENT_ID}\" >> .env
+RUN echo NEXT_PUBLIC_SUPPORT_EMAIL=\"${NEXT_PUBLIC_SUPPORT_EMAIL}\" >> .env
+
+# run build
+ENV NODE_ENV=production
+RUN yarn build
+CMD yarn start

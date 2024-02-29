@@ -1,0 +1,8 @@
+{
+  "controllerPathGlobs": ["src/api/v1/controllers/index.ts"],
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "spec": {
+    "outputDirectory": "./",
+    "specVersion": 3
+  }
+}

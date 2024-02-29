@@ -1,0 +1,5 @@
+**/dist
+**/build
+**/node_modules
+shim.js
+metro.config.js

@@ -1,0 +1,29 @@
+FROM --platform=linux/amd64 node:19.3.0 AS base
+
+# install libvips
+RUN apt-get update && apt-get install -y libvips
+
+WORKDIR /home/node
+COPY src/core ./core
+WORKDIR /home/node/app
+COPY src/server/package.json ./
+COPY src/server/yarn.lock ./
+COPY src/server/src ./src
+RUN yarn install --non-interactive --immutable
+
+FROM base AS pre-build
+COPY src/server/tsconfig.json ./
+COPY src/server/tsconfig.build.json ./
+
+FROM pre-build AS build
+COPY src/server/gen-sql-queries.ts ./
+RUN yarn sql
+# swagger.json file
+COPY src/server/tsoa.config.json ./
+RUN yarn cp:core
+RUN yarn tsoa
+ENV NODE_ENV=production
+RUN yarn build:api
+
+FROM build AS api
+CMD yarn start:api

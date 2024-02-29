@@ -1,0 +1,49 @@
+{
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node",
+    "experimentalModules": true,
+    "compilerOptions": {}
+  },
+  "esbuild": {
+    "esm": true,
+    "files": true,
+    "experimentalSpecifierResolution": "node",
+    "experimentalModules": true,
+    "compilerOptions": {
+      "transpileOnly": true
+    }
+  },
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
+    "declaration": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "removeComments": true,
+    "noLib": false,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "allowJs": false,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "noUnusedLocals": true
+  },
+  "include": [
+    "src/**/*.ts",
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

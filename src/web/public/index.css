@@ -1,0 +1,9 @@
+html,
+body {
+  margin: none;
+}
+
+@font-face {
+  font-family: 'Anek Latin';
+  src: url('fonts/AnekLatin.ttf');
+}

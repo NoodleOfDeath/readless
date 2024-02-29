@@ -1,0 +1,46 @@
+FROM --platform=linux/amd64 node:19.3.0 AS base
+
+# install required cli tools
+RUN npm i -g tsoa
+
+# copy dependency projects
+WORKDIR /home/node
+COPY src/server ./server
+COPY src/core ./core
+
+# copy project resources
+WORKDIR /home/node/app
+COPY src/mobile/android ./android
+COPY src/mobile/ios ./ios
+COPY src/mobile/src ./src
+COPY src/mobile/.env ./
+COPY src/mobile/.eslintignore ./
+COPY src/mobile/.eslintrc.js ./
+COPY src/mobile/.node-version ./
+COPY src/mobile/.ruby-version ./
+COPY src/mobile/.watchmanconfig ./
+COPY src/mobile/app.json ./
+COPY src/mobile/babel.config.json ./
+COPY src/mobile/Gemfile ./
+COPY src/mobile/index.js ./
+COPY src/mobile/metro.config.js ./
+COPY src/mobile/package.json ./
+COPY src/mobile/react-native.config.js ./
+COPY src/mobile/tsconfig.json ./
+COPY src/mobile/yarn.lock ./
+
+# generate code
+RUN yarn cp:core
+RUN yarn tsoa
+
+# run yarn installation
+FROM base AS yarn-install
+RUN yarn install --non-interactive --immutable
+
+# run pod install
+FROM yarn-install AS pod-install
+RUN yarn npx pod-install
+
+# launch container
+FROM pod-install AS dev
+CMD yarn start

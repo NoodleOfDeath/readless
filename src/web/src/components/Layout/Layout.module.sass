@@ -1,0 +1,27 @@
+@import ~/styles/helpers
+
+.layout
+  background: $n2
+  position: relative
+  display: flex
+  flex-direction: column
+  flex-grow: 1
+  min-height: 100vh
+  overflow: hidden
+  &.layoutNoOverflow
+    overflow: visible
+
+.inner
+  flex-grow: 1
+
+.main
+  position: relative
+  margin: auto
+  margin-top: 8rem
+  padding: 0rem 2rem
+  max-width: 1600px
+  +x
+    margin-bottom: 96px
+    +m
+      margin-bottom: 64px
+      text-align: center

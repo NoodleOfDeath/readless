@@ -1,0 +1,112 @@
+@import ~/styles/helpers
+
+.design
+    position: relative
+    padding-bottom: 128px
+    +x
+        padding-bottom: 80px
+    +m
+        padding-bottom: 32px
+    &:before,
+    &:after
+        content: ""
+        position: absolute
+        bottom: 0
+        height: 496px
+        +x
+            height: 320px
+        +m
+            height: 128px
+    &:before
+        left: 0
+        width: 65.5%
+        background: #B6DFEC
+        +x
+            width: 59%
+    &:after
+        right: 0
+        width: 34.5%
+        background: #195DC9
+        +x
+            width: 41%
+
+.title
+    max-width: 660px
+    margin: 0 auto 80px
+    text-align: center
+    +x
+        margin-bottom: 60px
+    +d
+        max-width: 500px
+    +m
+        margin-bottom: 32px
+
+.preview
+    position: relative
+    z-index: 2
+    font-size: 0
+    img
+        border-radius: 13px
+
+.circle
+    position: absolute
+    border-radius: 50%
+    z-index: 2
+    &:nth-child(1)
+        top: 21%
+        left: -4.3%
+        width: 104px
+        +d
+            left: -8%
+        +m
+            top: 41%
+            left: -4%
+            width: 28px
+        span
+            background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(97.99% 97.99% at 83.49% 91.87%, #181814 63.61%, #4B4A49 100%)
+    &:nth-child(2)
+        top: 57%
+        left: 4.8%
+        width: 40px
+        +t
+            top: 80%
+            left: 2%
+        +m
+            top: 73%
+            left: 5%
+            width: 10px
+        span
+            background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #FFAF13 43.61%, #FBFF47 100%)
+    &:nth-child(3)
+        top: 27.5%
+        right: -7%
+        width: 40px
+        +t
+            right: -8%
+        +m
+            top: 45%
+            right: -5%
+            width: 10px
+        span
+            background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #136FFF 43.61%, #47BDFF 100%)
+    &:nth-child(4)
+        right: -3.5%
+        bottom: 24.5%
+        width: 80px
+        +t
+            right: -6%
+            bottom: 15%
+            width: 60px
+        +m
+            right: -2%
+            width: 20px
+        span
+            background: radial-gradient(35.65% 35.65% at 14.59% 15.55%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 42.48%), radial-gradient(77.99% 77.99% at 83.49% 91.87%, #27A867 43.61%, #33E68C 100%)
+    span
+        display: block
+        width: 100%
+        border-radius: 50%
+        &:before
+            content: ""
+            display: block
+            padding-bottom: 100%  

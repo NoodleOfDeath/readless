@@ -1,0 +1,13 @@
+@import ~/styles/helpers
+
+.field
+    &:not(:last-child)
+        margin-bottom: 12px
+
+.link
+    margin-bottom: 24px
+    +caption
+    color: $blue
+    transition: opacity .2s
+    &:hover
+        opacity: .85

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Newsletter</title>
+  <style>
+      body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+    }
+
+    .header, .footer {
+      display: flex;
+      justify-content: center;
+      background: #333;
+      color: white;
+      padding: 1rem;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      gap: 1rem;
+    }
+
+    .article {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0px 2rem;;
+    }
+
+    .article-img {
+      flex: 3;
+    }
+
+    .article-content {
+      flex: 7;
+    }
+
+    .button {
+      background-color: #333;
+      border: none;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 0.5rem;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>My Newsletter</h1>
+    </div>
+    <div class="content">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+      <div class="article">
+        <div class="article-img">
+          <img src="path_to_your_image.jpg" alt="Image Description">
+        </div>
+        <div class="article-content">
+          <h2>Article Title</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+        </div>
+      </div>
+      <div class="article">
+        <div class="article-img">
+          <img src="path_to_your_second_image.jpg" alt="Second Image Description">
+        </div>
+        <div class="article-content">
+          <h2>Another Article</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+        </div>
+      </div>
+      <a class="button" href="https://www.example.com">Read More</a>
+      <a class="button" href="https://www.example.com">Read More</a>
+    </div>
+    <div class="footer">
+      <p>Footer content here.</p>
+    </div>
+  </div>
+</body>
+</html>

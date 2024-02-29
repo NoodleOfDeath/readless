@@ -1,0 +1,104 @@
+@import ~/styles/helpers
+
+.downloads
+    position: relative
+
+.anchor
+    position: absolute
+    top: -150px
+    left: 0
+    right: 0
+    +d
+        top: -130px
+    +m
+        top: -100px
+
+.list
+    column-count: 2
+    column-gap: 40px
+    margin-bottom: -20px
+    +t
+        column-count: 1
+        column-gap: 0
+        margin-bottom: -40px
+
+.item
+    margin-bottom: 40px
+    &:nth-child(1)
+        .preview
+            padding: 2px 0 8px
+            +d
+                padding: 25px 40px 50px
+            +t
+                padding: 0
+            +m
+                max-width: 190px
+                margin: 0 auto
+    &:nth-child(2)
+        .preview
+            padding: 36px 0 56px
+            +d
+                padding-bottom: 46px
+            +t
+                padding: 0
+    &:nth-child(3)
+        padding-top: 40px
+        +d
+            padding-top: 82px
+        +t
+            padding-top: 0
+        .preview
+            padding: 28px 0 20px
+            +d
+                padding: 78px 0 43px
+            +t
+                padding: 0
+    &:nth-child(4)
+        .preview
+            padding: 54px 0 78px
+            +d
+                padding: 30px 10px 18px
+            +t
+                padding: 0
+
+.inner
+    padding: 40px
+    border-radius: 8px
+    background: $n2
+    +m
+        position: relative
+        padding: 40px 24px 128px
+        
+.head
+    display: flex
+    align-items: center
+    +m
+        display: block
+        text-align: center
+
+.subtitle
+    margin-right: auto
+    +d
+        font-size: 24px
+    +m
+        margin: 0 0 24px
+
+.button
+    +m
+        position: absolute
+        left: 50%
+        bottom: 40px
+        transform: translateX(-50%)
+
+.content
+    max-width: 250px
+    color: $n4
+    +m
+        display: none
+
+.preview
+    display: flex
+    justify-content: center
+    align-items: center
+    margin-top: 42px
+    

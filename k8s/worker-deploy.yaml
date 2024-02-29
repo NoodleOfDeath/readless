@@ -1,0 +1,113 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: $CONTAINER_NAME
+  namespace: $K8S_NAMESPACE
+spec:
+  replicas: $K8S_REPLICA_COUNT_WORKER
+  selector:
+    matchLabels:
+      app: $CONTAINER_NAME
+  template:
+    metadata:
+      labels:
+        app: $CONTAINER_NAME
+    spec:
+      containers:
+        - name: $CONTAINER_NAME
+          image: $REGISTRY/$IMAGE
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: '$K8S_MEMORY_REQUESTS'
+              cpu: '$K8S_CPU_REQUESTS'
+            limits:
+              memory: '$K8S_MEMORY_LIMITS'
+              cpu: '$K8S_CPU_LIMITS'
+          env:
+            - name: ANTHROPIC_API_KEY
+              value: '$ANTHROPIC_API_KEY'
+            - name: BACKOFF_INTERVAL
+              value: '$BACKOFF_INTERVAL'
+            - name: BASE_DOMAIN
+              value: '$BASE_DOMAIN'
+            - name: CHROMIUM_EXECUTABLE_PATH
+              value: '$CHROMIUM_EXECUTABLE_PATH'
+            - name: DEEPAI_API_KEY
+              value: '$DEEPAI_API_KEY'
+            - name: DUPLICATE_LOOKBACK_INTERVAL
+              value: '$DUPLICATE_LOOKBACK_INTERVAL'
+            - name: ENABLED_FEATURES
+              value: '$ENABLED_FEATURES'
+            - name: ERROR_REPORTING
+              value: '$ERROR_REPORTING'
+            - name: FIREBASE_CREDENTIALS
+              value: '$FIREBASE_CREDENTIALS'
+            - name: MAIL_HOST
+              value: '$MAIL_HOST'
+            - name: MAIL_PASS
+              value: '$MAIL_PASS'
+            - name: MAIL_PORT
+              value: '$MAIL_PORT'
+            - name: MAIL_REPLY_TO
+              value: '$MAIL_REPLY_TO'
+            - name: MAIL_USER
+              value: '$MAIL_USER'
+            - name: MAX_OPENAI_TOKEN_COUNT
+              value: '$MAX_OPENAI_TOKEN_COUNT'
+            - name: OLD_NEWS_THRESHOLD
+              value: '$OLD_NEWS_THRESHOLD'
+            - name: OPENAI_API_KEY
+              value: '$OPENAI_API_KEY'
+            - name: PUBLISHER_FETCH_INTERVAL
+              value: '$PUBLISHER_FETCH_INTERVAL'
+            - name: PUBLISHER_FETCH_LIMIT
+              value: '$PUBLISHER_FETCH_LIMIT'
+            - name: PUBLISHER_MAX_ATTEMPT_LIMIT
+              value: '$PUBLISHER_MAX_ATTEMPT_LIMIT'
+            - name: PG_CONNECTION_STRING
+              value: '$PG_CONNECTION_STRING'
+            - name: PLAY_HT_SECRET_KEY
+              value: '$PLAY_HT_SECRET_KEY'
+            - name: PLAY_HT_USER_ID
+              value: '$PLAY_HT_USER_ID'
+            - name: RELATIONSHIP_THRESHOLD
+              value: '$RELATIONSHIP_THRESHOLD'
+            - name: S3_BUCKET
+              value: '$S3_BUCKET'
+            - name: S3_KEY
+              value: '$S3_KEY'
+            - name: S3_SECRET
+              value: '$S3_SECRET'
+            - name: TOPIC_RECALCULATE_RATE
+              value: '$TOPIC_RECALCULATE_RATE'
+            - name: WORKER_QUEUE
+              value: '$WORKER_QUEUE'
+            - name: WORKER_RETRY_EXPRS
+              value: '$WORKER_RETRY_EXPRS'
+          # livenessProbe:
+          #   httpGet:
+          #     path: /v1/healthz
+          #     port: $PORT
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 5
+          # readinessProbe:
+          #   httpGet:
+          #     path: /v1/healthz
+          #     port: $PORT
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: $CONTAINER_NAME
+  namespace: $K8S_NAMESPACE
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+  selector:
+    app: $CONTAINER_NAME
+---

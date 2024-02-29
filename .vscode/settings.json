@@ -1,0 +1,121 @@
+{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "markdown"
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "vue",
+    "markdown"
+  ],
+  "eslint.options": {
+    "extensions": [
+      ".js",
+      ".jsx",
+      ".ts",
+      ".tsx"
+    ]
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit",
+    "source.organizeImports": "never",
+    "source.fixAll": "explicit"
+  },
+  "[python]": {
+    "editor.formatOnType": true,
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "editor.inlineSuggest.enabled": true,
+  "editor.fontFamily": "Cascadia Code, DM Mono, Menlo, Monaco, Courier New, monospace",
+  "editor.fontLigatures": "'calt', 'ss01'",
+  "editor.lineHeight": 1.5,
+  "editor.letterSpacing": 1,
+  "terminal.integrated.fontFamily": "Cascadia Code, Fira Code, DM Mono, Menlo, Monaco, Courier New, monospace",
+  "terminal.integrated.letterSpacing": 1,
+  "eslint.useESLintClass": true,
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "explorer.confirmDelete": false,
+  "prettier.jsxSingleQuote": true,
+  "prettier.singleAttributePerLine": true,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "all",
+  "editor.wordWrap": "on",
+  "explorer.confirmDragAndDrop": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "prettier.useEditorConfig": false,
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": true,
+    "plaintext": true,
+    "markdown": true,
+    "scminput": false
+  },
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "terminal.integrated.enableMultiLinePasteWarning": false,
+  "[sql]": {
+    "editor.defaultFormatter": "bradymholt.pgformatter"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
+  "[properties]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "files.associations": {
+    "*.swift": "swift"
+  },
+  "workbench.startupEditor": "none",
+  "eslint.format.enable": true,
+  "eslint.lintTask.enable": true,
+  "security.workspace.trust.untrustedFiles": "open",
+  "markdown.extension.preview.autoShowPreviewToSide": true,
+  "[json]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "editor.autoClosingBrackets": "never",
+  "react-native-tools.networkInspector.consoleLogsColorTheme": "Dark",
+  "vscode-pets.theme": "forest",
+  "markdown.extension.print.theme": "dark",
+  "typescript.inlayHints.enumMemberValues.enabled": true,
+  "typescript.autoClosingTags": false,
+  "typescript.experimental.aiQuickFix": true,
+  "window.autoDetectHighContrast": false,
+  "terminal.integrated.tabs.defaultColor": "terminal.ansiGreen",
+  "terminal.integrated.minimumContrastRatio": 3,
+  "window.zoomLevel": 1
+}

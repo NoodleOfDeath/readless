@@ -1,0 +1,52 @@
+@import ~/styles/helpers
+
+.main
+    position: relative
+    padding: 277px 0 355px
+    overflow: hidden
+    background: $n2
+    +d
+        margin-bottom: 80px
+        padding: 232px 0 200px
+    +m
+        margin-bottom: 24px
+        padding: 136px 0 424px
+
+.wrap
+    position: relative
+    z-index: 3
+    max-width: 300px
+    +m
+        max-width: 100%
+        text-align: center
+
+.title
+    margin-bottom: 20px
+    +m
+        margin-bottom: 16px
+        font-size: 48px
+        line-height: 56px
+
+.info
+    color: $n4
+    +m
+        font-size: 20px
+        line-height: 28px
+
+.preview
+    position: absolute
+    top: 50%
+    right: calc(50% - 680px)
+    transform: translateY(-43.5%)
+    +x
+        right: calc(50% - 780px)
+    +d
+        right: calc(50% - 565px)
+        width: 688px
+        transform: translateY(-40%)
+    +m
+        top: auto
+        right: 50%
+        bottom: 45px
+        width: 456px
+        transform: translate(62%,0)

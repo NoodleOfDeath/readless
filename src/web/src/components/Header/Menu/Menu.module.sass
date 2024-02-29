@@ -1,0 +1,91 @@
+@import ~/styles/helpers
+
+.burger
+    position: relative
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    flex-shrink: 0
+    width: 40px
+    height: 40px
+    &:before,
+    &:after
+        content: ""
+        width: 40px
+        height: 2px
+        margin: 4px auto
+        background: $n4
+        transition: width .2s, background .2s
+    &:hover
+        &:before,
+        &:after
+            width: 32px
+            background: $n7
+
+div.container
+    display: flex
+    flex-direction: column
+    max-width: 503px
+    padding: 64px
+    +x
+        max-width: 460px
+    +d
+        max-width: 420px
+    +m
+        max-width: 100%
+        padding: 48px 40px
+        
+div.socials
+    display: flex
+    flex-grow: 1
+    align-items: center
+    justify-content: space-evenly
+
+.navigation
+    display: flex
+    flex-direction: column
+    margin: auto 0
+    padding: 40px 0
+
+.link
+    display: flex
+    align-items: center
+    color: $n4
+    transition: color .2s
+    svg
+        margin-left: 12px
+        fill: $n4
+        transition: fill .2s
+    &:hover,
+    &.active
+        color: $n7
+        svg
+            fill: $n7
+    &:not(:last-child)
+        margin-bottom: 10px
+
+.line
+    display: flex
+    align-items: center
+
+.text
+    margin-bottom: 4px
+    +baseM
+    color: $n4
+
+.mail
+    color: $n7
+
+.chat
+    width: 52px
+    height: 52px
+    margin-left: auto
+    background: $blue
+    border-radius: 50%
+    font-size: 0
+    transition: background .2s
+    svg
+        fill: $n1
+    &:hover
+        background: darken($blue, 5)

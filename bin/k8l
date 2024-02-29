@@ -1,0 +1,47 @@
+#!/bin/bash
+
+THIS=$(basename $0)
+
+usage() {
+  echo
+  echo "shorthand for 'kubectl logs -l app=...'"
+  echo "okay basically just lets you read your"
+  echo "damn pod logs without typing 359583 chars"
+  echo
+  echo "usage: $THIS [-t|--tail <lines>] [-h|--help] <container-name-pattern>"
+  echo "  -t|--tail <lines>  number of lines to tail"
+  echo "  -h|--help          show this help"
+  echo "  <pattern>          pattern to match in deployment name"
+  exit 1
+}
+
+ARGS=()
+PATTERN=
+TAIL=10
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  -[0-9][0-9]*)
+    TAIL="${1:1}"
+    ;;
+  -h | --help)
+    usage
+    ;;
+  -t | --tail)
+    TAIL="$2"
+    shift
+    ;;
+  *)
+    ARGS+=("$1")
+    ;;
+  esac
+  shift
+done
+
+PATTERN="${ARGS[0]}"
+
+if [[ -z "$PATTERN" ]]; then
+  usage
+fi
+
+kubectl logs -l app=$(kubectl get deploy | grep $PATTERN | awk '{ print $1 }') --tail=$TAIL -f | grep -v healthz
