@@ -334,7 +334,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       offset,
     ].join(':');
 
-    if (queryKey === 'top_stories' && !forceCache) {
+    if (/^top_stories/.test(queryKey) && !forceCache) {
       const cache = await Cache.fromKey(cacheKey);
       if (cache && cache.expiresSoon === false) {
         try {
