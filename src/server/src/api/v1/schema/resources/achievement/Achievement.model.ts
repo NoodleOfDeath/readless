@@ -265,7 +265,22 @@ export class Achievement<
         return count / 100;
       },
       name: 'dissemination-deity',
-      points: 500,
+      points: 1000,
+    },
+    {
+      description: 'Share at least 500 articles',
+      displayName: 'Engagement Emperor',
+      findCandidates: async () => {
+        const interactions = await User.getInteractionCounts('share', { minCount: 500 });
+        return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
+      },
+      getProgress: async (user) => {
+        const interactions = await User.getInteractionCounts('share', undefined, user);
+        const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
+        return count / 500;
+      },
+      name: 'engagement-emperor',
+      points: 7500,
     },
     {
       description: 'Have at least one streak of 3 days or more',
