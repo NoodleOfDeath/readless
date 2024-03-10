@@ -34,6 +34,7 @@ async function cacheTopStories(locale: string, interval = '1d', depth = 1) {
       interval,
       locale,
       offset,
+      version: '1.17.14',
     });
     offset = next;
   }
