@@ -371,6 +371,22 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return response;
   }
 
+  public async getSummaryInteractions(type: InteractionType) {
+    return await SummaryInteraction.findAll({
+      attributes: ['targetId', [fn('max', col('summary_interaction.createdAt')), 'createdAt']],
+      group: ['targetId'],
+      order: [
+        [fn('max', col('summary_interaction.createdAt')), 'desc'],
+        ['targetId', 'desc'],
+      ],
+      where: {
+        revert: false,
+        type,
+        userId: this.id,
+      },
+    }));
+  }
+
   public static async getMetrics(user?: User, req?: MetricsRequest): Promise<MetricsResponse> {
     const streaks = await User.getStreaks();
     const daysActive = await User.getDaysActive();
@@ -453,7 +469,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
       lastSeen,
       longestStreak,
       memberSince: this.createdAt,
-      reputation: achievements.completed.reduce((acc, a) => acc + a.achievement.points ?? 0, 0),
+      reputation: achievements.completed.reduce((acc, a) => acc + a.achievement.points ?? 0, 0) + (this.getSummaryInteractions('read').length * 1) + (this.getSummaryInteractions('share').length * 3),
       streak,
       updatedAt: !Number.isNaN(updatedAt.valueOf()) ? updatedAt : new Date(),
     };
@@ -471,45 +487,9 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     profile.linkedThirdPartyAccounts = (await this.findAliases('thirdParty/apple', 'thirdParty/google')).map((a) => a.type.split('/')[1] as ThirdParty);
     profile.preferences = Object.fromEntries(metadata.filter((meta) => meta.type === 'pref').map((meta) => [meta.key, typeof meta.value === 'string' ? JSON.parse(meta.value) : meta.value]));
     if ((req?.version ?? '') >= '1.17.11') {
-      profile.preferences.bookmarkedSummaries = Object.fromEntries((await SummaryInteraction.findAll({
-        attributes: ['targetId', [fn('max', col('summary_interaction.createdAt')), 'createdAt']],
-        group: ['targetId'],
-        order: [
-          [fn('max', col('summary_interaction.createdAt')), 'desc'],
-          ['targetId', 'desc'],
-        ],
-        where: {
-          revert: false,
-          type: 'bookmark',
-          userId: this.id,
-        },
-      })).map((i) => [i.targetId, i.createdAt]));
-      profile.preferences.readSummaries = Object.fromEntries((await SummaryInteraction.findAll({
-        attributes: ['targetId', [fn('max', col('summary_interaction.createdAt')), 'createdAt']],
-        group: ['targetId'],
-        order: [
-          [fn('max', col('summary_interaction.createdAt')), 'desc'],
-          ['targetId', 'desc'],
-        ],
-        where: {
-          revert: false,
-          type: 'read',
-          userId: this.id,
-        },
-      })).map((i) => [i.targetId, i.createdAt]));
-      profile.preferences.removedSummaries = Object.fromEntries((await SummaryInteraction.findAll({
-        attributes: ['targetId', [fn('max', col('summary_interaction.createdAt')), 'createdAt']],
-        group: ['targetId'],
-        order: [
-          [fn('max', col('summary_interaction.createdAt')), 'desc'],
-          ['targetId', 'desc'],
-        ],
-        where: {
-          revert: false,
-          type: 'hide',
-          userId: this.id,
-        },
-      })).map((i) => [i.targetId, { createdAt: i.createdAt, item: true }]));
+      profile.preferences.bookmarkedSummaries = Object.fromEntries((await this.getSummaryInteractions('bookmark')).map((i) => [i.targetId, i.createdAt]));
+      profile.preferences.readSummaries = Object.fromEntries((await this.getSummaryInteractions('read')).map((i) => [i.targetId, i.createdAt]));
+      profile.preferences.removedSummaries = Object.fromEntries((await this.getSummaryInteractions('hide')).map((i) => [i.targetId, { createdAt: i.createdAt, item: true }]));
       profile.preferences.followedPublishers = ((await PublisherInteraction.findAll({
         attributes: ['targetId', [fn('max', col('publisher_interaction.createdAt')), 'createdAt']],
         group: ['targetId', col('publisher.name'), col('publisher.displayName'), col('publisher.imageUrl'), col('publisher.description')],
