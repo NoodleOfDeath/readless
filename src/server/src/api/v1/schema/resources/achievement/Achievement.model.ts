@@ -61,11 +61,11 @@ export class Achievement<
       description: 'Read at least 3 articles',
       displayName: 'Newbie',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('read', { minCount: 3 });
+        const interactions = await User.getSummaryInteractionCounts('read', { minCount: 3 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('read', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('read', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 3;
       },
@@ -76,11 +76,11 @@ export class Achievement<
       description: 'Read at least 10 articles',
       displayName: 'Reader',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('read', { minCount: 10 });
+        const interactions = await User.getSummaryInteractionCounts('read', { minCount: 10 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('read', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('read', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 10;
       },
@@ -91,11 +91,11 @@ export class Achievement<
       description: 'Read at least 25 articles',
       displayName: 'Avid Reader',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('read', { minCount: 25 });
+        const interactions = await User.getSummaryInteractionCounts('read', { minCount: 25 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('read', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('read', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 25;
       },
@@ -106,11 +106,11 @@ export class Achievement<
       description: 'Read at least 50 articles',
       displayName: 'Page Sage',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('read', { minCount: 50 });
+        const interactions = await User.getSummaryInteractionCounts('read', { minCount: 50 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('read', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('read', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 50;
       },
@@ -121,11 +121,11 @@ export class Achievement<
       description: 'Read at least 100 articles',
       displayName: 'Century Scribe',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('read', { minCount: 100 });
+        const interactions = await User.getSummaryInteractionCounts('read', { minCount: 100 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('read', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('read', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 100;
       },
@@ -136,11 +136,11 @@ export class Achievement<
       description: 'Read at least 300 articles',
       displayName: 'Triple Century Scribe',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('read', { minCount: 100 });
+        const interactions = await User.getSummaryInteractionCounts('read', { minCount: 100 });
         return await User.findAll({ where : { id: interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('read', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('read', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 100;
       },
@@ -151,11 +151,11 @@ export class Achievement<
       description: 'Bookmark at least 3 articles',
       displayName: 'Belated Bookworm',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('bookmark', { minCount: 3 });
+        const interactions = await User.getSummaryInteractionCounts('bookmark', { minCount: 3 });
         return await User.findAll({ where : { id: interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('bookmark', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 3;
       },
@@ -166,11 +166,11 @@ export class Achievement<
       description: 'Bookmark at least 10 articles',
       displayName: 'Avid Aficionado',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('bookmark', { minCount: 10 });
+        const interactions = await User.getSummaryInteractionCounts('bookmark', { minCount: 10 });
         return await User.findAll({ where : { id: interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('bookmark', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 10;
       },
@@ -181,11 +181,11 @@ export class Achievement<
       description: 'Bookmark at least 30 articles',
       displayName: 'Insatiable Inquirer',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('bookmark', { minCount: 30 });
+        const interactions = await User.getSummaryInteractionCounts('bookmark', { minCount: 30 });
         return await User.findAll({ where : { id: interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('bookmark', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 30;
       },
@@ -196,11 +196,11 @@ export class Achievement<
       description: 'Bookmark at least 100 articles',
       displayName: 'Highlight Honcho',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('bookmark', { minCount: 100 });
+        const interactions = await User.getSummaryInteractionCounts('bookmark', { minCount: 100 });
         return await User.findAll({ where : { id: interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('bookmark', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('bookmark', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 100;
       },
@@ -211,11 +211,11 @@ export class Achievement<
       description: 'Share at least 3 articles',
       displayName: 'Advocate',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('share', { minCount: 3 });
+        const interactions = await User.getSummaryInteractionCounts('share', { minCount: 3 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('share', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('share', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 3;
       },
@@ -226,11 +226,11 @@ export class Achievement<
       description: 'Share at least 10 articles',
       displayName: 'Community Catalyst',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('share', { minCount: 10 });
+        const interactions = await User.getSummaryInteractionCounts('share', { minCount: 10 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('share', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('share', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 10;
       },
@@ -241,11 +241,11 @@ export class Achievement<
       description: 'Share at least 30 articles',
       displayName: 'Pioneering Patron',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('share', { minCount: 30 });
+        const interactions = await User.getSummaryInteractionCounts('share', { minCount: 30 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('share', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('share', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 30;
       },
@@ -256,11 +256,11 @@ export class Achievement<
       description: 'Share at least 100 articles',
       displayName: 'Dissemination Deity',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('share', { minCount: 100 });
+        const interactions = await User.getSummaryInteractionCounts('share', { minCount: 100 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('share', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('share', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 100;
       },
@@ -271,11 +271,11 @@ export class Achievement<
       description: 'Share at least 500 articles',
       displayName: 'Engagement Emperor',
       findCandidates: async () => {
-        const interactions = await User.getInteractionCounts('share', { minCount: 500 });
+        const interactions = await User.getSummaryInteractionCounts('share', { minCount: 500 });
         return await User.findAll({ where : { id : interactions.map(interaction => interaction.userId) } });
       },
       getProgress: async (user) => {
-        const interactions = await User.getInteractionCounts('share', undefined, user);
+        const interactions = await User.getSummaryInteractionCounts('share', undefined, user);
         const count = interactions.find((interaction) => interaction.userId === user.id)?.count ?? 0;
         return count / 500;
       },

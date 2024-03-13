@@ -347,7 +347,7 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     return response;
   }
 
-  public static async getInteractionCounts(type: InteractionType, { 
+  public static async getSummaryInteractionCounts(type: InteractionType, { 
     minCount = null,
     limit = 100,
     offset = 0, 
@@ -384,14 +384,14 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
         type,
         userId: this.id,
       },
-    }));
+    });
   }
 
   public static async getMetrics(user?: User, req?: MetricsRequest): Promise<MetricsResponse> {
     const streaks = await User.getStreaks();
     const daysActive = await User.getDaysActive();
-    const readCounts = await User.getInteractionCounts('read', req);
-    const shareCounts = await User.getInteractionCounts('share', req);
+    const readCounts = await User.getSummaryInteractionCounts('read', req);
+    const shareCounts = await User.getSummaryInteractionCounts('share', req);
     return {
       daysActive,
       interactionCounts: {
@@ -459,17 +459,20 @@ export class User<A extends UserAttributes = UserAttributes, B extends UserCreat
     const streak = await this.calculateStreak();
     const achievements = await this.getAchievements();
     const updatedAt = new Date(Math.max(...[longestStreak?.updatedAt, streak?.updatedAt].filter(Boolean).map((d) => d.valueOf())));
+    const interactionCounts = {
+      read: { count: (await this.getSummaryInteractions('read')).length },
+      share: { count: (await this.getSummaryInteractions('share')).length },
+    };
     return {
       achievements: achievements.completed,
       daysActive: (await User.getDaysActive()).find((s) => s.userId === this.id) ?? { count: 1 },
-      interactionCounts: {
-        read: (await User.getInteractionCounts('read', undefined, this)).find((s) => s.userId === this.id) ?? { count: 0 },
-        share: (await User.getInteractionCounts('share', undefined, this)).find((s) => s.userId === this.id) ?? { count: 0 },
-      },
+      interactionCounts,
       lastSeen,
       longestStreak,
       memberSince: this.createdAt,
-      reputation: achievements.completed.reduce((acc, a) => acc + a.achievement.points ?? 0, 0) + (this.getSummaryInteractions('read').length * 1) + (this.getSummaryInteractions('share').length * 3),
+      reputation: achievements.completed.reduce((acc, a) => acc + a.achievement.points ?? 0, 0) +
+        interactionCounts.read.count * 1 + 
+        interactionCounts.share.count * 3,
       streak,
       updatedAt: !Number.isNaN(updatedAt.valueOf()) ? updatedAt : new Date(),
     };
