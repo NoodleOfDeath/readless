@@ -7,6 +7,7 @@ import winston from 'winston';
 import v1router from './v1';
 import { preprocessHeadersMiddleware, rateLimitMiddleware } from './v1/middleware';
 import {
+  Achievement,
   Category,
   Locale,
   Publisher,
@@ -19,6 +20,7 @@ import { DBService } from '../services';
 async function main() {
   
   await DBService.prepare();
+  Achievement.prepare();
   Locale.prepare();
   Queue.prepare();
   Role.prepare();
