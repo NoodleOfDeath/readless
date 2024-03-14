@@ -2,7 +2,6 @@ import ms from 'ms';
 import { Op } from 'sequelize';
 
 import {
-  Achievement,
   Queue,
   Subscription,
   User,
@@ -18,12 +17,10 @@ import {
 async function main() {
   await DBService.prepare();
   await Queue.prepare();
-  await Achievement.prepare();
   ScribeService.prepare();
   doWork();
   sendDailyPushNotifications();
   //sendStreakPushNotifications();
-  detectAndAssignAchievements();
 }
 
 export async function doWork() {
@@ -131,24 +128,6 @@ export async function sendStreakPushNotifications() {
     console.error(e);
   } finally {
     setTimeout(() => sendStreakPushNotifications(), 120_000);
-  }
-}
-
-async function detectAndAssignAchievements() {
-  try {
-    for (const criteria of Achievement.ACHIEVEMENT_CRITERIA) {
-      const achievement = await Achievement.findOne({ where: { name: criteria.name } });
-      if (!achievement || (criteria.beforeDateBased && criteria.beforeDateBased < new Date())) {
-        continue;
-      }
-      const users = await criteria.findCandidates();
-      console.log(`found ${users.length} candidates for achievement ${achievement.name}`);
-      users.forEach(async (user) => await user.grantAchievement(achievement));
-    }
-  } catch (e) {
-    console.error(e);
-  } finally {
-    setTimeout(() => detectAndAssignAchievements(), 30_000);
   }
 }
 
