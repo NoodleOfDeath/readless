@@ -22,7 +22,7 @@ import {
 } from '../../api/v1/schema';
 import { BaseService } from '../base';
 
-const MIN_TOKEN_COUNT = 50;
+const MIN_TOKEN_COUNT = 55;
 const MAX_OPENAI_TOKEN_COUNT = Number(process.env.MAX_OPENAI_TOKEN_COUNT || 1500);
 
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
