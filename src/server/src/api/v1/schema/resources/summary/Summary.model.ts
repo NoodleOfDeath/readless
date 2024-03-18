@@ -327,7 +327,7 @@ export class Summary extends Post<SummaryAttributes, SummaryCreationAttributes> 
       idArray?.join(','),
       excludeIds,
       interval,
-      queryKey === 'top_stories' ? '' : locale,
+      /^top_stories/.test(queryKey) ? '' : locale,
       start,
       end,
       pageSize,
