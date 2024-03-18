@@ -16,7 +16,7 @@ import {
   PuppeteerService,
 } from '../services';
 
-const SPIDER_FETCH_INTERVAL = process.env.SPIDER_FETCH_INTERVAL || '5m';
+const SPIDER_FETCH_INTERVAL = process.env.SPIDER_FETCH_INTERVAL || '3m';
 const OLD_NEWS_THRESHOLD = process.env.OLD_NEWS_THRESHOLD || '1d';
 const TOPIC_RECALCULATE_RATE = ms(process.env.TOPIC_RECALCULATE_RATE || '5m');
 
