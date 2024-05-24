@@ -316,13 +316,6 @@ export function Summary({
 
   // update when brought into view
   useFocusEffect(React.useCallback(() => {
-    if (summaryTranslations?.[summary.id]) {
-      setTranslations(summaryTranslations[summary.id]);
-      translateToggleRef.current?.setTranslations(summaryTranslations[summary.id]);
-    } else
-    if (getLocale() !== 'en') {
-      translateToggleRef.current?.translate();
-    }
     setIsRead(!forceUnread && (summary.id in { ...readSummaries }));
     setIsBookmarked(summary.id in { ...bookmarkedSummaries });
     setIsCompact(compactSummaries);
